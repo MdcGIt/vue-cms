@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,4 +47,11 @@ public class SysPermission extends BaseEntity {
 	 */
 	@TableField(typeHandler = JacksonTypeHandler.class)
 	private Map<String, List<String>> permissions;
+	
+	public Map<String, List<String>> getPermissions() {
+		if (this.permissions == null) {
+			this.permissions = new HashMap<>();
+		}
+		return this.permissions;
+	}
 }
