@@ -44,6 +44,7 @@ public class CMSConfig implements WebMvcConfigurer {
 					RESOURCE_ROOT = StringUtils.join(Arrays.copyOfRange(arr, 0, arr.length - 4), StringUtils.SLASH);
 				}
 				RESOURCE_ROOT += "/wwwroot_release/";
+				RESOURCE_ROOT = FileExUtils.normalizePath(RESOURCE_ROOT);
 				FileExUtils.mkdirs(RESOURCE_ROOT);
 				properties.setResourceRoot(RESOURCE_ROOT);
 			} catch (FileNotFoundException e) {

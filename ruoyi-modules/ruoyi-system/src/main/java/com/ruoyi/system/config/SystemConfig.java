@@ -10,11 +10,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.ruoyi.common.security.intercepter.DemoModeIntercepter;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.system.SysConstants;
 import com.ruoyi.system.config.properties.SysProperties;
+import com.ruoyi.system.intercepter.DemoModeIntercepter;
 
 import lombok.extern.slf4j.Slf4j;
 

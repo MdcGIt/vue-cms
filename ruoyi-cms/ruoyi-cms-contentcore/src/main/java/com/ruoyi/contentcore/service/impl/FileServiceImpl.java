@@ -29,9 +29,7 @@ import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.util.SiteUtils;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileServiceImpl implements IFileService {
@@ -101,15 +99,13 @@ public class FileServiceImpl implements IFileService {
 				return true;
 			});
     	}
-		log.info(root);
 		if (listFiles != null) {
 			for (int i = 0; i < listFiles.length &&  i < 1000; i++) {
 				// 最多显示1000个文件
 				File f = listFiles[i];
 				String filePath = FileExUtils.normalizePath(f.getAbsolutePath());
-				log.info(filePath);
 				FileVO vo = new FileVO();
-				vo.setFilePath(filePath.substring(root.length() - 1));
+				vo.setFilePath(filePath.substring(root.length()));
 				vo.setFileName(f.getName());
 				vo.setIsDirectory(f.isDirectory());
 				vo.setFileSize(f.length());
