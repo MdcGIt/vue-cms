@@ -1,0 +1,50 @@
+package com.ruoyi.contentcore.properties;
+
+import java.util.Map;
+
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.stereotype.Component;
+
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.contentcore.core.IProperty;
+import com.ruoyi.contentcore.util.ConfigPropertyUtils;
+
+/**
+ * 内容发布时更新内容列表页的最大页数
+ */
+@Component(IProperty.BEAN_NAME_PREFIX + MaxPageOnContentPublishProperty.ID)
+public class MaxPageOnContentPublishProperty implements IProperty {
+
+	public final static String ID = "MaxPageOnContentPublish";
+	
+	static UseType[] UseTypes = new UseType[] { UseType.Site };
+	
+	@Override
+	public UseType[] getUseTypes() {
+		return UseTypes;
+	}
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
+	@Override
+	public String getName() {
+		return "内容发布更新列表页数";
+	}
+	
+	@Override
+	public boolean validate(String value) {
+		return StringUtils.isEmpty(value) || NumberUtils.isDigits(value);
+	}
+	
+	@Override
+	public String defaultValue() {
+		return "5";
+	}
+	
+	public static int getValue(Map<String, Object> props) {
+		return ConfigPropertyUtils.getIntValue(ID, props);
+	}
+}
