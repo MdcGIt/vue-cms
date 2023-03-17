@@ -8,7 +8,7 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。技术栈：SpringBoot3 +
 
 后台预览地址：<http://admin.1000mz.com>
 
-账号：admin / admin
+账号：demo / a123456
 
 服务器内存不太够，未部署es和xxl-job。
 
