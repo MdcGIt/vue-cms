@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -141,6 +142,25 @@ public class RedisCache {
 		ValueOperations<String, T> operation = redisTemplate.opsForValue();
 		return operation.get(key);
 	}
+	
+	/**
+	 * 获得缓存的基本对象，如果不存在调用supplier获取数据。
+	 * 
+	 * @param <T>
+	 * @param cacheKey
+	 * @param supplier
+	 * @return
+	 */
+	public <T> T getCacheObject(String cacheKey, Supplier<T> supplier) {
+		T cacheObject = this.getCacheObject(cacheKey);
+		if (Objects.isNull(cacheObject)) {
+			cacheObject = supplier.get();
+			if (Objects.nonNull(cacheObject)) {
+				this.setCacheObject(cacheKey, cacheObject);
+			}
+		}
+		return cacheObject;
+	} 
 
 	/**
 	 * 删除单个对象
@@ -257,6 +277,17 @@ public class RedisCache {
 		return redisTemplate.opsForHash().entries(key);
 	}
 
+	public <T> Map<String, T> getCacheMap(final String key, Supplier<Map<String, T>> supplier) {
+		Map entries = redisTemplate.opsForHash().entries(key);
+		if (entries == null) {
+			entries = supplier.get();
+			if (entries != null) {
+				this.setCacheMap(key, entries);
+			}
+		}
+		return entries;
+	}
+
 	/**
 	 * 往Hash中存入数据
 	 *
@@ -278,6 +309,17 @@ public class RedisCache {
 	public <T> T getCacheMapValue(final String key, final String hKey) {
 		HashOperations<String, String, T> opsForHash = redisTemplate.opsForHash();
 		return opsForHash.get(key, hKey);
+	}
+	
+	public <T> T getCacheMapValue(final String key, final String hKey, Supplier<T> supplier) {
+		T cacheMapValue = this.getCacheMapValue(key, hKey);
+		if (cacheMapValue == null) {
+			cacheMapValue = supplier.get();
+			if (cacheMapValue != null) {
+				this.setCacheMapValue(key, hKey, cacheMapValue);
+			}
+		}
+		return cacheMapValue;
 	}
 
 	/**

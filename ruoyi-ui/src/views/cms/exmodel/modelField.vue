@@ -242,7 +242,7 @@ export default {
           { required: true, message: "不能为空", trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9]*$", message: "不能为空且只能使用字母数字", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ],
         controlType: [
           { required: true, message: "不能为空", trigger: "blur" }

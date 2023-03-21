@@ -189,6 +189,25 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         calendar.set(Calendar.SECOND, 59);
         return calendar.getTime();
     }
+	
+	/**
+	 * 获取今日起始0点
+	 * 
+	 * @return
+	 */
+	public static LocalDateTime getTodayStart() {
+		return getDayStart(LocalDateTime.now());
+	}
+	
+	/**
+	 * 获取指定时间当天的0点
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public static LocalDateTime getDayStart(LocalDateTime time) {
+		return LocalDateTime.of(time.getYear(), time.getMonthValue(), time.getDayOfMonth(), 0, 0, 0);
+	}
 
 	/**
 	 * 当日时间加上seconds秒

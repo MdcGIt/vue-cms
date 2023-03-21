@@ -1,5 +1,7 @@
 package com.ruoyi.common.security;
 
+import java.util.List;
+
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -58,5 +60,25 @@ public interface IUserType {
 	
 	default public SaSession getTokenSessionByToken(String tokenValue) {
 		return SaManager.getStpLogic(this.getType()).getTokenSessionByToken(tokenValue);
+	}
+
+	/**
+	 * 获取用户权限列表
+	 * 
+	 * @param loginUid
+	 * @return
+	 */
+	default List<String> getPermissionList(Long loginUid) {
+		return List.of();
+	}
+
+	/**
+	 * 获取用户角色列表
+	 * 
+	 * @param loginUid
+	 * @return
+	 */
+	default List<String> getRoleList(Long loginUid) {
+		return List.of();
 	}
 }
