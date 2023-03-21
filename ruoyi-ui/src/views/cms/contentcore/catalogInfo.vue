@@ -231,7 +231,7 @@
       @ok="handleContentSelectorOk"
       @close="handleContentSelectorClose"></cms-content-selector>
     <!-- 进度条 -->
-    <cms-progress title="发布任务" :open.sync="openProgress" :taskId="taskId"></cms-progress>
+    <cms-progress :title="progressTitle" :open.sync="openProgress" :taskId="taskId" @close="handleCloseProgress"></cms-progress>
   </div>
 </template>
 <script>
@@ -279,6 +279,7 @@ export default {
       openTemplateSelector: false, // 是否显示模板选择弹窗
       propKey: "", // 选择模板时记录变更的模板对应属性Key
       openProgress: false, // 是否显示任务进度条
+      progressTitle: "",
       taskId: "", // 任务ID
       // 发布选项弹窗
       publishDialogVisible: false,
@@ -399,13 +400,10 @@ export default {
       this.publishDialogVisible = false;
       this.publishChild = false;
       catalogApi.publishCatalog(data).then(response => {
-        if (response.code == 200) {
-          if (response.data && response.data != "") {
-            this.taskId = response.data;
-            this.openProgress = true;
-          }
-        } else {
-          this.$modal.msgError(response.msg);
+        if (response.data && response.data != "") {
+          this.taskId = response.data;
+          this.progressTitle = "发布任务";
+          this.openProgress = true;
         }
       }); 
     },
@@ -415,14 +413,18 @@ export default {
         retrun;
       }
       catalogApi.delCatalog(this.catalogId).then(response => {
-        if (response.code === 200) {
-          this.$modal.msgSuccess("删除成功");
-          this.resetForm("form_info");
-          this.$emit("remove", this.catalogId);
-        } else {
-          this.$modal.msgError(response.msg);
+        if (response.data && response.data != "") {
+          this.taskId = response.data;
+          this.progressTitle = "删除栏目";
+          this.openProgress = true;
         }
       });
+    },
+    handleCloseProgress() {
+      if (this.progressTitle == '删除栏目') {
+          this.resetForm("form_info");
+          this.$emit("remove", this.catalogId); 
+      }
     },
     handleSelectTemplate (propKey) {
       this.propKey = propKey;
