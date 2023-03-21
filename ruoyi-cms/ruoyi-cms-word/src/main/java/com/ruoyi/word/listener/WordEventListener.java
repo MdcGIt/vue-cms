@@ -9,6 +9,7 @@ import com.ruoyi.article.ArticleContentType;
 import com.ruoyi.article.domain.CmsArticleDetail;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.domain.CmsSite;
+import com.ruoyi.contentcore.enums.ContentCopyType;
 import com.ruoyi.contentcore.listener.event.BeforeContentSaveEvent;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.word.properties.HotWordGroupsProperty;
@@ -33,7 +34,8 @@ public class WordEventListener {
 	@EventListener
 	public void afterContentSave(BeforeContentSaveEvent event) {
 		IContent<?> content = event.getContent();
-		if (ArticleContentType.ID.equals(content.getContentType())) {
+		if (ArticleContentType.ID.equals(content.getContentType()) && !content.getContentEntity().isLinkContent()
+				&& !ContentCopyType.isMapping(content.getContentEntity().getCopyType())) {
 			CmsArticleDetail articleDetail = (CmsArticleDetail) content.getExtendEntity();
 			String contentHtml = articleDetail.getContentHtml();
 			// 敏感词处理

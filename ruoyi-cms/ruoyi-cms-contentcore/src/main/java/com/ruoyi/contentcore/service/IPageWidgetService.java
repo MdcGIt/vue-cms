@@ -6,6 +6,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.contentcore.core.IPageWidget;
 import com.ruoyi.contentcore.core.IPageWidgetType;
+import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsPageWidget;
 
 import freemarker.template.TemplateException;
@@ -53,6 +54,13 @@ public interface IPageWidgetService extends IService<CmsPageWidget> {
 	 * @throws IOException
 	 */
 	public void deletePageWidgets(List<Long> pageWidgetIds);
+
+	/**
+	 * 删除栏目相关页面部件数据
+	 * 
+	 * @param catalog
+	 */
+	void deletePageWidgetsByCatalog(CmsCatalog catalog);
 
 	/**
 	 * 发布页面部件

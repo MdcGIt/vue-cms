@@ -41,6 +41,11 @@ public class CmsPageWidget extends BaseEntity {
 	 */
 	private Long catalogId;
 
+    /**
+     * 所属栏目祖级IDs
+     */
+    private String catalogAncestors;
+
 	/**
 	 * 类型
 	 */

@@ -33,6 +33,7 @@ import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.IResourceType;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Resource;
 import com.ruoyi.contentcore.core.impl.ResourceType_Image;
+import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsResource;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
@@ -188,7 +189,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	}
 
 	@Override
-	public R<String> deleteResource(List<Long> resourceIds) {
+	public void deleteResource(List<Long> resourceIds) {
 		List<CmsResource> resources = this.listByIds(resourceIds);
 		if (resources.size() > 0) {
 			CmsSite site = siteService.getSite(resources.get(0).getSiteId());
@@ -204,7 +205,6 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 				this.removeById(r.getResourceId());
 			});
 		}
-		return R.ok();
 	}
 
 	@Override

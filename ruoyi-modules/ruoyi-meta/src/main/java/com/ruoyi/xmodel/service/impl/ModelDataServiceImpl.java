@@ -27,26 +27,26 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelData> implements IModelDataService {
-	
+
 	private final XModelMapper modelMapper;
-	
+
 	private final XModelFieldMapper modelFieldMapper;
-	
+
 	private final XModelDataMapper modelDataMapper;
-	
+
 	@Override
-	public void saveModelData(Long modelId ,String pkValue, Map<String, Object> params) {
+	public void saveModelData(Long modelId, String pkValue, Map<String, Object> params) {
 		XModel model = this.modelMapper.selectById(modelId);
 		Assert.notNull(model, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("modelId", modelId));
 
-		LambdaQueryWrapper<XModelField> q = new LambdaQueryWrapper<XModelField>()
-				.eq(XModelField::getModelId, modelId);
+		LambdaQueryWrapper<XModelField> q = new LambdaQueryWrapper<XModelField>().eq(XModelField::getModelId, modelId);
 		List<XModelField> fields = this.modelFieldMapper.selectList(q);
-		
+
 		boolean insert = false;
 		Map<String, Object> dataMap = null;
 		if (XModelUtils.isDefaultTable(model.getTableName())) {
-			dataMap = this.getMap(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modelId).eq(XModelData::getPkValue, pkValue));
+			dataMap = this.getMap(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modelId)
+					.eq(XModelData::getPkValue, pkValue));
 			if (dataMap == null) {
 				insert = true;
 				dataMap = new HashMap<>();
@@ -62,7 +62,7 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 				dataMap.put(XModelUtils.PRIMARY_FIELD_NAME, pkValue);
 			}
 		}
-		
+
 		for (XModelField field : fields) {
 			Object fieldValue = params.get(field.getFieldName());
 			if (fieldValue == null) {
@@ -87,7 +87,8 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 					sbInsertValues.append("'").append(e.getValue()).append("'");
 				}
 			});
-			this.modelDataMapper.insertCustomModelData(model.getTableName(), sbInsertFields.toString(), sbInsertValues.toString());
+			this.modelDataMapper.insertCustomModelData(model.getTableName(), sbInsertFields.toString(),
+					sbInsertValues.toString());
 		} else {
 			StringBuilder sbUpdateFields = new StringBuilder();
 			dataMap.entrySet().forEach(e -> {
@@ -119,5 +120,15 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 			}
 		}
 		return Collections.emptyMap();
+	}
+
+	@Override
+	public void deleteModelData(Long modeId, String pkValue) {
+		XModel model = this.modelMapper.selectById(modeId);
+		if (XModelUtils.isDefaultTable(model.getTableName())) {
+			this.remove(this.lambdaQuery().eq(XModelData::getModelId, modeId).eq(XModelData::getPkValue, pkValue));
+		} else {
+			this.modelDataMapper.deleteCustomModelData(model.getTableName(), pkValue);
+		}
 	}
 }

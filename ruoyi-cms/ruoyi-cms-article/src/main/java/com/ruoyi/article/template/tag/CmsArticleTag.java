@@ -65,6 +65,9 @@ public class CmsArticleTag extends AbstractTag {
 			throw new TemplateException("Invalid contentId: " + contentId, env);
 		}
 		CmsContent content = this.contentMapper.selectById(contentId);
+		if (content.isLinkContent()) {
+			return Map.of(TemplateVariable_ArticleContent, this.wrap(env, StringUtils.EMPTY));
+		}
 		if (ContentCopyType.isMapping(content.getCopyType())) {
 			contentId = content.getCopyId();
 		}

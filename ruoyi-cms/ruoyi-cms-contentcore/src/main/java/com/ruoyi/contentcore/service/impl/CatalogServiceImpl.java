@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.redis.RedisCache;
@@ -36,6 +37,7 @@ import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.fixed.config.BackendContext;
 import com.ruoyi.contentcore.listener.event.AfterCatalogDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterCatalogSaveEvent;
+import com.ruoyi.contentcore.listener.event.BeforeCatalogDeleteEvent;
 import com.ruoyi.contentcore.mapper.CmsCatalogMapper;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
@@ -183,23 +185,25 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public CmsCatalog deleteCatalog(long catalogId) {
 		CmsCatalog catalog = this.getById(catalogId);
-
-		long childCount = this.lambdaQuery().eq(CmsCatalog::getParentId, catalog.getCatalogId()).count();
+		applicationContext.publishEvent(new BeforeCatalogDeleteEvent(this, catalog));
+		
+		AsyncTaskManager.setTaskMessage("正在删除栏目数据");
+		long childCount = lambdaQuery().eq(CmsCatalog::getParentId, catalog.getCatalogId()).count();
 		Assert.isTrue(childCount == 0, ContentCoreErrorCode.DEL_CHILD_FIRST::exception);
 
 		if (catalog.getParentId() > 0) {
-			CmsCatalog parentCatalog = this.getById(catalog.getParentId());
+			CmsCatalog parentCatalog = getById(catalog.getParentId());
 			parentCatalog.setChildCount(parentCatalog.getChildCount() - 1);
-			this.updateById(parentCatalog);
+			updateById(parentCatalog);
 		}
 		// 删除栏目
-		this.removeById(catalogId);
-
-		this.clearCache(catalog);
-		this.applicationContext.publishEvent(new AfterCatalogDeleteEvent(this, catalog));
+		removeById(catalogId);
+		// 清除缓存
+		clearCache(catalog);
+		applicationContext.publishEvent(new AfterCatalogDeleteEvent(this, catalog));
 		return catalog;
 	}
 

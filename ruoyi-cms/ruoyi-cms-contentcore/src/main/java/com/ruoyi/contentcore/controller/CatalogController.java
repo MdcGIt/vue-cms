@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.async.AsyncTask;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -78,6 +79,8 @@ public class CatalogController extends BaseRestController {
 
 	private final List<IContentType> contentTypes;
 
+	private final AsyncTaskManager asyncTaskManager;
+	
 	/**
 	 * 查询栏目数据列表
 	 * 
@@ -152,8 +155,15 @@ public class CatalogController extends BaseRestController {
 	 */
 	@DeleteMapping("/{catalogId}")
 	public R<String> remove(@PathVariable("catalogId") @Min(1) Long catalogId) {
-		catalogService.deleteCatalog(catalogId);
-		return R.ok();
+		AsyncTask task = new AsyncTask() {
+			
+			@Override
+			public void run0() throws Exception {
+				catalogService.deleteCatalog(catalogId);
+			}
+		};
+		this.asyncTaskManager.execute(task);
+		return R.ok(task.getTaskId());
 	}
 
 	/**

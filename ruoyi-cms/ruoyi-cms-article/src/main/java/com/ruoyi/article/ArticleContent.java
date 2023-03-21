@@ -24,33 +24,37 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 	@Override
 	public Long add() {
 		super.add();
-		CmsArticleDetail articleDetail = this.getExtendEntity();
-		articleDetail.setContentId(this.getContentEntity().getContentId());
-		// 处理内部链接
-		String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
-		// 处理文章正文远程图片
-		if (YesOrNo.isYes(articleDetail.getDownloadRemoteImage())) {
-			AsyncTaskManager.setTaskPercent(90);
-			contentHtml = this.getArticleService().downloadRemoteImages(contentHtml, this.getSite(),
-					this.getOperator().getUsername());
-			articleDetail.setContentHtml(contentHtml);
-		}
-		this.getArticleService().save(articleDetail);
-		
-		if (StringUtils.isEmpty(this.getContentEntity().getLogo()) && AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
-			// 正文首图作为logo
-			this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
+		if (!this.getContentEntity().isLinkContent()
+				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+			CmsArticleDetail articleDetail = this.getExtendEntity();
+			articleDetail.setContentId(this.getContentEntity().getContentId());
+			// 处理内部链接
+			String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
+			// 处理文章正文远程图片
+			if (YesOrNo.isYes(articleDetail.getDownloadRemoteImage())) {
+				AsyncTaskManager.setTaskPercent(90);
+				contentHtml = this.getArticleService().downloadRemoteImages(contentHtml, this.getSite(),
+						this.getOperator().getUsername());
+				articleDetail.setContentHtml(contentHtml);
+			}
+			this.getArticleService().save(articleDetail);
+
+			if (StringUtils.isEmpty(this.getContentEntity().getLogo())
+					&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
+				// 正文首图作为logo
+				this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
+			}
 		}
 		this.getContentService().save(this.getContentEntity());
-		return articleDetail.getContentId();
+		return this.getContentEntity().getContentId();
 	}
 
 	@Override
 	public Long save() {
 		super.save();
-
-		// 非映射内容修改文章详情
-		if (!ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		// 非映射内容或标题内容修改文章详情
+		if (!this.getContentEntity().isLinkContent()
+				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
 			CmsArticleDetail articleDetail = this.getExtendEntity();
 			// 处理内部链接
 			String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
@@ -62,8 +66,9 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 			}
 			articleDetail.setContentHtml(contentHtml);
 			this.getArticleService().updateById(articleDetail);
-			
-			if (StringUtils.isEmpty(this.getContentEntity().getLogo()) && AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
+
+			if (StringUtils.isEmpty(this.getContentEntity().getLogo())
+					&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
 				// 正文首图作为logo
 				this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
 			}
@@ -92,7 +97,8 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 	@Override
 	public void delete() {
 		super.delete();
-		if (!ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.getContentEntity().isLinkContent()
+				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
 			CmsArticleDetail extendEntity = this.getExtendEntity();
 			this.getArticleService().removeById(extendEntity);
 		}
@@ -109,7 +115,7 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 			this.getArticleService().save(newArticleDetail);
 		}
 	}
-	
+
 	@Override
 	public String getFullText() {
 		return super.getFullText() + " " + HtmlUtils.clean(this.getExtendEntity().getContentHtml());

@@ -124,8 +124,9 @@ public class PageWidgetController extends BaseRestController {
 		pw.setPageWidgetEntity(pageWidget);
 		pw.setOperator(StpAdminUtil.getLoginUser());
 		if (pageWidget.getCatalogId() != null && pageWidget.getCatalogId() > 0) {
-			Long siteId = this.catalogService.getCatalog(pageWidget.getCatalogId()).getSiteId();
-			pageWidget.setSiteId(siteId);
+			CmsCatalog catalog = this.catalogService.getCatalog(pageWidget.getCatalogId());
+			pageWidget.setSiteId(catalog.getSiteId());
+			pageWidget.setCatalogAncestors(catalog.getAncestors());
 		} else {
 			CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 			pw.getPageWidgetEntity().setSiteId(site.getSiteId());

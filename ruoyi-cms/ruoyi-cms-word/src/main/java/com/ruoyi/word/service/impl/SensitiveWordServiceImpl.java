@@ -43,6 +43,9 @@ public class SensitiveWordServiceImpl extends ServiceImpl<CmsSensitiveWordMapper
 	
 	@Override
 	public String replaceSensitiveWords(String text, String replacement) {
+		if (StringUtils.isBlank(text)) {
+			return text;
+		}
 		if (StringUtils.isBlank(replacement)) {
 			replacement = WordConstants.SENSITIVE_WORD_REPLACEMENT;
 		}

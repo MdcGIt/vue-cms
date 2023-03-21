@@ -103,7 +103,8 @@ public class ResourceController extends BaseRestController {
 	@DeleteMapping("/{resourceIds}")
 	public R<String> delResources(@PathVariable("resourceIds") Long[] resourceIds) {
 		Assert.notEmpty(resourceIds, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception("resourceIds"));
-		return this.resourceService.deleteResource(Arrays.asList(resourceIds));
+		this.resourceService.deleteResource(Arrays.asList(resourceIds));
+		return R.ok();
 	}
 
 	@PostMapping("/upload")
