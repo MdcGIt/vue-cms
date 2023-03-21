@@ -169,7 +169,7 @@ import { getTemplateList, getTemplateDetail, renameTemplate, addTemplate, delTem
 export default {
   name: "CmsTemplate",
   data () {
-    var validatePath = (rule, value, callback) => {
+    const validatePath = (rule, value, callback) => {
         if (value === '' || !value.endsWith(this.templateSuffix)) {
           callback(new Error("模板文件名称不能为空且后缀必须为：" + this.templateSuffix));
         } else {

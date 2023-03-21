@@ -1,9 +1,13 @@
 package com.ruoyi.system.security;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.security.IUserType;
+import com.ruoyi.system.service.ISysPermissionService;
+import com.ruoyi.system.service.ISysRoleService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -12,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 public class AdminUserType implements IUserType {
 
 	public static final String TYPE = "sys_user";
+	
+	private final ISysPermissionService permissionService;
+	
+	private final ISysRoleService roleService;
 
 	static {
 		// 调用一次StpAdminUtil中的方法，保证其可以尽早的初始化 StpLogic ,@see SaManager.setConfig
@@ -26,5 +34,16 @@ public class AdminUserType implements IUserType {
 	@Override
 	public String getName() {
 		return I18nUtils.get("SATOKEN.USERTYPE.ADMIN");
+	}
+	
+	@Override
+	public List<String> getPermissionList(Long loginUid) {
+		return this.permissionService.getPermissionListByUser(loginUid);
+	}
+	
+
+	@Override
+	public List<String> getRoleList(Long loginUid) {
+		return roleService.selectRoleKeysByUserId(loginUid);
 	}
 }

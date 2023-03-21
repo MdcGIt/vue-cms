@@ -52,6 +52,12 @@
 			<artifactId>ruoyi-stat</artifactId>
 		</dependency>
 
+		<!-- 会员模块 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-member</artifactId>
+		</dependency>
+
 		<!-- 文章 -->
 		<dependency>
 			<groupId>com.ruoyi</groupId>

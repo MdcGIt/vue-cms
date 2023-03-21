@@ -212,7 +212,7 @@ export default {
       // 表单校验
       rules: {
         filePath: [
-          { required: true, message: "文件名不能为空", trigger: "blur" },
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ]
       },
       openUploadDialog: false,

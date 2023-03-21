@@ -174,13 +174,13 @@ export default {
           { required: true, message: "名称不能为空", trigger: "blur" }
         ],
         code: [
-          { required: true, message: "编码不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ],
         publishPipeCode: [
           { required: true, message: "发布通道不能为空", trigger: "blur" }
         ],
         path: [
-          { required: true, message: "目录不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ]
       }
     };
