@@ -30,4 +30,12 @@ public interface IMemberService extends IService<Member> {
 	 * @param memberIds
 	 */
 	void deleteMembers(List<Long> memberIds);
+
+	/**
+	 * 重置用户密码
+	 * 
+	 * @param user 用户信息
+	 * @return 结果
+	 */
+	void resetPwd(MemberDTO dto);
 }

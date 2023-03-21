@@ -20,6 +20,8 @@ import com.ruoyi.system.config.converter.DictConverter;
 import com.ruoyi.system.fixed.dict.Gender;
 import com.ruoyi.system.fixed.dict.UserStatus;
 import com.ruoyi.system.fixed.dict.YesOrNo;
+import com.ruoyi.system.security.AdminUserType;
+import com.ruoyi.system.security.ISecurityUser;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -35,7 +37,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName(value = SysUser.TABLE_NAME, autoResultMap = true)
-public class SysUser extends BaseEntity {
+public class SysUser extends BaseEntity implements ISecurityUser {
 
 	private static final long serialVersionUID = 1L;
 
@@ -177,5 +179,35 @@ public class SysUser extends BaseEntity {
 	public boolean isAccountNonLocked() {
 		// 状态未锁定状态，并且锁定解锁时间未空或者未过期
 		return this.getStatus() != UserStatus.LOCK || (Objects.nonNull(this.getLockEndTime()) && LocalDateTime.now().isAfter(this.getLockEndTime()));
+	}
+	
+	/**
+	 * 数据变更标识
+	 */
+	@TableField(exist = false)
+	private boolean modified;
+
+	@Override
+	public String getType() {
+		return AdminUserType.TYPE;
+	}
+
+	@Override
+	public void disbaleUser() {
+		this.status = UserStatus.DISABLE;
+		this.modified = true;
+	}
+	
+	@Override
+	public void lockUser(LocalDateTime lockEndTime) {
+		this.status = UserStatus.LOCK;
+		this.lockEndTime = lockEndTime;
+		this.modified = true;
+	}
+
+	@Override
+	public void forceModifyPassword() {
+		this.forceModifyPassword = YesOrNo.YES;
+		this.modified = true;
 	}
 }

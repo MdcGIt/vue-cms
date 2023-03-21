@@ -15,16 +15,13 @@ import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysSecurityConfig;
-import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.exception.SysErrorCode;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
 import com.ruoyi.system.fixed.dict.PasswordRetryStrategy;
 import com.ruoyi.system.fixed.dict.PasswordRule;
 import com.ruoyi.system.fixed.dict.PasswordSensitive;
-import com.ruoyi.system.fixed.dict.UserStatus;
-import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.system.mapper.SysSecurityConfigMapper;
-import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.security.ISecurityUser;
 import com.ruoyi.system.service.ISecurityConfigService;
 
 import lombok.Getter;
@@ -39,8 +36,6 @@ public class SecurityConfigServiceImpl extends ServiceImpl<SysSecurityConfigMapp
 	private final static String CACHE_KEY_CONFIG = "sys:security:config";
 
 	private final static String CACHE_KEY_PWD_RETRY = "sys:security:pwdretry:";
-
-	private final SysUserMapper userMapper;
 
 	private final RedisCache redisCache;
 	
@@ -97,7 +92,7 @@ public class SecurityConfigServiceImpl extends ServiceImpl<SysSecurityConfigMapp
 	}
 
 	@Override
-	public void validPassword(SysUser user, String password) {
+	public void validPassword(ISecurityUser user, String password) {
 		SysSecurityConfig securityConfig = this.getSecurityConfig();
 		if (Objects.nonNull(securityConfig) && securityConfig.isEnable()) {
 			// 最大长度
@@ -121,66 +116,70 @@ public class SecurityConfigServiceImpl extends ServiceImpl<SysSecurityConfigMapp
 	}
 
 	@Override
-	public void forceModifyPwdAfterResetPwd(SysUser user) {
+	public void forceModifyPwdAfterResetPwd(ISecurityUser user) {
 		SysSecurityConfig securityConfig = this.getSecurityConfig();
 		if (Objects.nonNull(securityConfig) && securityConfig.isEnable()
 				&& securityConfig.checkForceModifyPwdAfterReset()) {
-			user.setForceModifyPassword(YesOrNo.YES);
+			user.forceModifyPassword();
 		}
 	}
 
 	@Override
-	public void forceModifyPwdAfterUserAdd(SysUser user) {
+	public void forceModifyPwdAfterUserAdd(ISecurityUser user) {
 		SysSecurityConfig securityConfig = this.getSecurityConfig();
 		if (Objects.nonNull(securityConfig) && securityConfig.isEnable()
 				&& securityConfig.checkForceModifyPwdAfterAdd()) {
-			user.setForceModifyPassword(YesOrNo.YES);
+			user.forceModifyPassword();
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
-	public void onLoginPasswordError(SysUser user) {
+	public boolean processLoginPasswordError(ISecurityUser user) {
 		SysSecurityConfig config = this.getSecurityConfig();
 		if (Objects.nonNull(config) && config.isEnable()) {
+			String cacheKey = user.getType() + "_" + user.getUserId();
 			// 缓存更新
-			LoginPwdRetry lpe = this.redisCache.getCacheMapValue(CACHE_KEY_PWD_RETRY, user.getUserId().toString());
+			LoginPwdRetry lpe = this.redisCache.getCacheMapValue(CACHE_KEY_PWD_RETRY, cacheKey);
 			if (Objects.isNull(lpe)) {
-				lpe = new LoginPwdRetry(user.getUserId());
+				lpe = new LoginPwdRetry(cacheKey);
 			}
 			lpe.inc();
-			this.redisCache.setCacheMapValue(CACHE_KEY_PWD_RETRY, user.getUserId().toString(), lpe);
+			this.redisCache.setCacheMapValue(CACHE_KEY_PWD_RETRY, cacheKey, lpe);
 			// 执行策略
 			int passwordRetryLimit = config.getPasswordRetryLimit();
 			if (passwordRetryLimit > 0 && lpe.getNum() >= passwordRetryLimit) {
 				// 达到指定次数上限触发安全策略
 				if (PasswordRetryStrategy.DISABLE.equals(config.getPasswordRetryStrategy())) {
-					user.setStatus(UserStatus.DISABLE);
+					user.disbaleUser();
 				} else if (PasswordRetryStrategy.LOCK.equals(config.getPasswordRetryStrategy())) {
-					user.setStatus(UserStatus.LOCK);
 					LocalDateTime lockEndTime = LocalDateTime.now().plusSeconds(config.getPasswordRetryLockSeconds());
-					user.setLockEndTime(lockEndTime);
+					user.lockUser(lockEndTime);
 				}
-				this.userMapper.updateById(user);
+				return false;
 			}
 		}
+		return true;
 	}
 
 	@Override
-	public void onLoginSuccess(SysUser user) {
-		this.redisCache.deleteCacheMapValue(CACHE_KEY_PWD_RETRY, user.getUserId().toString());
+	public void onLoginSuccess(ISecurityUser user) {
+		this.redisCache.deleteCacheMapValue(CACHE_KEY_PWD_RETRY, user.getType() + "_" + user.getUserId());
 	}
 
 	@Getter
 	@Setter
 	static class LoginPwdRetry {
-		private Long uid;
+		private String uid;
 		private Integer num = 0;
 		private LocalDate date = LocalDate.now();
 
 		public LoginPwdRetry() {
 		}
 
-		public LoginPwdRetry(Long uid) {
+		public LoginPwdRetry(String uid) {
 			this.uid = uid;
 		}
 

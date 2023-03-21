@@ -258,7 +258,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	@Override
 	public void resetPwd(SysUser user) {
 		SysUser db = this.getById(user.getUserId());
-		Assert.notNull(db, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(user.getUserId()));
+		Assert.notNull(db, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("userId", user.getUserId()));
 
 		this.securityConfigService.validPassword(db, user.getPassword());
 

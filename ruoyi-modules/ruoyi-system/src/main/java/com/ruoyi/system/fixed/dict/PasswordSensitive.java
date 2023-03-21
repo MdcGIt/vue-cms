@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import com.ruoyi.common.utils.ChineseSpelling;
 import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.fixed.FixedDictType;
+import com.ruoyi.system.security.ISecurityUser;
 import com.ruoyi.system.service.ISysDictTypeService;
 
 /**
@@ -47,7 +47,7 @@ public class PasswordSensitive extends FixedDictType {
 		super.addDictData("DICT." + TYPE + "." + BIRTHDAY, BIRTHDAY, 6);
 	}
 
-	public static boolean check(String[] values, String password, SysUser user) {
+	public static boolean check(String[] values, String password, ISecurityUser user) {
 		if (StringUtils.isEmpty(password) || StringUtils.isEmpty(values) || Objects.isNull(user)) {
 			return true;
 		}

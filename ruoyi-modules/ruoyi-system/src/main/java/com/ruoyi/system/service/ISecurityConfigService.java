@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.SysSecurityConfig;
-import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.security.ISecurityUser;
 
 public interface ISecurityConfigService extends IService<SysSecurityConfig> {
 	
@@ -40,20 +40,20 @@ public interface ISecurityConfigService extends IService<SysSecurityConfig> {
 	void deleteConfigs(List<Long> configIds);
 	
 	/**
-	 * 密码错误处理
+	 * 密码错误处理，如果触发了安全策略返回false。
 	 * 
 	 * @param user
 	 * @param password
 	 * @return
 	 */
-	public void onLoginPasswordError(SysUser user);
+	public boolean processLoginPasswordError(ISecurityUser user);
 
 	/**
 	 * 登录成功处理
 	 * 
 	 * @param user
 	 */
-	void onLoginSuccess(SysUser user);
+	void onLoginSuccess(ISecurityUser user);
 
 	/**
 	 * 校验密码
@@ -62,21 +62,21 @@ public interface ISecurityConfigService extends IService<SysSecurityConfig> {
 	 * @param password
 	 * @return
 	 */
-	void validPassword(SysUser user, String password);
+	void validPassword(ISecurityUser user, String password);
 
 	/**
 	 * 重置密码后强制下次登录修改密码
 	 * 
 	 * @param user
 	 */
-	void forceModifyPwdAfterResetPwd(SysUser user);
+	void forceModifyPwdAfterResetPwd(ISecurityUser user);
 
 	/**
 	 * 后台添加 用户后强制下次登录修改密码
 	 * 
 	 * @param user
 	 */
-	void forceModifyPwdAfterUserAdd(SysUser user);
+	void forceModifyPwdAfterUserAdd(ISecurityUser user);
 
 	/**
 	 * 启用指定安全配置

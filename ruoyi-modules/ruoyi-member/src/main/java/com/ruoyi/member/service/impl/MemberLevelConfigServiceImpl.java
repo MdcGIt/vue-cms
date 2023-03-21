@@ -92,7 +92,7 @@ public class MemberLevelConfigServiceImpl extends ServiceImpl<MemberLevelConfigM
 				.orderByAsc(MemberLevelConfig::getLevel).list();
 		LevelManager levelManager = this.getLevelManager(levelType);
 		if (list.size() > 0) {
-			levelManager.setLevelConfigs(
+			levelManager.resetLevelConfigs(
 					list.stream().collect(Collectors.toMap(MemberLevelConfig::getLevel, conf -> conf)));
 		}
 	}
