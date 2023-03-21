@@ -1,6 +1,6 @@
 package com.ruoyi.member.domain.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.ruoyi.common.security.domain.BaseDTO;
 
@@ -37,7 +37,7 @@ public class MemberDTO extends BaseDTO {
 	/**
 	 * 手机号
 	 */
-	private String phoneNumber;
+	private String phonenumber;
 	
 	/**
 	 * Email
@@ -47,7 +47,7 @@ public class MemberDTO extends BaseDTO {
 	/**
 	 * 出生日期
 	 */
-	private LocalDate birthday;
+	private LocalDateTime birthday;
 	
 	/**
 	 * 状态

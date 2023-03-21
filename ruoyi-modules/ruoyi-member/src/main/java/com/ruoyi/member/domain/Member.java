@@ -1,11 +1,15 @@
 package com.ruoyi.member.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.member.fixed.dict.MemberStatus;
+import com.ruoyi.member.security.MemberUserType;
+import com.ruoyi.system.security.ISecurityUser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName(Member.TABLE_NAME)
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements ISecurityUser {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -48,7 +52,7 @@ public class Member extends BaseEntity {
 	/**
 	 * 手机号
 	 */
-	private String phoneNumber;
+	private String phonenumber;
 	
 	/**
 	 * Email
@@ -58,7 +62,7 @@ public class Member extends BaseEntity {
 	/**
 	 * 出生日期
 	 */
-	private LocalDate birthday;
+	private LocalDateTime birthday;
 	
 	/**
 	 * 状态
@@ -83,5 +87,40 @@ public class Member extends BaseEntity {
 	/**
 	 * 最近登录时间
 	 */
-	private String lastLoginTime;
+	private LocalDateTime lastLoginTime;
+	
+	/**
+	 * 数据变更标识
+	 */
+	@TableField(exist = false)
+	private boolean modified;
+
+	@Override
+	public String getType() {
+		return MemberUserType.TYPE;
+	}
+
+	@Override
+	public Long getUserId() {
+		return this.memberId;
+	}
+
+	@Override
+	public String getRealName() {
+		return null;
+	}
+
+	@Override
+	public void disbaleUser() {
+		this.status = MemberStatus.DISABLE;
+	}
+
+	@Override
+	public void lockUser(LocalDateTime lockEndTime) {
+		this.status = MemberStatus.LOCK;
+	}
+
+	@Override
+	public void forceModifyPassword() {
+	}
 }

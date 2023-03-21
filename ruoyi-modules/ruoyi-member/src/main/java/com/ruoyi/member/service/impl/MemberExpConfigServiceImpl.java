@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -45,6 +47,8 @@ public class MemberExpConfigServiceImpl extends ServiceImpl<MemberExpConfigMappe
 	private final IMemberLevelExpLogService expLogService;
 
 	private final AsyncTaskManager taskManager;
+	
+	private final RedissonClient redissonClient;
 
 	@Override
 	public IExpOperation getExpOperation(String opType) {
@@ -96,36 +100,40 @@ public class MemberExpConfigServiceImpl extends ServiceImpl<MemberExpConfigMappe
 		this.removeByIds(expOperationIds);
 	}
 
-	/**
-	 * TODO 用户分布式锁
-	 */
 	@Override
 	public void triggerExpOperation(String expOpType, Long memberId) {
-		List<MemberLevelExpLog> logs = new ArrayList<>();
-		List<MemberExpConfig> list = this.lambdaQuery().eq(MemberExpConfig::getOpType, expOpType).list();
-		for (MemberExpConfig memberExpOperation : list) {
-			String levelType = memberExpOperation.getLevelType();
-			MemberLevel memberLevel = this.memberLevelService.getMemberLevel(memberId, levelType);
-			// 校验上限
-			if (!this.checkLimit(memberExpOperation, memberId)) {
-				continue;
+		// 获取用户锁，避免并发导致经验值错误
+		RLock lock = this.redissonClient.getLock("TriggerExpOp_" + memberId);
+		lock.lock();
+		try {
+			List<MemberLevelExpLog> logs = new ArrayList<>();
+			List<MemberExpConfig> list = this.lambdaQuery().eq(MemberExpConfig::getOpType, expOpType).list();
+			for (MemberExpConfig memberExpOperation : list) {
+				String levelType = memberExpOperation.getLevelType();
+				MemberLevel memberLevel = this.memberLevelService.getMemberLevel(memberId, levelType);
+				// 校验上限
+				if (!this.checkLimit(memberExpOperation, memberId)) {
+					continue;
+				}
+				// 执行通用经验值变更处理逻辑
+				LevelManager levelManager = memberLevelConfigService.getLevelManager(memberExpOperation.getLevelType());
+				levelManager.addExp(memberLevel, memberExpOperation.getExp());
+				this.memberLevelService.updateById(memberLevel);
+				// 记录经验值变更日志
+				MemberLevelExpLog expLog = new MemberLevelExpLog();
+				expLog.setLogTime(LocalDateTime.now());
+				expLog.setLevelType(levelType);
+				expLog.setMemberId(memberId);
+				expLog.setOpType(expOpType);
+				expLog.setChangeExp(memberExpOperation.getExp());
+				expLog.setLevel(memberLevel.getLevel());
+				expLog.setExp(memberLevel.getExp());
 			}
-			// 执行通用经验值变更处理逻辑
-			LevelManager levelManager = memberLevelConfigService.getLevelManager(memberExpOperation.getLevelType());
-			levelManager.addExp(memberLevel, memberExpOperation.getExp());
-			this.memberLevelService.updateById(memberLevel);
-			// 记录经验值变更日志
-			MemberLevelExpLog expLog = new MemberLevelExpLog();
-			expLog.setLogTime(LocalDateTime.now());
-			expLog.setLevelType(levelType);
-			expLog.setMemberId(memberId);
-			expLog.setOpType(expOpType);
-			expLog.setChangeExp(memberExpOperation.getExp());
-			expLog.setLevel(memberLevel.getLevel());
-			expLog.setExp(memberLevel.getExp());
-		}
-		if (logs.size() > 0) {
-			taskManager.execute(() -> this.expLogService.saveBatch(logs));
+			if (logs.size() > 0) {
+				taskManager.execute(() -> this.expLogService.saveBatch(logs));
+			}
+		} finally {
+			lock.unlock();
 		}
 	}
 

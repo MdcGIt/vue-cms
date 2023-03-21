@@ -42,7 +42,7 @@
               clearable
               style="width: 110px">
               <el-option 
-                v-for="dict in dict.type.CCMemberStatus"
+                v-for="dict in dict.type.MemberStatus"
                 :key="dict.value"
                 :label="dict.label"
                 :value="dict.value" />
@@ -113,7 +113,7 @@
         prop="phoneNumber" />
       <el-table-column label="状态" align="center" prop="status" width="80">
           <template slot-scope="scope">
-            <dict-tag :options="dict.type.CCMemberStatus" :value="scope.row.status"/>
+            <dict-tag :options="dict.type.MemberStatus" :value="scope.row.status"/>
           </template>
         </el-table-column>
       <el-table-column 
@@ -143,6 +143,10 @@
                        width="180" 
                        class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button size="mini"
+                     type="text"
+                     icon="el-icon-key"
+                     @click="handleResetPwd(scope.row)">重置密码</el-button>
           <el-button size="mini"
                      type="text"
                      icon="el-icon-edit"
@@ -190,7 +194,7 @@
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in dict.type.CCMemberStatus"
+              v-for="dict in dict.type.MemberStatus"
               :key="dict.value"
               :label="dict.value"
             >{{dict.label}}</el-radio>
@@ -208,11 +212,11 @@
   </div>
 </template>
 <script>
-import { getMemberList, getMemberDetail, addMember, updateMember, deleteMembers } from "@/api/member/member";
+import { getMemberList, getMemberDetail, addMember, updateMember, deleteMembers, resetMemberPassword } from "@/api/member/member";
 
 export default {
   name: "MemberList",
-  dicts: [ 'CCMemberStatus' ],
+  dicts: [ 'MemberStatus' ],
   data () {
     const validateMember = (rule, value, callback) => {
         if (this.form.userName == '' && this.form.phoneNumber == '' && this.form.email == '') {
@@ -249,7 +253,12 @@ export default {
       },
       // 表单校验
       rules: {
-        userName: [
+        userName: [,
+          {
+            pattern: /^[A-Za-z][A-Za-z0-9_]+$/,
+            message: "必须以字母开头，且只能为（大小写字母，数字，下滑线）",
+            trigger: "blur"
+          },
           { validator: validateMember }
         ],
         password: [
@@ -351,7 +360,18 @@ export default {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(function () { });
-    }
+    },
+    handleResetPwd(row) {
+      this.$prompt("请输入" + row.userName + "的新密码", this.$t('Common.Tips'), {
+        confirmButtonText: this.$t('Common.Confirm'),
+        cancelButtonText: this.$t('Common.Cancel'),
+        closeOnClickModal: false
+      }).then(({ value }) => {
+          resetMemberPassword(row.memberId, value).then(response => {
+            this.$modal.msgSuccess('修改成功，新密码是：' + value);
+          });
+        }).catch(() => {});
+    },
   }
 };
 </script>

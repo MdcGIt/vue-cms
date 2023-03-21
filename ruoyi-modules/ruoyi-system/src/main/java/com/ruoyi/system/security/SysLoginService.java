@@ -87,7 +87,10 @@ public class SysLoginService {
 		// 密码校验
 		if (!SecurityUtils.matches(password, user.getPassword())) {
 			// 密码错误处理策略
-			this.securityConfigService.onLoginPasswordError(user);
+			this.securityConfigService.processLoginPasswordError(user);
+			if (user.isModified()) {
+				this.userService.updateById(user);
+			}
 			// 记录日志
 			asyncTaskManager.execute(this.logininfoService.recordLogininfor(AdminUserType.TYPE, user.getUserId(),
 					user.getUserName(), LoginLogType.LOGIN, SuccessOrFail.FAIL, "Invalid password."));

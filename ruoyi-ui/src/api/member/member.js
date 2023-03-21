@@ -38,3 +38,15 @@ export function deleteMembers(memberIds) {
     data: memberIds
   })
 }
+
+export function resetMemberPassword(memberId, password) {
+  const data = {
+    "memberId": memberId,
+    "password": password
+  }
+  return request({
+    url: '/member/resetPassword',
+    method: 'put',
+    data: data
+  })
+}

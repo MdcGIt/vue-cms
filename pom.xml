@@ -21,6 +21,7 @@
 		<spring-boot.version>3.0.2</spring-boot.version>
 		<druid.version>1.2.16</druid.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+		<redisson.version>3.20.0</redisson.version>
 		<commons.io.version>2.11.0</commons.io.version>
 		<commons.text.version>1.10.0</commons.text.version>
 		<commons.fileupload.version>1.5</commons.fileupload.version>
@@ -70,6 +71,13 @@
 				<version>${spring-boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			
+			<!-- redission -->
+			<dependency>
+			    <groupId>org.redisson</groupId>
+			    <artifactId>redisson-spring-boot-starter</artifactId>
+			    <version>${redisson.version}</version>
 			</dependency>
 
 			<!-- 阿里数据库连接池 -->

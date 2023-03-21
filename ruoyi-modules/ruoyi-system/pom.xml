@@ -16,6 +16,10 @@
     </description>
 
     <dependencies>
+		<dependency>
+		    <groupId>org.redisson</groupId>
+		    <artifactId>redisson-spring-boot-starter</artifactId>
+		</dependency>
 		<!-- 解析客户端操作系统、浏览器等 -->
 		<dependency>
 			<groupId>eu.bitwalker</groupId>

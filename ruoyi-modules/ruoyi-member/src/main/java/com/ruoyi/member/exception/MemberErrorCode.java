@@ -47,7 +47,17 @@ public enum MemberErrorCode implements ErrorCode {
 	/**
 	 * 用户名/手机号/Email不能全为空。
 	 */
-	USERNAME_PHONE_EMAIL_ALL_EMPTY;
+	USERNAME_PHONE_EMAIL_ALL_EMPTY,
+	
+	/**
+	 * 会员用户不存在
+	 */
+	MEMBER_NOT_EXISTS,
+	
+	/**
+	 * 会员用户被封禁
+	 */
+	MEMBER_DISABLED;
 	
 	@Override
 	public String value() {

@@ -44,13 +44,13 @@ public class MemberController extends BaseRestController {
 	@GetMapping
 	public R<?> getPageList(@RequestParam(required = false) String userName,
 			@RequestParam(required = false) String nickName, @RequestParam(required = false) String email,
-			@RequestParam(required = false) String phoneNumber, @RequestParam(required = false) String status) {
+			@RequestParam(required = false) String phonenumber, @RequestParam(required = false) String status) {
 		PageRequest pr = this.getPageRequest();
 		Page<Member> page = this.memberService.lambdaQuery()
 				.like(StringUtils.isNotEmpty(userName), Member::getUserName, userName)
 				.like(StringUtils.isNotEmpty(nickName), Member::getNickName, nickName)
 				.like(StringUtils.isNotEmpty(email), Member::getEmail, email)
-				.like(StringUtils.isNotEmpty(phoneNumber), Member::getPhoneNumber, phoneNumber)
+				.like(StringUtils.isNotEmpty(phonenumber), Member::getPhonenumber, phonenumber)
 				.eq(StringUtils.isNotEmpty(status), Member::getStatus, status)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 		List<MemberListVO> list = page.getRecords().stream().map(m -> {
@@ -92,6 +92,13 @@ public class MemberController extends BaseRestController {
 	public R<?> delete(@RequestBody @NotEmpty List<Long> memberIds) {
 		IdUtils.validate(memberIds);
 		this.memberService.deleteMembers(memberIds);
+		return R.ok();
+	}
+
+	@PutMapping("/resetPassword")
+	public R<?> resetPassword(@RequestBody MemberDTO dto) {
+		dto.setOperator(StpAdminUtil.getLoginUser());
+		this.memberService.resetPwd(dto);
 		return R.ok();
 	}
 }
