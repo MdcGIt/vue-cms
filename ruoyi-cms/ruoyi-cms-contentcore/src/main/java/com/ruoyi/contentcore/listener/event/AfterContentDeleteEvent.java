@@ -4,6 +4,9 @@ import org.springframework.context.ApplicationEvent;
 
 import com.ruoyi.contentcore.core.IContent;
 
+import lombok.Getter;
+
+@Getter
 public class AfterContentDeleteEvent extends ApplicationEvent {
 	
 	private static final long serialVersionUID = 1L;
@@ -13,9 +16,5 @@ public class AfterContentDeleteEvent extends ApplicationEvent {
 	public AfterContentDeleteEvent(Object source, IContent<?> content) {
 		super(source);
 		this.content = content;
-	}
-
-	public IContent<?> getContent() {
-		return content;
 	}
 }

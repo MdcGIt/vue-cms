@@ -293,7 +293,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	@Transactional
 	public void deleteUserByIds(List<Long> userIds) {
 		for (Long userId : userIds) {
-			Assert.isFalse(Constants.SUPER_ADMIN.equals(userId), SysErrorCode.SUPERADMIN_DELETE::exception);
+			Assert.isFalse(Constants.SUPER_ADMIN == userId.longValue(), SysErrorCode.SUPERADMIN_DELETE::exception);
 		}
 		// 删除用户与角色关联
 		userRoleMapper.delete(new LambdaQueryWrapper<SysUserRole>().in(SysUserRole::getUserId, userIds));

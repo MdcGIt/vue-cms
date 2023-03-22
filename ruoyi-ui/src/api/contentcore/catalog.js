@@ -58,6 +58,14 @@ export function delCatalog(catalogId) {
   })
 }
 
+// 转移栏目
+export function moveCatalog(fromCatalogId, toCatalogId) {
+  return request({
+    url: '/cms/catalog/move/' + fromCatalogId + "/" + toCatalogId,
+    method: 'post'
+  })
+}
+
 // 发布栏目
 export function publishCatalog(data) {
   return request({

@@ -225,7 +225,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 			CmsContent cmsContent = this.getById(contentId);
 			Assert.notNull(cmsContent, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
 
-			if (cmsContent.getCatalogId() == dto.getCatalogId()) {
+			if (cmsContent.getCatalogId().equals(dto.getCatalogId())) {
 				continue;
 			}
 			CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());

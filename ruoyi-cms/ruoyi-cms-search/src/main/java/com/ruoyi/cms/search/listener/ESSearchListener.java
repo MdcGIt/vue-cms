@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.ruoyi.cms.search.service.ContentIndexService;
 import com.ruoyi.contentcore.core.IContent;
+import com.ruoyi.contentcore.listener.event.AfterCatalogMoveEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentOfflineEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentPublishEvent;
@@ -48,5 +49,11 @@ public class ESSearchListener {
 		} catch (ElasticsearchException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@EventListener
+	public void afterCatalogMoveEvent(AfterCatalogMoveEvent event) {
+		log.debug("Rebuild escontent after catalog move: " + event.getFromCatalog().getName());
+		this.searchService.rebuildCatalogIndex(event.getFromCatalog(), true);
 	}
 }

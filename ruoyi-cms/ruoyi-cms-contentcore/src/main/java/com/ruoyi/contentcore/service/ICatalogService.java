@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -122,8 +123,9 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * 
 	 * @param fromCatalog
 	 * @param toCatalog
+	 * @return 
 	 */
-	void moveCatalog(CmsCatalog fromCatalog, CmsCatalog toCatalog);
+	AsyncTask moveCatalog(CmsCatalog fromCatalog, CmsCatalog toCatalog);
 	
 	/**
 	 * 配置静态化模板上下文中的静态化文件路径

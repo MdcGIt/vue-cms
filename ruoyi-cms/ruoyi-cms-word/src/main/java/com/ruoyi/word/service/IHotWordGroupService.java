@@ -7,7 +7,32 @@ import com.ruoyi.word.domain.CmsHotWordGroup;
 
 public interface IHotWordGroupService extends IService<CmsHotWordGroup> {
 
-	void deleteHotWordGroups(List<Long> groupIds);
-
+	/**
+	 * 获取站点所有热词分组
+	 * 
+	 * @param siteId
+	 * @return
+	 */
 	List<CmsHotWordGroup> getHotWordGroupsBySiteId(Long siteId);
+
+	/**
+	 * 添加热词分组
+	 * 
+	 * @param group
+	 */
+	void addHotWordGroup(CmsHotWordGroup group);
+
+	/**
+	 * 修改热词分组
+	 * 
+	 * @param group
+	 */
+	void updateHotWordGroup(CmsHotWordGroup group);
+
+	/**
+	 * 删除热词分组
+	 * 
+	 * @param groupIds
+	 */
+	void deleteHotWordGroups(List<Long> groupIds);
 }

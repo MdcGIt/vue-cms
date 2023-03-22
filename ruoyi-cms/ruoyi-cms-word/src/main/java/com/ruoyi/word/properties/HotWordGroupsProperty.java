@@ -35,11 +35,11 @@ public class HotWordGroupsProperty implements IProperty {
 	
 	@Override
 	public Class<?> valueClass() {
-		return Long[].class;
+		return String[].class;
 	}
 	
-	public static Long[] getHotWordGroupIds(Map<String, Object> firstProps, Map<String, Object> secondProps) {
+	public static String[] getHotWordGroupCodes(Map<String, Object> firstProps, Map<String, Object> secondProps) {
 		String propValue = ConfigPropertyUtils.getStringValue(ID, firstProps, secondProps);
-		return JacksonUtils.from(propValue, Long[].class);
+		return JacksonUtils.from(propValue, String[].class);
 	}
 }

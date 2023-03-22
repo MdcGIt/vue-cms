@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.storage.IFileStorageType;
 import com.ruoyi.common.storage.StorageReadArgs;
@@ -33,7 +32,6 @@ import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.IResourceType;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Resource;
 import com.ruoyi.contentcore.core.impl.ResourceType_Image;
-import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsResource;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;

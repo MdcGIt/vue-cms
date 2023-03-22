@@ -44,9 +44,9 @@ public class WordEventListener {
 			contentHtml = errorProneWordService.replaceErrorProneWords(contentHtml);
 			// 热词处理
 			CmsSite site = siteService.getSite(content.getCatalog().getSiteId());
-			Long[] groupIds = HotWordGroupsProperty.getHotWordGroupIds(content.getCatalog().getConfigProps(), site.getConfigProps());
-			if (Objects.nonNull(groupIds) && groupIds.length > 0) {
-				contentHtml = hotWordService.replaceHotWords(contentHtml, groupIds, null, null);
+			String[] groupCodes = HotWordGroupsProperty.getHotWordGroupCodes(content.getCatalog().getConfigProps(), site.getConfigProps());
+			if (Objects.nonNull(groupCodes) && groupCodes.length > 0) {
+				contentHtml = hotWordService.replaceHotWords(contentHtml, groupCodes, null, null);
 			}
 			articleDetail.setContentHtml(contentHtml);
 		}

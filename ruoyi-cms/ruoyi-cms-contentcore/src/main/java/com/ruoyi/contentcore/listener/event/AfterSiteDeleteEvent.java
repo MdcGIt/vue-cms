@@ -4,6 +4,9 @@ import org.springframework.context.ApplicationEvent;
 
 import com.ruoyi.contentcore.domain.CmsSite;
 
+import lombok.Getter;
+
+@Getter
 public class AfterSiteDeleteEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = 1L;
@@ -13,9 +16,5 @@ public class AfterSiteDeleteEvent extends ApplicationEvent {
 	public AfterSiteDeleteEvent(Object source, CmsSite site) {
 		super(source);
 		this.site = site;
-	}
-
-	public CmsSite getSite() {
-		return site;
 	}
 }

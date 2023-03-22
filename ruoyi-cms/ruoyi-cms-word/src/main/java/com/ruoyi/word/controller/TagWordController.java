@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * <p>
- *  TAG词前端控制器
+ * TAG词前端控制器
  * </p>
  *
  * @author 兮玥
@@ -43,39 +43,38 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/cms/tagword")
 public class TagWordController extends BaseRestController {
 
-    private final ISiteService siteService;
-    
+	private final ISiteService siteService;
+
 	private final ITagWordService tagWordService;
-    
-    @GetMapping
-    public R<?> getPageList(@RequestParam("groupId") @Min(1) Long groupId,
-    		@RequestParam(value = "query", required = false) String query) {
-    	PageRequest pr = this.getPageRequest();
-    	Page<CmsTagWord> page = this.tagWordService.lambdaQuery()
-    			.eq(CmsTagWord::getGroupId, groupId)
+
+	@GetMapping
+	public R<?> getPageList(@RequestParam("groupId") @Min(1) Long groupId,
+			@RequestParam(value = "query", required = false) String query) {
+		PageRequest pr = this.getPageRequest();
+		Page<CmsTagWord> page = this.tagWordService.lambdaQuery().eq(CmsTagWord::getGroupId, groupId)
 				.like(StringUtils.isNotEmpty(query), CmsTagWord::getWord, query)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
-    	page.getRecords().forEach(tag -> {
-    		if (StringUtils.isNotEmpty(tag.getLogo())) {
-    			tag.setSrc(InternalUrlUtils.getActualPreviewUrl(tag.getLogo()));
-    		}
-    	});
-    	return this.bindDataTable(page);
-    }
+		page.getRecords().forEach(tag -> {
+			if (StringUtils.isNotEmpty(tag.getLogo())) {
+				tag.setSrc(InternalUrlUtils.getActualPreviewUrl(tag.getLogo()));
+			}
+		});
+		return this.bindDataTable(page);
+	}
 
 	@PostMapping
 	public R<?> add(@RequestBody CmsTagWord tagWord) {
-    	CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-    	tagWord.setSiteId(site.getSiteId());
-    	tagWord.createBy(StpAdminUtil.getLoginUser().getUsername());
-    	this.tagWordService.addTagWord(tagWord);
+		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
+		tagWord.setSiteId(site.getSiteId());
+		tagWord.createBy(StpAdminUtil.getLoginUser().getUsername());
+		this.tagWordService.addTagWord(tagWord);
 		return R.ok();
 	}
 
 	@PutMapping
 	public R<?> edit(@RequestBody CmsTagWord tagWord) {
-    	tagWord.updateBy(StpAdminUtil.getLoginUser().getUsername());
-    	this.tagWordService.editTagWord(tagWord);
+		tagWord.updateBy(StpAdminUtil.getLoginUser().getUsername());
+		this.tagWordService.editTagWord(tagWord);
 		return R.ok();
 	}
 
@@ -85,4 +84,3 @@ public class TagWordController extends BaseRestController {
 		return R.ok();
 	}
 }
-

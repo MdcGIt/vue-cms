@@ -4,6 +4,9 @@ import org.springframework.context.ApplicationEvent;
 
 import com.ruoyi.contentcore.domain.CmsCatalog;
 
+import lombok.Getter;
+
+@Getter
 public class AfterCatalogDeleteEvent extends ApplicationEvent {
 	
 	private static final long serialVersionUID = 1L;
@@ -13,9 +16,5 @@ public class AfterCatalogDeleteEvent extends ApplicationEvent {
 	public AfterCatalogDeleteEvent(Object source, CmsCatalog catalog) {
 		super(source);
 		this.catalog = catalog;
-	}
-
-	public CmsCatalog getCatalog() {
-		return this.catalog;
 	}
 }

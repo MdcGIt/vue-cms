@@ -178,7 +178,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 	public void updateMenu(SysMenu menu) {
 		SysMenu db = this.getById(menu.getMenuId());
 		Assert.notNull(db, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(menu.getMenuId()));
-		Assert.isFalse(menu.getParentId() == menu.getMenuId(),
+		Assert.isFalse(menu.getParentId().equals(menu.getMenuId()),
 				() -> CommonErrorCode.SYSTEM_ERROR.exception("父节点不能选择自己"));
 		boolean checkFrameUrl = YesOrNo.isYes(menu.getIsFrame()) && !ServletUtils.isHttpUrl(menu.getPath());
 		Assert.isFalse(checkFrameUrl, () -> CommonErrorCode.SYSTEM_ERROR.exception("外链地址必须以http(s)://开头"));

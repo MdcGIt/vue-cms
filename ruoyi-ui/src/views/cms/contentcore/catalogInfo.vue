@@ -34,12 +34,20 @@
         </el-dropdown>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success"
+        <el-button type="primary"
                     icon="el-icon-edit"
                     size="mini"
                     plain
                     :disabled="!this.catalogId"
                     @click="handleChangeVisible">{{ catalogVisible ? "隐藏" : "显示" }}</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary"
+                    icon="el-icon-rank"
+                    size="mini"
+                    plain
+                    :disabled="!this.catalogId"
+                    @click="handleMoveCatalog">移动</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-popconfirm title="删除栏目会删除包括子栏目下所有数据确定删除吗？"
@@ -266,7 +274,7 @@ export default {
       return this.form_info.configProps && this.form_info.configProps.ExtendModel != null && this.form_info.configProps.ExtendModel.length > 0;
     },
     catalogVisible() {
-      return this.form_info.visibleFlag == "0";
+      return this.form_info.visibleFlag == "Y";
     }
   },
   data () {
@@ -275,6 +283,7 @@ export default {
       loading: false,
       activeName: 'basicInfo',
       openCatalogSelector: false,
+      catalogSelectorFor: undefined,
       openContentSelector: false,
       openTemplateSelector: false, // 是否显示模板选择弹窗
       propKey: "", // 选择模板时记录变更的模板对应属性Key
@@ -302,7 +311,7 @@ export default {
           { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_/]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ],
         catalogType: [
           { required: true, message: "栏目类型不能为空", trigger: "blur" }
@@ -369,7 +378,7 @@ export default {
       });
     },
     handleChangeVisible () {
-        const visible = this.form_info.visibleFlag == "1" ? "0" : "1";
+        const visible = this.form_info.visibleFlag == "Y" ? "N" : "Y";
         catalogApi.changeVisible(this.form_info.catalogId, visible).then(response => {
           if (response.code === 200) {
               this.$modal.msgSuccess(response.msg);
@@ -420,8 +429,12 @@ export default {
         }
       });
     },
+    handleMoveCatalog() {
+      this.catalogSelectorFor = "MoveCatalog";
+      this.openCatalogSelector = true;
+    },
     handleCloseProgress() {
-      if (this.progressTitle == '删除栏目') {
+      if (this.progressTitle == '删除栏目' || this.progressTitle == '转移栏目') {
           this.resetForm("form_info");
           this.$emit("remove", this.catalogId); 
       }
@@ -459,10 +472,26 @@ export default {
       }
     },
     handleCatalogSelectorOk(catalogs) {
-      if (catalogs && catalogs.length > 0) {
-        this.form_info.redirectUrl = catalogs[0].internalUrl;
+      if (this.catalogSelectorFor == 'MoveCatalog') {
+        let toCatalog = "0";
+        console.log(catalogs)
+        if (catalogs && catalogs.length > 0) {
+          toCatalog = catalogs[0].id;
+        }
+        catalogApi.moveCatalog(this.catalogId, toCatalog).then(response => {
+          if (response.data && response.data != "") {
+            this.taskId = response.data;
+            this.progressTitle = "转移栏目";
+            this.openProgress = true;
+          }
+        })
+      } else {
+        if (catalogs && catalogs.length > 0) {
+          this.form_info.redirectUrl = catalogs[0].internalUrl;
+        }
       }
       this.openCatalogSelector = false;
+      this.catalogSelectorFor = undefined;
     },
     handleCatalogSelectorClose() {
       this.openCatalogSelector = false;
