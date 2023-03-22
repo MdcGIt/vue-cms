@@ -3,7 +3,6 @@ package com.ruoyi.contentcore.core;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.SortUtils;
 import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.contentcore.core.impl.InternalDataType_Content;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
@@ -31,7 +29,6 @@ import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CatalogUtils;
-import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 
 public abstract class AbstractContent<T> implements IContent<T> {
@@ -326,7 +323,6 @@ public abstract class AbstractContent<T> implements IContent<T> {
 
 	@Override
 	public void offline() {
-		List<CmsContent> list = new ArrayList<>();
 		// 已发布内容删除静态页面
 		if (ContentStatus.isPublished(this.getContentEntity().getStatus())) {
 			try {
@@ -337,37 +333,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		}
 		this.getContentEntity().setStatus(ContentStatus.OFFLINE);
 		this.getContentEntity().updateBy(this.getOperator().getUsername());
-		list.add(this.getContentEntity());
-		// TODO 以下操作逻辑异步优化
-		// 映射关联内容同步下线
-		LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<CmsContent>()
-				.gt(CmsContent::getCopyType, ContentCopyType.Mapping.value())
-				.eq(CmsContent::getCopyId, this.getContentEntity().getContentId());
-		List<CmsContent> mappingList = this.getContentService().list(q);
-		for (CmsContent c : mappingList) {
-			if (ContentStatus.PUBLISHED == c.getStatus()) {
-				try {
-					this.getContentService().deleteStaticFiles(c);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			c.setStatus(ContentStatus.OFFLINE);
-			c.updateBy(this.getOperator().getUsername());
-			list.add(c);
-		}
-		this.getContentService().updateBatchById(mappingList);
-		// 标题内容同步下线
-		String internalUrl = InternalUrlUtils.getInternalUrl(InternalDataType_Content.ID,
-				this.getContentEntity().getContentId());
-		List<CmsContent> linkList = this.getContentService().list(new LambdaQueryWrapper<CmsContent>()
-				.eq(CmsContent::getLinkFlag, YesOrNo.YES).eq(CmsContent::getRedirectUrl, internalUrl));
-		for (CmsContent c : linkList) {
-			c.setStatus(ContentStatus.OFFLINE);
-			c.updateBy(this.getOperator().getUsername());
-			list.add(c);
-		}
-		this.getContentService().updateBatchById(list);
+		this.getContentService().updateById(this.getContentEntity());
 	}
 
 	@Override

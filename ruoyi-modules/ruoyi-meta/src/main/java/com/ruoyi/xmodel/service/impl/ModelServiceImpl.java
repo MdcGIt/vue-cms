@@ -103,7 +103,6 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 	@Transactional
 	public void deleteModel(List<Long> modelIds) {
 		for (Long modelId : modelIds) {
-			// TODO 校验模型是否被使用
 			XModel model = this.getById(modelId);
 			if (model != null) {
 				// 移除模型字段数据

@@ -3,13 +3,12 @@ package com.ruoyi.contentcore.service;
 import java.io.IOException;
 import java.util.List;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ruoyi.common.domain.R;
 import com.ruoyi.contentcore.domain.CmsResource;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface IResourceService extends IService<CmsResource> {
 	
@@ -41,7 +40,7 @@ public interface IResourceService extends IService<CmsResource> {
 	 * @param resourceIds
 	 * @return
 	 */
-	R<String> deleteResource(List<Long> resourceIds);
+	void deleteResource(List<Long> resourceIds);
 
 	/**
 	 * 获取资源访问路径

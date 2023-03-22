@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.async.AsyncTask;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -78,6 +80,8 @@ public class CatalogController extends BaseRestController {
 
 	private final List<IContentType> contentTypes;
 
+	private final AsyncTaskManager asyncTaskManager;
+	
 	/**
 	 * 查询栏目数据列表
 	 * 
@@ -152,8 +156,15 @@ public class CatalogController extends BaseRestController {
 	 */
 	@DeleteMapping("/{catalogId}")
 	public R<String> remove(@PathVariable("catalogId") @Min(1) Long catalogId) {
-		catalogService.deleteCatalog(catalogId);
-		return R.ok();
+		AsyncTask task = new AsyncTask() {
+			
+			@Override
+			public void run0() throws Exception {
+				catalogService.deleteCatalog(catalogId);
+			}
+		};
+		this.asyncTaskManager.execute(task);
+		return R.ok(task.getTaskId());
 	}
 
 	/**
@@ -283,18 +294,20 @@ public class CatalogController extends BaseRestController {
 	 * @return
 	 */
 	@PostMapping("/move/{from}/{to}")
-	public R<?> moveCatalog(@PathVariable("from") Long fromCatalogId, @PathVariable("to") Long toCatalogId) {
+	public R<?> moveCatalog(@PathVariable("from") @Min(1) Long fromCatalogId, @PathVariable("to") Long toCatalogId) {
 		CmsCatalog fromCatalog = this.catalogService.getCatalog(fromCatalogId);
 		Assert.notNull(fromCatalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("fromCatalogId", fromCatalogId));
-		CmsCatalog toCatalog = this.catalogService.getCatalog(toCatalogId);
-		Assert.notNull(toCatalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("toCatalogId", toCatalogId));
-
-		// 目标栏目不能是源栏目的子栏目或自身，且目标栏目不是当前栏目的父级栏目
-		boolean isSelfOfChild = toCatalog.getAncestors().startsWith(fromCatalog.getAncestors())
-				|| toCatalog.getCatalogId() == fromCatalog.getParentId();
-		Assert.isFalse(isSelfOfChild, ContentCoreErrorCode.CATALOG_MOVE_TO_SELF_OR_CHILD::exception);
-		this.catalogService.moveCatalog(fromCatalog, toCatalog);
-
-		return R.ok();
+		CmsCatalog toCatalog = null;
+		if (IdUtils.validate(toCatalogId)) {
+			toCatalog = this.catalogService.getCatalog(toCatalogId);
+			Assert.notNull(toCatalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("toCatalogId", toCatalogId));
+	
+			// 目标栏目不能是源栏目的子栏目或自身，且目标栏目不是当前栏目的父级栏目
+			boolean isSelfOfChild = toCatalog.getAncestors().startsWith(fromCatalog.getAncestors())
+					|| toCatalog.getCatalogId().equals(fromCatalog.getParentId());
+			Assert.isFalse(isSelfOfChild, ContentCoreErrorCode.CATALOG_MOVE_TO_SELF_OR_CHILD::exception);
+		}
+		AsyncTask task = this.catalogService.moveCatalog(fromCatalog, toCatalog);
+		return R.ok(task.getTaskId());
 	}
 }

@@ -1,5 +1,7 @@
 package com.ruoyi.article.domain.vo;
 
+import java.util.Objects;
+
 import org.springframework.beans.BeanUtils;
 
 import com.ruoyi.article.domain.CmsArticleDetail;
@@ -38,7 +40,9 @@ public class ArticleVO extends ContentVO {
 		if (StringUtils.isNotEmpty(dto.getLogo())) {
 			dto.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(dto.getLogo()));
 		}
-		BeanUtils.copyProperties(articleDetail, dto);
+		if (Objects.nonNull(articleDetail)) {
+			BeanUtils.copyProperties(articleDetail, dto);
+		}
 		return dto;
 	}
 }

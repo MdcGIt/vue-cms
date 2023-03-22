@@ -115,7 +115,7 @@
           label="热词分组"
           prop="HotWordGroups">
           <el-checkbox-group v-model="form_extend.HotWordGroups">
-            <el-checkbox v-for="group in hotWordGroups" :label="group.groupId" :key="group.groupId">{{ group.name }}</el-checkbox>
+            <el-checkbox v-for="group in hotWordGroups" :label="group.code" :key="group.code">{{ group.name }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-card>

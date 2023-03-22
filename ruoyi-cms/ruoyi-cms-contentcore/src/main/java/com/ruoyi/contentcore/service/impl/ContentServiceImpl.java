@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.async.AsyncTaskManager;
@@ -66,7 +67,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	private final IPublishPipeService publishPipeService;
 
 	private final AsyncTaskManager asyncTaskManager;
-	
+
 	@Override
 	public void deleteContents(List<Long> contentIds) {
 		for (Long contentId : contentIds) {
@@ -82,8 +83,19 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	public boolean deleteContentsByCatalogId(long catalogId) {
-		// TODO Auto-generated method stub
+	public boolean deleteContentsByCatalog(CmsCatalog catalog) {
+		int pageSize = 100;
+		long total = this.lambdaQuery().likeRight(CmsContent::getCatalogAncestors, catalog.getAncestors()).count();
+
+		for (int i = 0; i * pageSize < total; i++) {
+			AsyncTaskManager.setTaskProgressInfo((int) (i * pageSize / total), "正在栏目删除内容：" + (i * pageSize) + " / " + total);
+			this.lambdaQuery().likeRight(CmsContent::getCatalogAncestors, catalog.getAncestors())
+					.page(new Page<>(i, pageSize, false)).getRecords().forEach(content -> {
+						IContentType contentType = ContentCoreUtils.getContentType(content.getContentType());
+						IContent<?> icontent = contentType.loadContent(content);
+						icontent.delete();
+					});
+		}
 		return false;
 	}
 
@@ -147,7 +159,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	@Transactional
 	public AsyncTask addContent(IContent<?> content) {
 		AsyncTask task = new AsyncTask() {
-			
+
 			@Override
 			public void run0() {
 				applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
@@ -165,7 +177,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	@Transactional
 	public AsyncTask saveContent(IContent<?> content) {
 		AsyncTask task = new AsyncTask() {
-			
+
 			@Override
 			public void run0() {
 				applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
@@ -213,11 +225,12 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 			CmsContent cmsContent = this.getById(contentId);
 			Assert.notNull(cmsContent, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
 
-			if (cmsContent.getCatalogId() == dto.getCatalogId()) {
+			if (cmsContent.getCatalogId().equals(dto.getCatalogId())) {
 				continue;
 			}
 			CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
-			Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
+			Assert.notNull(catalog,
+					() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
 
 			if (!catalog.getCatalogType().equals(CatalogType_Common.ID)) {
 				continue;
@@ -262,7 +275,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 			IContent<?> content = ct.loadContent(c);
 			content.setOperator(operator);
 			content.offline();
-			
+
 			this.applicationContext.publishEvent(new AfterContentOfflineEvent(this, content));
 		}
 	}
@@ -288,8 +301,9 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 		CmsSite site = this.siteService.getSite(siteId);
 
 		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
-		String repeatTitleCheckType = RepeatTitleCheckProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
-		
+		String repeatTitleCheckType = RepeatTitleCheckProperty.getValue(catalog.getConfigProps(),
+				site.getConfigProps());
+
 		if (StringUtils.isNotEmpty(repeatTitleCheckType)) {
 			if (RepeatTitleCheckProperty.CheckType_Site.equals(repeatTitleCheckType)) {
 				LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<CmsContent>()

@@ -127,6 +127,7 @@ export default {
       siteName: undefined,
       // 当前选中栏目ID
       selectedCatalogId: undefined,
+      selectedCatalogPath: "",
       treeExpandedKeys: [],
       defaultProps: {
         children: "children",
@@ -141,10 +142,10 @@ export default {
           { required: true, message: "栏目名称不能为空", trigger: "blur" }
         ],
         alias: [
-          { required: true, message: "栏目别名不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ],
         path: [
-          { required: true, message: "栏目目录不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_/]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
         ],
         catalogType: [
           { required: true, message: "栏目类型不能为空", trigger: "blur" }
@@ -193,6 +194,7 @@ export default {
     // 根节点点击事件
     handleTreeRootClick() {
       this.selectedCatalogId = undefined;
+      this.selectedCatalogPath = "";
       this.$cache.local.remove("LastSelectedCatalogId");
       this.$refs.tree.setCurrentKey(null);
       this.$emit("node-click", null);
@@ -200,6 +202,7 @@ export default {
     // 节点单击事件
     handleNodeClick (data) {
       this.selectedCatalogId = data.id;
+      this.selectedCatalogPath = data.props.path;
       this.$cache.local.set("LastSelectedCatalogId", this.selectedCatalogId);
       this.$emit("node-click", data);
     },
@@ -215,7 +218,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd () {
       this.resetAddForm();
-      this.form.parentId = this.selectedCatalogId;
+      this.form = { parentId: this.selectedCatalogId, path: this.selectedCatalogPath };
       this.diagOpen = true;
     },
     /** 新增栏目提交 */

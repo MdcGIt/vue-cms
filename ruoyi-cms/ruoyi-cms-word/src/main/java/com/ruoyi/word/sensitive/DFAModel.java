@@ -17,7 +17,7 @@ import com.ruoyi.common.utils.StringUtils;
 public class DFAModel<T> {
 
 	private final Map<String, DFANode<T>> root = new HashMap<>();
-//    
+    
 //	public void load(Set<String> blackList, Set<String> whiteList) {
 //		this.addWords(blackList, SensitiveWordType.BLACK);
 //		this.addWords(whiteList, SensitiveWordType.WHITE);

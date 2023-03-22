@@ -1,26 +1,32 @@
 package com.ruoyi.word.service;
 
+import java.util.Map;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.word.domain.CmsHotWord;
 
 public interface IHotWordService extends IService<CmsHotWord> {
 
 	/**
-	 * 按指定热词分组处理内容中的热词
+	 * 缓存热词对象
+	 */
+	public record HotWord(String word, String url, String target) {
+		
+	}
+
+	/**
+	 * 获取指定分组热词集合
 	 * 
-	 * @param text
-	 * @param groupIds
-	 * @param target
-	 * @param replacementTemplate
+	 * @param groupCode
 	 * @return
 	 */
-	String replaceHotWords(String text, Long[] groupIds, String target, String replacementTemplate);
+	Map<String, HotWord> getHotWords(String groupCode);
 
 	/**
 	 * 按指定热词分组处理内容中的热词
 	 * 
 	 * @param text
-	 * @param groupIds
+	 * @param groupCodes
 	 * @param target
 	 * @param replacementTemplate
 	 * @return

@@ -122,6 +122,13 @@ public class AsyncTaskManager {
     protected static void removeCurrent() {
     	CURRENT.remove();
     }
+    
+    public static void checkInterrupt() throws InterruptedException {
+    	AsyncTask task = CURRENT.get();
+    	if (Objects.nonNull(task)) {
+    		task.checkInterrupt();
+    	}
+    }
 
     public static String addErrMessage(String message) {
     	AsyncTask task = CURRENT.get();

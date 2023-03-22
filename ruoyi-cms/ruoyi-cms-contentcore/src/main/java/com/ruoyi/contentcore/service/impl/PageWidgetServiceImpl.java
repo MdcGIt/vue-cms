@@ -10,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.contentcore.core.IPageWidget;
 import com.ruoyi.contentcore.core.IPageWidgetType;
+import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsPageWidget;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.mapper.CmsPageWidgetMapper;
@@ -29,7 +31,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 		implements IPageWidgetService {
 
 	private final Map<String, IPageWidgetType> pageWidgetTypes;
-	
+
 	@Override
 	public IPageWidgetType getPageWidgetType(String type) {
 		IPageWidgetType pwt = this.pageWidgetTypes.get(IPageWidgetType.BEAN_NAME_PREFIX + type);
@@ -54,8 +56,10 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 	@Override
 	@Transactional
 	public void addPageWidget(IPageWidget pw) {
-		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(), pw.getPageWidgetEntity().getCode(), null);
-		Assert.isTrue(checkCodeUnique, () -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
+		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
+				pw.getPageWidgetEntity().getCode(), null);
+		Assert.isTrue(checkCodeUnique,
+				() -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
 
 		pw.add();
 	}
@@ -64,11 +68,13 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 	@Transactional
 	public void savePageWidget(IPageWidget pw) {
 		CmsPageWidget pageWidget = this.getById(pw.getPageWidgetEntity().getPageWidgetId());
-		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId", pw.getPageWidgetEntity().getPageWidgetId()));
+		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId",
+				pw.getPageWidgetEntity().getPageWidgetId()));
 
-		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(), pw.getPageWidgetEntity().getCode(),
-				pw.getPageWidgetEntity().getPageWidgetId());
-		Assert.isTrue(checkCodeUnique, () -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
+		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
+				pw.getPageWidgetEntity().getCode(), pw.getPageWidgetEntity().getPageWidgetId());
+		Assert.isTrue(checkCodeUnique,
+				() -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
 
 		pw.save();
 	}
@@ -78,6 +84,18 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 	public void deletePageWidgets(List<Long> pageWidgetIds) {
 		List<CmsPageWidget> pageWidgets = this.listByIds(pageWidgetIds);
 		for (CmsPageWidget pageWidget : pageWidgets) {
+			IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
+			IPageWidget pw = pwt.loadPageWidget(pageWidget);
+			pw.delete();
+		}
+	}
+
+	@Override
+	public void deletePageWidgetsByCatalog(CmsCatalog catalog) {
+		List<CmsPageWidget> list = this.lambdaQuery().likeRight(CmsPageWidget::getCatalogAncestors, catalog.getAncestors()).list();
+		for (int i = 0; i < list.size(); i++) {
+			CmsPageWidget pageWidget = list.get(i);
+			AsyncTaskManager.setTaskProgressInfo((i * 100) / list.size(), "正在删除页面部件：" + i + " / " + list.size());
 			IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
 			IPageWidget pw = pwt.loadPageWidget(pageWidget);
 			pw.delete();

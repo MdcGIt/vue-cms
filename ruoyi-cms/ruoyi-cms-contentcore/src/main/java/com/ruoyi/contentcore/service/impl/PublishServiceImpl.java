@@ -539,6 +539,9 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 			logger.warn("【{}】栏目设置不静态化：{} - {}", publishPipeCode, catalog.getName(), content.getTitle());
 			return; // 不静态化直接跳过
 		}
+		if (content.isLinkContent()) {
+			return; // 标题内容不需要静态化
+		}
 		final String detailTemplate = getDetailTemplate(site, catalog, content, publishPipeCode);
 		File templateFile = this.templateService.findTemplateFile(site, detailTemplate, publishPipeCode);
 		if (templateFile == null) {

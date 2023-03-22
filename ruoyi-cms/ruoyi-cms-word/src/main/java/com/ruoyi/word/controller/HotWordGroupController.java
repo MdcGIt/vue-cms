@@ -18,12 +18,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
-import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.SortUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
@@ -68,7 +64,7 @@ public class HotWordGroupController extends BaseRestController {
 		List<CmsHotWordGroup> list = this.hotWordGroupService.getHotWordGroupsBySiteId(site.getSiteId());
 		List<Map<String, Object>> options = new ArrayList<>();
 		list.forEach(g -> {
-			options.add(Map.of("groupId", g.getGroupId(), "name", g.getName()));
+			options.add(Map.of("code", g.getCode(), "name", g.getName()));
 		});
 		return this.bindDataTable(options);
 	}
@@ -94,39 +90,17 @@ public class HotWordGroupController extends BaseRestController {
 	@PostMapping
 	public R<?> add(@RequestBody CmsHotWordGroup group) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		if (!checkUnique(site.getSiteId(), null, group.getName(), group.getCode())) {
-			return R.fail("分组名称或编码冲突");
-		}
 		group.setSiteId(site.getSiteId());
-		group.setGroupId(IdUtils.getSnowflakeId());
-		group.setSortFlag(SortUtils.getDefaultSortValue());
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
-		this.hotWordGroupService.save(group);
+		this.hotWordGroupService.addHotWordGroup(group);
 		return R.ok(group.getGroupId());
 	}
 
 	@PutMapping
 	public R<String> edit(@RequestBody CmsHotWordGroup group) {
-		CmsHotWordGroup dbGroup = this.hotWordGroupService.getById(group.getGroupId());
-		Assert.notNull(dbGroup, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("groupId", group.getGroupId()));
-		
-		if (!checkUnique(dbGroup.getSiteId(), group.getGroupId(), group.getName(), group.getCode())) {
-			return R.fail("分组名称或编码冲突");
-		}
-		dbGroup.setName(group.getName());
-		dbGroup.setCode(group.getCode());
-		dbGroup.setRemark(group.getRemark());
-		dbGroup.updateBy(StpAdminUtil.getLoginUser().getUsername());
-		this.hotWordGroupService.updateById(group);
+		group.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
+		this.hotWordGroupService.updateHotWordGroup(group);
 		return R.ok();
-	}
-
-	private boolean checkUnique(Long siteId, Long groupId, String name, String code) {
-		LambdaQueryWrapper<CmsHotWordGroup> q = new LambdaQueryWrapper<CmsHotWordGroup>()
-				.eq(CmsHotWordGroup::getSiteId, siteId)
-				.ne(groupId != null && groupId > 0, CmsHotWordGroup::getGroupId, groupId)
-				.and(wrapper -> wrapper.eq(CmsHotWordGroup::getName, name).or().eq(CmsHotWordGroup::getCode, code));
-		return this.hotWordGroupService.count(q) == 0;
 	}
 
 	@DeleteMapping

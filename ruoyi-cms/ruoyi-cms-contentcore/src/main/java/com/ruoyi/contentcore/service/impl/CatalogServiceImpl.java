@@ -1,6 +1,7 @@
 package com.ruoyi.contentcore.service.impl;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.async.AsyncTask;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.redis.RedisCache;
@@ -27,6 +31,7 @@ import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.core.impl.CatalogType_Link;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Catalog;
 import com.ruoyi.contentcore.domain.CmsCatalog;
+import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.CatalogApplyChildrenDTO;
 import com.ruoyi.contentcore.domain.dto.CatalogDTO;
@@ -35,8 +40,11 @@ import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.fixed.config.BackendContext;
 import com.ruoyi.contentcore.listener.event.AfterCatalogDeleteEvent;
+import com.ruoyi.contentcore.listener.event.AfterCatalogMoveEvent;
 import com.ruoyi.contentcore.listener.event.AfterCatalogSaveEvent;
+import com.ruoyi.contentcore.listener.event.BeforeCatalogDeleteEvent;
 import com.ruoyi.contentcore.mapper.CmsCatalogMapper;
+import com.ruoyi.contentcore.mapper.CmsContentMapper;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CatalogUtils;
@@ -60,6 +68,10 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	private final ISiteService siteService;
 
 	private final RedisCache redisCache;
+
+	private final CmsContentMapper contentMapper;
+
+	private final AsyncTaskManager asyncTaskManager;
 
 	@Override
 	public CmsCatalog getCatalog(Long catalogId) {
@@ -111,7 +123,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 					String.valueOf(c.getParentId()), c.getName(), c.getParentId() == 0);
 			String internalUrl = InternalUrlUtils.getInternalUrl(InternalDataType_Catalog.ID, c.getCatalogId());
 			String logoSrc = InternalUrlUtils.getActualPreviewUrl(c.getLogo());
-			Map<String, Object> props = Map.of("internalUrl", internalUrl, "logo",
+			Map<String, Object> props = Map.of("path", c.getPath(), "internalUrl", internalUrl, "logo",
 					c.getLogo() == null ? "" : c.getLogo(), "logoSrc", logoSrc == null ? "" : logoSrc, "description",
 					c.getDescription() == null ? "" : c.getDescription());
 			treeNode.setProps(props);
@@ -183,23 +195,25 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public CmsCatalog deleteCatalog(long catalogId) {
 		CmsCatalog catalog = this.getById(catalogId);
+		applicationContext.publishEvent(new BeforeCatalogDeleteEvent(this, catalog));
 
-		long childCount = this.lambdaQuery().eq(CmsCatalog::getParentId, catalog.getCatalogId()).count();
+		AsyncTaskManager.setTaskMessage("正在删除栏目数据");
+		long childCount = lambdaQuery().eq(CmsCatalog::getParentId, catalog.getCatalogId()).count();
 		Assert.isTrue(childCount == 0, ContentCoreErrorCode.DEL_CHILD_FIRST::exception);
 
 		if (catalog.getParentId() > 0) {
-			CmsCatalog parentCatalog = this.getById(catalog.getParentId());
+			CmsCatalog parentCatalog = getById(catalog.getParentId());
 			parentCatalog.setChildCount(parentCatalog.getChildCount() - 1);
-			this.updateById(parentCatalog);
+			updateById(parentCatalog);
 		}
 		// 删除栏目
-		this.removeById(catalogId);
-
-		this.clearCache(catalog);
-		this.applicationContext.publishEvent(new AfterCatalogDeleteEvent(this, catalog));
+		removeById(catalogId);
+		// 清除缓存
+		clearCache(catalog);
+		applicationContext.publishEvent(new AfterCatalogDeleteEvent(this, catalog));
 		return catalog;
 	}
 
@@ -296,26 +310,93 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		if (StringUtils.equals(visible, catalog.getVisibleFlag())) {
 			return;
 		}
-		catalog.setVisibleFlag(visible);
+		catalog.setVisibleFlag(YesOrNo.isYes(visible) ? YesOrNo.YES : YesOrNo.NO);
 		this.updateById(catalog);
 		this.clearCache(catalog);
 	}
 
 	@Override
-	public void moveCatalog(CmsCatalog fromCatalog, CmsCatalog toCatalog) {
-		// 所有需要迁移的栏目
-		List<CmsCatalog> list = this.list(
-				new LambdaQueryWrapper<CmsCatalog>().likeRight(CmsCatalog::getAncestors, fromCatalog.getAncestors()));
+	public AsyncTask moveCatalog(CmsCatalog fromCatalog, CmsCatalog toCatalog) {
+		// 所有需要迁移的子栏目，按Ancestors排序依次处理
+		List<CmsCatalog> children = this.lambdaQuery().ne(CmsCatalog::getCatalogId, fromCatalog.getCatalogId())
+				.likeRight(CmsCatalog::getAncestors, fromCatalog.getAncestors()).orderByAsc(CmsCatalog::getAncestors)
+				.list();
 		// 判断栏目ancestors长度是否会超过限制
-		int maxTreelevel = toCatalog == null ? 1 : toCatalog.getTreeLevel() + 1;
-		for (CmsCatalog catalog : list) {
-			maxTreelevel = Math.max(maxTreelevel,
-					catalog.getTreeLevel() - fromCatalog.getTreeLevel() + toCatalog.getTreeLevel() + 1);
+		int baseTreeLevel = Objects.isNull(toCatalog) ? 1 : toCatalog.getTreeLevel() + 1;
+		int maxTreelevel = baseTreeLevel;
+		for (CmsCatalog catalog : children) {
+			maxTreelevel = Math.max(maxTreelevel, catalog.getTreeLevel() - fromCatalog.getTreeLevel() + baseTreeLevel);
 		}
 		Assert.isTrue(ContentCoreConsts.CATALOG_MAX_TREE_LEVEL >= maxTreelevel,
 				ContentCoreErrorCode.CATALOG_MAX_TREE_LEVEL::exception);
+		AsyncTask task = new AsyncTask() {
 
-		// TODO 修改fromCatalog.parentId，修改所有子栏目ancestors，修改原父级栏目相关数据
+			@Override
+			public void run0() throws Exception {
+				moveCatalog0(fromCatalog, toCatalog, children);
+			}
+		};
+		// 设置唯一任务ID避免同步执行，可能会导致数据错乱。
+		task.setTaskId("CatalogMove");
+		this.asyncTaskManager.execute(task);
+		return task;
+	}
+
+	private void moveCatalog0(CmsCatalog fromCatalog, CmsCatalog toCatalog, List<CmsCatalog> children) {
+		Map<Long, CmsCatalog> invokedCatalogs = new HashMap<>();
+		AsyncTaskManager.setTaskPercent(10);
+		// 1、原父级栏目子节点数-1
+		if (fromCatalog.getParentId() > 0) {
+			AsyncTaskManager.setTaskMessage("更新转移栏目原父级栏目数据");
+			CmsCatalog parent = this.getById(fromCatalog.getCatalogId());
+			parent.setChildCount(parent.getChildCount() - 1);
+			invokedCatalogs.put(parent.getCatalogId(), parent);
+		}
+		// 2、来源栏目修改相关属性
+		AsyncTaskManager.setTaskMessage("更新转移栏目数据");
+		fromCatalog.setParentId(Objects.isNull(toCatalog) ? 0 : toCatalog.getCatalogId());
+		String fromCatalogAncestors = CatalogUtils.getCatalogAncestors(toCatalog, fromCatalog.getCatalogId());
+		fromCatalog.setAncestors(fromCatalogAncestors);
+		fromCatalog.setTreeLevel(Objects.isNull(toCatalog) ? 1 : toCatalog.getTreeLevel() + 1);
+		fromCatalog.setSortFlag(SortUtils.getDefaultSortValue());
+		invokedCatalogs.put(fromCatalog.getCatalogId(), fromCatalog);
+		// 3、依次处理所有栏目
+		for (int i = 0; i < children.size(); i++) {
+			AsyncTaskManager.setTaskMessage("更新转移栏目子栏目数据");
+			CmsCatalog child = children.get(i);
+			CmsCatalog parent = invokedCatalogs.get(child.getParentId());
+			child.setAncestors(CatalogUtils.getCatalogAncestors(parent.getAncestors(), child.getCatalogId()));
+			child.setTreeLevel(parent.getTreeLevel() + 1);
+			invokedCatalogs.put(child.getCatalogId(), child);
+		}
+		// 4、目标栏目子栏目数+1
+		if (Objects.nonNull(toCatalog)) {
+			AsyncTaskManager.setTaskMessage("更新转移目标栏目数据");
+			toCatalog.setChildCount(toCatalog.getChildCount() + 1);
+			invokedCatalogs.put(toCatalog.getCatalogId(), toCatalog);
+		}
+		AsyncTaskManager.setTaskPercent(20);
+		// 5、批量更新数据库
+		invokedCatalogs.values().forEach(catalog -> {
+			this.lambdaUpdate().set(CmsCatalog::getParentId, catalog.getParentId())
+					.set(CmsCatalog::getAncestors, catalog.getAncestors())
+					.set(CmsCatalog::getTreeLevel, catalog.getTreeLevel())
+					.set(CmsCatalog::getChildCount, catalog.getChildCount())
+					.eq(CmsCatalog::getCatalogId, catalog.getCatalogId()).update();
+		});
+		AsyncTaskManager.setTaskPercent(30);
+		// 6、更新缓存
+		invokedCatalogs.values().forEach(c -> clearCache(c));
+		// 7、更新除目标栏目外的所有栏目内容数据
+		AsyncTaskManager.setTaskProgressInfo(40, "更新转移栏目及其子栏目内容");
+		invokedCatalogs.values().forEach(catalog -> {
+			if (toCatalog == null || catalog.getCatalogId() != toCatalog.getCatalogId()) {
+				new LambdaUpdateChainWrapper<>(contentMapper).set(CmsContent::getCatalogAncestors, catalog.getAncestors())
+						.eq(CmsContent::getCatalogId, catalog.getCatalogId()).update();
+			}
+		});
+		// 8、其他扩展，例如：重建栏目内容索引
+		this.applicationContext.publishEvent(new AfterCatalogMoveEvent(this, fromCatalog, toCatalog, children));
 	}
 
 	@Override
@@ -333,7 +414,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	public void saveCatalogExtends(Long catalogId, Map<String, Object> configs, String operator) {
 		CmsCatalog catalog = this.getCatalog(catalogId);
 		ConfigPropertyUtils.filterConfigProps(configs, IProperty.UseType.Catalog);
-		
+
 		catalog.setConfigProps(configs);
 		catalog.updateBy(operator);
 		this.updateById(catalog);

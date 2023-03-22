@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
-import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -54,23 +51,15 @@ public class ErrorProneWordController extends BaseRestController {
 
 	@PostMapping
 	public R<?> add(@RequestBody CmsErrorProneWord errorProneWord) {
-		errorProneWord.setWordId(IdUtils.getSnowflakeId());
 		errorProneWord.createBy(StpAdminUtil.getLoginUser().getUsername());
-		this.errorProneWordService.save(errorProneWord);
+		this.errorProneWordService.addErrorProneWord(errorProneWord);
 		return R.ok();
 	}
 
 	@PutMapping
 	public R<String> edit(@RequestBody CmsErrorProneWord errorProneWord) {
-		CmsErrorProneWord dbErrorProneWord = this.errorProneWordService.getById(errorProneWord.getWordId());
-		Assert.notNull(dbErrorProneWord,
-				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("wordId", errorProneWord.getWordId()));
-
-		dbErrorProneWord.setWord(errorProneWord.getWord());
-		dbErrorProneWord.setReplaceWord(errorProneWord.getReplaceWord());
-		dbErrorProneWord.setRemark(errorProneWord.getRemark());
-		dbErrorProneWord.updateBy(StpAdminUtil.getLoginUser().getUsername());
-		this.errorProneWordService.updateById(errorProneWord);
+		errorProneWord.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
+		this.errorProneWordService.updateErrorProneWord(errorProneWord);
 		return R.ok();
 	}
 

@@ -1,5 +1,7 @@
 package com.ruoyi.contentcore.util;
 
+import java.util.Objects;
+
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IInternalDataType;
 import com.ruoyi.contentcore.core.impl.CatalogType_Link;
@@ -26,6 +28,10 @@ public class CatalogUtils {
 			return parentAncestors + ANCESTORS_SPLITER + catalogId;
 		}
 		return catalogId.toString();
+	}
+
+	public static String getCatalogAncestors(CmsCatalog parent, Long catalogId) {
+		return getCatalogAncestors(Objects.isNull(parent) ? null : parent.getAncestors(), catalogId);
 	}
 	
 	/**

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,11 +36,14 @@ public class CmsHotWordGroup extends BaseEntity {
     /**
      * 名称
      */
+    @NotEmpty
     private String name;
 
     /**
      * 编码，唯一标识
      */
+    @NotEmpty
+	@Pattern(regexp = "^[A-Za-z0-9_]+$", message = "热词分组编码只能使用大小写字母、数字和下划线")
     private String code;
     
     /**

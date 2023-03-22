@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.storage.IFileStorageType;
 import com.ruoyi.common.storage.StorageReadArgs;
@@ -188,7 +187,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	}
 
 	@Override
-	public R<String> deleteResource(List<Long> resourceIds) {
+	public void deleteResource(List<Long> resourceIds) {
 		List<CmsResource> resources = this.listByIds(resourceIds);
 		if (resources.size() > 0) {
 			CmsSite site = siteService.getSite(resources.get(0).getSiteId());
@@ -204,7 +203,6 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 				this.removeById(r.getResourceId());
 			});
 		}
-		return R.ok();
 	}
 
 	@Override

@@ -10,5 +10,5 @@ public class Constants {
 	/**
 	 * 超级管理员账号ID，系统内唯一，主要开发使用
 	 */
-	public static final Long SUPER_ADMIN = 1L;
+	public static final long SUPER_ADMIN = 1L;
 }

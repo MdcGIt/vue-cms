@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.core.IContent;
+import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.dto.CopyContentDTO;
 import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
@@ -31,10 +32,10 @@ public interface IContentService extends IService<CmsContent> {
 	/**
 	 * 删除指定栏目内容
 	 * 
-	 * @param catalogId
+	 * @param catalog
 	 * @return
 	 */
-	public boolean deleteContentsByCatalogId(long catalogId);
+	public boolean deleteContentsByCatalog(CmsCatalog catalog);
 
 	/**
 	 * 获取内容链接
