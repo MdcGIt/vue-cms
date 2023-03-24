@@ -138,4 +138,7 @@ public interface IContentService extends IService<CmsContent> {
 	 * @throws IOException 
 	 */
 	public void deleteStaticFiles(CmsContent contentEntity) throws IOException;
+
+
+	public void addContent0(IContent<?> content);
 }

@@ -71,7 +71,7 @@
             class="mb8">
       <el-col :span="1.5">
         <el-popover placement="bottom-start"
-                    :width="addBtnPopoverWidth"
+                    :width="304"
                     trigger="click">
           <el-row style="margin-bottom:20px">
             <el-radio-group v-model="addContentType">
@@ -91,7 +91,7 @@
                       icon="el-icon-plus"
                       size="mini"
                       plain
-                      v-hasPermi="['contentcore:content:add']">新增
+                      v-hasPermi="['contentcore:content:add']">{{ $t("Common.Add") }}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
         </el-popover>
@@ -103,7 +103,7 @@
                     size="mini"
                     :disabled="multiple"
                     @click="handleDelete"
-                    v-hasPermi="['contentcore:content:delete']">删除
+                    v-hasPermi="['contentcore:content:delete']">{{ $t("Common.Delete") }}
         </el-button>
       </el-col>
     </el-row>
@@ -303,7 +303,6 @@ export default {
       openProgress: false,
       taskId: "",
       addContentType: "",
-      addBtnPopoverWidth: 200,
       openCatalogSelector: false, // 栏目选择弹窗
       isCopy: false,
       openContentSortDialog: false // 内容选择弹窗

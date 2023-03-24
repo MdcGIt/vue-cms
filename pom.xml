@@ -393,6 +393,13 @@
 				<version>${ruoyi.version}</version>
 			</dependency>
 
+			<!-- 音视频集 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-cms-media</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
+
 			<!-- 友链 -->
 			<dependency>
 				<groupId>com.ruoyi</groupId>

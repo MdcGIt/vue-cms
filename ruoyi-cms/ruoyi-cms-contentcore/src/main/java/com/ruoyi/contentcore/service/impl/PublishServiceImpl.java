@@ -53,6 +53,7 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
 import com.ruoyi.contentcore.template.ITemplateType;
 import com.ruoyi.contentcore.template.impl.CatalogTemplateType;
+import com.ruoyi.contentcore.template.impl.ContentTemplateType;
 import com.ruoyi.contentcore.template.impl.SiteTemplateType;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.PageWidgetUtils;
@@ -432,7 +433,7 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 			// init template datamode
 			TemplateUtils.initGlobalVariables(site, templateContext);
 			// init templateType data to datamode
-			ITemplateType templateType = this.templateService.getTemplateType(contentType.getTemplateType());
+			ITemplateType templateType = this.templateService.getTemplateType(ContentTemplateType.TypeId);
 			templateType.initTemplateData(content.getContentId(), templateContext);
 			// 分页链接
 			String contentLink = this.contentService.getContentLink(content, 1, publishPipeCode, isPreview);
@@ -556,8 +557,7 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 			// init template datamode
 			TemplateUtils.initGlobalVariables(site, templateContext);
 			// init templateType data to datamode
-			IContentType contentType = ContentCoreUtils.getContentType(content.getContentType());
-			ITemplateType templateType = this.templateService.getTemplateType(contentType.getTemplateType());
+			ITemplateType templateType = this.templateService.getTemplateType(ContentTemplateType.TypeId);
 			templateType.initTemplateData(content.getContentId(), templateContext);
 			// 静态化文件地址
 			this.setContentStaticPath(site, catalog, content, templateContext);

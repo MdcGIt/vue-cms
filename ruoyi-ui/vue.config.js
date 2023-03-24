@@ -68,6 +68,7 @@ module.exports = {
         minRatio: 0.8                   // 压缩率小于1才会压缩
       })
     ],
+    // externals: 'hls.js'
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test

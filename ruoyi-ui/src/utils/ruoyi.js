@@ -46,6 +46,26 @@ export function parseTime(time, pattern) {
   return time_str
 }
 
+// 毫秒数转时长显示
+export function transferDuration (milliseconds) {
+  const totalSeconds = milliseconds / 1000;
+  // hours
+  const hours = totalSeconds / 3600;
+  const hoursRound = Math.floor(hours);
+  const hoursStr = `${hoursRound > 0 ? `${hoursRound}时` : ''}`;
+  // minutes
+  const minutes = totalSeconds % 3600 / 60;
+  const minutesRound = Math.floor(minutes);
+  const minutesStr = `${minutesRound > 0 ? `${minutesRound}分` : ''}`;
+  // seconds
+  const seconds = totalSeconds % 3600 % 60;
+  const secondsRound = Math.floor(seconds)
+  const secondsStr = `${secondsRound > 0 ? `${secondsRound}秒` : ''}`
+
+  const str = `${hoursStr}${minutesStr}${secondsStr}`
+  return str
+}
+
 // 表单重置
 export function resetForm(refName) {
   if (this.$refs[refName]) {

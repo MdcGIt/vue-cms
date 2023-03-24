@@ -88,6 +88,12 @@
 			<artifactId>ruoyi-cms-image</artifactId>
 		</dependency>
 
+		<!-- 音视频集 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-cms-media</artifactId>
+		</dependency>
+
 		<!-- 友链 -->
 		<dependency>
 			<groupId>com.ruoyi</groupId>

@@ -22,6 +22,7 @@
 		<module>ruoyi-cms-word</module>
 		<module>ruoyi-cms-image</module>
 		<module>ruoyi-cms-search</module>
+		<module>ruoyi-cms-media</module>
 	</modules>
 	
 	<properties>

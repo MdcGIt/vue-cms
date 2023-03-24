@@ -44,7 +44,7 @@
                     <el-input v-model="form.subTitle" maxlength="120" show-word-limit />
                   </el-form-item>
                   <el-form-item
-                    label="标题新闻"
+                    label="链接内容"
                     prop="linkFlag">
                     <el-checkbox v-model="form.linkFlag" true-label="Y" false-label="N"></el-checkbox>
                   </el-form-item>
@@ -99,8 +99,17 @@
           </el-row>
           <el-row v-if="this.form.linkFlag !== 'Y' && this.contentType === 'image'">
             <el-col class="pr10">
-              <cms-image-album-editor v-model="form.imageList"
-                              @choose="handleSetLogo"></cms-image-album-editor>
+              <cms-image-editor v-model="form.imageList" @choose="handleSetLogo"></cms-image-editor>
+            </el-col>
+          </el-row>
+          <el-row v-if="this.form.linkFlag !== 'Y' && this.contentType === 'audio'">
+            <el-col class="pr10">
+              <cms-audio-editor v-model="form.audioList" :logo="form.logoSrc"></cms-audio-editor>
+            </el-col>
+          </el-row>
+          <el-row v-if="this.form.linkFlag !== 'Y' && this.contentType === 'video'">
+            <el-col class="pr10">
+              <cms-video-editor v-model="form.videoList"></cms-video-editor>
             </el-col>
           </el-row>
         </el-col>
@@ -218,7 +227,9 @@ import { getInitContentEditorData, addContent, saveContent, publishContent, lock
 import Sticky from '@/components/Sticky'
 import CKEditor5 from '@/components/CKEditor5';
 import CMSProgress from '@/views/components/Progress';
-import CMSImageAlbumEditor from '@/views/cms/imageAlbum/editor';
+import CMSImageEditor from '@/views/cms/imageAlbum/editor';
+import CMSAudioEditor from '@/views/cms/media/audioEditor';
+import CMSVideoEditor from '@/views/cms/media/videoEditor';
 import CMSLogoView from '@/views/cms/components/LogoView';
 import CMSResourceDialog from "@/views/cms/contentcore/resourceDialog";
 import CMSCatalogSelector from "@/views/cms/contentcore/catalogSelector";
@@ -238,7 +249,9 @@ export default {
     Sticky,
     'cms-template-selector': CMSTemplateSelector,
     'cms-progress': CMSProgress,
-    "cms-image-album-editor": CMSImageAlbumEditor,
+    "cms-image-editor": CMSImageEditor,
+    "cms-audio-editor": CMSAudioEditor,
+    "cms-video-editor": CMSVideoEditor,
     "cms-resource-dialog": CMSResourceDialog,
     "cms-logo-view": CMSLogoView,
     'cms-catalog-selector': CMSCatalogSelector,

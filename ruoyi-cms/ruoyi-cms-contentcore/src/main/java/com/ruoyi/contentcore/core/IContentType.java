@@ -36,13 +36,6 @@ public interface IContentType extends Comparable<IContentType> {
      */
     String getComponent();
 
-	/**
-	 * 内容模板类型
-	 * 
-	 * @return
-	 */
-	public String getTemplateType();
-
     /**
      * 显示顺序
      */

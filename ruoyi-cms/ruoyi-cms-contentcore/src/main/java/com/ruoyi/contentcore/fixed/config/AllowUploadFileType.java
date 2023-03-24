@@ -26,7 +26,7 @@ public class AllowUploadFileType extends FixedConfig {
 	public static final List<String> ALLOWED_UPLOAD_EXTENSION = List.of(
             "bmp", "gif", "jpg", "jpeg", "png", "webp", "psd", "ai", "tif", "tiff",
             "doc", "docx", "xls", "xlsx", "ppt", "pptx", "pdf", "fla", "swf", "js", "css", "shtml", "html", "htm", "txt", "ttf", "eot",
-            "mp4", "avi", "rmvb", "mpg", "flv", "mpeg", "rm", "mov", "wmv", "wmp", "mp3", "wma", "wav",
+            "mp4", "avi", "rmvb", "mpg", "flv", "mpeg", "rm", "mov", "wmv", "wmp", "mp3", "wma", "wav", "ogg",
             "rar", "zip", "gz", "bz2", "z", "iso", "cab", "jar"
 		);
 

@@ -1,0 +1,255 @@
+<template>
+  <div class="cms-audio-editor bg-purple-white">
+    <transition-group name="flip-a-list" tag="div">
+      <el-card shadow="always"
+              v-for="(item, index) in itemList"
+              :key="item.path"
+              class="r-card mt10">
+        <el-row>
+          <aplayer :autoplay="false" preload="none" style="margin:0;margin-bottom:10px;"
+            :music="{
+              title: item.title,
+              artist: item.author,
+              src: item.src,
+              pic: logo
+            }"
+          />
+        </el-row>
+        <el-row>
+          <el-col :span="4" >
+            <div class="a-left-item"> 
+              <label class="a-left-label">类型</label>
+              <div class="a-left-value">{{ item.type }}</div>
+            </div>
+            <div class="a-left-item"> 
+              <label class="a-left-label">大小</label>
+              <div class="a-left-value">{{ item.fileSizeName }}</div>
+            </div>
+            <div class="a-left-item"> 
+              <label class="a-left-label">格式</label>
+              <div class="a-left-value">{{ item.format }}</div>
+            </div>
+            <div class="a-left-item"> 
+              <label class="a-left-label">时长</label>
+              <div class="a-left-value">{{ transferDuration(item.duration) }}</div>
+            </div>
+            <div class="a-left-item"> 
+              <label class="a-left-label">编码方式</label>
+              <div class="a-left-value">{{ item.decoder }}</div>
+            </div>
+            <div class="a-left-item"> 
+              <label class="a-left-label">声道数</label>
+              <div class="a-left-value">{{ item.channels }}</div>
+            </div>
+            <div class="a-left-item"> 
+              <label class="a-left-label">比特率</label>
+              <div class="a-left-value">{{ item.bitRate }}</div>
+            </div>
+            <div class="a-left-item"> 
+              <label class="a-left-label">采样率</label>
+              <div class="a-left-value">{{ item.samplingRate }}</div>
+            </div>
+          </el-col>
+          <el-col :span="20">
+            <el-row>
+              <el-form-item label="标题">
+                <el-input v-model="item.title"></el-input>
+              </el-form-item>
+            </el-row>
+            <el-row>
+              <el-form-item label="作者">
+                <el-input v-model="item.author"></el-input>
+              </el-form-item>
+            </el-row>
+            <el-row>
+              <el-form-item label="简介">
+                <el-input type="textarea"
+                        :rows="2"
+                        v-model="item.description"></el-input>
+              </el-form-item>
+            </el-row>
+            <el-row class="r-opr-row">
+              <el-link icon="el-icon-top"
+                      v-if="index > 0" 
+                      @click="moveUp(index)">上移</el-link>
+              <el-link icon="el-icon-bottom"
+                            v-if="itemList.length > 1 && index < itemList.length - 1" 
+                      @click="moveDown(index)">下移</el-link>
+              <el-link icon="el-icon-edit"
+                      @click="editItem(index)">编辑</el-link>
+              <el-link icon="el-icon-delete"
+                      @click="deleteImage(index)">删除</el-link>
+            </el-row>
+          </el-col>
+        </el-row>
+      </el-card>
+    </transition-group>
+    <el-card shadow="always" class="mt10">
+        <div class="btn-add-audio bg-purple-white" @click="addItem">
+          <svg-icon icon-class="video" style="width:60px;height:60px;"></svg-icon>
+          <div>添加音频</div>
+        </div>
+    </el-card>
+    <cms-resource-dialog 
+      :open.sync="openResourceDialog"
+      :upload-limit="uploadLimit"
+      rtype="audio"
+      @ok="handleResourceDialogOk">
+    </cms-resource-dialog>
+  </div>
+</template>
+<script>
+import Aplayer from 'vue-aplayer'
+import CMSResourceDialog from "@/views/cms/contentcore/resourceDialog";
+
+export default {
+  name: "CMSAudioList",
+  components: {
+    "cms-resource-dialog": CMSResourceDialog,
+    Aplayer
+  },
+  model: {
+    prop: 'itemList',
+    event: 'change'
+  },
+  props: {
+    itemList: {
+      type: Array,
+      default: () => [],
+      required: false,
+    },
+    logo: {
+      type: String,
+      required: false
+    }
+  },
+  data () {
+    return {
+      openResourceDialog: false,
+      uploadLimit: 10,
+      editIndex: -1
+    };
+  },
+  watch: {
+    itemList(newVal) {
+      this.$emit("change", newVal);
+    }
+  },
+  methods: {
+    handleResourceDialogOk (results) {
+      if (this.editIndex > -1) {
+        const r = results[0];
+        this.itemList[this.editIndex] = { 
+            path: r.path, 
+            src: r.src, 
+            title: r.name, 
+            fileName: r.name, 
+            fileSize: r.fileSize,
+            fileSizeName: r.fileSizeName,
+            resourceType: r.resourceType
+          };
+        this.editIndex = -1;
+      } else {
+        results.forEach(r => {
+          this.itemList.push({ 
+            path: r.path, 
+            src: r.src, 
+            title: r.name, 
+            fileName: r.name, 
+            fileSize: r.fileSize,
+            fileSizeName: r.fileSizeName,
+            resourceType: r.resourceType
+          });
+        });
+      }
+    },
+    addItem () {
+      this.editIndex = -1;
+      this.uploadLimit = 10;
+      this.openResourceDialog = true;
+    },
+    editItem (index) {
+      this.uploadLimit = 1;
+      this.editIndex = index;
+      this.openResourceDialog = true;
+    },
+    deleteImage (index) {
+      this.itemList.splice(index, 1);
+    }, 
+    moveUp (index) {
+        let temp = this.itemList[index];
+        // this.itemList[index] = this.itemList[index - 1];
+        this.$set(this.itemList, index, this.itemList[index - 1]);
+        this.$set(this.itemList, index - 1, temp);
+    },
+    moveDown (index) {
+        let temp = this.itemList[index];
+        // this.itemList[index] = this.itemList[index + 1];
+        this.$set(this.itemList, index, this.itemList[index + 1]);
+        this.$set(this.itemList, index + 1, temp);
+    },
+    chooseImage (index) {
+        this.$emit("choose", this.itemList[index].path, this.itemList[index].src);
+    }
+  }
+};
+</script>
+<style>
+.cms-audio-editor .flip-a-list-move {
+  transition: transform 1s;
+}
+.cms-audio-editor .flip-a-list-item {
+  transition: all 1s;
+  display: inline-block;
+}
+.cms-audio-editor .flip-a-list-enter, .flip-a-list-leave-to
+/* .list-complete-leave-active for below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.cms-audio-editor .flip-a-list-leave-active {
+  position: absolute;
+}
+.cms-audio-editor .el-form-item {
+  margin-bottom: 5px;
+}
+.cms-audio-editor label.a-left-label {
+    width: 70px;
+    text-align: right;
+    vertical-align: middle;
+    float: left;
+    font-size: 12px;
+    color: #606266;
+    line-height: 22px;
+    padding: 0 12px 0 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.cms-audio-editor .a-left-value {
+    margin-left: 70px;
+    line-height: 22px;
+    position: relative;
+    font-size: 12px;
+}
+.cms-audio-editor .btn-add-audio {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  fill: #5a5e66;
+}
+.cms-audio-editor .btn-add-audio:hover {
+  color:#1890ff;
+}
+.cms-audio-editor .r-card .el-card__body {
+  padding: 15px;
+}
+.cms-audio-editor .el-link {
+  text-decoration: none;
+  margin-left: 20px;
+}
+.cms-audio-editor .r-opr-row {
+  text-align: right;
+  margin-top: 10px;
+}
+</style>

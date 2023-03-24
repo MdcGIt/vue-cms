@@ -24,56 +24,58 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 	@Override
 	public Long add() {
 		super.add();
-		if (!this.getContentEntity().isLinkContent()
-				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
-			CmsArticleDetail articleDetail = this.getExtendEntity();
-			articleDetail.setContentId(this.getContentEntity().getContentId());
-			// 处理内部链接
-			String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
-			// 处理文章正文远程图片
-			if (YesOrNo.isYes(articleDetail.getDownloadRemoteImage())) {
-				AsyncTaskManager.setTaskPercent(90);
-				contentHtml = this.getArticleService().downloadRemoteImages(contentHtml, this.getSite(),
-						this.getOperator().getUsername());
-				articleDetail.setContentHtml(contentHtml);
-			}
-			this.getArticleService().save(articleDetail);
-
-			if (StringUtils.isEmpty(this.getContentEntity().getLogo())
-					&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
-				// 正文首图作为logo
-				this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
-			}
-		}
 		this.getContentService().save(this.getContentEntity());
+		if (this.getContentEntity().isLinkContent()
+				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+			return this.getContentEntity().getContentId();
+		}
+		CmsArticleDetail articleDetail = this.getExtendEntity();
+		articleDetail.setContentId(this.getContentEntity().getContentId());
+		// 处理内部链接
+		String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
+		// 处理文章正文远程图片
+		if (YesOrNo.isYes(articleDetail.getDownloadRemoteImage())) {
+			AsyncTaskManager.setTaskPercent(90);
+			contentHtml = this.getArticleService().downloadRemoteImages(contentHtml, this.getSite(),
+					this.getOperator().getUsername());
+			articleDetail.setContentHtml(contentHtml);
+		}
+		this.getArticleService().save(articleDetail);
+
+		if (StringUtils.isEmpty(this.getContentEntity().getLogo())
+				&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
+			// 正文首图作为logo
+			this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
+		}
 		return this.getContentEntity().getContentId();
 	}
 
 	@Override
 	public Long save() {
 		super.save();
-		// 非映射内容或标题内容修改文章详情
-		if (!this.getContentEntity().isLinkContent()
-				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
-			CmsArticleDetail articleDetail = this.getExtendEntity();
-			// 处理内部链接
-			String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
-			// 处理文章正文远程图片
-			if (YesOrNo.isYes(articleDetail.getDownloadRemoteImage())) {
-				AsyncTaskManager.setTaskPercent(90);
-				contentHtml = this.getArticleService().downloadRemoteImages(contentHtml, this.getSite(),
-						this.getOperator().getUsername());
-			}
-			articleDetail.setContentHtml(contentHtml);
-			this.getArticleService().updateById(articleDetail);
-
-			if (StringUtils.isEmpty(this.getContentEntity().getLogo())
-					&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
-				// 正文首图作为logo
-				this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
-			}
-		}
 		this.getContentService().updateById(this.getContentEntity());
+		// 非映射内容或标题内容修改文章详情
+		if (this.getContentEntity().isLinkContent()
+				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+			return this.getContentEntity().getContentId();
+		}
+		CmsArticleDetail articleDetail = this.getExtendEntity();
+		// 处理内部链接
+		String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
+		// 处理文章正文远程图片
+		if (YesOrNo.isYes(articleDetail.getDownloadRemoteImage())) {
+			AsyncTaskManager.setTaskPercent(90);
+			contentHtml = this.getArticleService().downloadRemoteImages(contentHtml, this.getSite(),
+					this.getOperator().getUsername());
+		}
+		articleDetail.setContentHtml(contentHtml);
+		this.getArticleService().updateById(articleDetail);
+
+		if (StringUtils.isEmpty(this.getContentEntity().getLogo())
+				&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
+			// 正文首图作为logo
+			this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
+		}
 		return this.getContentEntity().getContentId();
 	}
 
