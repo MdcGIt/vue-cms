@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,6 @@ import com.ruoyi.system.security.SaAdminCheckLogin;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
-import co.elastic.clients.elasticsearch.core.GetResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -62,10 +62,16 @@ public class ContentIndexController extends BaseRestController {
 
 	private final ElasticsearchClient esClient;
 
+	@Value("${spring.data.elasticsearch.repositories.enabled:true}")
+	private boolean elasticSearchEnable;
+
 	@GetMapping("/contents")
 	public R<?> selectDocumentList(@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "onlyTitle", required = false ,defaultValue = "false") Boolean onlyTitle,
 			@RequestParam(value = "contentType", required = false) String contentType) throws ElasticsearchException, IOException {
+		if (!elasticSearchEnable) {
+			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
+		}
 		PageRequest pr = this.getPageRequest();
 
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -120,19 +126,27 @@ public class ContentIndexController extends BaseRestController {
 
 	@GetMapping("/content/{contentId}")
 	public R<?> selectDocumentDetail(@PathVariable(value = "contentId") Long contentId) throws ElasticsearchException, IOException {
-		GetResponse<ESContent> res = this.esClient.get(qb -> qb.index(ESContent.INDEX_NAME).id(contentId.toString()), ESContent.class);
-		ESContent source = res.source();
+		if (!elasticSearchEnable) {
+			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
+		}
+		ESContent source = this.searchService.getContentIndexDetail(contentId);
 		return R.ok(source);
 	}
 
 	@DeleteMapping("/contents")
 	public R<?> deleteDocuments(@RequestBody @NotEmpty List<Long> contentIds) throws ElasticsearchException, IOException {
+		if (!elasticSearchEnable) {
+			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
+		}
 		this.searchService.deleteContentIndex(contentIds);
 		return R.ok();
 	}
 
 	@PostMapping("/build/{contentId}")
 	public R<?> buildContentIndex(@PathVariable("contentId") @Min(1) Long contentId) {
+		if (!elasticSearchEnable) {
+			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
+		}
 		CmsContent content = this.contentService.getById(contentId);
 		Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
 		
@@ -144,6 +158,9 @@ public class ContentIndexController extends BaseRestController {
 
 	@PostMapping("/rebuild")
 	public R<?> rebuildAllIndex() {	
+		if (!elasticSearchEnable) {
+			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
+		}
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		AsyncTask task = this.searchService.rebuildAllIndex(site);
 		return R.ok(task.getTaskId());

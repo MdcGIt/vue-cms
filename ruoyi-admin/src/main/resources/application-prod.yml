@@ -61,6 +61,8 @@ spring:
   # redis 配置
   data:
     elasticsearch: 
+      repositories:
+        enable: false
       cluster-name: docker-cluster-01
       cluster-nodes: 127.0.0.1:9300
     redis:
