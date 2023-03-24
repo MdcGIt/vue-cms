@@ -3,15 +3,16 @@ DOCKERUSER={{DOCKERUSER}}
 DOCKERPWD={{DOCKERPWD}}
 DOCKER_HUB_URL={{DOCKER_HUB_URL}}
 IMAGE_REPOSITORY={{IMAGE_REPOSITORY}}
+IMAGE_TAG=latest
 
 DOCKER_IMAGE=${DOCKER_HUB_URL}/${IMAGE_REPOSITORY}
 # pull docker image
 echo ${DOCKERPWD} | docker login --username=${DOCKERUSER} --password-stdin ${DOCKER_HUB_URL}
-docker pull ${DOCKER_IMAGE}
+docker pull ${DOCKER_IMAGE}:${IMAGE_TAG}
 docker logout ${DOCKER_HUB_URL}
 
 # 处理none镜像
-NONE_IMAGE_ID_ARR=$(docker images | grep ${DOCKER_IMAGE} | grep "<none>" | awk '{print $3}')
+NONE_IMAGE_ID_ARR=$(docker images | grep "${DOCKER_IMAGE}" | grep "<none>" | awk '{print $3}')
 for NONE_IMAGE_ID in ${NONE_IMAGE_ID_ARR[*]}; do
   # 停止容器
   NONE_RUNNING_CONTAINER_ID_ARR=$(docker ps -a | grep $NONE_IMAGE_ID | awk '{print $1}')
