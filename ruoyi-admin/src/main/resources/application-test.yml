@@ -188,7 +188,7 @@ xxl:
   job:
     enable: true
     accessToken: default_token
-    adminAddresses: http://127.0.0.1:18080/xxl-job-admin
+    adminAddresses: http://qf-xxl-job-admin:18080/xxl-job-admin
     executor:
       ### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
       appname: ruoyi-admin
