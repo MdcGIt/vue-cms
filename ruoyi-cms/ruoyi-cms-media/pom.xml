@@ -7,18 +7,17 @@
 	<parent>
 		<groupId>com.ruoyi</groupId>
 		<artifactId>ruoyi-cms</artifactId>
-		<version>0.1.0</version>
+		<version>0.2.0</version>
 	</parent>
 
 	<artifactId>ruoyi-cms-media</artifactId>
 	<description>音频内容类型扩展模块</description>
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/ws.schild/jave-all-deps -->
+		<!-- 音视频处理工具库 -->
 		<dependency>
 		    <groupId>ws.schild</groupId>
 		    <artifactId>jave-all-deps</artifactId>
-		    <version>3.3.1</version>
 		</dependency>
 
 		<!-- 内容核心 -->
