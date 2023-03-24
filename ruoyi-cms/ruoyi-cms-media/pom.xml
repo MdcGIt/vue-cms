@@ -23,14 +23,6 @@
 		    <groupId>ws.schild</groupId>
 		    <artifactId>jave-nativebin-linux64</artifactId>
 		</dependency>
-		<dependency>
-		    <groupId>ws.schild</groupId>
-    		<artifactId>jave-nativebin-win64</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>ws.schild</groupId>
-   		 	<artifactId>jave-nativebin-osx64</artifactId>
-		</dependency>
 
 		<!-- 内容核心 -->
 		<dependency>
