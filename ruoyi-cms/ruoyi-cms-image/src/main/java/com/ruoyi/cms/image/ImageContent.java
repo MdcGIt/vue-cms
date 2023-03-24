@@ -62,14 +62,12 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 		// 图片数处理
 		List<CmsImage> imageList = this.getExtendEntity();
 		// 先删除数据
-		List<Long> deleteImageIds = imageList.stream().filter(img -> IdUtils.validate(img.getImageId()))
+		List<Long> updateImageIds = imageList.stream().filter(img -> IdUtils.validate(img.getImageId()))
 				.map(CmsImage::getImageId).toList();
-		if (deleteImageIds.size() > 0) {
-			this.getImageService()
-					.remove(new LambdaQueryWrapper<CmsImage>()
-							.eq(CmsImage::getContentId, this.getContentEntity().getContentId())
-							.notIn(CmsImage::getImageId, deleteImageIds));
-		}
+		this.getImageService()
+				.remove(new LambdaQueryWrapper<CmsImage>()
+						.eq(CmsImage::getContentId, this.getContentEntity().getContentId())
+						.notIn(updateImageIds.size() > 0, CmsImage::getImageId, updateImageIds));
 		for (int i = 0; i < images.size(); i++) {
 			CmsImage image = images.get(i);
 			if (IdUtils.validate(image.getImageId())) {

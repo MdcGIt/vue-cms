@@ -214,22 +214,25 @@ export default {
   margin-bottom: 5px;
 }
 .cms-audio-editor label.a-left-label {
-    width: 70px;
-    text-align: right;
-    vertical-align: middle;
-    float: left;
-    font-size: 12px;
-    color: #606266;
-    line-height: 22px;
-    padding: 0 12px 0 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+  width: 70px;
+  text-align: right;
+  vertical-align: middle;
+  float: left;
+  font-size: 12px;
+  color: #606266;
+  line-height: 22px;
+  padding: 0 12px 0 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.cms-audio-editor .a-left-item {
+  clear: both;
 }
 .cms-audio-editor .a-left-value {
-    margin-left: 70px;
-    line-height: 22px;
-    position: relative;
-    font-size: 12px;
+  margin-left: 70px;
+  line-height: 22px;
+  position: relative;
+  font-size: 12px;
 }
 .cms-audio-editor .btn-add-audio {
   width: 100%;

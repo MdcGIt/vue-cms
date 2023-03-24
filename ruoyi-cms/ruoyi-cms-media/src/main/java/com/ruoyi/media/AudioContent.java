@@ -65,14 +65,12 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 		// 音频数处理
 		List<CmsAudio> audioList = this.getExtendEntity();
 		// 先删除音频
-		List<Long> deleteAudioIds = audioList.stream().filter(audio -> IdUtils.validate(audio.getAudioId()))
+		List<Long> updateAudioIds = audioList.stream().filter(audio -> IdUtils.validate(audio.getAudioId()))
 				.map(CmsAudio::getAudioId).toList();
-		if (deleteAudioIds.size() > 0) {
-			this.getAudioService()
-					.remove(new LambdaQueryWrapper<CmsAudio>()
-							.eq(CmsAudio::getContentId, this.getContentEntity().getContentId())
-							.notIn(CmsAudio::getAudioId, deleteAudioIds));
-		}
+		this.getAudioService()
+				.remove(new LambdaQueryWrapper<CmsAudio>()
+						.eq(CmsAudio::getContentId, this.getContentEntity().getContentId())
+						.notIn(updateAudioIds.size() > 0, CmsAudio::getAudioId, updateAudioIds));
 		// 查找需要修改的音频
 		Map<Long, CmsAudio> oldAudioMap = this.getAudioService().lambdaQuery()
 				.eq(CmsAudio::getContentId, this.getContentEntity().getContentId()).list().stream()
