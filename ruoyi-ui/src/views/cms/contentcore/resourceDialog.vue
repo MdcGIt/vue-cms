@@ -39,7 +39,7 @@
                 :on-exceed="handleFileUloadExceed"
                 :auto-upload="false">
                 <i class="el-icon-plus"></i>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                <div slot="tip" class="el-upload__tip">只能上传{{upload.accept}}文件，且不超过{{upload.acceptSize}}</div>
               </el-upload>
             </el-form-item>
             <el-form-item v-show="showNet"
@@ -184,7 +184,8 @@ export default {
       // 上传参数
       upload: {
         isUploading: false, // 上传按钮loading
-        accept: ".jpg,.png", // 文件类型限制
+        accept: ".jpg,.png,.mp3,.mp4,.flv", // 文件类型限制
+        acceptSize: "20m",
         limit: this.uploadLimit, // 文件数限制
         headers: { Authorization: "Bearer " + getToken(), CurrentSite: this.$cache.local.get("CurrentSite") },
         url: process.env.VUE_APP_BASE_API + "/cms/resource/upload", // 上传的地址

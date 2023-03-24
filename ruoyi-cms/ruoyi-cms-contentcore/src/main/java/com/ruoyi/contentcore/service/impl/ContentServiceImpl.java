@@ -19,6 +19,7 @@ import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.core.IContentType;
@@ -156,39 +157,47 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
 	public AsyncTask addContent(IContent<?> content) {
 		AsyncTask task = new AsyncTask() {
 
 			@Override
 			public void run0() {
-				applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
-				content.add();
-				applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
-				this.setPercent(100);
+				SpringUtils.getBean(IContentService.class).addContent0(content);
 			}
 		};
 		task.setType("SaveContent");
 		asyncTaskManager.execute(task);
 		return task;
 	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void addContent0(IContent<?> content) {
+		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
+		content.add();
+		applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
+		AsyncTaskManager.setTaskPercent(100);
+	}
 
 	@Override
-	@Transactional
 	public AsyncTask saveContent(IContent<?> content) {
 		AsyncTask task = new AsyncTask() {
 
 			@Override
 			public void run0() {
-				applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
-				content.save();
-				applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
-				this.setPercent(100);
+				saveContent0(content);
 			}
 		};
 		task.setType("SaveContent");
 		asyncTaskManager.execute(task);
 		return task;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void saveContent0(IContent<?> content) {
+		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
+		content.save();
+		applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
+		AsyncTaskManager.setTaskPercent(100);
 	}
 
 	@Override

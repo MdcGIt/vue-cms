@@ -10,7 +10,6 @@ import com.ruoyi.article.domain.CmsArticleDetail;
 import com.ruoyi.article.domain.dto.ArticleDTO;
 import com.ruoyi.article.domain.vo.ArticleVO;
 import com.ruoyi.article.mapper.CmsArticleDetailMapper;
-import com.ruoyi.article.template.ArticleTemplateType;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -62,11 +61,6 @@ public class ArticleContentType implements IContentType {
     public String getComponent() {
         return "cms/article/editor";
     }
-
-	@Override
-	public String getTemplateType() {
-		return ArticleTemplateType.TypeId;
-	}
 
 	@Override
 	public IContent<?> loadContent(CmsContent xContent) {

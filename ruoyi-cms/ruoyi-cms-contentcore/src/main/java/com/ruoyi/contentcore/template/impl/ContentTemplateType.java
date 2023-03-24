@@ -1,6 +1,5 @@
-package com.ruoyi.cms.image.template;
+package com.ruoyi.contentcore.template.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -20,28 +19,27 @@ import com.ruoyi.contentcore.util.TemplateUtils;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Component(ITemplateType.BEAN_NAME_PREFIX + ImageTemplateType.TypeId)
-public class ImageTemplateType implements ITemplateType {
+@Component(ITemplateType.BEAN_NAME_PREFIX + ContentTemplateType.TypeId)
+public class ContentTemplateType implements ITemplateType {
 	
-	public final static String TypeId = "image";
+	public final static String TypeId = "Content";
 	
 	private final CmsContentMapper contentMapper;
-
+	
 	private final ISiteService siteService;
 
 	private final ICatalogService catalogService;
-	
+
 	@Override
 	public String getId() {
 		return TypeId;
 	}
-	
+
 	@Override
 	public void initTemplateData(Object dataId, TemplateContext context) {
 		CmsContent content = this.contentMapper.selectById(ConvertUtils.toLong(dataId));
-		Map<String, Object> imageAlbumMap = new HashMap<>();
-		imageAlbumMap.putAll(ReflectASMUtils.beanToMap(content));
-		context.getVariables().put(TemplateUtils.TemplateVariable_Content, imageAlbumMap);
+		Map<String, Object> contentMap = ReflectASMUtils.beanToMap(content);
+		context.getVariables().put(TemplateUtils.TemplateVariable_Content, contentMap);
 
 		CmsSite site = this.siteService.getSite(content.getSiteId());
 		CmsCatalog catalog = this.catalogService.getCatalog(content.getCatalogId());

@@ -2,8 +2,6 @@ package com.ruoyi.cms.image;
 
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.cms.image.domain.CmsImage;
 import com.ruoyi.cms.image.service.IImageService;
@@ -12,9 +10,8 @@ import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.AbstractContent;
-import com.ruoyi.contentcore.core.InternalURL;
 import com.ruoyi.contentcore.domain.CmsCatalog;
-import com.ruoyi.contentcore.util.InternalUrlUtils;
+import com.ruoyi.contentcore.enums.ContentCopyType;
 
 public class ImageContent extends AbstractContent<List<CmsImage>> {
 
@@ -29,10 +26,14 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 	public Long add() {
 		super.add();
 		this.getContentService().save(this.getContentEntity());
-		
+
+		if (this.getContentEntity().isLinkContent()
+				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+			return this.getContentEntity().getContentId();
+		}
 		List<CmsImage> images = this.getExtendEntity();
-		
-		if (!this.getContentEntity().isLinkContent() && StringUtils.isNotEmpty(images)) {
+
+		if (StringUtils.isNotEmpty(images)) {
 			for (int i = 0; i < images.size(); i++) {
 				CmsImage cmsImage = images.get(i);
 				cmsImage.setImageId(IdUtils.getSnowflakeId());
@@ -52,38 +53,36 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 		this.getContentService().updateById(this.getContentEntity());
 		// 处理图片
 		List<CmsImage> images = this.getExtendEntity();
-		if (this.getContentEntity().isLinkContent()) {
-			this.getImageService().remove(new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId, this.getContentEntity().getContentId()));
-		} else if (images != null && images.size() > 0) {
-			long[] oldImageIds = images.stream().filter(item -> item.getImageId() != null && item.getImageId() > 0)
-					.mapToLong(item -> item.getImageId()).toArray();
-			List<CmsImage> list = this.getImageService().list(new LambdaQueryWrapper<CmsImage>()
-					.eq(CmsImage::getContentId, this.getContentEntity().getContentId()));
-			for (CmsImage dbImg : list) {
-				if (!ArrayUtils.contains(oldImageIds, dbImg.getImageId().longValue())) {
-					this.getImageService().removeById(dbImg);
-				}
-			}
-			for (int i = 0; i < images.size(); i++) {
-				CmsImage cmsImage = images.get(i);
-				if (cmsImage.getImageId() == null || cmsImage.getImageId() == 0) {
-					cmsImage.setImageId(IdUtils.getSnowflakeId());
-					cmsImage.setContentId(this.getContentEntity().getContentId());
-					String path = cmsImage.getPath();
-					if (InternalUrlUtils.isInternalUrl(path)) {
-						InternalURL internalUrl = InternalUrlUtils.parseInternalUrl(cmsImage.getPath());
-						path = internalUrl.getPath();
-					}
-					String fileType = FileExUtils.getExtension(path);
-					cmsImage.setImageType(fileType);
-					cmsImage.setSortFlag(i);
-					cmsImage.createBy(this.getOperator().getUsername());
-					this.getImageService().save(cmsImage);
-				} else {
-					cmsImage.setSortFlag(i);
-					cmsImage.updateBy(this.getOperator().getUsername());
-					this.getImageService().updateById(cmsImage);
-				}
+		if (this.getContentEntity().isLinkContent()
+				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+			this.getImageService().remove(new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId,
+					this.getContentEntity().getContentId()));
+			return this.getContentEntity().getContentId();
+		}
+		// 图片数处理
+		List<CmsImage> imageList = this.getExtendEntity();
+		// 先删除数据
+		List<Long> deleteImageIds = imageList.stream().filter(img -> IdUtils.validate(img.getImageId()))
+				.map(CmsImage::getImageId).toList();
+		if (deleteImageIds.size() > 0) {
+			this.getImageService()
+					.remove(new LambdaQueryWrapper<CmsImage>()
+							.eq(CmsImage::getContentId, this.getContentEntity().getContentId())
+							.notIn(CmsImage::getImageId, deleteImageIds));
+		}
+		for (int i = 0; i < images.size(); i++) {
+			CmsImage image = images.get(i);
+			if (IdUtils.validate(image.getImageId())) {
+				image.setSortFlag(i);
+				image.updateBy(this.getOperator().getUsername());
+				this.getImageService().updateById(image);
+			} else {
+				image.setImageId(IdUtils.getSnowflakeId());
+				image.setContentId(this.getContentEntity().getContentId());
+				image.setImageType(FileExUtils.getExtension(image.getPath()));
+				image.setSortFlag(i);
+				image.createBy(this.getOperator().getUsername());
+				this.getImageService().save(image);
 			}
 		}
 		return this.getContentEntity().getContentId();
@@ -92,9 +91,8 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 	@Override
 	public void delete() {
 		super.delete();
-		IImageService imageService = this.getImageService();
-		List<CmsImage> albumImages = imageService.getAlbumImages(this.getContentEntity().getContentId());
-		this.getImageService().removeByIds(albumImages.stream().map(CmsImage::getImageId).toList());
+		this.getImageService().remove(
+				new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId, this.getContentEntity().getContentId()));
 	}
 
 	@Override
@@ -103,11 +101,11 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 
 		Long newContentId = (Long) this.getParams().get("NewContentId");
 		List<CmsImage> albumImages = this.getImageService().getAlbumImages(this.getContentEntity().getContentId());
-		for (CmsImage cmsImage : albumImages) {
-			cmsImage.createBy(this.getOperator().getUsername());
-			cmsImage.setImageId(IdUtils.getSnowflakeId());
-			cmsImage.setContentId(newContentId);
-			this.getImageService().save(cmsImage);
+		for (CmsImage image : albumImages) {
+			image.createBy(this.getOperator().getUsername());
+			image.setImageId(IdUtils.getSnowflakeId());
+			image.setContentId(newContentId);
+			this.getImageService().save(image);
 		}
 	}
 

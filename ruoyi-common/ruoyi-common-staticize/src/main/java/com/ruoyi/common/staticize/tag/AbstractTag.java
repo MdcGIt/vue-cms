@@ -2,10 +2,10 @@ package com.ruoyi.common.staticize.tag;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -95,10 +95,10 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 	 * @throws TemplateException
 	 */
 	Map<String, String> validTagAttributes(Environment env, Map<String, TemplateModel> attrs) throws TemplateException {
-		Map<String, String> map = null;
+		CaseInsensitiveMap<String, String> map = null;
 		List<TagAttr> tagAttrs = this.getTagAttrs();
 		if (tagAttrs != null) {
-			map = new HashMap<>();
+			map = new CaseInsensitiveMap<>();
 			for (TagAttr tagAttr : tagAttrs) {
 				String attrValue = FreeMarkerUtils.getStringFrom(attrs, tagAttr.getName());
 				if (tagAttr.isMandatory() && StringUtils.isEmpty(attrValue)) {

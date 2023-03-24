@@ -60,7 +60,7 @@ public class CmsImageTag extends AbstractListTag {
 		}
 		TemplateContext context = FreeMarkerUtils.getTemplateContext(env);
 		pageResult.getRecords().forEach(image -> {
-			image.setPath(
+			image.setSrc(
 					InternalUrlUtils.getActualUrl(image.getPath(), context.getPublishPipeCode(), context.isPreview()));
 		});
 		return TagPageData.of(pageResult.getRecords(), pageResult.getTotal());

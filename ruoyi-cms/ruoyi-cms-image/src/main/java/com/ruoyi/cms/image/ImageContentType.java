@@ -12,7 +12,6 @@ import com.ruoyi.cms.image.domain.CmsImage;
 import com.ruoyi.cms.image.domain.dto.ImageAlbumDTO;
 import com.ruoyi.cms.image.domain.vo.ImageAlbumVO;
 import com.ruoyi.cms.image.mapper.CmsImageMapper;
-import com.ruoyi.cms.image.template.ImageTemplateType;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -68,11 +67,6 @@ public class ImageContentType implements IContentType {
 	@Override
 	public String getComponent() {
 		return "cms/imageAlbum/editor";
-	}
-
-	@Override
-	public String getTemplateType() {
-		return ImageTemplateType.TypeId;
 	}
 
 	@Override

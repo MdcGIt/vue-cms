@@ -1,0 +1,253 @@
+<template>
+  <div class="cms-video-editor bg-purple-white">
+    <transition-group name="flip-list" tag="div">
+      <el-card shadow="always"
+              v-for="(item, index) in itemList"
+              :key="item.videoId?item.videoId:item.path"
+              class="r-card mt10">
+        <el-container class="r-container">
+          <el-aside width="280px" class="r-left">
+            <video-player
+              class="video-player vjs-custom-skin"
+              :options="{
+                playbackRates: [0.5, 1.0, 1.5, 2.0, 3.0], //播放速度
+                currentTime: '00:00',
+                autoplay: false,
+                muted: false, // 默认情况下将会消除任何音频。
+                loop: false,
+                preload: 'none',
+                language: 'zh-CN',
+                aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如'16:9'或'4:3'）
+                fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器
+                sources: [
+                  {
+                    src: item.src,//视频地址
+                  },
+                ],
+                controlBar: {
+                  timeDivider: false,
+                  durationDisplay: false,
+                  remainingTimeDisplay: false,
+                  fullscreenToggle: true, //全屏按钮
+                },
+              }"
+            ></video-player>
+          </el-aside>
+          <el-container>
+            <el-main>
+              <el-row>
+                <el-form-item label="参数">
+                  <div style="font-size:12px;color:#777;">
+                    [ 类型: {{ item.type }} ]
+                    [ 大小: {{ item.fileSizeName }} ]
+                    [ 时长: {{ transferDuration(item.duration) }} ]
+                    [ 分辨率: {{ item.width }}x{{ item.height }} ]
+                    <el-tooltip placement="top" effect="light">
+                      <div slot="content">
+                        <p>格式：[ {{ item.format ? item.format : '-' }} ]</p>
+                        <p>编码：[ {{ item.decoder ? item.decoder : '-'  }} ]</p>
+                        <p>码率：[ {{ item.bitRate }} ]</p>
+                        <p>帧率：[ {{ item.frameRate }} ]</p>
+                      </div>
+                      <el-link type="primary" :underline="false">详情</el-link>
+                    </el-tooltip>
+                  </div>
+                </el-form-item>
+              </el-row>
+              <el-row>
+                <el-form-item label="标题">
+                  <el-input v-model="item.title"></el-input>
+                </el-form-item>
+              </el-row>
+              <el-row>
+                <el-form-item label="摘要">
+                  <el-input type="textarea"
+                          :rows="2"
+                          v-model="item.desc"></el-input>
+                </el-form-item>
+              </el-row>
+              <el-row class="r-opr-row">
+                <el-link 
+                  icon="el-icon-top"
+                  :underline="false"
+                  v-if="index > 0" 
+                  @click="moveUp(index)">上移</el-link>
+                <el-link
+                  icon="el-icon-bottom"
+                  :underline="false"
+                  v-if="itemList.length > 1 && index < itemList.length - 1" 
+                  @click="moveDown(index)">下移</el-link>
+                <el-link 
+                  icon="el-icon-edit"
+                  :underline="false"
+                  @click="editItem(index)">编辑</el-link>
+                <el-link 
+                  icon="el-icon-delete"
+                  :underline="false"
+                  @click="deleteImage(index)">删除</el-link>
+              </el-row>
+            </el-main>
+          </el-container>
+        </el-container>
+      </el-card>
+    </transition-group>
+    <el-card shadow="always" class="mt10">
+        <div class="btn-add bg-purple-white" @click="addItem">
+          <svg-icon icon-class="video" style="width:60px;height:60px;"></svg-icon>
+          <div>添加视频</div>
+        </div>
+    </el-card>
+    <cms-resource-dialog 
+      :open.sync="openResourceDialog"
+      :upload-limit="uploadLimit"
+      rtype="video"
+      @ok="handleResourceDialogOk">
+    </cms-resource-dialog>
+  </div>
+</template>
+<script>
+import CMSResourceDialog from "@/views/cms/contentcore/resourceDialog";
+
+export default {
+  name: "CMSVideoList",
+  components: {
+    "cms-resource-dialog": CMSResourceDialog
+  },
+  model: {
+    prop: 'itemList',
+    event: 'change'
+  },
+  props: {
+    itemList: {
+      type: Array,
+      default: () => [],
+      required: false,
+    }
+  },
+  data () {
+    return {
+      openResourceDialog: false,
+      uploadLimit: 10,
+      editIndex: -1
+    };
+  },
+  watch: {
+    itemList(newVal) {
+      this.$emit("change", newVal);
+    }
+  },
+  methods: {
+    handleResourceDialogOk (results) {
+      if (this.editIndex > -1) {
+        const r = results[0];
+        this.itemList[this.editIndex] = { 
+            path: r.path, 
+            src: r.src, 
+            title: r.name, 
+            fileName: r.name, 
+            fileSize: r.fileSize,
+            fileSizeName: r.fileSizeName,
+            resourceType: r.resourceType
+          };
+        this.editIndex = -1;
+      } else {
+        results.forEach(r => {
+          this.itemList.push({ 
+            path: r.path, 
+            src: r.src, 
+            title: r.name, 
+            fileName: r.name, 
+            fileSize: r.fileSize,
+            fileSizeName: r.fileSizeName,
+            resourceType: r.resourceType
+          });
+        });
+      }
+    },
+    addItem () {
+      this.editIndex = -1;
+      this.uploadLimit = 10;
+      this.openResourceDialog = true;
+    },
+    editItem (index) {
+      this.uploadLimit = 1;
+      this.editIndex = index;
+      this.openResourceDialog = true;
+    },
+    deleteImage (index) {
+      this.itemList.splice(index, 1);
+    }, 
+    moveUp (index) {
+        let temp = this.itemList[index];
+        // this.itemList[index] = this.itemList[index - 1];
+        this.$set(this.itemList, index, this.itemList[index - 1]);
+        this.$set(this.itemList, index - 1, temp);
+    },
+    moveDown (index) {
+        let temp = this.itemList[index];
+        // this.itemList[index] = this.itemList[index + 1];
+        this.$set(this.itemList, index, this.itemList[index + 1]);
+        this.$set(this.itemList, index + 1, temp);
+    },
+    chooseImage (index) {
+        this.$emit("choose", this.itemList[index].path, this.itemList[index].src);
+    }
+  }
+};
+</script>
+<style>
+.cms-video-editor .flip-list-move {
+  transition: transform 1s;
+}
+.cms-video-editor .flip-list-item {
+  transition: all 1s;
+  display: inline-block;
+}
+.cms-video-editor .flip-list-enter, .flip-list-leave-to
+/* .list-complete-leave-active for below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.cms-video-editor .flip-list-leave-active {
+  position: absolute;
+}
+.cms-video-editor .btn-add {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  fill: #5a5e66;
+}
+.cms-video-editor .btn-add:hover {
+  color:#1890ff;
+}
+.cms-video-editor .r-card .el-card__body {
+  padding: 15px;
+}
+.cms-video-editor .r-container {
+  height: 200px;
+  overflow: hidden;
+}
+.cms-video-editor .r-container .r-left {
+  padding: 0;
+  background-color: #fff;
+  text-align: center;
+  overflow: hidden;
+  height: 200px;
+  font-size: 12px;
+  color: #777;
+}
+.cms-video-editor .r-container .el-main {
+  padding: 0px;
+}
+.cms-video-editor .r-container .el-main .el-form-item {
+  margin-bottom: 12px;
+}
+.cms-video-editor .r-container .el-main .el-link {
+  margin-left: 20px;
+}
+.cms-video-editor .r-container .r-opr-row {
+  text-align: right;
+  margin-top: 10px;
+}
+</style>

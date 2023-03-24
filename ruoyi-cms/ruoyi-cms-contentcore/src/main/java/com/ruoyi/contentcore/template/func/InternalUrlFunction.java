@@ -31,7 +31,7 @@ public class InternalUrlFunction extends AbstractFunc  {
 
 	@Override
 	public String getDesc() {
-		return "将类似“iurl://”的内部链接解析为正常http(s)访问地址，例如：${internalUrl(content.redirectUrl)}";
+		return "将内部链接“iurl://”解析为正常http(s)访问地址，例如：${internalUrl(content.redirectUrl)}";
 	}
 	
 	@Override
@@ -41,7 +41,7 @@ public class InternalUrlFunction extends AbstractFunc  {
 		}
 		TemplateContext context = FreeMarkerUtils.getTemplateContext(Environment.getCurrentEnvironment());
 		SimpleScalar simpleScalar = (SimpleScalar) args[0];
-		return InternalUrlUtils.dealInternalUrl(simpleScalar.getAsString(), context.getPublishPipeCode(), context.isPreview());
+		return InternalUrlUtils.getActualUrl(simpleScalar.getAsString(), context.getPublishPipeCode(), context.isPreview());
 	}
 
 	@Override
