@@ -3,7 +3,7 @@ package com.ruoyi.system.intercepter;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.ruoyi.common.Constants;
+import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.exception.SecurityErrorCode;
 import com.ruoyi.system.security.StpAdminUtil;
 
@@ -21,7 +21,7 @@ public class DemoModeIntercepter implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String method = request.getMethod();
-		if (StpAdminUtil.isLogin() && StpAdminUtil.getLoginIdAsLong() == Constants.SUPER_ADMIN) {
+		if (StpAdminUtil.isLogin() && SecurityUtils.isSuperAdmin(StpAdminUtil.getLoginIdAsLong())) {
 			return true; // 超级管理员允许操作
 		}
 		if (HttpMethod.POST.matches(method) || HttpMethod.PUT.matches(method) || HttpMethod.DELETE.matches(method)) {

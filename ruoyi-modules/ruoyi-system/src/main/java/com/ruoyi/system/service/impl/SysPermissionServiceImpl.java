@@ -10,8 +10,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.Constants;
 import com.ruoyi.common.redis.RedisCache;
+import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.domain.SysRole;
@@ -66,7 +66,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	@Override
 	public Map<String, List<String>> getPermissionMapByUser(Long userId) {
 		Map<String, List<String>> permissions = new HashMap<>();
-		if (Constants.SUPER_ADMIN == userId) {
+		if (SecurityUtils.isSuperAdmin(userId)) {
 			PermissionType[] values = PermissionType.values();
 			for (PermissionType pt : values) {
 				permissions.put(pt.name(), List.of(ALL_PERMISSION));
@@ -98,7 +98,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
 	@Override
 	public List<String> getPermissionListByUser(Long userId) {
-		if (Constants.SUPER_ADMIN == userId) {
+		if (SecurityUtils.isSuperAdmin(userId)) {
 			return List.of(ALL_PERMISSION);
 		}
 		ArrayList<String> permissions = new ArrayList<>();
