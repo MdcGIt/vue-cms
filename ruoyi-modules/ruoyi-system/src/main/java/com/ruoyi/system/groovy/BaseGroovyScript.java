@@ -14,8 +14,12 @@ public abstract class BaseGroovyScript extends IJobHandler {
 	
 	@Override
 	public void execute() throws Exception {
-		this.run(writer);
+		try {
+			this.run(writer);
+		} catch (Exception e) {
+			e.printStackTrace(writer);
+		}
 	}
 
-	protected abstract void run(PrintWriter out);
+	protected abstract void run(PrintWriter out) throws Exception;
 }

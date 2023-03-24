@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-groovy-container">
     <el-form :model="form" ref="form" :rules="rules" size="small" label-position="top" label-width="140px">
       <el-form-item label="Groovy Script" prop="scriptText">
         <el-input
@@ -15,11 +15,12 @@
     </el-form>
 
     <el-row>
+      <div class="groovy_result">
       {{ resultString }}
+      </div>
     </el-row>
   </div>
 </template>
-
 <script>
 import { executeGroovySrcity } from "@/api/system/groovy";
 
@@ -54,3 +55,14 @@ export default {
   }
 };
 </script>
+<style>
+.app-groovy-container {
+  padding: 20px;
+}
+.app-groovy-container .groovy_result {
+  font-size: 14px;
+  line-height: 22px;
+  color: #444;
+  white-space: break-spaces;
+}
+</style>

@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-oracle as builder
+FROM openjdk:17-jdk-oraclelinux8 as builder
 
 ARG APP_NAME
 ARG APP_VERSION
