@@ -1,4 +1,4 @@
-package com.ruoyi.contentcore.config;
+package com.ruoyi.system.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.contentcore.config.properties.XxlJobProperties;
+import com.ruoyi.system.config.properties.XxlJobProperties;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 
 import lombok.RequiredArgsConstructor;

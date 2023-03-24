@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.search.domain.DictWord;
 import com.ruoyi.search.domain.dto.DictWordDTO;
 import com.ruoyi.search.exception.SearchErrorCode;
@@ -35,6 +36,9 @@ public class DictWordServiceImpl extends ServiceImpl<DictWordMapper, DictWord> i
 	public void batchAddDictWords(DictWordDTO dto) {
 		List<DictWord> dictWords = new ArrayList<>();
 		for (String word : dto.getWords()) {
+			if (StringUtils.isBlank(word)) {
+				continue;
+			}
 			Long count = this.lambdaQuery().eq(DictWord::getWord, word.trim()).count();
 			Assert.isTrue(count == 0, () -> SearchErrorCode.DICT_WORD_EXISTS.exception(word));
 			

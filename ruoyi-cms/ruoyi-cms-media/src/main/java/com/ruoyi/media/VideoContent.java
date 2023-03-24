@@ -72,14 +72,12 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 		// 视频数处理
 		List<CmsVideo> videoList = this.getExtendEntity();
 		// 先删除视频
-		List<Long> deleteVideoIds = videoList.stream().filter(video -> IdUtils.validate(video.getVideoId()))
+		List<Long> updateVideoIds = videoList.stream().filter(video -> IdUtils.validate(video.getVideoId()))
 				.map(CmsVideo::getVideoId).toList();
-		if (deleteVideoIds.size() > 0) {
-			this.getVideoService()
-					.remove(new LambdaQueryWrapper<CmsVideo>()
-							.eq(CmsVideo::getContentId, this.getContentEntity().getContentId())
-							.notIn(CmsVideo::getVideoId, deleteVideoIds));
-		}
+		this.getVideoService()
+				.remove(new LambdaQueryWrapper<CmsVideo>()
+						.eq(CmsVideo::getContentId, this.getContentEntity().getContentId())
+						.notIn(updateVideoIds.size() > 0, CmsVideo::getVideoId, updateVideoIds));
 		// 查找剩余需要修改的视频
 		Map<Long, CmsVideo> oldVideoMap = this.getVideoService().lambdaQuery()
 				.eq(CmsVideo::getContentId, this.getContentEntity().getContentId()).list().stream()

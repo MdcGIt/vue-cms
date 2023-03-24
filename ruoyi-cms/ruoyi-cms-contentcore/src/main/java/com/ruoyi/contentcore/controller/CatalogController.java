@@ -81,7 +81,7 @@ public class CatalogController extends BaseRestController {
 	private final List<IContentType> contentTypes;
 
 	private final AsyncTaskManager asyncTaskManager;
-	
+
 	/**
 	 * 查询栏目数据列表
 	 * 
@@ -157,7 +157,7 @@ public class CatalogController extends BaseRestController {
 	@DeleteMapping("/{catalogId}")
 	public R<String> remove(@PathVariable("catalogId") @Min(1) Long catalogId) {
 		AsyncTask task = new AsyncTask() {
-			
+
 			@Override
 			public void run0() throws Exception {
 				catalogService.deleteCatalog(catalogId);
@@ -201,7 +201,7 @@ public class CatalogController extends BaseRestController {
 	 */
 	@GetMapping("/getContentTypes")
 	public R<?> getContentTypes() {
-		List<Map<String, String>> list = this.contentTypes.stream()
+		List<Map<String, String>> list = this.contentTypes.stream().sorted((c1, c2) -> c1.getOrder() - c2.getOrder())
 				.map(ct -> Map.of("id", ct.getId(), "name", I18nUtils.get(ct.getName()))).toList();
 		return R.ok(list);
 	}
@@ -248,7 +248,7 @@ public class CatalogController extends BaseRestController {
 			if (StringUtils.isEmpty(value)) {
 				value = prop.defaultValue();
 			}
-			if(Objects.nonNull(prop.valueClass())) {
+			if (Objects.nonNull(prop.valueClass())) {
 				configProps.put(prop.getId(), JacksonUtils.from(value, prop.valueClass()));
 			} else {
 				configProps.put(prop.getId(), value);
@@ -296,12 +296,13 @@ public class CatalogController extends BaseRestController {
 	@PostMapping("/move/{from}/{to}")
 	public R<?> moveCatalog(@PathVariable("from") @Min(1) Long fromCatalogId, @PathVariable("to") Long toCatalogId) {
 		CmsCatalog fromCatalog = this.catalogService.getCatalog(fromCatalogId);
-		Assert.notNull(fromCatalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("fromCatalogId", fromCatalogId));
+		Assert.notNull(fromCatalog,
+				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("fromCatalogId", fromCatalogId));
 		CmsCatalog toCatalog = null;
 		if (IdUtils.validate(toCatalogId)) {
 			toCatalog = this.catalogService.getCatalog(toCatalogId);
 			Assert.notNull(toCatalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("toCatalogId", toCatalogId));
-	
+
 			// 目标栏目不能是源栏目的子栏目或自身，且目标栏目不是当前栏目的父级栏目
 			boolean isSelfOfChild = toCatalog.getAncestors().startsWith(fromCatalog.getAncestors())
 					|| toCatalog.getCatalogId().equals(fromCatalog.getParentId());

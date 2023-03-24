@@ -7,6 +7,18 @@ import cn.dev33.satoken.secure.BCrypt;
  */
 public class SecurityUtils {
 	
+	private static final long SUPER_ADMIN_UID = 1;
+	
+	/**
+	 * 是否超级管理员
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public static boolean isSuperAdmin(long userId) {
+		return userId == SUPER_ADMIN_UID;
+	}
+	
 	/**
 	 * 密码加密
 	 * 

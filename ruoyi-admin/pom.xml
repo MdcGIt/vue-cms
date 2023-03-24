@@ -106,11 +106,11 @@
 			<artifactId>ruoyi-cms-word</artifactId>
 		</dependency>
 
-		<!-- 内容索引
+		<!-- 内容索引 -->
 		<dependency>
 			<groupId>com.ruoyi</groupId>
 			<artifactId>ruoyi-cms-search</artifactId>
-		</dependency> -->
+		</dependency>
 	</dependencies>
 
 	<build>

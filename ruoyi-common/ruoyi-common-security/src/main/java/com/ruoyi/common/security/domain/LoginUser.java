@@ -3,7 +3,7 @@ package com.ruoyi.common.security.domain;
 import java.io.Serializable;
 import java.util.List;
 
-import com.ruoyi.common.Constants;
+import com.ruoyi.common.security.SecurityUtils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -83,7 +83,7 @@ public class LoginUser implements Serializable {
 	private Object user;
 	
 	public boolean isSuperAdministrator() {
-		return this.getUserId() == Constants.SUPER_ADMIN;
+		return SecurityUtils.isSuperAdmin(userId);
 	}
 
 	public LoginUser() {

@@ -1,4 +1,4 @@
-package com.ruoyi.contentcore.config.properties;
+package com.ruoyi.system.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
