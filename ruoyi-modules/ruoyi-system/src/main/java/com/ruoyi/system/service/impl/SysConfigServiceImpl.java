@@ -14,7 +14,6 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.ConvertUtils;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.SysConstants;
@@ -43,16 +42,11 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
 	 */
 	@Override
 	public String selectConfigByKey(String configKey) {
-		String configValue = ConvertUtils.toStr(redisCache.getCacheObject(getCacheKey(configKey)));
-		if (StringUtils.isNotEmpty(configValue)) {
-			return configValue;
-		}
-		SysConfig retConfig = this.lambdaQuery().eq(SysConfig::getConfigKey, configKey).one();
-		if (Objects.nonNull(retConfig)) {
-			redisCache.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue());
-			return retConfig.getConfigValue();
-		}
-		return null;
+		String configValue = redisCache.getCacheObject(getCacheKey(configKey), () -> {
+			SysConfig one = this.lambdaQuery().eq(SysConfig::getConfigKey, configKey).one();
+			return Objects.nonNull(one) ? one.getConfigValue() : null;
+		});
+		return configValue;
 	}
 
 	/**

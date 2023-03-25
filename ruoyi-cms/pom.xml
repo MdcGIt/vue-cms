@@ -23,6 +23,7 @@
 		<module>ruoyi-cms-image</module>
 		<module>ruoyi-cms-search</module>
 		<module>ruoyi-cms-media</module>
+		<module>ruoyi-cms-comment</module>
 	</modules>
 	
 	<properties>

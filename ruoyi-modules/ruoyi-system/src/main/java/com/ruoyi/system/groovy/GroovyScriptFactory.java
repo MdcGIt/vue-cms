@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -13,20 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
-import com.xxl.job.core.glue.GlueFactory;
-import com.xxl.job.core.handler.IJobHandler;
+import com.ruoyi.common.utils.SpringUtils;
+import com.ruoyi.common.utils.StringUtils;
 
 import groovy.lang.GroovyClassLoader;
 import jakarta.annotation.Resource;
 
-public class SpringBoot3GlueFactory extends GlueFactory {
-	
-	private static Logger logger = LoggerFactory.getLogger(SpringBoot3GlueFactory.class);
+public class GroovyScriptFactory {
 
-	private static GlueFactory glueFactory = new SpringBoot3GlueFactory();
-	
-	public static GlueFactory getInstance(){
+	private static Logger logger = LoggerFactory.getLogger(GroovyScriptFactory.class);
+
+	private static GroovyScriptFactory glueFactory = new GroovyScriptFactory();
+
+	public static GroovyScriptFactory getInstance() {
 		return glueFactory;
 	}
 
@@ -34,41 +34,43 @@ public class SpringBoot3GlueFactory extends GlueFactory {
 	 * groovy class loader
 	 */
 	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+	
 	private ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
 	/**
 	 * load new instance, prototype
 	 *
-	 * @param codeSource
+	 * @param scriptText
 	 * @return
 	 * @throws Exception
 	 */
-	public IJobHandler loadNewInstance(String codeSource) throws Exception{
-		if (codeSource!=null && codeSource.trim().length()>0) {
-			Class<?> clazz = getCodeSourceClass(codeSource);
+	public BaseGroovyScript loadNewInstance(String scriptText) throws Exception {
+		if (StringUtils.isNotBlank(scriptText)) {
+			Class<?> clazz = getCodeSourceClass(scriptText);
 			if (clazz != null) {
 				Object instance = clazz.getDeclaredConstructor().newInstance();
-				if (instance!=null) {
-					if (instance instanceof IJobHandler) {
+				if (instance != null) {
+					if (instance instanceof BaseGroovyScript groovyScript) {
 						this.injectService(instance);
-						return (IJobHandler) instance;
+						return groovyScript;
 					} else {
-						throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
-								+ "cannot convert from instance["+ instance.getClass() +"] to IJobHandler");
+						throw new IllegalArgumentException(
+								"Cannot convert from instance[" + instance.getClass() + "] to BaseGroovyScript");
 					}
 				}
 			}
 		}
-		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
+		throw new IllegalArgumentException("Groovy script text cannot be empty.");
 	}
-	private Class<?> getCodeSourceClass(String codeSource){
+
+	private Class<?> getCodeSourceClass(String codeSource) {
 		try {
 			// md5
 			byte[] md5 = MessageDigest.getInstance("MD5").digest(codeSource.getBytes());
 			String md5Str = new BigInteger(1, md5).toString(16);
 
 			Class<?> clazz = CLASS_CACHE.get(md5Str);
-			if(clazz == null){
+			if (clazz == null) {
 				clazz = groovyClassLoader.parseClass(codeSource);
 				CLASS_CACHE.putIfAbsent(md5Str, clazz);
 			}
@@ -83,16 +85,10 @@ public class SpringBoot3GlueFactory extends GlueFactory {
 	 * 
 	 * @param instance
 	 */
-	@Override
-	public void injectService(Object instance) {
+	private void injectService(Object instance) {
 		if (instance == null) {
 			return;
 		}
-
-		if (XxlJobSpringExecutor.getApplicationContext() == null) {
-			return;
-		}
-
 		Field[] fields = instance.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			if (Modifier.isStatic(field.getModifiers())) {
@@ -102,26 +98,22 @@ public class SpringBoot3GlueFactory extends GlueFactory {
 			Object fieldBean = null;
 			// with bean-id, bean could be found by both @Resource and @Autowired, or bean
 			// could only be found by @Autowired
-
 			if (AnnotationUtils.getAnnotation(field, Resource.class) != null) {
-				try {
-					Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
-					if (resource.name() != null && resource.name().length() > 0) {
-						fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(resource.name());
-					} else {
-						fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getName());
-					}
-				} catch (Exception e) {
+				Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
+				if (StringUtils.isNotBlank(resource.name())) {
+					fieldBean = SpringUtils.getBean(resource.name());
+				} else {
+					fieldBean = SpringUtils.getBean(field.getName());
 				}
 				if (fieldBean == null) {
-					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
+					fieldBean = SpringUtils.getBean(field.getType());
 				}
 			} else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
 				Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
-				if (qualifier != null && qualifier.value() != null && qualifier.value().length() > 0) {
-					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(qualifier.value());
+				if (Objects.nonNull(qualifier) && StringUtils.isNotBlank(qualifier.value())) {
+					fieldBean = SpringUtils.getBean(qualifier.value());
 				} else {
-					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
+					fieldBean = SpringUtils.getBean(field.getType());
 				}
 			}
 
@@ -137,5 +129,4 @@ public class SpringBoot3GlueFactory extends GlueFactory {
 			}
 		}
 	}
-
 }

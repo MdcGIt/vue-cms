@@ -19,5 +19,6 @@
 		<module>ruoyi-stat</module>
 		<module>ruoyi-search</module>
 		<module>ruoyi-member</module>
+		<module>ruoyi-comment</module>
 	</modules>
 </project>

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -50,12 +51,9 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
 
 	@Override
 	public List<SysDictData> selectDictDatasByType(String dictType) {
-		List<SysDictData> dictDatas = this.redisCache.getCacheObject(SysConstants.CACHE_SYS_DICT_KEY + dictType);
-		if (Objects.isNull(dictDatas)) {
-			dictDatas = this.dictDataMapper
-					.selectList(new LambdaQueryWrapper<SysDictData>().eq(SysDictData::getDictType, dictType));
-			this.setCache(dictType, dictDatas);
-		}
+		List<SysDictData> dictDatas = this.redisCache.getCacheObject(SysConstants.CACHE_SYS_DICT_KEY + dictType, () -> {
+			return new LambdaQueryChainWrapper<>(this.dictDataMapper).eq(SysDictData::getDictType, dictType).list();
+		});
 		return dictDatas;
 	}
 
