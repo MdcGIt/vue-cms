@@ -1,5 +1,7 @@
 package com.ruoyi.system.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,7 @@ public class SysLogininforServiceImpl extends ServiceImpl<SysLogininforMapper, S
 				logininfor.setUserType(userType);
 				logininfor.setUserId(ConvertUtils.toStr(userId));
 				logininfor.setUserName(username);
+				logininfor.setLoginTime(LocalDateTime.now());
 				logininfor.setIpaddr(ip);
 				logininfor.setLoginLocation(IP2RegionUtils.ip2Region(ip));
 				logininfor.setBrowser(browser);
