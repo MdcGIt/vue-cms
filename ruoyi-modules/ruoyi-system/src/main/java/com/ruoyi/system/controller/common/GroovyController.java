@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.system.groovy.BaseGroovyScript;
-import com.ruoyi.system.groovy.SpringBoot3GlueFactory;
+import com.ruoyi.system.groovy.GroovyScriptFactory;
 import com.ruoyi.system.security.AdminUserType;
-import com.xxl.job.core.handler.IJobHandler;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -34,15 +33,11 @@ public class GroovyController {
 	@Priv(type = AdminUserType.TYPE, value = "sys:groovy:exec")
 	@PostMapping("/exec")
 	public R<?> execGroovyScript(@RequestBody ScriptBody scriptBody) throws Exception {
-		IJobHandler jobHandler = SpringBoot3GlueFactory.getInstance().loadNewInstance(scriptBody.getScriptText());
-		if (jobHandler instanceof BaseGroovyScript script) {
-			StringWriter writer = new StringWriter();
-			PrintWriter printWriter = new PrintWriter(writer);
-			script.setPrintWriter(printWriter);
-			script.execute();
-			return R.ok(writer.toString());
-		}
-		return R.fail("The script class must extends com.ruoyi.system.groovy.BaseGroovyScript.");
+		BaseGroovyScript script = GroovyScriptFactory.getInstance().loadNewInstance(scriptBody.getScriptText());
+		StringWriter writer = new StringWriter();
+		script.setPrintWriter(new PrintWriter(writer));
+		script.run();
+		return R.ok(writer.toString());
 	}
 	
 	@Getter
