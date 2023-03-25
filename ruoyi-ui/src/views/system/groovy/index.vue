@@ -1,5 +1,5 @@
 <template>
-  <div class="app-groovy-container">
+  <div class="app-groovy-container" :loading="loading">
     <el-form :model="form" ref="form" :rules="rules" size="small" label-position="top" label-width="140px">
       <el-form-item label="Groovy Script" prop="scriptText">
         <el-input
@@ -22,13 +22,14 @@
   </div>
 </template>
 <script>
+import { Loading } from 'element-ui';
 import { executeGroovySrcity } from "@/api/system/groovy";
 
 export default {
   name: "SysGroovyScript",
   data() {
     return {
-      loading: true,
+      loading: false,
       resultString: "",
       form: {
         scriptText: ""
@@ -45,11 +46,20 @@ export default {
     handleExecute: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.startLoading();
           executeGroovySrcity(this.form).then(response => {
             this.$modal.msgSuccess(this.$t('Common.Success'));
             this.resultString = response.data;
+            this.loading.close();
           });
         }
+      });
+    },
+    startLoading: function() {
+      this.loading = Loading.service({
+        lock: true,
+        text: '执行中...',
+        background: 'rgba(0, 0, 0, 0.7)'
       });
     }
   }
