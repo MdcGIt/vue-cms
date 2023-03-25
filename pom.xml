@@ -372,6 +372,13 @@
 				<artifactId>ruoyi-member</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
+			
+			<!-- 评论模块 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-comment</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
 
 			<!-- CMS Modules Start -->
 			<!-- 内容核心 -->
@@ -441,6 +448,13 @@
 			<dependency>
 				<groupId>com.ruoyi</groupId>
 				<artifactId>ruoyi-cms-search</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
+			
+			<!-- 内容评论模块 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-cms-comment</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
 			<!-- CMS Modules End -->

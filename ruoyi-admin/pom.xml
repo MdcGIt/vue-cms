@@ -111,6 +111,12 @@
 			<groupId>com.ruoyi</groupId>
 			<artifactId>ruoyi-cms-search</artifactId>
 		</dependency>
+		
+		<!-- 内容评论模块 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-cms-comment</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
