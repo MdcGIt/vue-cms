@@ -103,7 +103,7 @@ public class SysProfileController extends BaseRestController {
 	}
 
 	@SaAdminCheckLogin
-	@Log(title = "个人中心", businessType = BusinessType.UPDATE)
+	@Log(title = "个人中心", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/updatePwd")
 	public R<?> updatePwd(String oldPassword, String newPassword) {
 		LoginUser loginUser = StpAdminUtil.getLoginUser();
