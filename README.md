@@ -13,7 +13,7 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。技术栈：SpringBoot3 +
 服务器内存不太够，未部署es和xxl-job。
 
 ##### 本地部署开启es和xxl-job:
-- 去掉ruoyi-admin/pom.xml内容索引模块依赖注释。
+- 修改application-prod.yml配置spring.data.elasticsearch.repositories.enabled=true
 - 修改application-dev.yml配置xxl.job.enable=true。
 
 前台网站地址：<http://www.swikoon.com>
@@ -45,7 +45,7 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。技术栈：SpringBoot3 +
 
 *   [x] 友链管理
 *   [x] 广告管理
-*   [ ] 评论管理
+*   [x] 评论管理
 *   [ ] 留言管理
 *   [ ] 调查投票
 
