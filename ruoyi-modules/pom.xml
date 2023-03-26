@@ -20,5 +20,6 @@
 		<module>ruoyi-search</module>
 		<module>ruoyi-member</module>
 		<module>ruoyi-comment</module>
+		<module>ruoyi-vote</module>
 	</modules>
 </project>
