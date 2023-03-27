@@ -112,7 +112,7 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		comment.setIp(dto.getClientIp());
 		comment.setUserAgent(dto.getUserAgent());
 		comment.setLocation(IP2RegionUtils.ip2Region(dto.getClientIp()));
-		comment.setClientType(ServletUtils.getClientType(dto.getUserAgent()));
+		comment.setClientType(ServletUtils.getDeviceType(dto.getUserAgent()));
 		this.commentService.save(comment);
 		// 提供扩展点
 		this.applicationContext.publishEvent(new AfterCommentSubmitEvent(this, comment));

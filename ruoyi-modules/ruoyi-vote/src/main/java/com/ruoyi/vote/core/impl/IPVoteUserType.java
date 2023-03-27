@@ -16,7 +16,7 @@ public class IPVoteUserType implements IVoteUserType {
 
 	@Override
 	public String getName() {
-		return "$t{VOTE.ITEM_TYPE.IP}";
+		return "$t{VOTE.USER_TYPE.IP}";
 	}
 	
 }

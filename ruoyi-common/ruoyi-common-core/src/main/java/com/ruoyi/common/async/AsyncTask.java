@@ -148,6 +148,9 @@ public abstract class AsyncTask implements Runnable {
 	 */
 	public void interrupt() {
 		log.debug("[{}]Task interrupted: {}", Thread.currentThread().getName(), this.getTaskId());
+		if (this.interrupt) {
+			return;
+		}
 		this.interrupt = true;
 		this.setInterruptTime(LocalDateTime.now());
 	}

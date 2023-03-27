@@ -24,6 +24,7 @@
 		<module>ruoyi-cms-search</module>
 		<module>ruoyi-cms-media</module>
 		<module>ruoyi-cms-comment</module>
+		<module>ruoyi-cms-vote</module>
 	</modules>
 	
 	<properties>

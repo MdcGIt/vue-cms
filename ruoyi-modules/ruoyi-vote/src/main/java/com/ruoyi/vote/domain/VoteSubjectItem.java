@@ -49,12 +49,12 @@ public class VoteSubjectItem extends BaseEntity {
 	/**
 	 * 选项描述
 	 */
-	private String desc;
+	private String description;
 
 	/**
 	 * 排序标识
 	 */
-	private Long sortFlag;
+	private Integer sortFlag;
 	
 	/**
 	 * 投票数

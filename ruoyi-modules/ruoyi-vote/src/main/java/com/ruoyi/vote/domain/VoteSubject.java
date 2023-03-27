@@ -47,11 +47,17 @@ public class VoteSubject extends BaseEntity {
 	/**
 	 * 排序标识
 	 */
-	private Long sortFlag;
+	private Integer sortFlag;
 	
 	/**
 	 * 选项列表
 	 */
 	@TableField(exist = false)
 	private List<VoteSubjectItem> itemList;
+	
+	/**
+	 * 排到指定主题前
+	 */
+	@TableField(exist = false)
+	private Long nextSubjectId;
 }

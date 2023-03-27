@@ -8,7 +8,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.system.fixed.dict.UserStatus;
+import com.ruoyi.system.validator.Dict;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,49 +38,69 @@ public class Vote extends BaseEntity {
 	/**
 	 * 唯一标识编码
 	 */
+	@Pattern(regexp = "^[A-Za-z0-9_]+$", message = "编码不能为空且只能使用大小写字母及数字组合")
 	private String code;
 
 	/**
 	 * 投票标题
 	 */
+	@NotEmpty
 	private String title;
 
 	/**
 	 * 投票开始时间
 	 */
+	@NotEmpty
 	private LocalDateTime startTime;
 
 	/**
 	 * 投票结束时间
 	 */
+	@NotEmpty
 	private LocalDateTime endTime;
-	
+
 	/**
-	 * 投票用户类型（IP、浏览器指纹，会员）
+	 * 投票用户类型（IP、浏览器指纹，登录用户）
 	 */
+	@NotEmpty
 	private String userType;
-	
+
 	/**
 	 * 每日投票限制次数
 	 */
+	@Min(1)
 	private Integer dayLimit;
-	
+
 	/**
 	 * 总共可投票次数
 	 */
+	@Min(1)
 	private String totalLimit;
-	
+
 	/**
 	 * 状态
+	 * 
 	 * @see com.ruoyi.vote.fixed.dict.VoteStatus
 	 */
-	private Integer status;
+	@Dict(UserStatus.TYPE)
+	private String status;
 
 	/**
 	 * 结果查看方式（不允许查看、投票后可看、不限制）
 	 */
-	private String resultViewType;
+	@NotEmpty
+	private String viewType;
+
+	/**
+	 * 投票总人数
+	 */
+	private Integer total;
 	
+	/**
+	 * 来源归属标识，例如：cms:siteid
+	 */
+	private String source;
+
 	/**
 	 * 主题列表
 	 */
