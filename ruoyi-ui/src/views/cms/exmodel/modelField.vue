@@ -1,115 +1,105 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              label-width="68px"
-              class="el-form-search">
+      <el-form 
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        label-width="68px"
+        class="el-form-search">
         <el-form-item prop="query">
           <el-input placeholder="数据字段名称/编码查询" v-model="queryParams.query" size="mini"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="mini"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="mini"
-                    @click="resetQuery">重置</el-button>
+          <el-button 
+            type="primary"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleQuery">搜索</el-button>
+          <el-button 
+            icon="el-icon-refresh"
+            size="mini"
+            @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row class="mb10">
-      <el-button plain
-                  type="info"
-                  icon="el-icon-back"
-                  size="mini"
-                  @click="handleGoBack">返回模型列表</el-button>
-      <el-button plain
-                  type="primary"
-                  icon="el-icon-plus"
-                  size="mini"
-                  @click="handleAdd">新建</el-button>
-      <el-button type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                  :disabled="multiple"
-                  @click="handleBatchDelete">删除</el-button>
+      <el-button 
+        plain
+        type="info"
+        icon="el-icon-back"
+        size="mini"
+        @click="handleGoBack">返回模型列表</el-button>
+      <el-button 
+        plain
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
+        @click="handleAdd">新建</el-button>
+      <el-button 
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
+        @click="handleBatchDelete">删除</el-button>
     </el-row>
     <el-row>
-      <el-table v-loading="loading"
-            :data="fieldList"
-            @selection-change="handleSelectionChange">
-      <el-table-column type="selection"
-                       width="55"
-                       align="center" />
-        <el-table-column label="名称"
-                         align="center"
-                         prop="name" />
-        <el-table-column label="编码"
-                         align="center"
-                         prop="code" />
-        <el-table-column label="控件类型"
-                         align="center"
-                         prop="controlType">
+      <el-table v-loading="loading" :data="fieldList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="名称" align="center" prop="name" />
+        <el-table-column label="编码" align="center" prop="code" />
+        <el-table-column label="控件类型" align="center" prop="controlType">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.MetaControlType" :value="scope.row.controlType"/>
           </template>
         </el-table-column>
-        <el-table-column label="对应数据表字段"
-                         align="center"
-                         prop="fieldName" />
-        <el-table-column label="是否必填"
-                         align="center"
-                         prop="mandatoryFlag">
+        <el-table-column label="对应数据表字段" align="center" prop="fieldName" />
+        <el-table-column label="是否必填" align="center" prop="mandatoryFlag">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.YesOrNo" :value="scope.row.mandatoryFlag"/>
           </template>
         </el-table-column>
-        <el-table-column label="操作"
-                         align="center"
-                         width="300" 
-                         class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-button size="mini"
-                       type="text"
-                       icon="el-icon-edit"
-                       @click="handleEdit(scope.row)">修改</el-button>
-            <el-button size="mini"
-                       type="text"
-                       icon="el-icon-delete"
-                       @click="handleDelete(scope.row)">删除</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
+              @click="handleEdit(scope.row)">修改</el-button>
+            <el-button 
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
+              @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="fieldTotal>0"
-                  :total="fieldTotal"
-                  :page.sync="queryParams.pageNum"
-                  :limit.sync="queryParams.pageSize"
-                  @pagination="loadXModelFieldList" />
+      <pagination 
+        v-show="fieldTotal>0"
+        :total="fieldTotal"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="loadXModelFieldList" />
     </el-row>
     <!-- 添加/编辑弹窗 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               width="600px"
-               :close-on-click-modal="false"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="100px"
-               class="el-form-dialog">
-        <el-form-item label="名称"
-                      prop="name">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      width="600px"
+      :close-on-click-modal="false"
+      append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px" class="el-form-dialog">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="编码"
-                      prop="code">
+        <el-form-item label="编码" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item v-if="!isDefaultTable" label="数据表字段"
-                      prop="fieldName">
+        <el-form-item v-if="!isDefaultTable" label="数据表字段" prop="fieldName">
           <el-select v-model="form.fieldName" placeholder="请选择" size="small">
             <el-option
               v-for="fieldName in tableFields"
@@ -119,8 +109,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="isDefaultTable" label="字段类型"
-                      prop="fieldType">
+        <el-form-item v-if="isDefaultTable" label="字段类型" prop="fieldType">
           <el-select v-model="form.fieldType" placeholder="请选择" size="small">
             <el-option
               v-for="dict in dict.type.MetaFieldType"
@@ -130,8 +119,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="控件类型"
-                      prop="controlType">
+        <el-form-item label="控件类型" prop="controlType">
           <el-select v-model="form.controlType" placeholder="请选择" size="small">
             <el-option
               v-for="dict in dict.type.MetaControlType"
@@ -141,8 +129,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="是否必填"
-                      prop="mandatoryFlag">
+        <el-form-item label="是否必填" prop="mandatoryFlag">
           <el-select v-model="form.mandatoryFlag" placeholder="请选择" size="small">
             <el-option
               v-for="dict in dict.type.YesOrNo"
@@ -152,12 +139,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="默认值"
-                      prop="defaultValue">
+        <el-form-item label="默认值" prop="defaultValue">
           <el-input v-model="form.defaultValue" />
         </el-form-item>
-        <el-form-item v-if="showOptions" label="可选项配置"
-                      prop="options">
+        <el-form-item v-if="showOptions" label="可选项配置" prop="options">
           <div>
             <el-radio-group v-model="form.options.type">
               <el-radio label="text">手动输入</el-radio>
@@ -165,22 +150,17 @@
             </el-radio-group>
           </div>
           <div>
-            <el-input v-if="form.options.type==='text'"
-                      type="textarea"
-                      v-model="form.options.value" />
-            <el-input v-if="form.options.type==='dict'"
-                      v-model="form.options.value" />
+            <el-input v-if="form.options.type==='text'" type="textarea" v-model="form.options.value" />
+            <el-input v-if="form.options.type==='dict'" v-model="form.options.value" />
           </div>
         </el-form-item>
-        <el-form-item label="备注"
-                      prop="remark">
+        <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="form.remark" />
         </el-form-item>
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button type="primary"
-                   @click="handleAddSave">确 定</el-button>
+        <el-button type="primary" @click="handleAddSave">确 定</el-button>
         <el-button @click="closeDialog(false)">取 消</el-button>
       </div>
     </el-dialog>
@@ -194,17 +174,6 @@
 <script>
 import { addXModelField, editXModelField, deleteXModelField, listXModelField, listXModelTableFields } from "@/api/contentcore/exmodel";
 
-const validFieldType = (rule, value, callback) => {
-  if (this.isDefaultTable) {
-    return callback(new Error("请输入账户信息"));
-  } else {
-    if (validateAccountNumber(value)) {
-      callback();
-    } else {
-      return callback(new Error('账号格式不正确'))
-    }
-  }
-};
 export default {
   name: "CMSEXModelField",
   dicts: [ 'MetaFieldType', 'MetaControlType', 'YesOrNo' ],

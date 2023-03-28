@@ -28,6 +28,7 @@ import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.vote.core.IVoteItemType;
 import com.ruoyi.vote.core.IVoteUserType;
 import com.ruoyi.vote.domain.Vote;
+import com.ruoyi.vote.priv.VotePriv;
 import com.ruoyi.vote.service.IVoteService;
 
 import jakarta.validation.constraints.Min;
@@ -45,7 +46,7 @@ public class VoteController extends BaseRestController {
 
 	private final List<IVoteItemType> itemTypes;
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(required = false) String title, @RequestParam(required = false) String status) {
 		PageRequest pr = this.getPageRequest();
@@ -55,7 +56,7 @@ public class VoteController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
 	@GetMapping("/{voteId}")
 	public R<?> getVoteDetail(@PathVariable @Min(1) Long voteId) {
 		Vote vote = this.voteService.getById(voteId);
@@ -64,6 +65,7 @@ public class VoteController extends BaseRestController {
 	}
 
 	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
 	@GetMapping("/userTypes")
 	public R<?> getVoteUserTypes() {
 		List<Map<String, String>> list = this.userTypes.stream()
@@ -79,7 +81,7 @@ public class VoteController extends BaseRestController {
 		return R.ok(list);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "vote:mgr.add")
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.ADD)
 	@PostMapping
 	public R<?> add(@RequestBody Vote vote) {
 		vote.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -87,7 +89,7 @@ public class VoteController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = { "vote:mgr.add", "vote:mgr.edit" })
+	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PutMapping
 	public R<?> update(@RequestBody Vote vote) {
 		vote.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -95,7 +97,7 @@ public class VoteController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "vote:mgr.delete")
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.DELETE)
 	@DeleteMapping
 	public R<String> delete(@RequestBody @NotEmpty List<Long> dictWordIds) {
 		this.voteService.deleteVotes(dictWordIds);

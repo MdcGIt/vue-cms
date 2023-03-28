@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -25,8 +26,9 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.link.domain.CmsLink;
 import com.ruoyi.link.domain.dto.LinkDTO;
+import com.ruoyi.link.priv.FriendLinkPriv;
 import com.ruoyi.link.service.ILinkService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import jakarta.validation.constraints.Min;
@@ -41,7 +43,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
 @RestController
 @RequestMapping("/cms/link")
 @RequiredArgsConstructor
@@ -51,6 +52,7 @@ public class LinkController extends BaseRestController {
 
 	private final ILinkService linkService;
 
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.VIEW)
 	@GetMapping
 	public R<?> getPageList(@RequestParam("groupId") @Min(1) Long groupId,
 			@RequestParam(value = "query", required = false) String query) {
@@ -68,6 +70,7 @@ public class LinkController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.ADD)
 	@PostMapping
 	public R<?> add(@RequestBody LinkDTO dto) {
 		CmsLink link = new CmsLink();
@@ -82,6 +85,7 @@ public class LinkController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.ADD, FriendLinkPriv.EDIT } )
 	@PutMapping
 	public R<String> edit(@RequestBody LinkDTO dto) {
 		CmsLink link = new CmsLink();
@@ -91,6 +95,7 @@ public class LinkController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.DELETE)
 	@DeleteMapping
 	public R<String> remove(@RequestBody @NotEmpty List<LinkDTO> dtoList) {
 		List<Long> linkIds = dtoList.stream().map(LinkDTO::getLinkId).toList();

@@ -233,4 +233,16 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	public static LocalDateTime epochMilliToLocalDateTime(long epochMilli) {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneId.systemDefault());
 	}
+
+	/**
+	 * 当前时间是否在指定时间范围内
+	 * 
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public static boolean isNowBetween(LocalDateTime startTime, LocalDateTime endTime) {
+		LocalDateTime now = LocalDateTime.now();
+		return startTime.isBefore(now) && endTime.isAfter(now);
+	}
 }

@@ -26,27 +26,33 @@
     <el-row :gutter="10"
             class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary"
-                   icon="el-icon-plus"
-                   size="mini"
-                   plain
-                   @click="handleAdd">新增</el-button>
+        <el-button 
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          plain
+          v-hasPermi="['cms:friendlink:add']"
+          @click="handleAdd">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success"
-                   icon="el-icon-edit"
-                   size="mini"
-                   plain
-                   :disabled="single"
-                   @click="handleEdit">编辑</el-button>
+        <el-button 
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          plain
+          :disabled="single"
+          v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
+          @click="handleEdit">编辑</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   size="mini"
-                   plain
-                   :disabled="multiple"
-                   @click="handleDelete">删除</el-button>
+        <el-button 
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          plain
+          :disabled="multiple"
+          v-hasPermi="['cms:friendlink:delete']"
+          @click="handleDelete">删除</el-button>
       </el-col>
     </el-row>
 
@@ -85,14 +91,18 @@
                           width="180" 
                           class-name="small-padding fixed-width">
             <template slot-scope="scope">
-              <el-button size="mini"
-                        type="text"
-                        icon="el-icon-edit"
-                        @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="mini"
-                        type="text"
-                        icon="el-icon-delete"
-                        @click="handleDelete(scope.row)">删除</el-button>
+              <el-button 
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
+                @click="handleEdit(scope.row)">编辑</el-button>
+              <el-button 
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                v-hasPermi="[ 'cms:friendlink:delete' ]"
+                @click="handleDelete(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

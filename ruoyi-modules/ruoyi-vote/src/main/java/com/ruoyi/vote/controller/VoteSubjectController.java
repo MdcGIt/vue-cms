@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.vote.domain.VoteSubject;
 import com.ruoyi.vote.domain.VoteSubjectItem;
 import com.ruoyi.vote.domain.dto.SaveSubjectItemsDTO;
+import com.ruoyi.vote.priv.VotePriv;
 import com.ruoyi.vote.service.IVoteSubjectItemService;
 import com.ruoyi.vote.service.IVoteSubjectService;
 
@@ -28,7 +30,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
-@SaAdminCheckLogin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/vote/subject")
@@ -38,12 +39,14 @@ public class VoteSubjectController extends BaseRestController {
 
 	private final IVoteSubjectItemService voteSubjectItemService;
 
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
 	@GetMapping
 	public R<?> getVoteSubjects(@RequestParam @Min(1) Long voteId) {
 		List<VoteSubject> subjects = this.voteSubjectService.getVoteSubjectList(voteId);
 		return this.bindDataTable(subjects);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
 	@GetMapping("/{subjectId}")
 	public R<?> getVoteSubjectDetail(@PathVariable @Min(1) Long subjectId) {
 		VoteSubject subject = this.voteSubjectService.getById(subjectId);
@@ -51,6 +54,7 @@ public class VoteSubjectController extends BaseRestController {
 		return R.ok(subject);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PostMapping
 	public R<?> add(@RequestBody VoteSubject voteSubject) {
 		voteSubject.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -58,6 +62,7 @@ public class VoteSubjectController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PutMapping
 	public R<?> update(@RequestBody VoteSubject voteSubject) {
 		voteSubject.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -65,12 +70,14 @@ public class VoteSubjectController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@DeleteMapping
 	public R<String> delete(@RequestBody @NotEmpty List<Long> subjectIds) {
 		this.voteSubjectService.deleteVoteSubjects(subjectIds);
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
 	@GetMapping("/items/{subjectId}")
 	public R<?> getSubjectItems(@PathVariable @Min(1) Long subjectId) {
 		List<VoteSubjectItem> list = voteSubjectItemService.lambdaQuery().eq(VoteSubjectItem::getSubjectId, subjectId)
@@ -78,6 +85,7 @@ public class VoteSubjectController extends BaseRestController {
 		return this.bindDataTable(list);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PostMapping("/items")
 	public R<?> saveSubjectItems(@RequestBody SaveSubjectItemsDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());

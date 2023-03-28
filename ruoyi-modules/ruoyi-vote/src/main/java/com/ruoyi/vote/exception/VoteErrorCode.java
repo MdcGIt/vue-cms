@@ -22,7 +22,12 @@ public enum VoteErrorCode implements ErrorCode {
 	/**
 	 * 超出问卷调查每日参与次数上限
 	 */
-	VOTE_DAY_LIMIT;
+	VOTE_DAY_LIMIT,
+	
+	/**
+	 * 问卷调查还未开始或已过期
+	 */
+	TIME_ERR;
 	
 	@Override
 	public String value() {

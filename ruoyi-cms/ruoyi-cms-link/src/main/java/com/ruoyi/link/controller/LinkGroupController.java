@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -25,8 +26,9 @@ import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.link.domain.CmsLinkGroup;
 import com.ruoyi.link.domain.dto.LinkGroupDTO;
+import com.ruoyi.link.priv.FriendLinkPriv;
 import com.ruoyi.link.service.ILinkGroupService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -40,7 +42,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cms/link_group")
@@ -50,6 +51,7 @@ public class LinkGroupController extends BaseRestController {
 
 	private final ILinkGroupService linkGroupService;
 
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.VIEW)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(value = "query", required = false) String query) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -61,6 +63,7 @@ public class LinkGroupController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.ADD)
 	@PostMapping
 	public R<?> add(@RequestBody LinkGroupDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -78,6 +81,7 @@ public class LinkGroupController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.ADD, FriendLinkPriv.EDIT })
 	@PutMapping
 	public R<String> edit(@RequestBody LinkGroupDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -93,6 +97,7 @@ public class LinkGroupController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.DELETE)
 	@DeleteMapping
 	public R<String> remove(@RequestBody @NotEmpty List<LinkGroupDTO> dtoList) {
 		List<Long> linkGroupIds = dtoList.stream().map(LinkGroupDTO::getLinkGroupId).toList();

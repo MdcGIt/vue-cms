@@ -49,6 +49,10 @@ public class VoteApiServiceImpl implements IVoteApiService {
 		IVoteUserType voteUserType = this.voteService.getVoteUserType(vote.getUserType());
 		String userId = voteUserType.getUserId();
 		
+		// 判断投票时间
+		boolean checkTime = DateUtils.isNowBetween(vote.getStartTime(), vote.getEndTime());
+		Assert.isTrue(checkTime, VoteErrorCode.TIME_ERR::exception);
+		
 		RLock lock = redissonClient.getLock("VoteSubmit-" + userId);
 		lock.lock();
 		try {

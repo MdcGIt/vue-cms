@@ -37,6 +37,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
+          v-hasPermi="['vote:mgr:add']"
         >{{ $t('Common.Add') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -47,6 +48,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
+          v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
         >{{ $t('Common.Edit') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -57,6 +59,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
+          v-hasPermi="['vote:mgr:delete']"
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadVoteList"></right-toolbar>
@@ -104,18 +107,21 @@
             type="text"
             icon="el-icon-edit"
             @click="handleVoteSubject(scope.row)"
+            v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
           >编辑主题</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
+            v-hasPermi="['vote:mgr:edit']"
           >{{ $t('Common.Edit') }}</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
+            v-hasPermi="['vote:mgr:delete']"
           >{{ $t('Common.Delete') }}</el-button>
         </template>
       </el-table-column>
