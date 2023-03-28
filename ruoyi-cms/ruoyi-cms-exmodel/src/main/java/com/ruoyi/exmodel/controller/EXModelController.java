@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.exmodel.priv.EXModelPriv;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.xmodel.domain.XModel;
@@ -44,7 +47,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
 @RestController
 @RequestMapping("/cms/exmodel")
 @RequiredArgsConstructor
@@ -58,6 +60,7 @@ public class EXModelController extends BaseRestController {
 
 	private final ISiteService siteService;
 
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.VIEW)
 	@GetMapping
 	public R<?> getModelList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -70,6 +73,7 @@ public class EXModelController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.ADD)
 	@PostMapping
 	public R<?> add(@RequestBody XModelDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -80,6 +84,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@PutMapping
 	public R<?> edit(@RequestBody XModelDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -87,6 +92,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<XModelDTO> dtoList) {
 		if (dtoList == null || dtoList.size() == 0) {
@@ -97,6 +103,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.VIEW)
 	@GetMapping("/fields")
 	public R<?> getModelFieldList(@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "modelId", required = false) Long modelId) {
@@ -107,6 +114,7 @@ public class EXModelController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@PostMapping("/field")
 	public R<?> addField(@RequestBody XModelFieldDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -114,6 +122,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@PutMapping("/field")
 	public R<?> editField(@RequestBody XModelFieldDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -121,12 +130,14 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@DeleteMapping("/field")
 	public R<?> removeField(@RequestBody @NotEmpty List<Long> fieldIds) {
 		this.modelFieldService.deleteModelField(fieldIds);
 		return R.ok();
 	}
 
+	@SaAdminCheckLogin
 	@GetMapping("data/{modelId}")
 	public R<?> getModelData(@PathVariable @NotNull @Min(1) Long modelId, @RequestParam String pkValue) {
 		List<XModelFieldDataDTO> mfd = this.modelFieldService.getFieldDatas(modelId, pkValue);

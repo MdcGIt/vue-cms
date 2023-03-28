@@ -26,6 +26,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAddVoteSubject"
+          v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
         >{{ $t('Common.Add') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -36,6 +37,7 @@
           size="mini"
           :disabled="single"
           @click="handleEditVoteSubject"
+          v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
         >{{ $t('Common.Edit') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -46,6 +48,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDeleteVoteSubject"
+          v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -124,17 +127,20 @@
             plain
             size="mini"
             icon="el-icon-plus"
+            v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
             @click="handleAddVoteSubject(scope.row)">插入主题</el-button>
           <el-button
             plain
             size="mini"
             icon="el-icon-edit"
+            v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
             @click="handleEditVoteSubject(scope.row)">编辑</el-button>
           <el-button
             plain
             size="mini"
             icon="el-icon-delete"
             type="danger"
+            v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
             @click="handleDeleteVoteSubject(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -173,6 +179,7 @@
             icon="el-icon-edit"
             size="mini"
             @click="handleSaveItems"
+            v-hasPermi="['vote:mgr:add', 'vote:mgr:edit']"
           >保存</el-button>
         </el-col>
       </el-row>

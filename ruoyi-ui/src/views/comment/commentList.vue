@@ -2,13 +2,34 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="success" plain icon="el-icon-cricle-check" size="small" :disabled="commentMultiple" @click="handleAuditPass">审核通过</el-button>
+        <el-button
+          type="success" 
+          plain 
+          icon="el-icon-cricle-check"
+          size="small" 
+          :disabled="commentMultiple" 
+          v-hasPermi="['comment:mgr:audit']"
+          @click="handleAuditPass">审核通过</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-cricle-close" size="small" :disabled="commentMultiple" @click="handleAuditNotPass">审核不通过</el-button>
+        <el-button 
+          type="warning" 
+          plain 
+          icon="el-icon-cricle-close" 
+          size="small" 
+          :disabled="commentMultiple"
+          v-hasPermi="['comment:mgr:audit']"
+          @click="handleAuditNotPass">审核不通过</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="small" :disabled="commentMultiple" @click="handleDelete" >{{ $t('Common.Delete') }}</el-button>
+        <el-button 
+          type="danger" 
+          plain 
+          icon="el-icon-delete" 
+          size="small" 
+          :disabled="commentMultiple" 
+          v-hasPermi="['comment:mgr:delete']"
+          @click="handleDelete" >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadCommentList"></right-toolbar>
     </el-row>

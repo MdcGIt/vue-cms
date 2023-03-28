@@ -12,6 +12,9 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。技术栈：SpringBoot3 +
 
 服务器内存不太够，未部署es和xxl-job。
 
+演示站的静态资源已提交到[ruoyi-vue-cms-wwwroot](https://gitee.com/liweiyi/ruoyi-vue-cms-wwwroot)，如有需要自行下载吧。
+CMS资源路径配置application.yml中ruoyi.cms.resourceRoot，默认与项目同级的wwwroot_release
+
 ##### 本地部署开启es和xxl-job:
 - 修改application-prod.yml配置spring.data.elasticsearch.repositories.enabled=true
 - 修改application-dev.yml配置xxl.job.enable=true。

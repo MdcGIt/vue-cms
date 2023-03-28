@@ -22,21 +22,23 @@
     </el-row>
     <el-row :gutter="10"
             class="mb8">
-      <el-button plain
-                  type="primary"
-                  icon="el-icon-plus"
-                  size="mini"
-                  @click="handleAdd">新建</el-button>
-      <el-button type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                  :disabled="multiple"
-                  @click="handleBatchDelete">删除</el-button>
+      <el-button 
+        plain
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        v-hasPermi="[ 'cms:exmodel:add' ]"
+        @click="handleAdd">新建</el-button>
+      <el-button 
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        v-hasPermi="[ 'cms:exmodel:delete' ]"
+        @click="handleBatchDelete">删除</el-button>
     </el-row>
     <el-row>
-      <el-table v-loading="loading"
-            :data="xmodelList"
-            @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" :data="xmodelList" @selection-change="handleSelectionChange">
       <el-table-column type="selection"
                        width="55"
                        align="center" />
@@ -49,55 +51,53 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="编码"
-                          prop="code" />
-        <el-table-column label="分类"
-                          prop="ownerType" />
-        <el-table-column label="数据表"
-                          prop="tableName" />
-        <el-table-column label="操作"
-                          align="center"
-                          width="300" 
-                          class-name="small-padding fixed-width">
+        <el-table-column label="编码" prop="code" />
+        <el-table-column label="分类" prop="ownerType" />
+        <el-table-column label="数据表" prop="tableName" />
+        <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-button size="mini"
-                        type="text"
-                        icon="el-icon-edit"
-                        @click="handleEdit(scope.row)">修改</el-button>
-            <el-button size="mini"
-                        type="text"
-                        icon="el-icon-delete"
-                        @click="handleDelete(scope.row)">删除</el-button>
+            <el-button 
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
+              @click="handleEdit(scope.row)">修改</el-button>
+            <el-button 
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              v-hasPermi="[ 'cms:exmodel:delete' ]"
+              @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="xmodelTotal>0"
-                :total="xmodelTotal"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="loadXModelList" />
+      <pagination 
+        v-show="xmodelTotal>0"
+        :total="xmodelTotal"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="loadXModelList" />
     </el-row>
     <!-- 添加/编辑模型弹窗 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               width="600px"
-               :close-on-click-modal="false"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="100px"
-               class="el-form-dialog">
-        <el-form-item label="名称"
-                      prop="name">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      width="600px"
+      :close-on-click-modal="false"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="100px"
+        class="el-form-dialog">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="编码"
-                      prop="code">
+        <el-form-item label="编码" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="数据存储表"
-                      prop="tableName">
+        <el-form-item label="数据存储表" prop="tableName">
           <el-select v-model="form.tableName" filterable placeholder="请选择">
             <el-option
               v-for="item in xmodelDataTableList"
@@ -107,15 +107,12 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注"
-                      prop="remark">
+        <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="form.remark" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary"
-                   @click="handleAddSave">确 定</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAddSave">确 定</el-button>
         <el-button @click="closeDialog(false)">取 消</el-button>
       </div>
     </el-dialog>
