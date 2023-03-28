@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 public interface IVoteSubjectService extends IService<VoteSubject> {
 
 	/**
-	 * 获取指定调查投票的所有主题列表
+	 * 获取指定问卷调查的所有主题列表
 	 * 
 	 * @param voteId
 	 * @return
@@ -19,21 +19,21 @@ public interface IVoteSubjectService extends IService<VoteSubject> {
 	List<VoteSubject> getVoteSubjectList(Long voteId);
 
 	/**
-	 * 添加投票主题数据
+	 * 添加问卷调查主题数据
 	 * 
 	 * @param voteSubject
 	 */
 	void addVoteSubject(VoteSubject voteSubject);
 
 	/**
-	 * 更新投票主题数据
+	 * 更新问卷调查主题数据
 	 * 
 	 * @param voteSubject
 	 */
 	void updateVoteSubject(VoteSubject voteSubject);
 
 	/**
-	 * 删除投票主题数据
+	 * 删除问卷调查主题数据
 	 * 
 	 * @param subjectIds
 	 */

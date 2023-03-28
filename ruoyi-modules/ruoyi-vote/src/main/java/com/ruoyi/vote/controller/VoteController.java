@@ -47,9 +47,10 @@ public class VoteController extends BaseRestController {
 
 	@SaAdminCheckLogin
 	@GetMapping
-	public R<?> getPageList(@RequestParam(required = false) String title) {
+	public R<?> getPageList(@RequestParam(required = false) String title, @RequestParam(required = false) String status) {
 		PageRequest pr = this.getPageRequest();
 		Page<Vote> page = this.voteService.lambdaQuery().like(StringUtils.isNotEmpty(title), Vote::getTitle, title)
+				.eq(StringUtils.isNotEmpty(status), Vote::getStatus, status)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 		return this.bindDataTable(page);
 	}

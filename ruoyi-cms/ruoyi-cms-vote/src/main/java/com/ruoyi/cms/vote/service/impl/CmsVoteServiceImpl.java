@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class CmsVoteServiceImpl implements ICmsVoteService {
 
 	/**
-	 * 获取投票来源字段标识
+	 * 获取问卷调查来源字段标识
 	 * 
 	 * @param siteId
 	 * @return

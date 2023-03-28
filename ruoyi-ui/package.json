@@ -1,9 +1,9 @@
 {
-  "name": "RuoYi-Vue-CMS",
+  "name": "ruoyi-vue-cms",
   "version": "3.8.4",
-  "description": "RuoYi-Vue-CMS",
+  "description": "RuoYi-Vue-CMS[内容管理系统]",
   "author": "",
-  "license": "Apache2.0",
+  "license": "Apache-2.0",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build:prod": "vue-cli-service build",

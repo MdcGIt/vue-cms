@@ -8,6 +8,13 @@ export function getVoteSubjectList(voteId) {
   })
 }
 
+export function getVoteSubjectDetail(subjectId) {
+  return request({
+    url: '/vote/subject/' + subjectId,
+    method: 'get'
+  })
+}
+
 export function addVoteSubject(data) {
   return request({
     url: '/vote/subject',
@@ -32,9 +39,16 @@ export function deleteVoteSubjects(voteIds) {
   })
 }
 
+export function getSubjectItems(subjectId) {
+  return request({
+    url: '/vote/subject/items/' + subjectId,
+    method: 'get'
+  })
+}
+
 export function saveSubjectItems(data) {
   return request({
-    url: '/vote/subject/item',
+    url: '/vote/subject/items',
     method: 'post',
     data: data
   })

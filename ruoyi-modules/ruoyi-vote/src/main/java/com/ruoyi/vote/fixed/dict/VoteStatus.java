@@ -11,7 +11,7 @@ import com.ruoyi.system.fixed.FixedDictType;
 import com.ruoyi.system.service.ISysDictTypeService;
 
 /**
- * 调查投票状态
+ * 问卷调查状态
  */
 @Component(FixedDictType.BEAN_PREFIX + VoteStatus.TYPE)
 public class VoteStatus extends FixedDictType {
@@ -22,7 +22,7 @@ public class VoteStatus extends FixedDictType {
 
 	public static final String STOP = "1"; // 停用
 
-	public static final String CLOSE = "2"; // 关闭，关闭的投票表示归档不可再变更
+	public static final String CLOSE = "2"; // 关闭，关闭的问卷调查表示归档不可再变更
 	
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 

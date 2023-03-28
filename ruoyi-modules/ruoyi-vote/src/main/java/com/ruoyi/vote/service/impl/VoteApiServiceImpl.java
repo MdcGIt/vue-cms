@@ -1,22 +1,26 @@
 package com.ruoyi.vote.service.impl;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.exception.CommonErrorCode;
-import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
-import com.ruoyi.vote.domain.Vote;
-import com.ruoyi.vote.domain.VoteSubject;
-import com.ruoyi.vote.domain.VoteSubjectItem;
-import com.ruoyi.vote.domain.vo.VoteSubjectVO;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.vote.core.IVoteUserType;
+import com.ruoyi.vote.domain.VoteLog;
+import com.ruoyi.vote.domain.dto.VoteSubmitDTO;
+import com.ruoyi.vote.domain.dto.VoteSubmitDTO.SubjectResult;
 import com.ruoyi.vote.domain.vo.VoteVO;
-import com.ruoyi.vote.mapper.VoteMapper;
-import com.ruoyi.vote.mapper.VoteSubjectItemMapper;
-import com.ruoyi.vote.mapper.VoteSubjectMapper;
+import com.ruoyi.vote.exception.VoteErrorCode;
 import com.ruoyi.vote.service.IVoteApiService;
+import com.ruoyi.vote.service.IVoteLogService;
+import com.ruoyi.vote.service.IVoteService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,54 +28,58 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class VoteApiServiceImpl implements IVoteApiService {
 
-	private static final String CACHE_PREFIX = "voteapi:";
+	private final IVoteService voteService;
 
-	private final VoteMapper voteMapper;
+	private final IVoteLogService voteLogService;
+	
+	private final RedissonClient redissonClient;
+	
+	private final AsyncTaskManager asyncTaskManager;
 
-	private final VoteSubjectMapper subjectMapper;
-
-	private final VoteSubjectItemMapper subjectItemMapper;
-
-	private final RedisCache redisCache;
-
-	/**
-	 * 获取投票详情
-	 * 
-	 * @param voteId
-	 * @return
-	 */
 	@Override
 	public VoteVO getVote(Long voteId) {
-		return this.redisCache.getCacheObject(CACHE_PREFIX + voteId, () -> loadVoteDetail(voteId));
+		return this.voteService.getVote(voteId);
 	}
 
-	private VoteVO loadVoteDetail(Long voteId) {
-		Vote vote = this.voteMapper.selectById(voteId);
-		Assert.notNull(vote, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("voteId", voteId));
+	@Override
+	public void submitVote(VoteSubmitDTO dto) {
+		VoteVO vote = this.getVote(dto.getVoteId());
+		Assert.notNull(vote, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("voteId", dto.getVoteId()));
 
-		VoteVO voteVO = new VoteVO();
-		voteVO.setVoteId(vote.getVoteId());
-		voteVO.setTitle(vote.getTitle());
-		voteVO.setStartTime(vote.getStartTime());
-		voteVO.setEndTime(vote.getEndTime());
-		voteVO.setDayLimit(vote.getDayLimit());
-		voteVO.setTotalLimit(vote.getTotalLimit());
-		voteVO.setViewType(vote.getViewType());
-		voteVO.setTotal(voteVO.getTotal());
-
-		new LambdaQueryChainWrapper<>(this.subjectItemMapper).eq(VoteSubjectItem::getVoteId, vote.getVoteId());
-
-		List<VoteSubjectVO> subjects = new LambdaQueryChainWrapper<>(this.subjectMapper)
-				.eq(VoteSubject::getVoteId, vote.getVoteId()).list().stream().map(subject -> {
-					VoteSubjectVO voteSubjectVO = new VoteSubjectVO();
-					voteSubjectVO.setSubjectId(subject.getSubjectId());
-					voteSubjectVO.setTitle(subject.getTitle());
-					voteSubjectVO.setType(subject.getType());
-					voteSubjectVO.setSortFlag(subject.getSortFlag());
-					voteSubjectVO.setItems(null);
-					return voteSubjectVO;
-				}).toList();
-		voteVO.setSubjects(subjects);
-		return voteVO;
+		IVoteUserType voteUserType = this.voteService.getVoteUserType(vote.getUserType());
+		String userId = voteUserType.getUserId();
+		
+		RLock lock = redissonClient.getLock("VoteSubmit-" + userId);
+		lock.lock();
+		try {
+			// 判断提交上限
+			Long total = this.voteLogService.lambdaQuery().eq(VoteLog::getVoteId, dto.getVoteId())
+					.eq(VoteLog::getUserType, vote.getUserType()).eq(VoteLog::getUserId, userId).count();
+			Assert.isTrue(total < vote.getTotalLimit(), VoteErrorCode.VOTE_TOTAL_LIMIT::exception);
+			
+			Long dayCount = this.voteLogService.lambdaQuery().eq(VoteLog::getVoteId, dto.getVoteId())
+					.eq(VoteLog::getUserType, vote.getUserType()).eq(VoteLog::getUserId, userId)
+					.ge(VoteLog::getLogTime, DateUtils.getDayStart(LocalDateTime.now())).count();
+			Assert.isTrue(dayCount < vote.getDayLimit(), VoteErrorCode.VOTE_DAY_LIMIT::exception);
+	
+			// 记录日志
+			Map<Long, String> result = dto.getSubjects().stream()
+					.collect(Collectors.toMap(SubjectResult::getSubjectId, SubjectResult::getResult));
+			VoteLog voteLog = new VoteLog();
+			voteLog.setVoteId(dto.getVoteId());
+			voteLog.setUserType(vote.getUserType());
+			voteLog.setUserId(userId);
+			voteLog.setResult(result);
+			voteLog.setLogTime(LocalDateTime.now());
+			voteLog.setIp(dto.getIp());
+			voteLog.setUserAgent(dto.getUserAgent());
+			voteLogService.save(voteLog);
+			// 更新问卷参与数和主题选项票数
+			this.asyncTaskManager.execute(() -> {
+				this.voteService.onVoteSubmit(voteLog);
+			});
+		} finally {
+			lock.unlock();
+		}
 	}
 }

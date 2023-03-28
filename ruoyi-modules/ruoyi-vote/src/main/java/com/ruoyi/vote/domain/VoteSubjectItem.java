@@ -1,6 +1,7 @@
 package com.ruoyi.vote.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
@@ -9,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 调查投票主题选项表
+ * 问卷调查主题选项表
  *
  * @author 兮玥
  * @email liweiyimwz@126.com
@@ -27,7 +28,7 @@ public class VoteSubjectItem extends BaseEntity {
 	private Long itemId;
 
 	/**
-	 * 关联调查投票表ID
+	 * 关联问卷调查表ID
 	 */
 	private Long voteId;
 
@@ -57,7 +58,13 @@ public class VoteSubjectItem extends BaseEntity {
 	private Integer sortFlag;
 	
 	/**
-	 * 投票数
+	 * 选项票数
 	 */
 	private Integer total;
+	
+	/**
+	 * 总票数
+	 */
+	@TableField(exist = false)
+	private Integer voteTotal;
 }

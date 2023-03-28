@@ -13,6 +13,11 @@ public class VoteSubjectItemVO {
 	private Long itemId;
 	
 	/**
+	 * 主题ID
+	 */
+	private Long subjectId;
+	
+	/**
 	 * 类型（文字、图片、内容引用）
 	 */
 	private String type;
@@ -25,7 +30,7 @@ public class VoteSubjectItemVO {
 	/**
 	 * 选项描述
 	 */
-	private String desc;
+	private String description;
 
 	/**
 	 * 排序标识

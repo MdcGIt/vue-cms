@@ -5,7 +5,7 @@ import com.ruoyi.vote.domain.VoteSubject;
 
 /**
  * <p>
- * 调查投票主题表Mapper 接口
+ * 问卷调查主题表Mapper 接口
  * </p>
  *
  * @author 兮玥

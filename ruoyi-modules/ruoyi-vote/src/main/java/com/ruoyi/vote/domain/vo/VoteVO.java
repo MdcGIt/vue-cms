@@ -16,37 +16,42 @@ public class VoteVO {
 	private Long voteId;
 	
 	/**
-	 * 投票标题
+	 * 问卷调查标题
 	 */
 	private String title;
 
 	/**
-	 * 投票开始时间
+	 * 开始时间
 	 */
 	private LocalDateTime startTime;
 
 	/**
-	 * 投票结束时间
+	 * 结束时间
 	 */
 	private LocalDateTime endTime;
 	
 	/**
-	 * 每日投票限制次数
+	 * 参与人类型
+	 */
+	private String userType;
+	
+	/**
+	 * 每日限制次数
 	 */
 	private Integer dayLimit;
 	
 	/**
-	 * 总共可投票次数
+	 * 总共可参与次数
 	 */
-	private String totalLimit;
+	private Integer totalLimit;
 	
 	/**
-	 * 结果查看方式（不允许查看、投票后可看、不限制）
+	 * 结果查看方式（不允许查看、提交后可看、不限制）
 	 */
 	private String viewType;
 	
 	/**
-	 * 已投票人数
+	 * 已参与人数
 	 */
 	private Integer total;
 	

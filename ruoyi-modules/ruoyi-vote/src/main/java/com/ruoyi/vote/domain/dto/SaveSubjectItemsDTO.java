@@ -18,7 +18,7 @@ public class SaveSubjectItemsDTO extends BaseDTO {
 	private Long subjectId;
 
 	/**
-	 * 主题投票信息
+	 * 问卷调查主题选项列表
 	 */
 	private List<VoteSubjectItem> itemList;
 }

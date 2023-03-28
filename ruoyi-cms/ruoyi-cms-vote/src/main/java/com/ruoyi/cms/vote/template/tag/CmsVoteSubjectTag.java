@@ -11,9 +11,9 @@ import com.ruoyi.common.staticize.tag.AbstractListTag;
 import com.ruoyi.common.staticize.tag.TagAttr;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.vote.domain.Vote;
-import com.ruoyi.vote.domain.VoteSubject;
+import com.ruoyi.vote.domain.vo.VoteSubjectVO;
+import com.ruoyi.vote.domain.vo.VoteVO;
 import com.ruoyi.vote.service.IVoteService;
-import com.ruoyi.vote.service.IVoteSubjectService;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateException;
@@ -24,16 +24,14 @@ import lombok.RequiredArgsConstructor;
 public class CmsVoteSubjectTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_vote_subject";
-	public final static String NAME = "调查投票主题列表标签";
+	public final static String NAME = "问卷调查主题列表标签";
 
 	private final IVoteService voteService;
-
-	private final IVoteSubjectService voteSubjectService;
 
 	@Override
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = super.getTagAttrs();
-		tagAttrs.add(new TagAttr("code", true, TagAttrDataType.STRING, "调查投票编码"));
+		tagAttrs.add(new TagAttr("code", true, TagAttrDataType.STRING, "问卷调查编码"));
 		return tagAttrs;
 	}
 
@@ -46,11 +44,11 @@ public class CmsVoteSubjectTag extends AbstractListTag {
 		}
 		Vote vote = this.voteService.lambdaQuery().eq(Vote::getCode, code).one();
 		if (vote == null) {
-			throw new TemplateException("获取调查投票数据失败：" + code, env);
+			throw new TemplateException("获取问卷调查数据失败：" + code, env);
 		}
-
-		List<VoteSubject> subjects = this.voteSubjectService.lambdaQuery().eq(VoteSubject::getVoteId, vote.getVoteId())
-				.orderByAsc(VoteSubject::getSortFlag).list();
+		
+		VoteVO vo = this.voteService.getVote(vote.getVoteId());
+		List<VoteSubjectVO> subjects = vo.getSubjects();
 		return TagPageData.of(subjects);
 	}
 
@@ -66,6 +64,14 @@ public class CmsVoteSubjectTag extends AbstractListTag {
 
 	@Override
 	public String getDescription() {
-		return "获取指定调查投票接主题数据列表，内嵌<#list DataList as subject>${subject.title}</#list>遍历数据";
+		return """
+				获取指定问卷调查主题数据列表，示例：
+				<#list DataList as subject>
+					${subject.title}
+					<#list subject.items as item>
+						${item.type} - ${item.content}
+					</#list>
+				</#list>
+				""";
 	}
 }

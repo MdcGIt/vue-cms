@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 投票调查表
+ * 问卷调查表
  *
  * @author 兮玥
  * @email liweiyimwz@126.com
@@ -42,40 +42,40 @@ public class Vote extends BaseEntity {
 	private String code;
 
 	/**
-	 * 投票标题
+	 * 问卷调查标题
 	 */
 	@NotEmpty
 	private String title;
 
 	/**
-	 * 投票开始时间
+	 * 开始时间
 	 */
 	@NotEmpty
 	private LocalDateTime startTime;
 
 	/**
-	 * 投票结束时间
+	 * 结束时间
 	 */
 	@NotEmpty
 	private LocalDateTime endTime;
 
 	/**
-	 * 投票用户类型（IP、浏览器指纹，登录用户）
+	 * 用户类型（IP、浏览器指纹，登录用户）
 	 */
 	@NotEmpty
 	private String userType;
 
 	/**
-	 * 每日投票限制次数
+	 * 每日限制次数
 	 */
 	@Min(1)
 	private Integer dayLimit;
 
 	/**
-	 * 总共可投票次数
+	 * 总共可参与次数
 	 */
 	@Min(1)
-	private String totalLimit;
+	private Integer totalLimit;
 
 	/**
 	 * 状态
@@ -86,13 +86,13 @@ public class Vote extends BaseEntity {
 	private String status;
 
 	/**
-	 * 结果查看方式（不允许查看、投票后可看、不限制）
+	 * 结果查看方式（不允许查看、提交后可看、不限制）
 	 */
 	@NotEmpty
 	private String viewType;
 
 	/**
-	 * 投票总人数
+	 * 提交总人数
 	 */
 	private Integer total;
 	

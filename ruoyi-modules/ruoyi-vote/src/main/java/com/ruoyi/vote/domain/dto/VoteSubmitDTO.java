@@ -15,24 +15,32 @@ public class VoteSubmitDTO {
 	private Long voteId;
 
 	/**
-	 * 主题投票信息
+	 * 问卷调查主题信息
 	 */
-	private List<Subject> subjects;
+	private List<SubjectResult> subjects;
+	
+	/**
+	 * IP
+	 */
+	private String ip;
+	
+	/**
+	 * UserAgent
+	 */
+	private String userAgent;
 
 	@Getter
 	@Setter
-	static class Subject {
+	public static class SubjectResult {
 
+		/**
+		 * 主题ID
+		 */
 		private Long subjectId;
-
+		
 		/**
-		 * 选项信息
+		 * 结果：itemId || inputText
 		 */
-		private Long itemId;
-
-		/**
-		 * 输入信息
-		 */
-		private String input;
+		private String result;
 	}
 }

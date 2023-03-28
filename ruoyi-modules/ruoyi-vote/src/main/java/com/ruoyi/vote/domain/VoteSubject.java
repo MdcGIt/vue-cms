@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 调查投票主题表
+ * 问卷调查主题表
  *
  * @author 兮玥
  * @email liweiyimwz@126.com
@@ -30,7 +30,7 @@ public class VoteSubject extends BaseEntity {
 	private Long subjectId;
 
 	/**
-	 * 关联调查投票表ID
+	 * 关联问卷调查表ID
 	 */
 	private Long voteId;
 	

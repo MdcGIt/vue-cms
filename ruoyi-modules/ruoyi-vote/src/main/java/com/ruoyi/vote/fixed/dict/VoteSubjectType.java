@@ -11,7 +11,7 @@ import com.ruoyi.system.fixed.FixedDictType;
 import com.ruoyi.system.service.ISysDictTypeService;
 
 /**
- * 调查投票主题类型
+ * 问卷调查主题类型
  */
 @Component(FixedDictType.BEAN_PREFIX + VoteSubjectType.TYPE)
 public class VoteSubjectType extends FixedDictType {

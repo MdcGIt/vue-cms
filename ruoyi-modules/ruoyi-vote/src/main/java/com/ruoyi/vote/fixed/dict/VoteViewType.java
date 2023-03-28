@@ -11,7 +11,7 @@ import com.ruoyi.system.fixed.FixedDictType;
 import com.ruoyi.system.service.ISysDictTypeService;
 
 /**
- * 调查投票查看方式
+ * 问卷调查查看方式
  */
 @Component(FixedDictType.BEAN_PREFIX + VoteViewType.TYPE)
 public class VoteViewType extends FixedDictType {
@@ -20,7 +20,7 @@ public class VoteViewType extends FixedDictType {
 
 	public static final String INVISIBLE = "0"; // 不可查看
 
-	public static final String AFTER_VOTE = "1"; // 投票后查看
+	public static final String AFTER_VOTE = "1"; // 提交后查看
 
 	public static final String VISIBLE = "2"; // 不限制
 	

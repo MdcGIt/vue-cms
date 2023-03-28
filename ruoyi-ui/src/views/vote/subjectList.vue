@@ -3,6 +3,24 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-if="subjectTableExpand"
+          type="primary"
+          plain
+          icon="el-icon-minus"
+          size="mini"
+          @click="handleTableExpand"
+        >收起</el-button>
+        <el-button
+          v-else
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleTableExpand"
+        >展开</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="primary"
           plain
           icon="el-icon-plus"
@@ -30,12 +48,21 @@
           @click="handleDeleteVoteSubject"
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-close"
+          size="mini"
+          @click="handleClose"
+        >{{ $t('Common.Close') }}</el-button>
+      </el-col>
     </el-row>
     
-    <el-table v-loading="loading" ref="subjectTable" :data="this.subjectList">
-      <el-table-column type="expand" :show-header="false">
+    <el-table v-loading="loading" ref="subjectTable" :data="subjectList" @selection-change="handleSelectionChange">
+      <el-table-column type="expand">
         <template slot-scope="scope">
-          <el-table v-if="scope.row.type!=='input'" header-row-class-name="subject-item-table-header" :data="scope.row.itemList">
+          <el-table v-if="scope.row.type!=='input'"  :show-header="false" :data="scope.row.itemList">
             <el-table-column type="index" align="right" width="100">
               <template slot-scope="scope2">
                 {{ subjectItemIndex(scope2.$index) }}
@@ -43,7 +70,7 @@
             </el-table-column>
             <el-table-column width="120">
               <template slot-scope="scope2">
-                <el-select v-model="scope2.row.type" disabled>
+                <el-select v-model="scope2.row.type" size="mini" disabled>
                   <el-option
                     v-for="type in subjectItemTypes"
                     :key="type.id"
@@ -58,19 +85,19 @@
                 {{ scope2.row.content }}
               </template>
             </el-table-column>
-            <el-table-column width="290">
+            <el-table-column lable="票数" width="200">
               <template slot-scope="scope2">
-                <el-button
-                  plain
-                  type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                  @click="handleDeleteItem(scope2.row.itemId)">删除选项</el-button>
+                票数：{{ scope2.row.total }}
+                <el-progress :percentage="itemProgressPercent(scope2.row)"></el-progress> 
               </template>
             </el-table-column>
           </el-table>
+          <div v-else style="background-color: #f4f4f5;color: #909399;font-size:12px;line-height: 30px;padding-left:10px;">
+            <i class="el-icon-info mr5"></i>输入类型主题无需配置选项
+          </div>
         </template>
       </el-table-column>
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column
         type="index"
         label="序号"
@@ -79,7 +106,8 @@
       <el-table-column
         label="主题">
         <template slot-scope="scope">
-          <el-link type="primary" @click="handleItemList(scope.row)">{{ scope.row.title }}</el-link>
+          <el-link v-if="scope.row.type!='input'" type="primary" @click="handleItemList(scope.row)">{{ scope.row.title }}</el-link>
+          <span v-else>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="类型" prop="type" width="280">
@@ -107,7 +135,7 @@
             size="mini"
             icon="el-icon-delete"
             type="danger"
-            @click="handleDeleteVoteSubject(scope.$index)">删除</el-button>
+            @click="handleDeleteVoteSubject(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -147,18 +175,8 @@
             @click="handleSaveItems"
           >保存</el-button>
         </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            style="float:right"
-            @click="handleAddItem(itemList.length)"
-          >添加选项</el-button>
-        </el-col>
       </el-row>
-      <el-table :data="itemList">
+      <el-table v-loading="loadingItems" :data="itemList">
         <el-table-column align="center" width="50">
           <template slot-scope="scope">
             <el-button
@@ -222,23 +240,34 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-row :gutter="10" style="padding:10px">
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            plain
+            icon="el-icon-plus"
+            size="mini"
+            style="float:right"
+            @click="handleAddItem(itemList.length)"
+          >添加选项</el-button>
+        </el-col>
+      </el-row>
     </el-drawer>
   </div>
 </template>
 
 <script>
 import { getVoteItemTypes } from "@/api/vote/vote";
-import { getVoteSubjectList, addVoteSubject, updateVoteSubject, deleteVoteSubjects, saveSubjectItems } from "@/api/vote/subject";
+import { getVoteSubjectList, getVoteSubjectDetail, addVoteSubject, updateVoteSubject, deleteVoteSubjects, getSubjectItems, saveSubjectItems } from "@/api/vote/subject";
 
 export default {
   name: "VoteSubjectList",
   dicts: [ 'VoteSubjectType' ],
-  components: { 
-  },
   data() {
     return {
       voteId: this.$route.query.voteId,
       loading: true,
+      loadingItems: false,
       ids: [],
       single: true,
       multiple: true,
@@ -248,6 +277,7 @@ export default {
       itemIndexName: [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ],
       subjectItemTypes: [],
       subjectList: [],
+      subjectTableExpand: false,
       form: {},
       rules: {
         title: [
@@ -267,8 +297,17 @@ export default {
     this.loadVoteSubjectList();
   },
   methods: {
+    itemProgressPercent(row) {
+      return row.voteTotal > 0 ? parseInt(row.total*100/row.voteTotal) : 0;
+    },
     subjectItemIndex(index) {
-      return this.itemIndexName[index];
+      let num = parseInt(index / 26);
+      index = index % 26;
+      let name = this.itemIndexName[index];
+      if (num > 0) {
+        name = name + num;
+      }
+      return name;
     },
     loadVoteSubjectItemTypes() {
       getVoteItemTypes().then(response => {
@@ -280,6 +319,14 @@ export default {
       getVoteSubjectList(this.voteId).then(response => {
           this.subjectList = response.data.rows;
           this.loading = false;
+        }
+      );
+    },
+    loadVoteSubjectItemList() {
+      this.loadingItems = true;
+      getSubjectItems(this.currentSubjectId).then(response => {
+          this.itemList = response.data.rows;
+          this.loadingItems = false;
         }
       );
     },
@@ -352,19 +399,18 @@ export default {
     },
     handleItemList(row) {
       this.currentSubjectId = row.subjectId;
-      this.itemList = row.itemList;
+      this.loadVoteSubjectItemList();
       this.openSubjectItems = true;
     },
     handleSubjectItemsClose() {
       this.currentSubjectId = undefined;
       this.openSubjectItems = false;
+      this.loadVoteSubjectList();
     },
     handleAddItem(rowIndex) {
-      console.log("handleAddItem", rowIndex)
       this.itemList.splice(rowIndex, 0, { type: "Text" });
     },
     handleDeleteItem(rowIndex) {
-      console.log("handleAddItem", rowIndex)
       this.itemList.splice(rowIndex, 1);
     },
     handleUpItem(rowIndex) {
@@ -376,15 +422,18 @@ export default {
     handleSaveItems() {
       const data = { subjectId: this.currentSubjectId, itemList: this.itemList }
       saveSubjectItems(data).then(response => {
-        this.loadVoteSubjectList();
+        this.loadVoteSubjectItemList();
         this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
       });
+    },
+    handleClose() {
+      const obj = { path: "/operations/vote" };
+      this.$tab.closeOpenPage(obj);
+    },
+    handleTableExpand() {
+      this.subjectList.forEach(row => this.$refs.subjectTable.toggleRowExpansion(row, !this.subjectTableExpand));
+      this.subjectTableExpand = !this.subjectTableExpand;
     }
   }
 };
 </script>
-<style>
-.subject-item-table-header{
-  display: none;
-}
-</style>

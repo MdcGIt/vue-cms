@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -18,9 +19,9 @@ import com.ruoyi.vote.domain.VoteSubject;
 import com.ruoyi.vote.domain.VoteSubjectItem;
 import com.ruoyi.vote.domain.dto.SaveSubjectItemsDTO;
 import com.ruoyi.vote.fixed.dict.VoteSubjectType;
-import com.ruoyi.vote.mapper.VoteMapper;
 import com.ruoyi.vote.mapper.VoteSubjectItemMapper;
 import com.ruoyi.vote.mapper.VoteSubjectMapper;
+import com.ruoyi.vote.service.IVoteService;
 import com.ruoyi.vote.service.IVoteSubjectService;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -30,13 +31,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class VoteSubjectServiceImpl extends ServiceImpl<VoteSubjectMapper, VoteSubject> implements IVoteSubjectService {
 
-	private final VoteMapper voteMapper;
+	private final IVoteService voteService;
 
 	private final VoteSubjectItemMapper voteSubjectItemMapper;
 
 	@Override
 	public List<VoteSubject> getVoteSubjectList(Long voteId) {
-		Vote vote = this.voteMapper.selectById(voteId);
+		Vote vote = this.voteService.getById(voteId);
 		Assert.notNull(vote, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("voteId", voteId));
 
 		List<VoteSubject> subjects = this.lambdaQuery().eq(VoteSubject::getVoteId, voteId)
@@ -48,7 +49,9 @@ public class VoteSubjectServiceImpl extends ServiceImpl<VoteSubjectMapper, VoteS
 
 		vote.setSubjectList(subjects);
 		subjects.forEach(subject -> {
-			subject.setItemList(itemsMap.getOrDefault(subject.getSubjectId(), List.of()));
+			List<VoteSubjectItem> items = itemsMap.getOrDefault(subject.getSubjectId(), List.of());
+			items.forEach(item -> item.setVoteTotal(vote.getTotal()));
+			subject.setItemList(items);
 		});
 		return subjects;
 	}
@@ -56,6 +59,9 @@ public class VoteSubjectServiceImpl extends ServiceImpl<VoteSubjectMapper, VoteS
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addVoteSubject(VoteSubject voteSubject) {
+		Vote vote = this.voteService.getById(voteSubject.getVoteId());
+		Assert.notNull(vote, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("voteId", voteSubject.getVoteId()));
+
 		Map<Long, VoteSubject> dbSubjects = this.lambdaQuery().eq(VoteSubject::getVoteId, voteSubject.getVoteId())
 				.orderByAsc(VoteSubject::getSortFlag).list().stream()
 				.collect(Collectors.toMap(VoteSubject::getSubjectId, s -> s));
@@ -73,6 +79,8 @@ public class VoteSubjectServiceImpl extends ServiceImpl<VoteSubjectMapper, VoteS
 			voteSubject.setSortFlag(dbSubjects.size());
 		}
 		this.save(voteSubject);
+		// 更新缓存
+		this.voteService.clearVoteCache(voteSubject.getVoteId());
 	}
 
 	@Override
@@ -86,19 +94,25 @@ public class VoteSubjectServiceImpl extends ServiceImpl<VoteSubjectMapper, VoteS
 			db.setType(voteSubject.getType());
 			if (VoteSubjectType.isInput(db.getType())) {
 				// 类型修改成输入则移除所有选项
-				this.voteSubjectItemMapper.delete(new LambdaQueryChainWrapper<>(this.voteSubjectItemMapper)
-						.eq(VoteSubjectItem::getSubjectId, db.getSubjectId()));
+				this.voteSubjectItemMapper.delete(
+						new LambdaQueryWrapper<VoteSubjectItem>().eq(VoteSubjectItem::getSubjectId, db.getSubjectId()));
 			}
 		}
 		this.updateById(db);
+		// 更新缓存
+		this.voteService.clearVoteCache(db.getVoteId());
 	}
 
 	@Override
 	public void deleteVoteSubjects(@NotEmpty List<Long> subjectIds) {
-		this.removeByIds(subjectIds);
+		List<VoteSubject> subjects = this.listByIds(subjectIds);
+		this.removeByIds(subjects);
 		// 删除选项
-		this.voteSubjectItemMapper.delete(new LambdaQueryChainWrapper<>(this.voteSubjectItemMapper)
-				.in(VoteSubjectItem::getSubjectId, subjectIds));
+		this.voteSubjectItemMapper
+				.delete(new LambdaQueryWrapper<VoteSubjectItem>().in(VoteSubjectItem::getSubjectId, subjectIds));
+		// 更新缓存
+		subjects.stream().map(VoteSubject::getVoteId).distinct()
+				.forEach(voteId -> this.voteService.clearVoteCache(voteId));
 	}
 
 	@Override
@@ -113,7 +127,7 @@ public class VoteSubjectServiceImpl extends ServiceImpl<VoteSubjectMapper, VoteS
 		List<Long> updateItemIds = dto.getItemList().stream().filter(item -> IdUtils.validate(item.getItemId()))
 				.map(VoteSubjectItem::getItemId).toList();
 		List<Long> remmoveItemIds = dbItems.stream().filter(item -> !updateItemIds.contains(item.getItemId()))
-				.map(VoteSubjectItem::getSubjectId).toList();
+				.map(VoteSubjectItem::getItemId).toList();
 		if (remmoveItemIds.size() > 0) {
 			this.voteSubjectItemMapper.deleteBatchIds(remmoveItemIds);
 		}
@@ -138,5 +152,7 @@ public class VoteSubjectServiceImpl extends ServiceImpl<VoteSubjectMapper, VoteS
 				this.voteSubjectItemMapper.insert(item);
 			}
 		}
+		// 更新缓存
+		this.voteService.clearVoteCache(subject.getVoteId());
 	}
 }
