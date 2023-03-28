@@ -222,7 +222,7 @@ export default {
           { required: true, message: "名称不能为空", trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9]*$", message: "不能为空且只能使用大小写字母和数字", trigger: "blur" }
         ]
       }
     };

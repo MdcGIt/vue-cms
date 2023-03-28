@@ -4,14 +4,14 @@
 
 	<groupId>com.ruoyi</groupId>
 	<artifactId>ruoyi</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 	<packaging>pom</packaging>
 
 	<name>RuoYi-Vue-CMS</name>
 	<description>RuoYi-Vue-CMS内容管理系统</description>
 
 	<properties>
-		<ruoyi.version>0.2.0</ruoyi.version>
+		<ruoyi.version>0.3.0</ruoyi.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
@@ -373,6 +373,13 @@
 				<version>${ruoyi.version}</version>
 			</dependency>
 			
+			<!-- 投票调查模块 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-vote</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
+			
 			<!-- 评论模块 -->
 			<dependency>
 				<groupId>com.ruoyi</groupId>
@@ -451,15 +458,20 @@
 				<version>${ruoyi.version}</version>
 			</dependency>
 			
-			<!-- 内容评论模块 -->
+			<!-- CMS评论模块 -->
 			<dependency>
 				<groupId>com.ruoyi</groupId>
 				<artifactId>ruoyi-cms-comment</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
+			
+			<!-- CMS投票调查模块 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-cms-vote</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
 			<!-- CMS Modules End -->
-
-
 		</dependencies>
 	</dependencyManagement>
 

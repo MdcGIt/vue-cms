@@ -196,7 +196,7 @@ public class SysUserController extends BaseRestController {
 	 * 重置密码
 	 */
 	@Priv(type = AdminUserType.TYPE, value = "system:user:resetPwd")
-	@Log(title = "用户管理", businessType = BusinessType.UPDATE)
+	@Log(title = "用户管理", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/resetPwd")
 	public R<?> resetPwd(@RequestBody SysUser user) {
 		userService.resetPwd(user);

@@ -262,7 +262,7 @@ export default {
       RoleId: "角色ID",
       RoleName: "角色名称",
       RoleKey: "角色编码",
-      RoleKeyTips: "控制器中定义的权限字符，例如：@PreAuthorize(`@ss.hasRole('admin')`)",
+      RoleKeyTips: "不能为空且只能使用字母、数字和下划线",
       Sort: "显示顺序",
       Status: "状态",
       UserSetting: "分配用户",

@@ -123,7 +123,7 @@ public class CoreController extends BaseRestController {
 			ITemplateType templateType = this.templateService.getTemplateType(SiteTemplateType.TypeId);
 			templateType.initTemplateData(siteId, templateContext);
 			templateContext.getVariables().put("Request", params);
-			templateContext.getVariables().put("ClientType", ServletUtils.getClientType());
+			templateContext.getVariables().put("ClientType", ServletUtils.getDeviceType());
 			// staticize
 			this.staticizeService.process(templateContext, ServletUtils.getResponse().getWriter());
 			log.debug("[{}]动态区块模板解析：{}，耗时：{}", publishPipeCode, template, System.currentTimeMillis() - s);

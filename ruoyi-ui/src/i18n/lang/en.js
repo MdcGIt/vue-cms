@@ -260,7 +260,7 @@ export default {
       RoleId: "Role ID",
       RoleName: "Role Name",
       RoleKey: "Role Key",
-      RoleKeyTips: "Role key is used for controller authorize，eg: @PreAuthorize(`@ss.hasRole('admin')`)",
+      RoleKeyTips: "Role key cannot be empty and only number, character and underline.",
       Sort: "Sort",
       Status: "Status",
       UserSetting: "User Setting",

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ruoyi-modules</artifactId>
         <groupId>com.ruoyi</groupId>
-        <version>0.2.0</version>
+        <version>0.3.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,11 +19,6 @@
 		<dependency>
 		    <groupId>org.redisson</groupId>
 		    <artifactId>redisson-spring-boot-starter</artifactId>
-		</dependency>
-		<!-- 解析客户端操作系统、浏览器等 -->
-		<dependency>
-			<groupId>eu.bitwalker</groupId>
-			<artifactId>UserAgentUtils</artifactId>
 		</dependency>
 
 		<!-- 获取系统信息 -->

@@ -20,6 +20,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.Cookie;
@@ -33,7 +34,7 @@ import jakarta.servlet.http.HttpSession;
  * @author ruoyi
  */
 public class ServletUtils {
-	
+
 	/**
 	 * www主域
 	 */
@@ -58,17 +59,17 @@ public class ServletUtils {
 	 * RequestHeader[User-Agent]
 	 */
 	public static final String HEADER_USER_AGENT = "User-Agent";
-	
+
 	/**
 	 * RequestHeader[Referer]
 	 */
 	public static final String HEADER_REFERER = "Referer";
-	
+
 	/**
 	 * RequestHeader[Accept-Language]
 	 */
 	public static final String HEADER_ACCEPT_LANGUAGE = "Accept-Language";
-	
+
 	public static final String UNKNOWN = "unknown";
 
 	public static boolean isHttpUrl(String url) {
@@ -81,6 +82,10 @@ public class ServletUtils {
 
 	public static String getUserAgent() {
 		return getHeader(getRequest(), HEADER_USER_AGENT);
+	}
+
+	public static UserAgent parseUserAgent(HttpServletRequest request) {
+		return UserAgent.parseUserAgentString(getUserAgent(request));
 	}
 
 	public static String getReferer(HttpServletRequest request) {
@@ -233,7 +238,7 @@ public class ServletUtils {
 	public static int getParameterToInt(String name, int defaultValue) {
 		return getParameterToInt(getRequest(), name, defaultValue);
 	}
-	
+
 	/**
 	 * 获取Integer参数
 	 */
@@ -617,10 +622,15 @@ public class ServletUtils {
 		}
 		return bytes;
 	}
-	
-	public static String getClientType() {
+
+	/**
+	 * 根据User-Agent解析客户端类型
+	 * 
+	 * @return
+	 */
+	public static String getDeviceType() {
 		String userAgent = ServletUtils.getUserAgent();
-		return getClientType(userAgent);
+		return getDeviceType(userAgent);
 	}
 
 	/**
@@ -629,48 +639,8 @@ public class ServletUtils {
 	 * @param userAgent
 	 * @return
 	 */
-	public static String getClientType(String userAgent) {
-		if (StringUtils.isEmpty(userAgent)) {
-			return "Other";
-		}
-		if (userAgent.indexOf("Windows NT 6.2") > 0) {
-			return "Windows 8";
-		} else if (userAgent.indexOf("Windows Phone 8") > 0) {
-			return "Windows Phone 8";
-		} else if (userAgent.indexOf("iPhone") > 0) {
-			return "iPhone";
-		} else if (userAgent.indexOf("iPad") > 0) {
-			return "iPad";
-		} else if (userAgent.indexOf("Android") > 0) {
-			return "Android";
-		} else if (userAgent.indexOf("BlackBerry") > 0) {
-			return "BlackBerry";
-		} else if (userAgent.indexOf("SymbianOS") > 0 || userAgent.indexOf("Series") > 0) {
-			return "Symbian";
-		} else if (userAgent.indexOf("Windows NT 6.1") > 0) {
-			return "Windows 7";
-		} else if (userAgent.indexOf("Windows NT 6.0") > 0) {
-			return "Windows Vista";
-		} else if (userAgent.indexOf("Windows NT 5.2") > 0) {
-			return "Windows 2003";
-		} else if (userAgent.indexOf("Windows NT 5.1") > 0) {
-			return "Windows XP";
-		} else if (userAgent.indexOf("Windows NT 5.0") > 0) {
-			return "Windows 2000";
-		} else if (userAgent.indexOf("Windows NT") > 0) {
-			return "Windows NT";
-		} else if (userAgent.indexOf("Windows 9") > 0 || userAgent.indexOf("Windows 4") > 0) {
-			return "Windows 9x";
-		} else if (userAgent.indexOf("Unix") > 0 || userAgent.indexOf("SunOS") > 0 || userAgent.indexOf("BSD") > 0) {
-			return "Unix";
-		} else if (userAgent.indexOf("Linux") > 0) {
-			return "Linux";
-		} else if (userAgent.indexOf("Mac OS") > 0) {
-			return "Mac OS";
-		} else if (userAgent.indexOf("Windows CE") > 0) {
-			return "Windows CE";
-		} else {
-			return "Other";
-		}
+	public static String getDeviceType(String userAgent) {
+		UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+		return ua.getOperatingSystem().getDeviceType().getName();
 	}
 }

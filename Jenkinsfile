@@ -117,7 +117,8 @@ pipeline {
 		                    sed -i "s/{{DOCKERUSER}}/${DOCKERUSER}/g" docker-deploy.sh
 							sed -i "s/{{DOCKERPWD}}/${DOCKERPWD}/g" docker-deploy.sh
 							sed -i "s/{{DOCKER_HUB_URL}}/${DOCKER_HUB_URL}/g" docker-deploy.sh
-							sed -i "s/{{IMAGE_REPOSITORY}}/${DOCKER_HUB_WORKSPACE}\\/${APP_NAME}:${IMAGE_TAG}/g" docker-deploy.sh
+							sed -i "s/{{IMAGE_REPOSITORY}}/${DOCKER_HUB_WORKSPACE}\\/${APP_NAME}/g" docker-deploy.sh
+							sed -i "s/{{IMAGE_TAG}}/${IMAGE_TAG}/g" docker-deploy.sh
 										
 		                    cp -f docker/docker-compose_${DEPLOY_ENV}.yml docker-compose.yml
 		                    

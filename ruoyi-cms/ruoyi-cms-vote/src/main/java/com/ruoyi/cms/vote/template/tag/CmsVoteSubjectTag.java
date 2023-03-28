@@ -1,0 +1,77 @@
+package com.ruoyi.cms.vote.template.tag;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Component;
+
+import com.ruoyi.common.staticize.enums.TagAttrDataType;
+import com.ruoyi.common.staticize.tag.AbstractListTag;
+import com.ruoyi.common.staticize.tag.TagAttr;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.vote.domain.Vote;
+import com.ruoyi.vote.domain.vo.VoteSubjectVO;
+import com.ruoyi.vote.domain.vo.VoteVO;
+import com.ruoyi.vote.service.IVoteService;
+
+import freemarker.core.Environment;
+import freemarker.template.TemplateException;
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
+public class CmsVoteSubjectTag extends AbstractListTag {
+
+	public final static String TAG_NAME = "cms_vote_subject";
+	public final static String NAME = "问卷调查主题列表标签";
+
+	private final IVoteService voteService;
+
+	@Override
+	public List<TagAttr> getTagAttrs() {
+		List<TagAttr> tagAttrs = super.getTagAttrs();
+		tagAttrs.add(new TagAttr("code", true, TagAttrDataType.STRING, "问卷调查编码"));
+		return tagAttrs;
+	}
+
+	@Override
+	public TagPageData prepareData(Environment env, Map<String, String> attrs, boolean page, int size, int pageIndex)
+			throws TemplateException {
+		String code = MapUtils.getString(attrs, "code");
+		if (StringUtils.isEmpty(code)) {
+			throw new TemplateException("属性code不能为空", env);
+		}
+		Vote vote = this.voteService.lambdaQuery().eq(Vote::getCode, code).one();
+		if (vote == null) {
+			throw new TemplateException("获取问卷调查数据失败：" + code, env);
+		}
+		
+		VoteVO vo = this.voteService.getVote(vote.getVoteId());
+		List<VoteSubjectVO> subjects = vo.getSubjects();
+		return TagPageData.of(subjects);
+	}
+
+	@Override
+	public String getTagName() {
+		return TAG_NAME;
+	}
+
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
+	@Override
+	public String getDescription() {
+		return """
+				获取指定问卷调查主题数据列表，示例：
+				<#list DataList as subject>
+					${subject.title}
+					<#list subject.items as item>
+						${item.type} - ${item.content}
+					</#list>
+				</#list>
+				""";
+	}
+}
