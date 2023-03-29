@@ -70,7 +70,7 @@ public class CommentController extends BaseRestController {
 
 	@Priv(type = AdminUserType.TYPE, value = CommentPriv.VIEW)
 	@GetMapping("/like/{commentId}")
-	public R<?> getCommentLikeList(@PathVariable @Min(1) Long commentId, @RequestParam("uid") Long uid) {
+	public R<?> getCommentLikeList(@PathVariable @Min(1) Long commentId, @RequestParam(required = false) Long uid) {
 		PageRequest pr = this.getPageRequest();
 		Page<CommentLike> page = this.commentLikeService.lambdaQuery()
 				.eq(IdUtils.validate(commentId), CommentLike::getCommentId, commentId)
