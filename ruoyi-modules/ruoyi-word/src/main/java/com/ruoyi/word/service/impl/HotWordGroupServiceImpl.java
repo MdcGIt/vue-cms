@@ -28,13 +28,14 @@ public class HotWordGroupServiceImpl extends ServiceImpl<HotWordGroupMapper, Hot
 	private final HotWordMapper hotWordMapper;
 
 	@Override
-	public void addHotWordGroup(HotWordGroup group) {
+	public HotWordGroup addHotWordGroup(HotWordGroup group) {
 		this.checkUnique(group.getGroupId(), group.getName(), group.getCode());
 
 		group.setGroupId(IdUtils.getSnowflakeId());
 		group.setSortFlag(SortUtils.getDefaultSortValue());
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
 		this.save(group);
+		return group;
 	}
 
 	@Override

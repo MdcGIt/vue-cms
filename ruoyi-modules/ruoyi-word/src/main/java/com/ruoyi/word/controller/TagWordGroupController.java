@@ -60,8 +60,7 @@ public class TagWordGroupController extends BaseRestController {
 	@PostMapping
 	public R<?> add(@RequestBody TagWordGroup group) {
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
-		this.tagWordGroupService.addTagWordGroup(group);
-		return R.ok();
+		return R.ok(this.tagWordGroupService.addTagWordGroup(group));
 	}
 
 	@PutMapping

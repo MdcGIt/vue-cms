@@ -80,8 +80,7 @@ public class HotWordGroupController extends BaseRestController {
 	@PostMapping
 	public R<?> add(@RequestBody HotWordGroup group) {
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
-		this.hotWordGroupService.addHotWordGroup(group);
-		return R.ok(group.getGroupId());
+		return R.ok(this.hotWordGroupService.addHotWordGroup(group));
 	}
 
 	@PutMapping

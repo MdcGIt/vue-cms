@@ -193,20 +193,16 @@ export default {
           }
           if (this.form.groupId) {
             editHotWordGroup(this.form).then(response => {
-              if (response.code === 200) {
-                this.diagOpen = false;
-                this.$modal.msgSuccess(response.msg);
-                this.loadGroupTreeData();
-              }
+              this.diagOpen = false;
+              this.$modal.msgSuccess(response.msg);
+              this.loadGroupTreeData();
             });
           } else {
             addHotWordGroup(this.form).then(response => {
-              if (response.code === 200) {
-                this.$cache.local.set("LastSelectedHotWordGroupId", response.data.groupId);
-                this.diagOpen = false;
-                this.$modal.msgSuccess(response.msg);
-                this.loadGroupTreeData();
-              }
+              this.$cache.local.set("LastSelectedHotWordGroupId", response.data.groupId);
+              this.diagOpen = false;
+              this.$modal.msgSuccess(response.msg);
+              this.loadGroupTreeData();
             });
           }
         }
@@ -217,10 +213,8 @@ export default {
       this.$modal.confirm('是否确认删除选中的分组?').then(function() {
         return deleteHotWordGroup(groupIds);
       }).then((response) => {
-        if (response.code == 200) {
-          this.$modal.msgSuccess(response.msg);
-          this.loadGroupTreeData();
-        }
+        this.$modal.msgSuccess(response.msg);
+        this.loadGroupTreeData();
       }).catch(() => {});
     }
   }

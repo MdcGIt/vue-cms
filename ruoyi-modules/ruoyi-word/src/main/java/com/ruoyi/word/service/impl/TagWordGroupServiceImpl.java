@@ -30,12 +30,13 @@ public class TagWordGroupServiceImpl extends ServiceImpl<TagWordGroupMapper, Tag
 	private final TagWordMapper tagWordMapper;
 
 	@Override
-	public void addTagWordGroup(TagWordGroup group) {
+	public TagWordGroup addTagWordGroup(TagWordGroup group) {
 		checkUnique(group.getParentId(), null, group.getName(), group.getCode());
 
 		group.setGroupId(IdUtils.getSnowflakeId());
 		group.setSortFlag(SortUtils.getDefaultSortValue());
 		this.save(group);
+		return group;
 	}
 
 	@Override

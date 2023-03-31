@@ -12,7 +12,7 @@ public interface IHotWordGroupService extends IService<HotWordGroup> {
 	 * 
 	 * @param group
 	 */
-	void addHotWordGroup(HotWordGroup group);
+	HotWordGroup addHotWordGroup(HotWordGroup group);
 
 	/**
 	 * 修改热词分组

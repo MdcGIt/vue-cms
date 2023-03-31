@@ -14,7 +14,7 @@ public interface ITagWordGroupService extends IService<TagWordGroup> {
 	 * @param group
 	 * @return
 	 */
-	void addTagWordGroup(TagWordGroup group);
+	TagWordGroup addTagWordGroup(TagWordGroup group);
 
 	/**
 	 * 编辑TAG词分组
