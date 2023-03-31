@@ -163,7 +163,7 @@
 }
 </style>
 <script>
-import { urlValidator } from '@/utils/validate'
+import { validURL } from '@/utils/validate'
 import { getHotWordList, addHotWord, editHotWord, deleteHotWord } from "@/api/word/hotWord";
 import CMSHotWordGroupTree from '@/views/word/hotWordGroupTree';
 import CMSLogoView from '@/views/cms/components/LogoView';
@@ -195,7 +195,16 @@ export default {
         ],
         url: [
           { required: true, message: "链接不能为空", trigger: "blur" },
-          { trigger: "blur", validator: urlValidator }
+          { 
+            trigger: "blur", 
+            validator: (rule, value, callback) => {
+              if (!validURL(value)) {
+                callback(new Error("请使用以http(s)://开头的标准网络地址"));
+              } else {
+                callback();
+              }
+            } 
+          }
         ],
         urlTarget: [
           { required: true, message: "跳转方式不能为空", trigger: "blur" }
