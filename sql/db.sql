@@ -11,7 +11,7 @@
  Target Server Version : 50735
  File Encoding         : 65001
 
- Date: 28/03/2023 18:47:14
+ Date: 01/04/2023 00:42:02
 */
 
 SET NAMES utf8mb4;
@@ -61,6 +61,76 @@ CREATE TABLE `cc_comment_like`  (
   `like_time` datetime(0) NOT NULL COMMENT '点赞时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for cc_error_prone_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_error_prone_word`;
+CREATE TABLE `cc_error_prone_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '替换词',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_error_prone_word
+-- ----------------------------
+INSERT INTO `cc_error_prone_word` VALUES (1482979643789541377, '凑和', '凑合', 'admin', '2022-01-17 15:34:34', 'admin', '2022-01-17 15:34:34', NULL);
+INSERT INTO `cc_error_prone_word` VALUES (1482979706737655809, '脉博', '脉搏', 'admin', '2022-01-17 15:34:49', 'admin', '2022-01-17 15:34:49', NULL);
+INSERT INTO `cc_error_prone_word` VALUES (1482979792091742209, '幅射', '辐射', 'admin', '2022-01-17 15:35:10', 'admin', '2022-01-17 15:35:10', NULL);
+
+-- ----------------------------
+-- Table structure for cc_hot_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_hot_word`;
+CREATE TABLE `cc_hot_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
+  `url_target` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '跳转方式',
+  `use_count` int(255) NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint(255) NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_hot_word
+-- ----------------------------
+INSERT INTO `cc_hot_word` VALUES (401960948670533, 401960868323397, '王者荣耀', 'http://www.119you.com', '_blank', 0, 0, 'admin', '2023-03-31 22:03:19', 'admin', '2023-03-31 22:03:19', NULL);
+
+-- ----------------------------
+-- Table structure for cc_hot_word_group
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_hot_word_group`;
+CREATE TABLE `cc_hot_word_group`  (
+  `group_id` bigint(20) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `sort_flag` bigint(20) NULL DEFAULT NULL,
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`group_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_hot_word_group
+-- ----------------------------
+INSERT INTO `cc_hot_word_group` VALUES (401960868323397, '游戏热词', 'game', 168027138000, 'admin', '2023-03-31 22:03:00', 'admin', '2023-03-31 22:03:00', NULL);
 
 -- ----------------------------
 -- Table structure for cc_member
@@ -194,6 +264,71 @@ CREATE TABLE `cc_member_signin_log`  (
   `log_time` datetime(0) NOT NULL COMMENT '签到时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for cc_sensitive_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_sensitive_word`;
+CREATE TABLE `cc_sensitive_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `type` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型：BLACK=敏感词，WHITE=白名单',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '替换词',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_sensitive_word
+-- ----------------------------
+INSERT INTO `cc_sensitive_word` VALUES (1482266133891878914, 'BLACK', '狗日滴', NULL, 'admin', '2022-01-15 16:19:20', 'admin', '2022-01-15 16:19:20', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1482266192272396290, 'BLACK', 'fuck', NULL, 'admin', '2022-01-15 16:19:34', 'admin', '2022-01-15 16:19:34', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1482266254880772097, 'BLACK', '妈卖批', NULL, 'admin', '2022-01-15 16:19:49', 'admin', '2022-01-15 16:19:49', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1491730556066902017, 'WHITE', '上游行业', NULL, 'admin', '2022-02-10 19:07:34', 'admin', '2022-02-10 19:07:34', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1491730583887720449, 'BLACK', '游行', NULL, 'admin', '2022-02-10 19:07:41', 'admin', '2022-02-10 19:07:41', NULL);
+
+-- ----------------------------
+-- Table structure for cc_tag_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_tag_word`;
+CREATE TABLE `cc_tag_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
+  `use_count` int(11) NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint(20) NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `sort_flag` bigint(255) NOT NULL COMMENT '排序标识',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for cc_tag_word_group
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_tag_word_group`;
+CREATE TABLE `cc_tag_word_group`  (
+  `group_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `parent_id` bigint(20) NOT NULL COMMENT '父级ID',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一编码',
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
+  `sort_flag` bigint(20) NULL DEFAULT NULL COMMENT '排序标识',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`group_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cc_vote
@@ -491,11 +626,11 @@ CREATE TABLE `cms_catalog`  (
 -- ----------------------------
 -- Records of cms_catalog
 -- ----------------------------
-INSERT INTO `cms_catalog` VALUES (390567488348229, 1630092239507464193, 0, '新闻中心', NULL, 'news', NULL, '390567488348229', NULL, 'common', 'news/', NULL, 'Y', 'Y', 167748979300, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, 6, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:23:13', 'admin', '2023-02-27 17:23:13', NULL);
+INSERT INTO `cms_catalog` VALUES (390567488348229, 1630092239507464193, 0, '新闻中心', 'iurl://resources/image/2023/03/17/396941061038149.png?type=resource&id=396941061038149&sid=1630092239507464193', 'news', NULL, '390567488348229', NULL, 'common', 'news/', NULL, 'Y', 'Y', 167748979300, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, 6, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"detailTemplate_article\":\"\",\"detailTemplate_image\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_audio\":\"\",\"indexTemplate\":\"\",\"listTemplate\":\"\",\"detailTemplate_video\":\"\"}}', '{}', 'admin', '2023-02-27 17:23:13', 'admin', '2023-04-01 00:34:00', NULL);
 INSERT INTO `cms_catalog` VALUES (390567566614597, 1630092239507464193, 390567488348229, '行业新闻', NULL, 'xwzx_xyxw', NULL, '390567488348229:390567566614597', NULL, 'common', 'news/hy/', NULL, 'Y', 'Y', 167748981100, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:23:32', 'admin', '2023-03-11 14:40:18', NULL);
 INSERT INTO `cms_catalog` VALUES (390570590720069, 1630092239507464193, 390567488348229, '思威控新闻', NULL, 'xwzx_swkxw', NULL, '390567488348229:390570590720069', NULL, 'common', 'news/swk/', NULL, 'Y', 'Y', 167749055100, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:35:50', 'admin', '2023-03-11 14:40:18', NULL);
 INSERT INTO `cms_catalog` VALUES (390570663739461, 1630092239507464193, 0, '产品中心', NULL, 'product', NULL, '390570663739461', NULL, 'common', 'product/', NULL, 'Y', 'Y', 167749056700, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, 0, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\"},\"h5\":{}}', '{}', 'admin', '2023-02-27 17:36:08', 'admin', '2023-03-08 19:04:36', NULL);
-INSERT INTO `cms_catalog` VALUES (390570748936261, 1630092239507464193, 390570663739461, 'DK系列', NULL, 'product_dk', NULL, '390570663739461:390570748936261', NULL, 'common', 'product/dk/', NULL, 'Y', 'Y', 167749058800, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 10, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\",\"indexTemplate\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_image\":\"\"}}', '{\"ArticleImageHeight\":\"0\",\"ArticleImageWidth\":\"0\",\"EnableIndex\":\"Y\",\"RepeatTitleCheck\":\"0\",\"ContentExtendModel\":\"396563529257029\",\"ExtendModel\":\"\",\"HotWordGroups\":\"[]\"}', 'admin', '2023-02-27 17:36:29', 'admin', '2023-03-17 15:21:17', NULL);
+INSERT INTO `cms_catalog` VALUES (390570748936261, 1630092239507464193, 390570663739461, 'DK系列', NULL, 'product_dk', NULL, '390570663739461:390570748936261', NULL, 'common', 'product/dk/', NULL, 'Y', 'Y', 167749058800, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 10, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\",\"indexTemplate\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_image\":\"\"}}', '{\"HotWordGroups\":\"[]\",\"ArticleImageHeight\":\"700\",\"CatalogExtendModel\":\"\",\"EnableIndex\":\"Y\",\"RepeatTitleCheck\":\"0\",\"ContentExtendModel\":\"396563529257029\",\"ArticleImageWidth\":\"700\"}', 'admin', '2023-02-27 17:36:29', 'admin', '2023-04-01 00:33:47', NULL);
 INSERT INTO `cms_catalog` VALUES (390570814517317, 1630092239507464193, 390570663739461, 'GK系列', NULL, 'product_gk', NULL, '390570663739461:390570814517317', NULL, 'common', 'product/gk/', NULL, 'Y', 'Y', 167749060400, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 12, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\"}}', '{}', 'admin', '2023-02-27 17:36:45', 'admin', '2023-03-10 19:58:41', NULL);
 INSERT INTO `cms_catalog` VALUES (390570870935621, 1630092239507464193, 0, '应用领域', NULL, 'case', NULL, '390570870935621', NULL, 'common', 'case/', NULL, 'Y', 'Y', 167749061800, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:36:59', 'admin', '2023-02-27 17:36:59', NULL);
 INSERT INTO `cms_catalog` VALUES (390570940239941, 1630092239507464193, 0, '技术支持', NULL, 'support', NULL, '390570940239941', NULL, 'common', 'support/', NULL, 'Y', 'Y', 167749063500, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:37:15', 'admin', '2023-02-27 17:37:15', NULL);
@@ -608,68 +743,6 @@ INSERT INTO `cms_content` VALUES (392325435105349, 1630092239507464193, 39057081
 INSERT INTO `cms_content` VALUES (393784398516293, 1630092239507464193, 390571116064837, '390570940239941:390571037143109:390571116064837', 390570940239941, 100, NULL, 'article', '组态软件V4.6.1下载地址: www.goukia.com', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167827520700, '[]', '[]', 0, 0, '2023-03-08 19:33:28', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-08 19:33:27', 'admin', '2023-03-08 19:33:27', NULL);
 INSERT INTO `cms_content` VALUES (399084891713605, 1630092239507464193, 390571481559109, '390571481559109', 390571481559109, 100, NULL, 'audio', '测试音频', NULL, NULL, NULL, 'iurl://resources/image/2023/03/24/399322312380485.png?type=resource&id=399322312380485&sid=1630092239507464193', NULL, NULL, '0', NULL, NULL, NULL, NULL, '60', 0, 0, NULL, 167957019100, '[]', '[]', 0, 0, '2023-03-24 11:16:03', NULL, '[\"pc\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-23 19:16:32', 'admin', '2023-03-24 16:13:29', NULL);
 INSERT INTO `cms_content` VALUES (399145884594245, 1630092239507464193, 390571481559109, '390571481559109', 390571481559109, 100, NULL, 'video', '测试视频', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167958414600, '[]', '[]', 0, 0, '2023-03-24 12:47:53', NULL, '[\"pc\"]', NULL, 'N', NULL, 'N', NULL, NULL, 'admin', '2023-03-23 23:09:05', 'admin', '2023-03-24 12:47:52', NULL);
-
--- ----------------------------
--- Table structure for cms_error_prone_word
--- ----------------------------
-DROP TABLE IF EXISTS `cms_error_prone_word`;
-CREATE TABLE `cms_error_prone_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '替换词',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of cms_error_prone_word
--- ----------------------------
-INSERT INTO `cms_error_prone_word` VALUES (1482979643789541377, '凑和', '凑合', 'admin', '2022-01-17 15:34:34', 'admin', '2022-01-17 15:34:34', NULL);
-INSERT INTO `cms_error_prone_word` VALUES (1482979706737655809, '脉博', '脉搏', 'admin', '2022-01-17 15:34:49', 'admin', '2022-01-17 15:34:49', NULL);
-INSERT INTO `cms_error_prone_word` VALUES (1482979792091742209, '幅射', '辐射', 'admin', '2022-01-17 15:35:10', 'admin', '2022-01-17 15:35:10', NULL);
-
--- ----------------------------
--- Table structure for cms_hot_word
--- ----------------------------
-DROP TABLE IF EXISTS `cms_hot_word`;
-CREATE TABLE `cms_hot_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
-  `url_target` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '跳转方式',
-  `use_count` int(255) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(255) NOT NULL DEFAULT 0 COMMENT '点击次数',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for cms_hot_word_group
--- ----------------------------
-DROP TABLE IF EXISTS `cms_hot_word_group`;
-CREATE TABLE `cms_hot_word_group`  (
-  `group_id` bigint(20) NOT NULL,
-  `site_id` bigint(20) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sort_flag` bigint(20) NULL DEFAULT NULL,
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`group_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cms_image
@@ -967,32 +1040,7 @@ INSERT INTO `cms_resource` VALUES (399084971860037, 1630092239507464193, 'audio'
 INSERT INTO `cms_resource` VALUES (399085007847493, 1630092239507464193, 'audio', 'Local', '11582.mp3', 'resources/audio/2023/03/23/399085007847493.mp3', '11582.mp3', 'mp3', NULL, NULL, 184549, NULL, 0, NULL, 'admin', '2023-03-23 19:01:05', 'admin', '2023-03-23 19:01:05', NULL);
 INSERT INTO `cms_resource` VALUES (399145939935301, 1630092239507464193, 'video', 'Local', 'trailer.mp4', 'resources/video/2023/03/23/399145939935301.mp4', 'trailer.mp4', 'mp4', NULL, NULL, 4372373, NULL, 0, NULL, 'admin', '2023-03-23 23:09:01', 'admin', '2023-03-23 23:09:01', NULL);
 INSERT INTO `cms_resource` VALUES (399322312380485, 1630092239507464193, 'image', 'Local', '239017.png', 'resources/image/2023/03/24/399322312380485.png', '239017.png', 'png', 710, 600, 642829, NULL, 0, NULL, 'admin', '2023-03-24 11:06:41', 'admin', '2023-03-24 11:06:41', NULL);
-
--- ----------------------------
--- Table structure for cms_sensitive_word
--- ----------------------------
-DROP TABLE IF EXISTS `cms_sensitive_word`;
-CREATE TABLE `cms_sensitive_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `type` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型：BLACK=敏感词，WHITE=白名单',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '替换词',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of cms_sensitive_word
--- ----------------------------
-INSERT INTO `cms_sensitive_word` VALUES (1482266133891878914, 'BLACK', '狗日滴', NULL, 'admin', '2022-01-15 16:19:20', 'admin', '2022-01-15 16:19:20', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1482266192272396290, 'BLACK', 'fuck', NULL, 'admin', '2022-01-15 16:19:34', 'admin', '2022-01-15 16:19:34', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1482266254880772097, 'BLACK', '妈卖批', NULL, 'admin', '2022-01-15 16:19:49', 'admin', '2022-01-15 16:19:49', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1491730556066902017, 'WHITE', '上游行业', NULL, 'admin', '2022-02-10 19:07:34', 'admin', '2022-02-10 19:07:34', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1491730583887720449, 'BLACK', '游行', NULL, 'admin', '2022-02-10 19:07:41', 'admin', '2022-02-10 19:07:41', NULL);
+INSERT INTO `cms_resource` VALUES (401996611027013, 1630092239507464193, 'image', 'Local', '5ca4adb6e358a7f3b22602973b689bee.jpg', 'resources/image/2023/04/01/401996611027013.jpg', '5ca4adb6e358a7f3b22602973b689bee.jpg', 'jpg', 680, 374, 27934, NULL, 0, NULL, 'admin', '2023-04-01 00:28:26', 'admin', '2023-04-01 00:28:26', NULL);
 
 -- ----------------------------
 -- Table structure for cms_site
@@ -1027,7 +1075,7 @@ CREATE TABLE `cms_site`  (
 -- ----------------------------
 -- Records of cms_site
 -- ----------------------------
-INSERT INTO `cms_site` VALUES (1630092239507464193, 0, '思威控', NULL, NULL, 'swikoon', '', 0, NULL, NULL, NULL, 167747925000, '{\"pc\":{\"staticSuffix\":\"shtml\",\"url\":\"http://www.swikoon.com/\",\"indexTemplate\":\"index.template.html\",\"listTemplate\":\"list.template.html\",\"detailTemplate_article\":\"detail.template.html\",\"detailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_article\":\"detail.template.html\",\"defaultListTemplate\":\"list.template.html\",\"defaultDetailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_audio\":\"detail_audio.template.html\",\"defaultDetailTemplate_video\":\"detail_video.template.html\"}}', NULL, NULL, NULL, NULL, NULL, 'admin', '2023-02-27 14:27:30', 'admin', '2023-03-24 12:49:58');
+INSERT INTO `cms_site` VALUES (1630092239507464193, 0, '思威控', NULL, 'iurl://resources/image/2023/04/01/401996611027013.jpg?type=resource&id=401996611027013&sid=1630092239507464193', 'swikoon', '', 0, NULL, NULL, NULL, 167747925000, '{\"pc\":{\"staticSuffix\":\"shtml\",\"url\":\"http://www.swikoon.com/\",\"indexTemplate\":\"index.template.html\",\"listTemplate\":\"list.template.html\",\"detailTemplate_article\":\"detail.template.html\",\"detailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_article\":\"detail.template.html\",\"defaultListTemplate\":\"list.template.html\",\"defaultDetailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_audio\":\"detail_audio.template.html\",\"defaultDetailTemplate_video\":\"detail_video.template.html\"}}', '{\"ImageWatermark\":\"Y\",\"EnableIndex\":\"Y\",\"RepeatTitleCheck\":\"1\",\"ImageWatermarkArgs\":\"{\\\"image\\\":\\\"watermaker.jpg\\\",\\\"position\\\":\\\"TOP_LEFT\\\",\\\"opacity\\\":0.8,\\\"ratio\\\":30}\",\"PublishedContentEdit\":\"Y\",\"ArticleImageWidth\":\"700\",\"FileStorageType\":\"Local\",\"HotWordGroups\":\"[\\\"game\\\"]\",\"ArticleImageHeight\":\"700\",\"MaxPageOnContentPublish\":\"7\",\"SiteExtendModel\":\"\",\"AutoArticleLogo\":\"N\",\"SensitiveWordEnable\":\"Y\",\"FileStorageArgs\":\"{}\",\"ErrorProneWordEnable\":\"N\"}', NULL, NULL, NULL, NULL, 'admin', '2023-02-27 14:27:30', 'admin', '2023-04-01 00:28:29');
 
 -- ----------------------------
 -- Table structure for cms_site_property
@@ -1045,47 +1093,6 @@ CREATE TABLE `cms_site_property`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`property_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for cms_tag_word
--- ----------------------------
-DROP TABLE IF EXISTS `cms_tag_word`;
-CREATE TABLE `cms_tag_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
-  `use_count` int(11) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(20) NOT NULL DEFAULT 0 COMMENT '点击次数',
-  `sort_flag` bigint(255) NOT NULL COMMENT '排序标识',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for cms_tag_word_group
--- ----------------------------
-DROP TABLE IF EXISTS `cms_tag_word_group`;
-CREATE TABLE `cms_tag_word_group`  (
-  `group_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `parent_id` bigint(20) NOT NULL COMMENT '父级ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
-  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一编码',
-  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
-  `sort_flag` bigint(20) NULL DEFAULT NULL COMMENT '排序标识',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`group_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1765,7 +1772,7 @@ INSERT INTO `sys_menu` VALUES (2035, '互动运营', 0, 36, 'operations', NULL, 
 INSERT INTO `sys_menu` VALUES (2036, '友链管理', 2035, 1, 'link', 'cms/link/linkGroup', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:friendlink:list', 'link', 'admin', '2023-01-17 16:47:51', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2037, '扩展模型', 2025, 9, 'exmodel', 'cms/exmodel/model', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:exmodel:list', 'form', 'admin', '2023-01-17 16:48:38', 'admin', '2023-02-10 18:20:20', '');
 INSERT INTO `sys_menu` VALUES (2038, '广告管理', 2035, 2, 'advertisement', 'cms/ad/adSpace', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:advertisement:list', 'button', 'admin', '2023-01-17 16:49:16', 'admin', '2023-01-18 11:58:54', '');
-INSERT INTO `sys_menu` VALUES (2039, '词汇管理', 2025, 10, 'word', 'cms/word/word', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:word:list', 'input', 'admin', '2023-01-17 16:50:46', 'admin', '2023-02-10 18:20:24', '');
+INSERT INTO `sys_menu` VALUES (2039, '词汇管理', 2025, 10, 'word', 'word/word', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:word:list', 'input', 'admin', '2023-01-17 16:50:46', 'admin', '2023-03-31 22:01:53', '');
 INSERT INTO `sys_menu` VALUES (2040, '安全配置', 1, 12, 'security/config', 'system/security/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'system:security:list', 'shield-user-line', 'admin', '2023-01-17 16:52:57', 'admin', '2023-01-18 14:59:52', '');
 INSERT INTO `sys_menu` VALUES (2041, '异步任务', 2, 3, 'async', 'monitor/async/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'monitor:async:list', 'list', 'admin', '2023-02-02 11:29:24', 'admin', '2023-02-02 11:30:11', '');
 INSERT INTO `sys_menu` VALUES (2043, '系统日志', 2, 8, 'logs', 'monitor/logs/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'monitor:logs:list', 'list', 'admin', '2023-02-25 11:13:02', 'admin', '2023-02-25 11:17:07', '');
@@ -1843,7 +1850,7 @@ CREATE TABLE `sys_oper_log`  (
   `cost` bigint(20) NULL DEFAULT NULL COMMENT '操作耗时',
   `user_agent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '请求头User-Agent信息',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1050 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1051 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -1864,6 +1871,7 @@ INSERT INTO `sys_oper_log` VALUES (1046, '菜单管理', 'INSERT', 'R com.ruoyi.
 INSERT INTO `sys_oper_log` VALUES (1047, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-13 17:32:02\",\"updateBy\":\"admin\",\"updateTime\":\"2023-03-13 17:33:59\",\"remark\":\"\",\"menuId\":\"2051\",\"menuName\":\"内容索引\",\"parentId\":\"2025\",\"orderNum\":11,\"path\":\"search/index\",\"component\":\"cms/search/indexList\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:search:index\",\"icon\":\"documentation\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-28 18:46:15', 64, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36');
 INSERT INTO `sys_oper_log` VALUES (1048, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-14 16:26:55\",\"updateBy\":\"admin\",\"updateTime\":\"2023-03-14 16:29:00\",\"remark\":\"\",\"menuId\":\"2052\",\"menuName\":\"索引词库\",\"parentId\":\"2025\",\"orderNum\":12,\"path\":\"dictWord\",\"component\":\"search/dictWord\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:search:dict\",\"icon\":\"input\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-28 18:46:23', 45, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36');
 INSERT INTO `sys_oper_log` VALUES (1049, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-14 16:28:53\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2053\",\"menuName\":\"搜索日志\",\"parentId\":\"2025\",\"orderNum\":13,\"path\":\"searchLog\",\"component\":\"search/searchLog\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:search:log\",\"icon\":\"log\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-28 18:46:31', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1050, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:50:46\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-10 18:20:24\",\"remark\":\"\",\"menuId\":\"2039\",\"menuName\":\"词汇管理\",\"parentId\":\"2025\",\"orderNum\":10,\"path\":\"word\",\"component\":\"word/word\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:word:list\",\"icon\":\"input\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-31 22:01:53', 651, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
 
 -- ----------------------------
 -- Table structure for sys_permission
