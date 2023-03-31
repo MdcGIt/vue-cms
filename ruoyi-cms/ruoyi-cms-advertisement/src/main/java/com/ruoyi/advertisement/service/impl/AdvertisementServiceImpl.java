@@ -71,11 +71,6 @@ public class AdvertisementServiceImpl extends ServiceImpl<CmsAdvertisementMapper
 	@Override
 	@Transactional
 	public void deleteAdvertisement(List<Long> advertisementIds) {
-//		List<CmsAdvertisement> list = this.listByIds(advertisementIds);
-//		for (CmsAdvertisement ad : list) {
-//			// TODO 删除统计数据
-//			
-//		}
 		this.removeByIds(advertisementIds);
 	}
 

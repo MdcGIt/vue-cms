@@ -6,32 +6,47 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.stat.RequestEvent;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 广告日点击/展现统计数据
+ *
+ * @author 兮玥
+ * @email liweiyimwz@126.com
+ */
 @Getter
 @Setter
-@TableName(CmsAdClickLog.TABLE_NAME)
-public class CmsAdClickLog extends RequestEvent implements Serializable {
+@TableName(CmsAdDayStat.TABLE_NAME)
+public class CmsAdDayStat implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	public final static String TABLE_NAME = "cms_ad_click_log";
+	public final static String TABLE_NAME = "cms_ad_daystat";
 
-	@TableId(value = "log_id", type = IdType.AUTO)
-	private Long logId;
+	@TableId(value = "stat_id", type = IdType.AUTO)
+	private Long statId;
 	
 	/**
-	 * 站点ID
+	 * 统计日期，格式：yyyyMMdd
 	 */
-	private Long siteId;
+	private String day;
 	
 	/**
 	 * 广告ID
 	 */
-	private Long adId;
+	private Long advertisementId;
+	
+	/**
+	 * 点击数
+	 */
+	private Integer click;
+	
+	/**
+	 * 展现数
+	 */
+	private Integer view;
 	
 	/**
 	 * 广告名称

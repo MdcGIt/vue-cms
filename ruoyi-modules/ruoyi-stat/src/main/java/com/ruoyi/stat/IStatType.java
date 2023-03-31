@@ -2,8 +2,6 @@ package com.ruoyi.stat;
 
 import java.util.List;
 
-import com.ruoyi.common.domain.TreeNode;
-
 /**
  * 统计类型
  * 
@@ -17,7 +15,7 @@ import com.ruoyi.common.domain.TreeNode;
 public interface IStatType {
 	
 	/**
-	 * 统计树
+	 * 统计菜单树
 	 */
-	public List<TreeNode<String>> getStatTreeNodes();
+	public List<StatMenu> getStatMenus();
 }

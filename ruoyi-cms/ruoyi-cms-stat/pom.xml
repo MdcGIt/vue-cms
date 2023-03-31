@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ruoyi</groupId>
+		<artifactId>ruoyi-cms</artifactId>
+		<version>0.3.0</version>
+	</parent>
+
+	<artifactId>ruoyi-cms-stat</artifactId>
+	<description>站点统计模块</description>
+
+	<dependencies>
+		<!-- 内容核心 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-cms-contentcore</artifactId>
+		</dependency>
+		<!-- 统计模块 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-stat</artifactId>
+		</dependency>
+	</dependencies>
+</project>

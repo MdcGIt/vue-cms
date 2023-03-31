@@ -75,6 +75,10 @@ public class ServletUtils {
 	public static boolean isHttpUrl(String url) {
 		return StringUtils.startsWithIgnoreCase(url, HTTP) || StringUtils.startsWithIgnoreCase(url, HTTPS);
 	}
+	
+	public static String getAcceptLanaguage(HttpServletRequest request) {
+		return getHeader(request, HEADER_ACCEPT_LANGUAGE);
+	}
 
 	public static String getUserAgent(HttpServletRequest request) {
 		return getHeader(request, HEADER_USER_AGENT);

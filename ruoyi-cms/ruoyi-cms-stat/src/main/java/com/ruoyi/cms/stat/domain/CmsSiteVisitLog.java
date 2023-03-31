@@ -1,9 +1,8 @@
-package com.ruoyi.advertisement.domain;
+package com.ruoyi.cms.stat.domain;
 
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.stat.RequestEvent;
@@ -13,12 +12,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@TableName(CmsAdClickLog.TABLE_NAME)
-public class CmsAdClickLog extends RequestEvent implements Serializable {
+@TableName(CmsSiteVisitLog.TABLE_NAME)
+public class CmsSiteVisitLog extends RequestEvent implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	public final static String TABLE_NAME = "cms_ad_click_log";
+	public final static String TABLE_NAME = "cms_site_visit_log";
 
 	@TableId(value = "log_id", type = IdType.AUTO)
 	private Long logId;
@@ -29,13 +28,12 @@ public class CmsAdClickLog extends RequestEvent implements Serializable {
 	private Long siteId;
 	
 	/**
-	 * 广告ID
+	 * 栏目ID
 	 */
-	private Long adId;
+	private Long catalogId;
 	
 	/**
-	 * 广告名称
+	 * 内容ID
 	 */
-	@TableField(exist = false)
-	private String adName;
+	private Long contentId;
 }
