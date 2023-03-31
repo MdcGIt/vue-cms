@@ -35,9 +35,9 @@
           </el-switch>
         </el-form-item>
         <el-form-item label="栏目扩展模型"
-                      prop="ExtendModel">
+                      prop="CatalogExtendModel">
           <el-select 
-            v-model="form_extend.ExtendModel" 
+            v-model="form_extend.CatalogExtendModel" 
             filterable 
             clearable 
             placeholder="请选择">
@@ -52,7 +52,7 @@
                       icon="el-icon-finished" 
                       type="primary" 
                       plain 
-                      @click="handleApplyToCatalog('ExtendModel')">应用到栏目</el-button>
+                      @click="handleApplyToCatalog('CatalogExtendModel')">应用到栏目</el-button>
         </el-form-item>
         <el-form-item label="内容扩展模型"
                       prop="ContentExtendModel">
@@ -89,28 +89,6 @@
         <div slot="header" class="clearfix">
           <span>词汇配置</span>
         </div>
-        <el-form-item 
-          label="开启敏感词替换"
-          prop="SensitiveWordEnable">
-          <el-switch
-            v-model="form_extend.SensitiveWordEnable"
-            active-text="是"
-            inactive-text="否"
-            active-value="Y"
-            inactive-value="N">
-          </el-switch>
-        </el-form-item>
-        <el-form-item 
-          label="开启易错词替换"
-          prop="ErrorProneWordEnable">
-          <el-switch
-            v-model="form_extend.ErrorProneWordEnable"
-            active-text="是"
-            inactive-text="否"
-            active-value="Y"
-            inactive-value="N">
-          </el-switch>
-        </el-form-item>
         <el-form-item 
           label="热词分组"
           prop="HotWordGroups">
@@ -185,11 +163,6 @@ export default {
       const params = { catalogId: this.catalogId };
       getCatalogExtends(params).then(response => {
         this.form_extend = response.data;
-        if (this.form_extend.HotWordGroups && this.form_extend.HotWordGroups != '') {
-          this.form_extend.HotWordGroups = JSON.parse(this.form_extend.HotWordGroups);
-        } else {
-          this.form_extend.HotWordGroups = [];
-        }
         this.siteId = response.data.siteId;
         this.loading = false;
       });
@@ -211,7 +184,15 @@ export default {
     handleSaveExtends () {
       this.$refs["form_extend"].validate(valid => {
         if (valid) {
-          saveCatalogExtends(this.catalogId, this.form_extend).then(response => {
+          const data = {};
+          Object.keys(this.form_extend).forEach(key => {
+            if (typeof this.form_extend[key] == 'object') {
+            data[key] = JSON.stringify(this.form_extend[key]);
+            } else {
+              data[key] = this.form_extend[key];
+            }
+          })
+          saveCatalogExtends(this.catalogId, data).then(response => {
             if (response.code === 200) {
               this.$modal.msgSuccess("保存成功");
             } else {

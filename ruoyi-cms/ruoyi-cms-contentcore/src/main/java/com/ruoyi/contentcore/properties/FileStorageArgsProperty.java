@@ -1,11 +1,12 @@
 package com.ruoyi.contentcore.properties;
 
 import java.util.Map;
-import java.util.Objects;
 
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.utils.JacksonUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 
@@ -21,15 +22,6 @@ public class FileStorageArgsProperty implements IProperty {
 	public final static String ID = "FileStorageArgs";
 	
 	static UseType[] UseTypes = new UseType[] { UseType.Site };
-	
-	public static FileStorageArgs getFileStorageArgs(Map<String, Object> props) {
-		String stringValue = ConfigPropertyUtils.getStringValue(ID, props);
-		FileStorageArgs args = JacksonUtils.from(stringValue, FileStorageArgs.class);
-		if (Objects.isNull(args)) {
-			args = new FileStorageArgs();
-		}
-		return args;
-	}
 
 	@Override
 	public UseType[] getUseTypes() {
@@ -47,13 +39,25 @@ public class FileStorageArgsProperty implements IProperty {
 	}
 	
 	@Override
-	public String defaultValue() {
-		return JacksonUtils.to(new FileStorageArgs());
+	public FileStorageArgs defaultValue() {
+		return new FileStorageArgs();
 	}
-
+	
 	@Override
-	public Class<?> valueClass() {
-		return FileStorageArgs.class;
+	public FileStorageArgs getPropValue(Map<String, String> configProps) {
+		String v = MapUtils.getString(configProps, getId());
+		if (StringUtils.isNotEmpty(v)) {
+			return JacksonUtils.from(v, FileStorageArgs.class);
+		}
+		return defaultValue();
+	}	
+	
+	public static FileStorageArgs getValue(Map<String, String> props) {
+		String v = ConfigPropertyUtils.getStringValue(ID, props);
+		if (StringUtils.isNotEmpty(v)) {
+			return JacksonUtils.from(v, FileStorageArgs.class);
+		}
+		return new FileStorageArgs();
 	}
 	
 	@Getter

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getHotWordList(params) {
   return request({
-    url: '/cms/hotword',
+    url: '/word/hotword',
     method: 'get',
     params: params
   })
@@ -10,7 +10,7 @@ export function getHotWordList(params) {
 
 export function addHotWord(data) {
   return request({
-    url: '/cms/hotword',
+    url: '/word/hotword',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export function addHotWord(data) {
 
 export function editHotWord(data) {
   return request({
-    url: '/cms/hotword',
+    url: '/word/hotword',
     method: 'put',
     data: data
   })
@@ -26,7 +26,7 @@ export function editHotWord(data) {
 
 export function deleteHotWord(data) {
   return request({
-    url: '/cms/hotword',
+    url: '/word/hotword',
     method: 'delete',
     data: data
   })
@@ -34,21 +34,21 @@ export function deleteHotWord(data) {
 
 export function getHotWordGroupTreeData() {
   return request({
-    url: '/cms/hotwordgroup/treedata',
+    url: '/word/hotword/group/treedata',
     method: 'get'
   })
 }
 
 export function getHotWordGroupOptions() {
   return request({
-    url: '/cms/hotwordgroup/options',
+    url: '/word/hotword/group/options',
     method: 'get'
   })
 }
 
 export function addHotWordGroup(data) {
   return request({
-    url: '/cms/hotwordgroup',
+    url: '/word/hotword/group',
     method: 'post',
     data: data
   })
@@ -56,7 +56,7 @@ export function addHotWordGroup(data) {
 
 export function editHotWordGroup(data) {
   return request({
-    url: '/cms/hotwordgroup',
+    url: '/cms/hotword/group',
     method: 'put',
     data: data
   })
@@ -64,7 +64,7 @@ export function editHotWordGroup(data) {
 
 export function deleteHotWordGroup(data) {
   return request({
-    url: '/cms/hotwordgroup',
+    url: '/cms/hotword/group',
     method: 'delete',
     data: data
   })

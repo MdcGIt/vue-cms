@@ -84,5 +84,5 @@ public interface ISiteService extends IService<CmsSite> {
 	 * @param configs
 	 * @param operator
 	 */
-	void saveSiteExtend(Long siteId, Map<String, Object> configs, String operator);
+	void saveSiteExtend(Long siteId, Map<String, String> configs, String operator);
 }

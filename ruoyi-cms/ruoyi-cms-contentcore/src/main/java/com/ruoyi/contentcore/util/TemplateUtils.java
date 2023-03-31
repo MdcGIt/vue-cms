@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.utils.ReflectASMUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
+import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsSite;
 
@@ -68,8 +69,10 @@ public class TemplateUtils {
 		// 站点属性
 		Map<String, Object> mapSite = ReflectASMUtils.beanToMap(site);
 		// 扩展属性
-		if (Objects.nonNull(site.getConfigProps())) {
-			site.getConfigProps().entrySet().forEach(e -> {
+
+		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(site.getConfigProps(), UseType.Site);
+		if (Objects.nonNull(configProps)) {
+			configProps.entrySet().forEach(e -> {
 				mapSite.put(ContentCoreConsts.SiteExtendFieldPrefix + e.getKey(), e.getValue());
 			});
 		}

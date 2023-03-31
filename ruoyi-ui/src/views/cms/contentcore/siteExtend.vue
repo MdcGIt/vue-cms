@@ -39,10 +39,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="扩展模型"
-                      prop="ExtendModel">
+        <el-form-item label="站点扩展模型"
+                      prop="SiteExtendModel">
           <el-select 
-            v-model="form_extend.ExtendModel" 
+            v-model="form_extend.SiteExtendModel" 
             filterable 
             clearable 
             placeholder="请选择">
@@ -138,7 +138,7 @@
         </el-form-item>
         <el-form-item v-show="form_extend.ImageWatermark=='Y'" label="水印图片">
           <cms-image-viewer v-model="form_extend.ImageWatermarkArgs.image"
-                            :src="form_extend.ImageWatermarkArgs.imageSrc"
+                            :src="watermarkImageSrc"
                             :site="siteId"
                             action="/cms/site/upload_watermarkimage"></cms-image-viewer>
         </el-form-item>
@@ -252,10 +252,19 @@ export default {
       exmodelOptions: [],
       form_extend: {
         FileStorageArgs: {},
-        ImageWatermarkArgs: {}
+        ImageWatermarkArgs: {},
+        HotWordGroups:[]
       },
       hotWordGroups: []
     };
+  },
+  computed: {
+    watermarkImageSrc() {
+      if (this.form_extend.ImageWatermarkArgs.image && this.form_extend.ImageWatermarkArgs.image.length > 0) {
+        return this.form_extend.PreviewPrefix + this.form_extend.ImageWatermarkArgs.image;
+      }
+      return undefined;
+    }
   },
   watch: {
     siteId(newVal) {
@@ -275,14 +284,6 @@ export default {
       const params = { siteId: this.siteId };
       getSiteExtends(params).then(response => {
         this.form_extend = response.data == null ? {} : response.data;
-        if (this.form_extend.ImageWatermarkArgs.image !== '') {
-          this.form_extend.ImageWatermarkArgs.imageSrc = this.form_extend.PreviewPrefix + this.form_extend.ImageWatermarkArgs.image;
-        }
-        if (this.form_extend.HotWordGroups && this.form_extend.HotWordGroups != '') {
-          this.form_extend.HotWordGroups = JSON.parse(this.form_extend.HotWordGroups);
-        } else {
-          this.form_extend.HotWordGroups = [];
-        }
         this.loading = false;
       });
     },
@@ -311,7 +312,7 @@ export default {
           const data = {};
           Object.keys(this.form_extend).forEach(key => {
             if (typeof this.form_extend[key] == 'object') {
-              data[key] = JSON.stringify(this.form_extend[key]);
+            data[key] = JSON.stringify(this.form_extend[key]);
             } else {
               data[key] = this.form_extend[key];
             }

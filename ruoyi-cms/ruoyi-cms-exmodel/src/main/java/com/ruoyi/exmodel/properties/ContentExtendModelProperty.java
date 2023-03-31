@@ -32,7 +32,7 @@ public class ContentExtendModelProperty implements IProperty {
 		return "内容扩展模型";
 	}
 	
-	public static String getValue(Map<String, Object> props) {
+	public static String getValue(Map<String, String> props) {
 		return ConfigPropertyUtils.getStringValue(ID, props);
 	}
 }

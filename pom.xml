@@ -351,6 +351,13 @@
 				<artifactId>ruoyi-meta</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
+			
+			<!-- 词汇基础模块 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-word</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
 
 			<!-- 数据统计模块 -->
 			<dependency>

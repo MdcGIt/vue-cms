@@ -19,5 +19,10 @@
 			<groupId>com.ruoyi</groupId>
 			<artifactId>ruoyi-cms-article</artifactId>
 		</dependency>
+		<!-- 词汇基础模块 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-word</artifactId>
+		</dependency>
 	</dependencies>
 </project>

@@ -169,7 +169,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		// 写入磁盘/OSS
 		String fileStorageType = FileStorageTypeProperty.getValue(site.getConfigProps());
 		IFileStorageType fst = this.getFileStorageType(fileStorageType);
-		FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getFileStorageArgs(site.getConfigProps());
+		FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
 		// 写入参数设置
 		StorageWriteArgsBuilder builder = StorageWriteArgs.builder();
 		builder.bucket(fileStorageArgs.getBucket());
@@ -209,7 +209,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	public String getResourceLink(CmsResource resource, boolean isPreview) {
 		CmsSite site = this.siteService.getSite(resource.getSiteId());
 		if (!LocalFileStorageType.TYPE.equals(resource.getStorageType())) {
-			FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getFileStorageArgs(site.getConfigProps());
+			FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
 			if (fileStorageArgs != null && StringUtils.isNotEmpty(fileStorageArgs.getDomain())) {
 				String domain = fileStorageArgs.getDomain();
 				if (!domain.endsWith("/")) {
@@ -226,7 +226,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		CmsSite site = this.siteService.getSite(resource.getSiteId());
 		IFileStorageType storagetType = this.getFileStorageType(resource.getStorageType());
 		StorageReadArgsBuilder builder = StorageReadArgs.builder();
-		FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getFileStorageArgs(site.getConfigProps());
+		FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
 		if (fileStorageArgs != null) {
 			builder.endpoint(fileStorageArgs.getEndpoint())
 				.accessKey(fileStorageArgs.getAccessKey())

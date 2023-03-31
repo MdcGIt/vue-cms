@@ -38,7 +38,7 @@ public class FileStorageTypeProperty implements IProperty {
 		return LocalFileStorageType.TYPE;
 	}
 	
-	public static String getValue(Map<String, Object> props) {
+	public static String getValue(Map<String, String> props) {
 		return ConfigPropertyUtils.getStringValue(ID, props);
 	}
 }

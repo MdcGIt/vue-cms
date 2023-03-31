@@ -191,9 +191,9 @@ public class CmsCatalog extends BaseEntity {
 	 * 扩展配置
 	 */
 	@TableField(typeHandler = JacksonTypeHandler.class)
-	private Map<String, Object> configProps;
+	private Map<String, String> configProps;
 
-	public Map<String, Object> getConfigProps() {
+	public Map<String, String> getConfigProps() {
 		if (this.configProps == null) {
 			this.configProps = new HashMap<>();
 		}

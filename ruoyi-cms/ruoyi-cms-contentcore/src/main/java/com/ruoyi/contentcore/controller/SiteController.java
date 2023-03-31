@@ -2,12 +2,9 @@ package com.ruoyi.contentcore.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import org.apache.commons.collections4.MapUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +25,9 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
-import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.core.IPublishPipeProp.PublishPipePropUseType;
 import com.ruoyi.contentcore.domain.CmsSite;
@@ -214,19 +209,7 @@ public class SiteController extends BaseRestController {
 	public R<?> getSiteExtends(@RequestParam("siteId") Long siteId) {
 		CmsSite site = this.siteService.getSite(siteId);
 
-		Map<String, Object> configProps = site.getConfigProps();
-		if (configProps == null) {
-			configProps = new HashMap<>();
-		}
-		List<IProperty> props = ConfigPropertyUtils.getConfigPropertiesByUseType(UseType.Site);
-		for (IProperty prop : props) {
-			String value = MapUtils.getString(configProps, prop.getId(), prop.defaultValue());
-			if (Objects.nonNull(prop.valueClass())) {
-				configProps.put(prop.getId(), JacksonUtils.from(value, prop.valueClass()));
-			} else {
-				configProps.put(prop.getId(), value);
-			}
-		}
+		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(site.getConfigProps(), UseType.Site);
 		configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(site));
 		return R.ok(configProps);
 	}
@@ -239,7 +222,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 */
 	@PostMapping("/extends/{siteId}")
-	public R<?> saveSiteExtends(@PathVariable("siteId") Long siteId, @RequestBody Map<String, Object> configs) {
+	public R<?> saveSiteExtends(@PathVariable("siteId") Long siteId, @RequestBody Map<String, String> configs) {
 		this.siteService.saveSiteExtend(siteId, configs, StpAdminUtil.getLoginUser().getUsername());
 		return R.ok();
 	}

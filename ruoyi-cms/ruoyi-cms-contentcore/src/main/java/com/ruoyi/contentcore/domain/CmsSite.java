@@ -111,7 +111,14 @@ public class CmsSite extends BaseEntity {
      * 扩展属性配置
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private Map<String, Object> configProps;
+    private Map<String, String> configProps;
+
+	public Map<String, String> getConfigProps() {
+		if (this.configProps == null) {
+			this.configProps = new HashMap<>();
+		}
+		return configProps;
+	}
     
     public Map<String, Object> getPublishPipeProps(String publishPipeCode) {
     	if (this.publishPipeProps == null) {

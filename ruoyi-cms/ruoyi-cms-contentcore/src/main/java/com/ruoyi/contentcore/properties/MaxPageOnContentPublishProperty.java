@@ -2,6 +2,7 @@ package com.ruoyi.contentcore.properties;
 
 import java.util.Map;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 
@@ -36,15 +37,24 @@ public class MaxPageOnContentPublishProperty implements IProperty {
 	
 	@Override
 	public boolean validate(String value) {
-		return StringUtils.isEmpty(value) || NumberUtils.isDigits(value);
+		return StringUtils.isEmpty(value) || NumberUtils.isDigits(value.toString());
 	}
 	
 	@Override
-	public String defaultValue() {
-		return "5";
+	public Integer defaultValue() {
+		return 5;
 	}
 	
-	public static int getValue(Map<String, Object> props) {
+	@Override
+	public Integer getPropValue(Map<String, String> configProps) {
+		String string = MapUtils.getString(configProps, getId());
+		if (NumberUtils.isDigits(string)) {
+			return NumberUtils.toInt(string);
+		}
+		return defaultValue();
+	}
+	
+	public static int getValue(Map<String, String> props) {
 		return ConfigPropertyUtils.getIntValue(ID, props);
 	}
 }

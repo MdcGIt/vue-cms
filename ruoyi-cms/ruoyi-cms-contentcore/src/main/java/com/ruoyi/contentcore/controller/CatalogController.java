@@ -3,9 +3,7 @@ package com.ruoyi.contentcore.controller;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import org.apache.commons.collections4.MapUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,12 +25,10 @@ import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.ICatalogType;
 import com.ruoyi.contentcore.core.IContentType;
-import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.core.IPublishPipeProp.PublishPipePropUseType;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -241,19 +237,7 @@ public class CatalogController extends BaseRestController {
 		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
 
-		Map<String, Object> configProps = catalog.getConfigProps();
-		List<IProperty> props = ConfigPropertyUtils.getConfigPropertiesByUseType(UseType.Catalog);
-		for (IProperty prop : props) {
-			String value = MapUtils.getString(configProps, prop.getId());
-			if (StringUtils.isEmpty(value)) {
-				value = prop.defaultValue();
-			}
-			if (Objects.nonNull(prop.valueClass())) {
-				configProps.put(prop.getId(), JacksonUtils.from(value, prop.valueClass()));
-			} else {
-				configProps.put(prop.getId(), value);
-			}
-		}
+		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(), UseType.Catalog);
 		configProps.put("siteId", catalog.getSiteId());
 		configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(this.siteService.getSite(catalog.getSiteId())));
 		return R.ok(configProps);
@@ -268,7 +252,7 @@ public class CatalogController extends BaseRestController {
 	 */
 	@PutMapping("/extends/{catalogId}")
 	public R<?> saveCatalogExtends(@PathVariable("catalogId") Long catalogId,
-			@RequestBody Map<String, Object> configs) {
+			@RequestBody Map<String, String> configs) {
 		this.catalogService.saveCatalogExtends(catalogId, configs, StpAdminUtil.getLoginUser().getUsername());
 		return R.ok();
 	}

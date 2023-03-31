@@ -411,7 +411,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
-	public void saveCatalogExtends(Long catalogId, Map<String, Object> configs, String operator) {
+	public void saveCatalogExtends(Long catalogId, Map<String, String> configs, String operator) {
 		CmsCatalog catalog = this.getCatalog(catalogId);
 		ConfigPropertyUtils.filterConfigProps(configs, IProperty.UseType.Catalog);
 

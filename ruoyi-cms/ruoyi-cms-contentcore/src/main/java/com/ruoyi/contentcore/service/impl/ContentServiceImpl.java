@@ -89,7 +89,8 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 		long total = this.lambdaQuery().likeRight(CmsContent::getCatalogAncestors, catalog.getAncestors()).count();
 
 		for (int i = 0; i * pageSize < total; i++) {
-			AsyncTaskManager.setTaskProgressInfo((int) (i * pageSize / total), "正在栏目删除内容：" + (i * pageSize) + " / " + total);
+			AsyncTaskManager.setTaskProgressInfo((int) (i * pageSize / total),
+					"正在栏目删除内容：" + (i * pageSize) + " / " + total);
 			this.lambdaQuery().likeRight(CmsContent::getCatalogAncestors, catalog.getAncestors())
 					.page(new Page<>(i, pageSize, false)).getRecords().forEach(content -> {
 						IContentType contentType = ContentCoreUtils.getContentType(content.getContentType());
@@ -169,7 +170,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 		asyncTaskManager.execute(task);
 		return task;
 	}
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	public void addContent0(IContent<?> content) {
 		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
@@ -191,7 +192,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 		asyncTaskManager.execute(task);
 		return task;
 	}
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	public void saveContent0(IContent<?> content) {
 		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));

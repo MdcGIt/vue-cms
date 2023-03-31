@@ -1,7 +1,9 @@
 package com.ruoyi.article.properties;
 
 import java.util.Map;
+import java.util.Objects;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 
@@ -35,15 +37,20 @@ public class ArticleImageHeight implements IProperty {
 	
 	@Override
 	public boolean validate(String value) {
-		return NumberUtils.isDigits(value);
+		return Objects.nonNull(value) && NumberUtils.isDigits(value.toString());
 	}
 	
 	@Override
-	public String defaultValue() {
-		return "0";
+	public Integer defaultValue() {
+		return 600;
 	}
 	
-	public static int getValue(Map<String, Object> firstProps, Map<String, Object> secondProps) {
+	@Override
+	public Integer getPropValue(Map<String, String> configProps) {
+		return MapUtils.getInteger(configProps, getId(), defaultValue());
+	}
+	
+	public static int getValue(Map<String, String> firstProps, Map<String, String> secondProps) {
 		return ConfigPropertyUtils.getIntValue(ID, firstProps, secondProps);
 	}
 }

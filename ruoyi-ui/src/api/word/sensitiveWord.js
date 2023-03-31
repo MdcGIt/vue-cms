@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getSensitiveWordList(params) {
   return request({
-    url: '/cms/sensitiveword',
+    url: '/word/sensitiveword',
     method: 'get',
     params: params
   })
@@ -10,7 +10,7 @@ export function getSensitiveWordList(params) {
 
 export function addSensitiveWord(data) {
   return request({
-    url: '/cms/sensitiveword',
+    url: '/word/sensitiveword',
     method: 'post',
     data: data
   })
@@ -18,7 +18,7 @@ export function addSensitiveWord(data) {
 
 export function editSensitiveWord(data) {
   return request({
-    url: '/cms/sensitiveword',
+    url: '/word/sensitiveword',
     method: 'put',
     data: data
   })
@@ -26,7 +26,7 @@ export function editSensitiveWord(data) {
 
 export function deleteSensitiveWord(data) {
   return request({
-    url: '/cms/sensitiveword',
+    url: '/word/sensitiveword',
     method: 'delete',
     data: data
   })
