@@ -125,10 +125,7 @@
           <el-table-column label="类型"
                             width="100"
                             align="center"
-                            prop="type">
-            <template slot-scope="scope">
-              <dict-tag :options="dict.type.cms_advertisement_type" :value="scope.row.type"/>
-            </template>
+                            prop="typeName">
           </el-table-column>
           <el-table-column label="权重"
                             width="100"
@@ -205,7 +202,7 @@
 <script>
 import { getPublishPipeSelectData } from "@/api/contentcore/publishpipe";
 import { getPageWidget, addPageWidget, editPageWidget, publishPageWidgets } from "@/api/contentcore/pagewidget";
-import { listAdvertisements, deleteAdvertisement, enableAdvertisement, disableAdvertisement } from "@/api/advertisement/advertisement";
+import { listAdvertisements, listAdvertisementTypes, deleteAdvertisement, enableAdvertisement, disableAdvertisement } from "@/api/advertisement/advertisement";
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
 
 export default {
@@ -213,7 +210,7 @@ export default {
   components: {
     'cms-template-selector': CMSTemplateSelector,
   },
-  dicts: [ 'cms_advertisement_type', 'EnableOrDisable' ],
+  dicts: [ 'EnableOrDisable' ],
   data () {
     return {
       loading: true,

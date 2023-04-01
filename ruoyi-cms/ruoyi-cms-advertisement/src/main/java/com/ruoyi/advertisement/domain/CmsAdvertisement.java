@@ -3,6 +3,7 @@ package com.ruoyi.advertisement.domain;
 import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
@@ -38,6 +39,12 @@ public class CmsAdvertisement extends BaseEntity {
 	 * 类型
 	 */
     private String type;
+    
+    /**
+     * 类型名称
+     */
+    @TableField(exist = false)
+    private String typeName;
 
     /**
      * 名称

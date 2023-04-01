@@ -42,6 +42,7 @@ import com.ruoyi.contentcore.properties.FileStorageArgsProperty.FileStorageArgs;
 import com.ruoyi.contentcore.properties.FileStorageTypeProperty;
 import com.ruoyi.contentcore.service.IResourceService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
 
@@ -52,16 +53,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResource> implements IResourceService {
 
-	private final Map<String, IResourceType> resourceTypes;
-	
 	private final Map<String, IFileStorageType> fileStorageTypes;
 	
 	private final ISiteService siteService;
 
-	private IResourceType getResourceType(String type) {
-		return this.resourceTypes.get(IResourceType.BEAN_NAME_PREFIX + type);
-	}
-	
 	@Override
 	public CmsResource downloadImageFromUrl(String url, long siteId, String operator) throws Exception {
 		if (!ServletUtils.isHttpUrl(url)) {
@@ -69,7 +64,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		}
 
 		String suffix = FileExUtils.getImageSuffix(url);
-		IResourceType resourceType = this.getResourceType(ResourceType_Image.ID);
+		IResourceType resourceType = ContentCoreUtils.getResourceType(ResourceType_Image.ID);
 		if (!resourceType.check(suffix)) {
 			throw ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix);  // 不支持的图片格式
 		}
@@ -103,7 +98,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	public CmsResource addResource(ResourceUploadDTO dto)
 			throws IOException {
 		String suffix = FileExUtils.getExtension(dto.getFile().getOriginalFilename());
-		IResourceType resourceType = this.resourceTypes.values().stream().filter(rt -> rt.check(suffix))
+		IResourceType resourceType = ContentCoreUtils.getResourceTypes().stream().filter(rt -> rt.check(suffix))
 				.findFirst().orElseThrow(() -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();
@@ -136,7 +131,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		}
 		String suffix = base64Data.substring(11, base64Data.indexOf(";"));
 
-		IResourceType resourceType = this.resourceTypes.values().stream().filter(rt -> rt.check(suffix))
+		IResourceType resourceType = ContentCoreUtils.getResourceTypes().stream().filter(rt -> rt.check(suffix))
 				.findFirst().orElseThrow(() -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();

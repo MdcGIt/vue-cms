@@ -41,6 +41,11 @@ public class ResourceType_Image implements IResourceType {
 	public String getId() {
 		return ID;
 	}
+	
+	@Override
+	public String getName() {
+		return "CMS.CONTENTCORE.RESOURCE_TYPE." + ID;
+	}
 
 	@Override
 	public String[] getUsableSuffix() {

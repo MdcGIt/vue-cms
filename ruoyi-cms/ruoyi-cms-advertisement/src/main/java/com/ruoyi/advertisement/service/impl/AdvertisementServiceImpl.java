@@ -37,14 +37,14 @@ public class AdvertisementServiceImpl extends ServiceImpl<CmsAdvertisementMapper
 
 	@Override
 	public IAdvertisementType getAdvertisementType(String typeId) {
-		return this.advertisementTypes.get(typeId);
+		return this.advertisementTypes.get(IAdvertisementType.BEAN_NAME_PREFIX + typeId);
 	}
 
 	@Override
 	public List<IAdvertisementType> getAdvertisementTypeList() {
 		return this.advertisementTypes.values().stream().toList();
 	}
-
+	
 	@Override
 	public CmsAdvertisement addAdvertisement(AdvertisementDTO dto) {
 		CmsAdvertisement advertisement = new CmsAdvertisement();

@@ -9,10 +9,10 @@
         <el-input placeholder="资源名称" v-model="queryParams.name" size="small">
           <el-select v-model="queryParams.resourceType" slot="prepend" placeholder="类型" size="small" style="width:80px;">
             <el-option
-              v-for="dict in dict.type.cms_resource_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
+              v-for="rt in resourceTypes"
+              :key="rt.id"
+              :label="rt.name"
+              :value="rt.id"
             />
           </el-select>
         </el-input>
@@ -72,11 +72,7 @@
                        align="center"
                        prop="resourceId"
                        width="180" />
-      <el-table-column prop="resourceType" label="类型" width="80">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.cms_resource_type" :value="scope.row.resourceType"/>
-        </template>
-      </el-table-column>
+      <el-table-column prop="resourceTypeName" label="类型" width="80" />
       <el-table-column label="名称"
                        align="left"
                        prop="name">
@@ -190,11 +186,10 @@
 </style>
 <script>
 import { getToken } from "@/utils/auth";
-import { getResrouceList, getResourceDetail, delResource } from "@/api/contentcore/resource";
+import { getResourceTypes, getResrouceList, getResourceDetail, delResource } from "@/api/contentcore/resource";
 
 export default {
   name: "CmsResource",
-  dicts: ['cms_resource_type'],
   data () {
     return {
       // 遮罩层
@@ -223,6 +218,7 @@ export default {
         beginTime: undefined,
         endTime: undefined
       },
+      resourceTypes: [],
       // 表单参数
       form: {},
       // 表单校验
@@ -245,9 +241,15 @@ export default {
     };
   },
   created () {
+    this.loadResourceTypes();
     this.getList();
   },
   methods: {
+    loadResourceTypes() {
+      getResourceTypes().then(response => {
+        this.resourceTypes = response.data;
+      });
+    },
     /** 查询资源列表 */
     getList () {
       this.loading = true;

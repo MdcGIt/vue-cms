@@ -3,6 +3,7 @@ package com.ruoyi.advertisement.controller;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.advertisement.IAdvertisementType;
 import com.ruoyi.advertisement.domain.CmsAdvertisement;
 import com.ruoyi.advertisement.pojo.dto.AdvertisementDTO;
 import com.ruoyi.advertisement.pojo.vo.AdvertisementVO;
@@ -65,6 +67,12 @@ public class AdvertisementController extends BaseRestController {
 				.like(StringUtils.isNotEmpty(name), CmsAdvertisement::getName, name)
 				.eq(state != null && state > -1, CmsAdvertisement::getState, state)
 				.orderByDesc(CmsAdvertisement::getCreateTime).page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
+		page.getRecords().forEach(adv -> {
+			IAdvertisementType advertisementType = this.advertisementService.getAdvertisementType(adv.getType());
+			if (Objects.nonNull(advertisementType)) {
+				adv.setTypeName(I18nUtils.get(advertisementType.getName()));
+			}
+		});
 		return this.bindDataTable(page.getRecords(), (int) page.getTotal());
 	}
 

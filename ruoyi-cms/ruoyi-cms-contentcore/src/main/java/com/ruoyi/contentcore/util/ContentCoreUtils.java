@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.util;
 
+import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.utils.Assert;
@@ -8,6 +9,7 @@ import com.ruoyi.contentcore.core.ICatalogType;
 import com.ruoyi.contentcore.core.IContentType;
 import com.ruoyi.contentcore.core.IInternalDataType;
 import com.ruoyi.contentcore.core.IPageWidgetType;
+import com.ruoyi.contentcore.core.IResourceType;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.template.ITemplateType;
 
@@ -38,6 +40,21 @@ public class ContentCoreUtils {
 	 * 页面组件类型
 	 */
 	private static final Map<String, IPageWidgetType> PageWidgetTypes = SpringUtils.getBeanMap(IPageWidgetType.class);
+	
+	/**
+	 * 资源类型
+	 */
+	private static final Map<String, IResourceType> ResourceTypes = SpringUtils.getBeanMap(IResourceType.class);
+
+	public static IResourceType getResourceType(String typeId) {
+		IResourceType rt = ResourceTypes.get(IResourceType.BEAN_NAME_PREFIX + typeId);
+		Assert.notNull(rt, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(typeId));
+		return rt;
+	}
+	
+	public static List<IResourceType> getResourceTypes() {
+		return ResourceTypes.values().stream().toList();
+	}
 
 	public static IPageWidgetType getPageWidgetType(String typeId) {
 		IPageWidgetType pwt = PageWidgetTypes.get(typeId);
