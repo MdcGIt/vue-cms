@@ -88,7 +88,7 @@
         prop="contentType"
         :formatter="contentTypeFormat" />
       <el-table-column 
-        label="状态"
+        label="删除前状态"
         width="110"
         align="center">
         <template slot-scope="scope">
@@ -96,7 +96,7 @@
         </template>
       </el-table-column>
       <el-table-column 
-        label="备份时间"
+        label="删除时间"
         align="center"
         prop="backupTime"
         width="160">
@@ -104,11 +104,11 @@
           <span>{{ parseTime(scope.row.backupTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备份人" :show-overflow-tooltip="true" prop="backupOperator" />
+      <el-table-column label="操作人" align="center" :show-overflow-tooltip="true" prop="backupOperator" width="140" />
       <el-table-column 
         label="操作"
         align="center"
-        width="300"
+        width="100"
         class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button 
