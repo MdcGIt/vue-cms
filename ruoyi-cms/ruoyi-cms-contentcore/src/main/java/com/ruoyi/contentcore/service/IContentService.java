@@ -3,8 +3,8 @@ package com.ruoyi.contentcore.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.async.AsyncTask;
+import com.ruoyi.common.mybatisplus.IBackupService;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -14,11 +14,22 @@ import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
 
-public interface IContentService extends IService<CmsContent> {
+public interface IContentService extends IBackupService<CmsContent> {
 
+	/**
+	 * 添加内容
+	 * 
+	 * @param content
+	 * @return
+	 */
 	public AsyncTask addContent(IContent<?> content);
 	
-
+	/**
+	 * 更新内容
+	 * 
+	 * @param content
+	 * @return
+	 */
 	public AsyncTask saveContent(IContent<?> content);
 
 	/**
@@ -27,7 +38,7 @@ public interface IContentService extends IService<CmsContent> {
 	 * @param contentIds
 	 * @return
 	 */
-	public void deleteContents(List<Long> contentIds);
+	public void deleteContents(List<Long> contentIds, LoginUser operator);
 	
 	/**
 	 * 删除指定栏目内容

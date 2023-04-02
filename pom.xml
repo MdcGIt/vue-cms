@@ -65,6 +65,13 @@
 				<version>${mysql.version}</version>
 			</dependency>
 			
+			<!-- cglib动态代理 -->
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib-nodep</artifactId>
+				<version>${cglib-nodep.version}</version>
+			</dependency>
+			
 			<!-- SpringBoot的依赖配置 -->
 			<dependency>
 				<groupId>org.springframework.boot</groupId>

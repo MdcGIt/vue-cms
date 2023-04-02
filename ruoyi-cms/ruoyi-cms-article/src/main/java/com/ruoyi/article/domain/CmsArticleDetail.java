@@ -3,6 +3,7 @@ package com.ruoyi.article.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoyi.common.mybatisplus.annotation.BackupTable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@BackupTable
 @TableName(CmsArticleDetail.TABLE_NAME)
 public class CmsArticleDetail {
 

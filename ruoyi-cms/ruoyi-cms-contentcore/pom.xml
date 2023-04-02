@@ -19,11 +19,6 @@
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-		</dependency>
 		
 		<dependency>
 			<groupId>com.ruoyi</groupId>

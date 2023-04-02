@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.ruoyi.common.mybatisplus.annotation.BackupTable;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 
@@ -23,6 +24,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@BackupTable
 @TableName(value = CmsContent.TABLE_NAME, autoResultMap = true)
 public class CmsContent extends BaseEntity {
 

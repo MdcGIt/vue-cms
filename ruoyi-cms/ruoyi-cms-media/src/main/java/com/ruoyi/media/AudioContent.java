@@ -11,7 +11,6 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.AbstractContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
-import com.ruoyi.contentcore.enums.ContentCopyType;
 import com.ruoyi.media.domain.CmsAudio;
 import com.ruoyi.media.service.IAudioService;
 
@@ -29,12 +28,10 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 		super.add();
 		this.getContentService().save(this.getContentEntity());
 
-		List<CmsAudio> audioList = this.getExtendEntity();
-
-		if (this.getContentEntity().isLinkContent()
-				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.hasExtendEntity()) {
 			return this.getContentEntity().getContentId();
 		}
+		List<CmsAudio> audioList = this.getExtendEntity();
 		if (StringUtils.isNotEmpty(audioList)) {
 			for (int i = 0; i < audioList.size(); i++) {
 				CmsAudio audio = audioList.get(i);
@@ -56,8 +53,7 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 		super.save();
 		this.getContentService().updateById(this.getContentEntity());
 		// 链接或映射内容直接删除所有音频数据
-		if (this.getContentEntity().isLinkContent()
-				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.hasExtendEntity()) {
 			this.getAudioService().remove(new LambdaQueryWrapper<CmsAudio>().eq(CmsAudio::getContentId,
 					this.getContentEntity().getContentId()));
 			return this.getContentEntity().getContentId();
@@ -109,22 +105,35 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 	@Override
 	public void delete() {
 		super.delete();
-		this.getAudioService().remove(
-				new LambdaQueryWrapper<CmsAudio>().eq(CmsAudio::getContentId, this.getContentEntity().getContentId()));
+		if (this.hasExtendEntity()) {
+			this.getAudioService().removeBatchByIds(getExtendEntity().stream().map(CmsAudio::getAudioId).toList());
+		}
+		this.backup();
+	}
+
+	@Override
+	public Long backup() {
+		Long backupId = super.backup();
+		if (this.hasExtendEntity()) {
+			this.getExtendEntity().forEach(audio -> getAudioService().backup(audio, backupId, this.getOperator().getUsername()));
+		}
+		return backupId;
 	}
 
 	@Override
 	public void copyTo(CmsCatalog toCatalog, Integer copyType) {
 		super.copyTo(toCatalog, copyType);
 
-		Long newContentId = (Long) this.getParams().get("NewContentId");
-		List<CmsAudio> audioList = this.getAudioService().getAlbumAudioList(this.getContentEntity().getContentId());
-		for (CmsAudio audio : audioList) {
-			audio.createBy(this.getOperator().getUsername());
-			audio.setAudioId(IdUtils.getSnowflakeId());
-			audio.setContentId(newContentId);
-			audio.setSiteId(toCatalog.getSiteId());
-			this.getAudioService().save(audio);
+		if (this.hasExtendEntity()) {
+			Long newContentId = (Long) this.getParams().get("NewContentId");
+			List<CmsAudio> audioList = this.getAudioService().getAlbumAudioList(this.getContentEntity().getContentId());
+			for (CmsAudio audio : audioList) {
+				audio.createBy(this.getOperator().getUsername());
+				audio.setAudioId(IdUtils.getSnowflakeId());
+				audio.setContentId(newContentId);
+				audio.setSiteId(toCatalog.getSiteId());
+				this.getAudioService().save(audio);
+			}
 		}
 	}
 

@@ -169,7 +169,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@DeleteMapping
 	public R<?> deleteContent(@RequestBody @NotEmpty List<Long> contentIds) {
-		this.contentService.deleteContents(contentIds);
+		this.contentService.deleteContents(contentIds, StpAdminUtil.getLoginUser());
 		return R.ok();
 	}
 

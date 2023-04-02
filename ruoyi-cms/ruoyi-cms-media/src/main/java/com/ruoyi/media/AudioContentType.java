@@ -137,4 +137,13 @@ public class AudioContentType implements IContentType {
 		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
 	}
+	
+	@Override
+	public void recover(CmsContent content) {
+		this.audioMapper.selectBackupByContentId(content.getContentId())
+		.forEach(audio -> {
+			this.audioMapper.insert(audio);
+			this.audioMapper.deleteBackupByContentId(content.getContentId());
+		});
+	}
 }

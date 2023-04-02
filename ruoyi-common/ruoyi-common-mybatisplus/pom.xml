@@ -23,6 +23,11 @@
 			<groupId>com.ruoyi</groupId>
 			<artifactId>ruoyi-common-datasource</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

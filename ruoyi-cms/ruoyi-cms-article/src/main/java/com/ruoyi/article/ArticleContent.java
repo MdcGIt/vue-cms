@@ -14,7 +14,6 @@ import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.AbstractContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
-import com.ruoyi.contentcore.enums.ContentCopyType;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 
 public class ArticleContent extends AbstractContent<CmsArticleDetail> {
@@ -25,8 +24,7 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 	public Long add() {
 		super.add();
 		this.getContentService().save(this.getContentEntity());
-		if (this.getContentEntity().isLinkContent()
-				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.hasExtendEntity()) {
 			return this.getContentEntity().getContentId();
 		}
 		CmsArticleDetail articleDetail = this.getExtendEntity();
@@ -55,8 +53,7 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 		super.save();
 		this.getContentService().updateById(this.getContentEntity());
 		// 非映射内容或标题内容修改文章详情
-		if (this.getContentEntity().isLinkContent()
-				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.hasExtendEntity()) {
 			return this.getContentEntity().getContentId();
 		}
 		CmsArticleDetail articleDetail = this.getExtendEntity();
@@ -99,17 +96,26 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 	@Override
 	public void delete() {
 		super.delete();
-		if (!this.getContentEntity().isLinkContent()
-				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
-			CmsArticleDetail extendEntity = this.getExtendEntity();
-			this.getArticleService().removeById(extendEntity);
+		if (this.hasExtendEntity()) {
+			this.getArticleService().removeById(this.getExtendEntity().getContentId());
 		}
+		this.backup();
+	}
+	
+	@Override
+	public Long backup() {
+		Long backupId = super.backup();
+		if (this.hasExtendEntity()) {
+			CmsArticleDetail extendEntity = this.getExtendEntity();
+			this.getArticleService().backup(extendEntity, backupId, this.getOperator().getUsername());
+		}
+		return backupId;
 	}
 
 	@Override
 	public void copyTo(CmsCatalog toCatalog, Integer copyType) {
 		super.copyTo(toCatalog, copyType);
-		if (ContentCopyType.isIndependency(copyType)) {
+		if (this.hasExtendEntity()) {
 			Long newContentId = (Long) this.getParams().get("NewContentId");
 			CmsArticleDetail newArticleDetail = new CmsArticleDetail();
 			BeanUtils.copyProperties(this.getExtendEntity(), newArticleDetail, "contentId");

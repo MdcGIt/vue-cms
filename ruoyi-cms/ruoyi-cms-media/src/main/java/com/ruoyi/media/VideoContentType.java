@@ -137,4 +137,13 @@ public class VideoContentType implements IContentType {
 		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
 	}
+
+	@Override
+	public void recover(CmsContent content) {
+		this.videoMapper.selectBackupByContentId(content.getContentId())
+		.forEach(video -> {
+			this.videoMapper.insert(video);
+			this.videoMapper.deleteBackupByContentId(content.getContentId());
+		});
+	}
 }

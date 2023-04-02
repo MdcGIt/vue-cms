@@ -133,8 +133,18 @@ public class ImageContentType implements IContentType {
 		}
 		vo.setCatalogName(catalog.getName());
 		// 发布通道模板数据
-		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(), PublishPipePropUseType.Content, vo.getPublishPipeProps());
+		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(),
+				PublishPipePropUseType.Content, vo.getPublishPipeProps());
 		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
+	}
+
+	@Override
+	public void recover(CmsContent content) {
+		this.imageMapper.selectBackupByContentId(content.getContentId())
+				.forEach(image -> {
+					this.imageMapper.insert(image);
+					this.imageMapper.deleteBackupByContentId(content.getContentId());
+				});
 	}
 }

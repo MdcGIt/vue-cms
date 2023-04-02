@@ -113,6 +113,12 @@ public abstract class AbstractContent<T> implements IContent<T> {
 	}
 
 	@Override
+	public boolean hasExtendEntity() {
+		return !this.getContentEntity().isLinkContent()
+				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType());
+	}
+
+	@Override
 	public Long add() {
 		CmsCatalog catalog = this.getCatalogService().getById(this.getCatalogId());
 		if (catalog == null) {
@@ -180,6 +186,13 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		CmsCatalog catalog = this.getCatalogService().getById(this.getCatalogId());
 		catalog.setContentCount(catalog.getContentCount() - 1);
 		catalogService.updateById(catalog);
+	}
+	
+	@Override
+	public Long backup() {
+		long backupId = IdUtils.getSnowflakeId();
+		this.getContentService().backup(this.getContentEntity(), backupId, this.getOperator().getUsername());
+		return backupId;
 	}
 
 	@Override

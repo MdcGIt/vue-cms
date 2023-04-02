@@ -73,4 +73,13 @@ public interface IContentType extends Comparable<IContentType> {
      * @return
      */
     public ContentVO initEditor(Long catalogId, Long contentId);
+
+    /**
+     * 恢复内容扩展实体备份表数据
+     * 
+     * @param content
+     */
+	default public void recover(CmsContent content) {
+		
+	}
 }

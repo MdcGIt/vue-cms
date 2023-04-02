@@ -68,15 +68,16 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	private final IPublishPipeService publishPipeService;
 
 	private final AsyncTaskManager asyncTaskManager;
-
+	
 	@Override
-	public void deleteContents(List<Long> contentIds) {
+	public void deleteContents(List<Long> contentIds, LoginUser operator) {
 		for (Long contentId : contentIds) {
 			CmsContent xContent = this.getById(contentId);
 			Assert.notNull(xContent, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
 
 			IContentType contentType = ContentCoreUtils.getContentType(xContent.getContentType());
 			IContent<?> content = contentType.loadContent(xContent);
+			content.setOperator(operator);
 			content.delete();
 
 			applicationContext.publishEvent(new AfterContentDeleteEvent(this, content));

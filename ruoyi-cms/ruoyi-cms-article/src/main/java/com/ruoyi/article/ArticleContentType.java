@@ -127,4 +127,13 @@ public class ArticleContentType implements IContentType {
 		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
 	}
+	
+	@Override
+	public void recover(CmsContent content) {
+		CmsArticleDetail articleDetail = this.articleMapper.selectBackupByContentId(content.getContentId());
+		if (articleDetail != null) {
+			this.articleMapper.insert(articleDetail);
+			this.articleMapper.deleteBackupByContentId(content.getContentId());
+		}
+	}
 }

@@ -61,6 +61,13 @@ public interface IContent<T> {
 	public void delete();
 
 	/**
+	 * 备份数据到备份表
+	 * 
+	 * @return backupId
+	 */
+	public Long backup();
+
+	/**
 	 * 发布内容
 	 */
 	public boolean publish();
@@ -142,4 +149,9 @@ public interface IContent<T> {
 	 * @return
 	 */
 	public String getFullText();
+
+	/**
+	 * 是否有扩展表
+	 */
+	boolean hasExtendEntity();
 }

@@ -1,5 +1,11 @@
 package com.ruoyi.media.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.media.domain.CmsAudio;
 
@@ -13,4 +19,9 @@ import com.ruoyi.media.domain.CmsAudio;
  */
 public interface CmsAudioMapper extends BaseMapper<CmsAudio> {
 
+	@Select("SELECT * FROM cms_audio_backup WHERE content_id = #{contentId}")
+	List<CmsAudio> selectBackupByContentId(@Param("contentId") Long contentId);
+
+	@Delete("DELETE FROM cms_audio_backup WHERE content_id = #{contentId}")
+	Long deleteBackupByContentId(@Param("contentId") Long contentId);
 }
