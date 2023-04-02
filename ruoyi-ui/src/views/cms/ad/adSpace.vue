@@ -149,7 +149,7 @@
 }
 </style>
 <script>
-import { codeValidator } from '@/utils/validate'
+import { validCode } from '@/utils/validate'
 import { getPublishPipeSelectData } from "@/api/contentcore/publishpipe";
 import { listAdSpaces, addAdSpace, editAdSpace, deleteAdSpace, publishAdSpace } from "@/api/advertisement/advertisement";
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
@@ -185,7 +185,16 @@ export default {
         ],
         code: [
           { required: true, message: "编码不能为空", trigger: "blur" },
-          { trigger: "blur", validator: codeValidator }
+          { 
+            trigger: "blur", 
+            validator: (rule, value, callback) => {
+              if (!validCode(value)) {
+                callback(new Error("只能使用大小写字母、数字、下划线"));
+              } else {
+                callback();
+              }
+            } 
+          }
         ],
         publishPipeCode: [
           { required: true, message: "发布通道不能为空", trigger: "blur" }

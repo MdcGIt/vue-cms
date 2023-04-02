@@ -31,6 +31,7 @@ import com.ruoyi.media.domain.CmsVideo;
 import com.ruoyi.media.domain.dto.VideoAlbumDTO;
 import com.ruoyi.media.domain.vo.VideoAlbumVO;
 import com.ruoyi.media.mapper.CmsVideoMapper;
+import com.ruoyi.media.service.IVideoService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,8 @@ public class VideoContentType implements IContentType {
 	private final CmsContentMapper contentMapper;
 
 	private final CmsVideoMapper videoMapper;
+	
+	private final IVideoService videoService;
 
 	private final ICatalogService catalogService;
 
@@ -136,5 +139,18 @@ public class VideoContentType implements IContentType {
 				PublishPipePropUseType.Content, vo.getPublishPipeProps());
 		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
+	}
+
+	@Override
+	public void recover(Long contentId) {
+		this.videoMapper.selectBackupIdsByContentId(contentId).forEach(backupId -> {
+			this.videoService.recover(backupId, CmsVideo.class);
+		});
+	}
+	
+	@Override
+	public void deleteBackups(Long contentId) {
+		List<Long> backupIds = this.videoMapper.selectBackupIdsByContentId(contentId);
+		this.videoService.deleteBackups(backupIds, CmsVideo.class);
 	}
 }

@@ -7,9 +7,23 @@ import com.ruoyi.stat.IStatType;
 
 public interface IStatService {
 
+	/**
+	 * 获取指定统计菜单类型
+	 * 
+	 * @param typeId
+	 * @return
+	 */
 	IStatType getStatType(String typeId);
 
+	/**
+	 * 获取统计菜单类型列表
+	 */
 	List<IStatType> getStatTypes();
 
-	List<TreeNode<String>> getStatTreeDatas();
+	/**
+	 * 获取统计菜单树
+	 * 
+	 * @return
+	 */
+	List<TreeNode<String>> getStatMenuTree();
 }

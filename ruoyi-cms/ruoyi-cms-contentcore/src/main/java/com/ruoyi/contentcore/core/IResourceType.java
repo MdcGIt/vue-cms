@@ -19,7 +19,15 @@ public interface IResourceType {
      */
     public final static String UploadResourceDirectory = "resources/";
 
+    /**
+     * 唯一标识
+     */
 	String getId();
+
+	/**
+	 * 名称
+	 */
+	String getName();
 
 	/**
 	 * 资源类型所用后缀

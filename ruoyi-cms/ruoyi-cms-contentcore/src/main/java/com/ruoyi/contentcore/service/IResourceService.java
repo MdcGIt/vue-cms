@@ -11,7 +11,7 @@ import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface IResourceService extends IService<CmsResource> {
-	
+
 	/**
 	 * 上传资源
 	 * 

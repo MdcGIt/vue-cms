@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { list, delLogininfor, cleanLogininfor, unlockLogininfor } from "@/api/monitor/logininfor";
+import { list, delLogininfor, cleanLogininfor } from "@/api/monitor/logininfor";
 
 export default {
   name: "Logininfor",
@@ -215,15 +215,6 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess(this.$t('Common.Success'));
-      }).catch(() => {});
-    },
-    /** 解锁按钮操作 */
-    handleUnlock() {
-      const username = this.selectName;
-      this.$modal.confirm(this.$t('System.LoginInfo.ConfirmUnlock', [ username ])).then(function() {
-        return unlockLogininfor(username);
-      }).then(() => {
-        this.$modal.msgSuccess(this.$t('System.LoginInfo.UnlockSuccess', [ username ]));
       }).catch(() => {});
     },
     /** 导出按钮操作 */

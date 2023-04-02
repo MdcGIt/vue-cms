@@ -172,7 +172,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	}
 
 	@Override
-	public void saveSiteExtend(Long siteId, Map<String, Object> configs, String operator) {
+	public void saveSiteExtend(Long siteId, Map<String, String> configs, String operator) {
 		CmsSite site = this.getSite(siteId);
 		ConfigPropertyUtils.filterConfigProps(configs, IProperty.UseType.Site);
 

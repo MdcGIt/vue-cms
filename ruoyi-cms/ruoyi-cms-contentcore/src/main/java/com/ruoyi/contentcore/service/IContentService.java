@@ -3,8 +3,8 @@ package com.ruoyi.contentcore.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.async.AsyncTask;
+import com.ruoyi.common.mybatisplus.IBackupService;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -14,11 +14,27 @@ import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
 
-public interface IContentService extends IService<CmsContent> {
+import jakarta.validation.constraints.NotEmpty;
 
+public interface IContentService extends IBackupService<CmsContent> {
+
+	/**
+	 * 添加内容
+	 * 
+	 * @param content
+	 * @return
+	 */
 	public AsyncTask addContent(IContent<?> content);
-	
 
+
+	public void addContent0(IContent<?> content);
+	
+	/**
+	 * 更新内容
+	 * 
+	 * @param content
+	 * @return
+	 */
 	public AsyncTask saveContent(IContent<?> content);
 
 	/**
@@ -27,7 +43,16 @@ public interface IContentService extends IService<CmsContent> {
 	 * @param contentIds
 	 * @return
 	 */
-	public void deleteContents(List<Long> contentIds);
+	public void deleteContents(List<Long> contentIds, LoginUser operator);
+
+
+	/**
+	 * 恢复回收站删除的内容到指定栏目
+	 * 
+	 * @param dto
+	 * @param operator
+	 */
+	void recoverContents(List<Long> backupIds, LoginUser operator);
 	
 	/**
 	 * 删除指定栏目内容
@@ -139,6 +164,10 @@ public interface IContentService extends IService<CmsContent> {
 	 */
 	public void deleteStaticFiles(CmsContent contentEntity) throws IOException;
 
-
-	public void addContent0(IContent<?> content);
+	/**
+	 * 删除备份表数据
+	 * 
+	 * @param backupIds
+	 */
+	public void deleteRecycleContents(@NotEmpty List<Long> backupIds);
 }

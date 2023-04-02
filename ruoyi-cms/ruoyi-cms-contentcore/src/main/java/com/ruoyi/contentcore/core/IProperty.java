@@ -1,5 +1,8 @@
 package com.ruoyi.contentcore.core;
 
+import java.util.Map;
+
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.ruoyi.common.utils.StringUtils;
@@ -55,14 +58,11 @@ public interface IProperty {
 	/**
 	 * 属性默认值
 	 */
-	default public String defaultValue() {
+	default public Object defaultValue() {
 		return StringUtils.EMPTY;
 	}
 
-	/**
-	 * 属性值如果是复杂对象，需定义对象类型
-	 */
-	default public Class<?> valueClass() {
-		return null;
+	default public Object getPropValue(Map<String, String> configProps) {
+		return MapUtils.getString(configProps, getId(), defaultValue().toString());
 	}
 }

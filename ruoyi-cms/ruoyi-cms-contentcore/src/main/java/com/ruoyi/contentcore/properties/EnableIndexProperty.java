@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
@@ -35,16 +34,11 @@ public class EnableIndexProperty implements IProperty {
 	}
 	
 	@Override
-	public boolean validate(String value) {
-		return StringUtils.isEmpty(value) || YesOrNo.YES.equals(value) || YesOrNo.NO.equals(value);
-	}
-	
-	@Override
 	public String defaultValue() {
 		return YesOrNo.YES;
 	}
 	
-	public static String getValue(Map<String, Object> firstConfigProps, Map<String, Object> secondConfigProps) {
+	public static String getValue(Map<String, String> firstConfigProps, Map<String, String> secondConfigProps) {
 		return ConfigPropertyUtils.getStringValue(ID, firstConfigProps, secondConfigProps);
 	}
 }

@@ -31,6 +31,7 @@ import com.ruoyi.media.domain.CmsAudio;
 import com.ruoyi.media.domain.dto.AudioAlbumDTO;
 import com.ruoyi.media.domain.vo.AudioAlbumVO;
 import com.ruoyi.media.mapper.CmsAudioMapper;
+import com.ruoyi.media.service.IAudioService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,8 @@ public class AudioContentType implements IContentType {
 	private final CmsContentMapper contentMapper;
 
 	private final CmsAudioMapper audioMapper;
+	
+	private final IAudioService audioService;
 
 	private final ICatalogService catalogService;
 
@@ -136,5 +139,18 @@ public class AudioContentType implements IContentType {
 				PublishPipePropUseType.Content, vo.getPublishPipeProps());
 		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
+	}
+
+	@Override
+	public void recover(Long contentId) {
+		this.audioMapper.selectBackupIdsByContentId(contentId).forEach(backupId -> {
+			this.audioService.recover(backupId, CmsAudio.class);
+		});
+	}
+	
+	@Override
+	public void deleteBackups(Long contentId) {
+		List<Long> backupIds = this.audioMapper.selectBackupIdsByContentId(contentId);
+		this.audioService.deleteBackups(backupIds, CmsAudio.class);
 	}
 }

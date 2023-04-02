@@ -1,20 +1,22 @@
 pipeline {
     agent any
     environment {
-    	// Docker镜像仓库地址
         DOCKER_HUB_URL = 'registry.cn-hangzhou.aliyuncs.com'
-    	// Docker镜像仓库命名空间
-        DOCKER_HUB_WORKSPACE = 'xxx'
-        // 钉钉群机器人ID
-        DINGTALK_ID = 'xxx'
+        DOCKER_HUB_WORKSPACE = 'xxxxxx'
+        DINGTALK_ID = 'xxxxxx'
         // 获取Maven pom.xml项目版本号
-        APP_VERSION = readMavenPom().getVersion()
+        //APP_VERSION = readMavenPom().getVersion()
+         APP_VERSION = '0.1.0'
     }
     parameters {
         choice(
             choices: [ 'N', 'Y' ],
             description: '是否发布服务端',
             name: 'DEPLOY_SERVER')
+        choice(
+            choices: [ 'N', 'Y' ],
+            description: '是否发布wwwroot_release',
+            name: 'DEPLOY_WWWROOT')
         choice(
             choices: [ 'N', 'Y' ],
             description: '是否发布前端',
@@ -60,7 +62,12 @@ pipeline {
         }
         stage("Checkout") {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'gitea', url: 'http://gitea.huaray.com/liweiyi/RuoYi-Vue.git']]])
+				dir('./Ruoyi-Vue-CMS') {
+					checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'LwyGitee', url: 'https://gitee.com/liweiyi/RuoYi-Vue-CMS.git']]])
+				}
+				dir('./wwwroot_release') {
+					checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'gitea', url: 'http://gitea.huaray.com/liweiyi/swikoon_wwwroot_release.git']]])
+				}
             }
         }
         stage("Build") {
@@ -68,22 +75,23 @@ pipeline {
                 expression { return params.DEPLOY_SERVER == 'Y' }
             }
             steps {
-			
-            	withEnv(['JAVA_HOME=/var/jenkins_home/jdk/jdk-17.0.4.1']) {
-					withMaven(maven: 'M3.8') {
-						sh 'mvn -U clean package -Dmaven.test.skip=true'
+				dir('./Ruoyi-Vue-CMS') {
+					withEnv(['JAVA_HOME=/var/jenkins_home/jdk/jdk-17.0.4.1']) {
+						withMaven(maven: 'M3.8') {
+							sh 'mvn -U clean package -Dmaven.test.skip=true'
+						}
 					}
-                }
+				}
             }
         }
-        stage("ServerDeploy") {
+        stage("ruoyi-admin") {
 			when {
                 expression { return params.DEPLOY_SERVER == 'Y' }
             }
             steps {
             	withEnv(['APP_PATH=ruoyi-admin', 'APP_NAME=ruoyi-admin']) {
-   					echo "docker build start: ${APP_PATH}"
-	            	dir('./') {
+   					echo "docker build start: ${APP_PATH}#${APP_VERSION}"
+	            	dir('./Ruoyi-Vue-CMS') {
 	                	withCredentials([usernamePassword(credentialsId: 'ALIYUN-DOCKER-REGISTRY-LWY', passwordVariable: 'DOCKERPWD', usernameVariable: 'DOCKERUSER')]) {
 							sh '''
 								cd ${APP_PATH}
@@ -93,19 +101,24 @@ pipeline {
 							'''
 			            }
 	            	}
-   					echo "docker push start: ${APP_PATH}"
-					dir('./') {
+   					echo "docker push start: ${APP_PATH}#${APP_VERSION}"
+					dir('./Ruoyi-Vue-CMS') {
 	                	withCredentials([usernamePassword(credentialsId: 'ALIYUN-DOCKER-REGISTRY-LWY', passwordVariable: 'DOCKERPWD', usernameVariable: 'DOCKERUSER')]) {
 			                sh '''
-	            	    		cd ${APP_PATH}
 			                    echo ${DOCKERPWD} | docker login --username=${DOCKERUSER} --password-stdin ${DOCKER_HUB_URL}
 			                    docker push ${DOCKER_HUB_URL}/${DOCKER_HUB_WORKSPACE}/${APP_NAME}:${IMAGE_TAG}
 			                    docker logout ${DOCKER_HUB_URL}
+								
+								cp -f bin/docker-image-clear.sh docker-image-clear.sh
+								sed -i "s/{{DOCKER_HUB_URL}}/${DOCKER_HUB_URL}/g" docker-image-clear.sh
+								sed -i "s/{{IMAGE_REPOSITORY}}/${DOCKER_HUB_WORKSPACE}\\/${APP_NAME}/g" docker-image-clear.sh
+			                    /bin/bash docker-image-clear.sh
+								rm -f docker-image-clear.sh
 			                '''
 			            }
 	                }
 	                // deploy
-	                dir('./') {
+	                dir('./Ruoyi-Vue-CMS') {
 		            	withCredentials([usernamePassword(credentialsId: 'ALIYUN-DOCKER-REGISTRY-LWY', passwordVariable: 'DOCKERPWD', usernameVariable: 'DOCKERUSER')]) {
 		            	    sh '''
 		            	    cp -f bin/docker-deploy.sh ${APP_PATH}
@@ -137,7 +150,7 @@ pipeline {
 	                }
 	
 	                // delete tmp file
-	                dir('./') {
+	                dir('./Ruoyi-Vue-CMS') {
 			        	sh 'rm -f ${APP_PATH}/docker-deploy.sh'
 			        	sh 'rm -f ${APP_PATH}/docker-compose.yml'
 	                }
@@ -145,12 +158,30 @@ pipeline {
   				}
             }
         }
-        stage("UI Deploy") {
+        stage("wwwroot_release") {
+			when {
+                expression { return params.DEPLOY_WWWROOT == 'Y' }
+            }
+            steps {
+				dir('./wwwroot_release') {
+					sh 'zip -q -r wwwroot_release.zip * --exclude *.svn* --exclude *.git*'
+					sshPublisher(publishers: [sshPublisherDesc(configName: 'GameCluster', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''
+								cd /www/docker/ruoyi-admin/wwwroot_release
+								unzip -o -q wwwroot_release.zip
+								rm -f wwwroot_release.zip
+								''', execTimeout: 600000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'ruoyi-admin/wwwroot_release/', 
+								remoteDirectorySDF: false, removePrefix: '', 
+								sourceFiles: 'wwwroot_release.zip')], 
+								usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+				}
+			}
+		}
+        stage("ruoyi-ui") {
 			when {
                 expression { return params.DEPLOY_UI == 'Y' }
             }
             steps {
-            	dir('./ruoyi-ui') {
+            	dir('./Ruoyi-Vue-CMS/ruoyi-ui') {
                		nodejs('NodeJS16_13') {
 	            	    sh '''
 	            	    npm install --registry=https://registry.npmmirror.com
@@ -160,7 +191,7 @@ pipeline {
 	            	    '''
 					}
             	}
-				dir('./ruoyi-ui/dist') {
+				dir('./Ruoyi-Vue-CMS/ruoyi-ui/dist') {
             	    sshPublisher(publishers: [sshPublisherDesc(configName: 'GameCluster', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''
             	    					mkdir -p /www/docker/ruoyi-ui
 										cd /www/docker/ruoyi-ui

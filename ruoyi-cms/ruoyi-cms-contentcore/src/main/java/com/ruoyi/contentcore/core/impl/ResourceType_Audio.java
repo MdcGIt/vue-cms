@@ -24,6 +24,11 @@ public class ResourceType_Audio implements IResourceType {
 	public String getId() {
 		return ID;
 	}
+	
+	@Override
+	public String getName() {
+		return "CMS.CONTENTCORE.RESOURCE_TYPE." + ID;
+	}
 
 	@Override
 	public String[] getUsableSuffix() {

@@ -1,15 +1,14 @@
 package com.ruoyi.contentcore.properties;
 
 import java.util.Map;
-import java.util.Objects;
 
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.enums.WatermarkerPosition;
-import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,22 +41,26 @@ public class ImageWatermarkArgsProperty implements IProperty {
 	}
 	
 	@Override
-	public String defaultValue() {
-		return JacksonUtils.to(new ImageWatermarkArgs());
-	}
-
-	@Override
-	public Class<?> valueClass() {
-		return ImageWatermarkArgs.class;
+	public ImageWatermarkArgs defaultValue() {
+		return new ImageWatermarkArgs();
 	}
 	
-	public static ImageWatermarkArgs getImageWatermarkArgs(Map<String, Object> configProps) {
-		String stringValue = ConfigPropertyUtils.getStringValue(ID, configProps);
-		ImageWatermarkArgs args = JacksonUtils.from(stringValue, ImageWatermarkArgs.class);
-		if (Objects.isNull(args)) {
-			args = new ImageWatermarkArgs();
+	@Override
+	public ImageWatermarkArgs getPropValue(Map<String, String> configProps) {
+		String v = MapUtils.getString(configProps, ID);
+		if (StringUtils.isNotEmpty(v)) {
+			System.out.println(v);
+			return JacksonUtils.from(v, ImageWatermarkArgs.class);
 		}
-		return args;
+		return defaultValue();
+	}
+	
+	public static ImageWatermarkArgs getValue(Map<String, String> configProps) {
+		String v = MapUtils.getString(configProps, ID);
+		if (StringUtils.isNotEmpty(v)) {
+			return JacksonUtils.from(v, ImageWatermarkArgs.class);
+		}
+		return new ImageWatermarkArgs();
 	}
 	
 	@Getter

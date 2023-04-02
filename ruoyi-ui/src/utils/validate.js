@@ -81,3 +81,13 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+/**
+ * 
+ * @param {String} code 
+ * @returns {Boolean}
+ */
+export function validCode(code) {
+  const reg = /^[A-Za-z0-9_]+$/
+  return reg.test(code);
+}

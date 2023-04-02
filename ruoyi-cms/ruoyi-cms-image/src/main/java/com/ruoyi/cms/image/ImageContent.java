@@ -11,7 +11,6 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.AbstractContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
-import com.ruoyi.contentcore.enums.ContentCopyType;
 
 public class ImageContent extends AbstractContent<List<CmsImage>> {
 
@@ -27,12 +26,10 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 		super.add();
 		this.getContentService().save(this.getContentEntity());
 
-		if (this.getContentEntity().isLinkContent()
-				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!hasExtendEntity()) {
 			return this.getContentEntity().getContentId();
 		}
 		List<CmsImage> images = this.getExtendEntity();
-
 		if (StringUtils.isNotEmpty(images)) {
 			for (int i = 0; i < images.size(); i++) {
 				CmsImage cmsImage = images.get(i);
@@ -53,8 +50,7 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 		this.getContentService().updateById(this.getContentEntity());
 		// 处理图片
 		List<CmsImage> images = this.getExtendEntity();
-		if (this.getContentEntity().isLinkContent()
-				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.hasExtendEntity()) {
 			this.getImageService().remove(new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId,
 					this.getContentEntity().getContentId()));
 			return this.getContentEntity().getContentId();
@@ -88,22 +84,37 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 
 	@Override
 	public void delete() {
+		this.backup();
 		super.delete();
-		this.getImageService().remove(
-				new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId, this.getContentEntity().getContentId()));
+		if (this.hasExtendEntity()) {
+			this.getImageService().remove(new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId,
+					this.getContentEntity().getContentId()));
+		}
+	}
+
+	@Override
+	public void backup() {
+		super.backup();
+		if (this.hasExtendEntity()) {
+			this.getImageService().lambdaQuery().eq(CmsImage::getContentId, this.getContentEntity().getContentId())
+					.list()
+					.forEach(image -> this.getImageService().backup(image, this.getOperator().getUsername()));
+		}
 	}
 
 	@Override
 	public void copyTo(CmsCatalog toCatalog, Integer copyType) {
 		super.copyTo(toCatalog, copyType);
 
-		Long newContentId = (Long) this.getParams().get("NewContentId");
-		List<CmsImage> albumImages = this.getImageService().getAlbumImages(this.getContentEntity().getContentId());
-		for (CmsImage image : albumImages) {
-			image.createBy(this.getOperator().getUsername());
-			image.setImageId(IdUtils.getSnowflakeId());
-			image.setContentId(newContentId);
-			this.getImageService().save(image);
+		if (hasExtendEntity()) {
+			Long newContentId = (Long) this.getParams().get("NewContentId");
+			List<CmsImage> albumImages = this.getImageService().getAlbumImages(this.getContentEntity().getContentId());
+			for (CmsImage image : albumImages) {
+				image.createBy(this.getOperator().getUsername());
+				image.setImageId(IdUtils.getSnowflakeId());
+				image.setContentId(newContentId);
+				this.getImageService().save(image);
+			}
 		}
 	}
 

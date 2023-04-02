@@ -1,16 +1,15 @@
 package com.ruoyi.contentcore.util;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.MapUtils;
 
-import com.ruoyi.common.utils.JacksonUtils;
-import com.ruoyi.common.utils.ObjectUtils;
+import com.ruoyi.common.utils.NumberUtils;
 import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IProperty;
@@ -18,9 +17,9 @@ import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 
 public class ConfigPropertyUtils {
-	
+
 	private static final Map<String, IProperty> ConfigProperties = SpringUtils.getBeanMap(IProperty.class);
-	
+
 	/**
 	 * 获取配置属性声明类
 	 * 
@@ -41,29 +40,35 @@ public class ConfigPropertyUtils {
 		return ConfigProperties.values().stream().filter(p -> p.checkUseType(useType)).collect(Collectors.toList());
 	}
 	
+	public static Map<String, Object> paseConfigProps(Map<String, String> configProps, UseType useType) {
+		Map<String, Object> map = new HashMap<>();
+		List<IProperty> props = ConfigPropertyUtils.getConfigPropertiesByUseType(useType);
+		for (IProperty prop : props) {
+			map.put(prop.getId(), prop.getPropValue(configProps));
+		}
+		return map;
+	}
+
 	/**
 	 * 过滤掉map中不符合条件的key-value.
 	 * 
 	 * @param configProps
 	 * @param useType
 	 */
-	public static void filterConfigProps(Map<String, Object> configProps, UseType useType) {
-		for (Iterator<Entry<String, Object>> iterator = configProps.entrySet().iterator(); iterator.hasNext();) {
-			Entry<String, Object> e = iterator.next();
+	public static void filterConfigProps(Map<String, String> configProps, UseType useType) {
+		for (Iterator<Entry<String, String>> iterator = configProps.entrySet().iterator(); iterator.hasNext();) {
+			Entry<String, String> e = iterator.next();
 			IProperty property = getConfigProperty(e.getKey());
 			if (property == null || !property.checkUseType(useType)) {
 				iterator.remove();
 				continue;
 			}
-			if (!property.validate(e.getValue().toString())) {
+			if (!property.validate(e.getValue())) {
 				throw ContentCoreErrorCode.INVALID_PROPERTY.exception(property.getId(), e.getValue());
-			}
-			if (Objects.nonNull(property.valueClass())) {
-				configProps.put(e.getKey(), JacksonUtils.to(e.getValue()));
 			}
 		}
 	}
-	
+
 	/**
 	 * 获取字符串类型配置属性值
 	 * 
@@ -71,11 +76,10 @@ public class ConfigPropertyUtils {
 	 * @param props
 	 * @return
 	 */
-	public static String getStringValue(String propertyKey, Map<String, Object> props) {
+	public static String getStringValue(String propertyKey, Map<String, String> props) {
 		return getStringValue(propertyKey, props, null);
 	}
 
-	
 	/**
 	 * 获取字符串类型配置属性值，优先firstProps，firstProps没有则查找secondProps
 	 * 
@@ -84,17 +88,19 @@ public class ConfigPropertyUtils {
 	 * @param secondProps
 	 * @return
 	 */
-	public static String getStringValue(String propertyKey, Map<String, Object> firstProps, Map<String, Object> secondProps) {
+	public static String getStringValue(String propertyKey, Map<String, String> firstProps,
+			Map<String, String> secondProps) {
 		IProperty prop = getConfigProperty(propertyKey);
 		if (prop != null) {
-			if (Objects.isNull(firstProps) && Objects.isNull(secondProps)) {
-				return prop.defaultValue();
-			}
 			String v = MapUtils.getString(firstProps, prop.getId());
 			if (StringUtils.isNotEmpty(v)) {
 				return v;
 			}
-			return MapUtils.getString(secondProps, prop.getId(), prop.defaultValue());
+			v = MapUtils.getString(secondProps, prop.getId());
+			if (StringUtils.isNotEmpty(v)) {
+				return v;
+			}
+			return prop.defaultValue().toString();
 		}
 		return null;
 	}
@@ -106,7 +112,7 @@ public class ConfigPropertyUtils {
 	 * @param props
 	 * @return
 	 */
-	public static int getIntValue(String propertyKey, Map<String, Object> props) {
+	public static int getIntValue(String propertyKey, Map<String, String> props) {
 		return getIntValue(propertyKey, props, null);
 	}
 
@@ -118,18 +124,18 @@ public class ConfigPropertyUtils {
 	 * @param secondProps
 	 * @return
 	 */
-	public static int getIntValue(String propertyKey, Map<String, Object> firstProps, Map<String, Object> secondProps) {
+	public static int getIntValue(String propertyKey, Map<String, String> firstProps, Map<String, String> secondProps) {
 		IProperty prop = getConfigProperty(propertyKey);
 		if (prop != null) {
-			int defaultV = Integer.parseInt(prop.defaultValue());
-			if (ObjectUtils.isAnyNull(firstProps, secondProps)) {
-				return defaultV;
+			String v = MapUtils.getString(firstProps, prop.getId());
+			if (NumberUtils.isDigits(v)) {
+				return NumberUtils.toInt(v);
 			}
-			int v = MapUtils.getIntValue(firstProps, prop.getId());
-			if (v != 0) {
-				return v;
+			v = MapUtils.getString(secondProps, prop.getId());
+			if (NumberUtils.isDigits(v)) {
+				return NumberUtils.toInt(v);
 			}
-			return MapUtils.getIntValue(secondProps, prop.getId(), defaultV);
+			return (int) prop.defaultValue();
 		}
 		return 0;
 	}

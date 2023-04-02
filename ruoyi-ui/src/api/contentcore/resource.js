@@ -1,9 +1,16 @@
 import request from '@/utils/request'
 
+export function getResourceTypes() {
+  return request({
+    url: '/cms/resource/types',
+    method: 'get'
+  })
+}
+
 // 查询资源列表
 export function getResrouceList(query) {
   return request({
-    url: '/cms/resource/list',
+    url: '/cms/resource',
     method: 'get',
     params: query
   })
@@ -12,7 +19,7 @@ export function getResrouceList(query) {
 // 获取资源详情
 export function getResourceDetail(resourceId) {
   return request({
-    url: '/cms/resource/info/' + resourceId,
+    url: '/cms/resource/' + resourceId,
     method: 'get'
   })
 }
@@ -41,7 +48,8 @@ export function updateResource(data) {
 // 删除资源
 export function delResource(resourceIds) {
   return request({
-    url: '/cms/resource/' + resourceIds,
-    method: 'delete'
+    url: '/cms/resource',
+    method: 'delete',
+    data: resourceIds
   })
 }

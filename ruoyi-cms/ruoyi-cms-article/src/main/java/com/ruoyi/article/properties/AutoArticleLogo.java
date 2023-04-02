@@ -34,16 +34,11 @@ public class AutoArticleLogo implements IProperty {
 	}
 	
 	@Override
-	public boolean validate(String value) {
-		return YesOrNo.YES.equals(value) || YesOrNo.NO.equals(value);
-	}
-	
-	@Override
 	public String defaultValue() {
 		return YesOrNo.NO;
 	}
 	
-	public static boolean getValue(Map<String, Object> props) {
+	public static boolean getValue(Map<String, String> props) {
 		return YesOrNo.isYes(ConfigPropertyUtils.getStringValue(ID, props));
 	}
 }

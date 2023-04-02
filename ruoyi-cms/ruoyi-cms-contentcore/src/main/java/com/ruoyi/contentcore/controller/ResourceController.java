@@ -1,8 +1,9 @@
 package com.ruoyi.contentcore.controller;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,10 +21,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.contentcore.core.IResourceType;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Resource;
 import com.ruoyi.contentcore.domain.CmsResource;
 import com.ruoyi.contentcore.domain.CmsSite;
@@ -31,11 +34,13 @@ import com.ruoyi.contentcore.domain.dto.ImageCropDTO;
 import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
 import com.ruoyi.contentcore.service.IResourceService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 @SaAdminCheckLogin
@@ -48,7 +53,14 @@ public class ResourceController extends BaseRestController {
 
 	private final IResourceService resourceService;
 
-	@GetMapping("/list")
+	@GetMapping("/types")
+	public R<?> getResourceTypes() {
+		List<Map<String, String>> list = ContentCoreUtils.getResourceTypes().stream()
+				.map(rt -> Map.of("id", rt.getId(), "name", I18nUtils.get(rt.getName()))).toList();
+		return R.ok(list);
+	}
+
+	@GetMapping
 	public R<?> listData(@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "resourceType", required = false) String resourceType,
 			@RequestParam(value = "beginTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date beginTime,
@@ -64,6 +76,8 @@ public class ResourceController extends BaseRestController {
 		Page<CmsResource> page = resourceService.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true), q);
 		if (page.getRecords().size() > 0) {
 			page.getRecords().forEach(r -> {
+				IResourceType rt = ContentCoreUtils.getResourceType(r.getResourceType());
+				r.setResourceTypeName(I18nUtils.get(rt.getName()));
 				if (r.getPath().startsWith("http://") || r.getPath().startsWith("https://")) {
 					r.setSrc(r.getPath());
 				} else {
@@ -76,7 +90,7 @@ public class ResourceController extends BaseRestController {
 		return bindDataTable(page);
 	}
 
-	@GetMapping("/info/{resourceId}")
+	@GetMapping("/{resourceId}")
 	public R<CmsResource> getInfo(@PathVariable("resourceId") Long resourceId) {
 		CmsResource resource = this.resourceService.getById(resourceId);
 		if (resource == null) {
@@ -100,10 +114,10 @@ public class ResourceController extends BaseRestController {
 		}
 	}
 
-	@DeleteMapping("/{resourceIds}")
-	public R<String> delResources(@PathVariable("resourceIds") Long[] resourceIds) {
+	@DeleteMapping
+	public R<String> delResources(@RequestBody @NotEmpty List<Long> resourceIds) {
 		Assert.notEmpty(resourceIds, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception("resourceIds"));
-		this.resourceService.deleteResource(Arrays.asList(resourceIds));
+		this.resourceService.deleteResource(resourceIds);
 		return R.ok();
 	}
 

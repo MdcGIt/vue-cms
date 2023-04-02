@@ -41,6 +41,11 @@ public class ResourceType_Image implements IResourceType {
 	public String getId() {
 		return ID;
 	}
+	
+	@Override
+	public String getName() {
+		return "CMS.CONTENTCORE.RESOURCE_TYPE." + ID;
+	}
 
 	@Override
 	public String[] getUsableSuffix() {
@@ -64,7 +69,7 @@ public class ResourceType_Image implements IResourceType {
 			if (ImageWatermarkProperty.getValue(site.getConfigProps())
 					&& !"webp".equalsIgnoreCase(resource.getSuffix())) {
 				// TODO webp水印支持
-				ImageWatermarkArgs args = ImageWatermarkArgsProperty.getImageWatermarkArgs(site.getConfigProps());
+				ImageWatermarkArgs args = ImageWatermarkArgsProperty.getValue(site.getConfigProps());
 				if (StringUtils.isNotEmpty(args.getImage())) {
 					// 水印图片占比大小调整
 					String siteResourceRoot = SiteUtils.getSiteResourceRoot(site);

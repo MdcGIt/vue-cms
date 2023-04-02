@@ -393,9 +393,20 @@ public class RedisCache {
 	 * @param key
 	 * @return
 	 */
-	public long atomicLong(String key) {
+	public long atomicLongIncr(String key) {
 		RedisAtomicLong redisAtomicLong = new RedisAtomicLong(key, this.redisTemplate);
-		this.redisTemplate.expire(key, 10, TimeUnit.SECONDS);
 		return redisAtomicLong.incrementAndGet();
+	}
+	
+	/**
+	 * 计数+delta
+	 * 
+	 * @param key
+	 * @param value
+	 * @param delta
+	 * @return
+	 */
+	public Long incrMapValue(String cacheKey, String mapKey, int delta) {
+		return this.redisTemplate.opsForHash().increment(cacheKey, mapKey, delta);
 	}
 }

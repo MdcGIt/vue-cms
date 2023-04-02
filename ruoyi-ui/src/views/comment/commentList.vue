@@ -201,7 +201,7 @@
 </template>
 
 <script>
-import { getCommentList, getCommentReplyList, getLikeList, deleteComments, auditComment } from "@/api/comment/comment";
+import { getCommentList, getCommentReplyList, getCommentLikeList, deleteComments, auditComment } from "@/api/comment/comment";
 import CommentLikeDialog from '@/views/comment/commentLike';
 
 export default {
@@ -267,7 +267,7 @@ export default {
     },
     loadLikeList() {
       this.likeLoading = true;
-      getLikeList(this.likeQueryParams).then(response => {
+      getCommentLikeList(this.likeQueryParams).then(response => {
           this.likeList = response.data.rows;
           this.likeTotal = parseInt(response.data.total);
           this.likeLoading = false;

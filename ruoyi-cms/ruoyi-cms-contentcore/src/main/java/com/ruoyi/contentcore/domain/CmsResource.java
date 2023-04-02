@@ -42,6 +42,12 @@ public class CmsResource extends BaseEntity {
     private String resourceType;
 
     /**
+     * 资源类型名称
+     */
+    @TableField(exist = false)
+    private String resourceTypeName;
+    
+    /**
      * 存储类型，默认：local
      */
     private String storageType;

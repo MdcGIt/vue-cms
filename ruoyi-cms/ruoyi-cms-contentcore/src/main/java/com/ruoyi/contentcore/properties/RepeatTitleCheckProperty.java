@@ -15,13 +15,13 @@ import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 public class RepeatTitleCheckProperty implements IProperty {
 
 	public final static String ID = "RepeatTitleCheck";
-	
+
 	static UseType[] UseTypes = new UseType[] { UseType.Site, UseType.Catalog };
 
 	public static final String CheckType_None = "0"; // 不校验
 	public static final String CheckType_Site = "1"; // 全站校验
 	public static final String CheckType_Catalog = "2"; // 栏目校验
-	
+
 	@Override
 	public UseType[] getUseTypes() {
 		return UseTypes;
@@ -36,18 +36,19 @@ public class RepeatTitleCheckProperty implements IProperty {
 	public String getName() {
 		return "校验重复标题策略";
 	}
-	
+
 	@Override
 	public boolean validate(String value) {
-		return StringUtils.isEmpty(value) || StringUtils.containsAny(value, CheckType_None, CheckType_Site, CheckType_Catalog);
+		return StringUtils.isEmpty(value) || StringUtils.equalsAny(value.toString(), StringUtils.EMPTY, CheckType_None,
+				CheckType_Site, CheckType_Catalog);
 	}
-	
+
 	@Override
 	public String defaultValue() {
 		return CheckType_None;
 	}
-	
-	public static String getValue(Map<String, Object> firstConfigProps, Map<String, Object> secondConfigProps) {
+
+	public static String getValue(Map<String, String> firstConfigProps, Map<String, String> secondConfigProps) {
 		return ConfigPropertyUtils.getStringValue(ID, firstConfigProps, secondConfigProps);
 	}
 }

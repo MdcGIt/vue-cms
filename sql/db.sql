@@ -11,7 +11,7 @@
  Target Server Version : 50735
  File Encoding         : 65001
 
- Date: 28/03/2023 18:47:14
+ Date: 02/04/2023 23:16:35
 */
 
 SET NAMES utf8mb4;
@@ -61,6 +61,76 @@ CREATE TABLE `cc_comment_like`  (
   `like_time` datetime(0) NOT NULL COMMENT '点赞时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for cc_error_prone_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_error_prone_word`;
+CREATE TABLE `cc_error_prone_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '替换词',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_error_prone_word
+-- ----------------------------
+INSERT INTO `cc_error_prone_word` VALUES (1482979643789541377, '凑和', '凑合', 'admin', '2022-01-17 15:34:34', 'admin', '2022-01-17 15:34:34', NULL);
+INSERT INTO `cc_error_prone_word` VALUES (1482979706737655809, '脉博', '脉搏', 'admin', '2022-01-17 15:34:49', 'admin', '2022-01-17 15:34:49', NULL);
+INSERT INTO `cc_error_prone_word` VALUES (1482979792091742209, '幅射', '辐射', 'admin', '2022-01-17 15:35:10', 'admin', '2022-01-17 15:35:10', NULL);
+
+-- ----------------------------
+-- Table structure for cc_hot_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_hot_word`;
+CREATE TABLE `cc_hot_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
+  `url_target` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '跳转方式',
+  `use_count` int(255) NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint(255) NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_hot_word
+-- ----------------------------
+INSERT INTO `cc_hot_word` VALUES (401960948670533, 401960868323397, '王者荣耀', 'http://www.119you.com', '_blank', 0, 0, 'admin', '2023-03-31 22:03:19', 'admin', '2023-03-31 22:03:19', NULL);
+
+-- ----------------------------
+-- Table structure for cc_hot_word_group
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_hot_word_group`;
+CREATE TABLE `cc_hot_word_group`  (
+  `group_id` bigint(20) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `sort_flag` bigint(20) NULL DEFAULT NULL,
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`group_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_hot_word_group
+-- ----------------------------
+INSERT INTO `cc_hot_word_group` VALUES (401960868323397, '游戏热词', 'game', 168027138000, 'admin', '2023-03-31 22:03:00', 'admin', '2023-03-31 22:03:00', NULL);
 
 -- ----------------------------
 -- Table structure for cc_member
@@ -194,6 +264,71 @@ CREATE TABLE `cc_member_signin_log`  (
   `log_time` datetime(0) NOT NULL COMMENT '签到时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for cc_sensitive_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_sensitive_word`;
+CREATE TABLE `cc_sensitive_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `type` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型：BLACK=敏感词，WHITE=白名单',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '替换词',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cc_sensitive_word
+-- ----------------------------
+INSERT INTO `cc_sensitive_word` VALUES (1482266133891878914, 'BLACK', '狗日滴', NULL, 'admin', '2022-01-15 16:19:20', 'admin', '2022-01-15 16:19:20', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1482266192272396290, 'BLACK', 'fuck', NULL, 'admin', '2022-01-15 16:19:34', 'admin', '2022-01-15 16:19:34', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1482266254880772097, 'BLACK', '妈卖批', NULL, 'admin', '2022-01-15 16:19:49', 'admin', '2022-01-15 16:19:49', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1491730556066902017, 'WHITE', '上游行业', NULL, 'admin', '2022-02-10 19:07:34', 'admin', '2022-02-10 19:07:34', NULL);
+INSERT INTO `cc_sensitive_word` VALUES (1491730583887720449, 'BLACK', '游行', NULL, 'admin', '2022-02-10 19:07:41', 'admin', '2022-02-10 19:07:41', NULL);
+
+-- ----------------------------
+-- Table structure for cc_tag_word
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_tag_word`;
+CREATE TABLE `cc_tag_word`  (
+  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
+  `use_count` int(11) NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint(20) NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `sort_flag` bigint(255) NOT NULL COMMENT '排序标识',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`word_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for cc_tag_word_group
+-- ----------------------------
+DROP TABLE IF EXISTS `cc_tag_word_group`;
+CREATE TABLE `cc_tag_word_group`  (
+  `group_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `parent_id` bigint(20) NOT NULL COMMENT '父级ID',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一编码',
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
+  `sort_flag` bigint(20) NULL DEFAULT NULL COMMENT '排序标识',
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`group_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cc_vote
@@ -337,6 +472,11 @@ CREATE TABLE `cms_advertisement`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of cms_advertisement
+-- ----------------------------
+INSERT INTO `cms_advertisement` VALUES (402192602718277, 394778222964805, 'image', '广告1', 100, NULL, '0', '2023-04-26 00:00:00', '2023-04-28 00:00:00', NULL, 'iurl://resources/image/2023/04/01/401996611027013.jpg?type=resource&id=401996611027013&sid=1630092239507464193', 'admin', '2023-04-01 13:45:55', 'admin', '2023-04-01 14:17:27', NULL);
+
+-- ----------------------------
 -- Table structure for cms_article_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_article_detail`;
@@ -366,8 +506,6 @@ INSERT INTO `cms_article_detail` VALUES (391304549122117, '<p style=\"margin-lef
 INSERT INTO `cms_article_detail` VALUES (391598214479941, '<figure class=\"image image_resized\" style=\"width:100%;\"><img src=\"iurl://resources/image/2023/03/17/396941061038149.png?type=resource&amp;id=396941061038149&amp;sid=1630092239507464193\" ></figure><p style=\"margin-left:0px;\">图片来源 ：西门子</p><p style=\"margin-left:0px;\"><strong>作者 |&nbsp;</strong>Anna Townshend</p><p style=\"margin-left:0px;\">开源HMI软件可以大大缩短开发时间，但需要企业内部具有专业技术人员，可以在未来进行修改或修复。</p><p style=\"margin-left:0px;\">我们设计和建造的所有包装设备上的人机界面（HMI）传统上都是由软件决定的。随着客户不断要求提高所有组件的互操作性，我们正在研究开源HMI软件。它的优点和缺点是什么?还有可能需要哪些额外的硬件?</p><p style=\"margin-left:0px;\"><strong>01</strong></p><p style=\"margin-left:0px;\"><strong>定义HMI：它还是硬件吗？</strong></p><p style=\"margin-left:0px;\">在每个人的口袋里都有智能手机之前，工业人机界面(HMI)可能是人们与触摸屏设备的唯一交互方式。这很疯狂，对吧?在那个年代，HMI是一个严格意义上的硬件，通过你最喜欢的现场总线连接到PLC。</p><p style=\"margin-left:0px;\">两端的开发都是通过专有软件进行的，工程师们成为了如何正确映射数据寄存器的专家，而且非常固执己见。如今，人机界面可以有多种形式。许多传统的HMI已经存在多年，但对现代界面、互操作性和可移植性的需求意味着专用的HMI模式正在受到威胁。</p><p style=\"margin-left:0px;\">许多用户更喜欢熟悉的手机或平板电脑界面，以及现代应用程序设计的流畅美感。如果你是一名设施操作员，你需要HMI是直观和高效的；如果你是一个原始设备制造商，HMI可能是你与客户最频繁接触的点，也是你的机器设备的代言人。</p><p style=\"margin-left:0px;\">那么，为什么要开源呢？难道因为它是免费的吗？显然并不全是。</p><p style=\"margin-left:0px;\">首先，让我们来定义一下 “开源” 这个词。简单地说，开源通常是指免费提供原始源代码的软件，并可以重新分发和修改。开源的一个流行说法是，它代表自由和准入，并不意味着是没有成本，因为使用开源工具的责任转移到了负责实施这些工具的开发者身上。这需要理解、经验和时间。</p><p style=\"margin-left:0px;\">许多为Web应用程序、超级计算机甚至互联网本身提供动力的技术都是开源的。这包括大量的开发工作，如Linux和Node-RED。Node-RED这样的平台正在改变我们对用户界面开发的看法。它为许多想要使用最新工具来构建他们的机器可视化，但缺乏编写HTML5或typescript的技能和经验的用户提供了访问权限。</p><p style=\"margin-left:0px;\">Node-RED是一个低代码量的环境，它使用Node.js，一个基于JavaScript编程语言的运行环境。这个环境使用了HTML5、Vue.js、React.js。它是如此容易使用，以至于开发人员可以在几分钟内完成从首次互动到概念验证的过程。</p><p style=\"margin-left:0px;\">开源的真正力量在于它可以像搭积木一样工作。例如，可视化需要数据，而这些数据需要被储存在某个地方，这些数据也需要被运输。</p><p style=\"margin-left:0px;\">有很多工具可以使用，例如Eclipse Mosquitto，一个实现了消息队列遥测传输协议（MQTT）的开源消息代理；以及InfluxDB，一个时间序列数据库。所有这些都在Linux上运行，协同工作以构建令人惊叹的交互式工业界面。</p><p style=\"margin-left:0px;\">再加上易于配置的仪表盘工具，如Grafana或Chronograf；它们都是可扩展的，并且可以从大量使用它们的社区中获得可用的贡献。也许对HMI平台最重要的演变是引入了Linux，它提供了一个重要的画布来创建一个多样化和高功能的界面。</p><p style=\"margin-left:0px;\">那么，如何开始? “如果你已经使用Linux和浏览器实现设备，那么你就可以马上开始了，不需要其他硬件。”万可公司Linux 和 IIoT 高级应用工程师Jesse Cox说，“安装Node-RED，并开始用一个简单的基于浏览器的集成开发环境（IDE）构建界面。导入仪表板节点以将组件添加到Web用户界面(UI)，你将惊讶于构建交互式UI的速度之快。如果你的HMI有一个浏览器，那么你可以把它指向你的Node-RED实例，然后你可能永远不会再以同样的方式看待闭源HMI解决方案了。”</p><p style=\"margin-left:0px;\"><strong>02</strong></p><p style=\"margin-left:0px;\"><strong>节省预算和开发时间</strong></p><p style=\"margin-left:0px;\">在HMI中使用开源软件有三个优势。</p><p style=\"margin-left:0px;\">首先，也是最明显的一点是，很多开源软件（OSS）是免费的，这为用户带来了直接的预算节省。</p><p style=\"margin-left:0px;\">其次，在节省预算的同时，减少了编程/开发时间。一旦开发出应用程序，就可以很容易地将其转换为共享相同软件的不同硬件平台。</p><p style=\"margin-left:0px;\">最后是能够从几个潜在的硬件平台中自由选择，为更广泛的产品范围打开大门，用户可能能够找到真正完全符合他们需求的非常具体的硬件，如具有IP67的设备或食品和饮料批准的设备（图1）。</p><figure class=\"image image_resized\" style=\"width:100%;\"><img src=\"iurl://resources/image/2023/03/17/396941063716933.png?type=resource&amp;id=396941063716933&amp;sid=1630092239507464193\" ></figure><p style=\"margin-left:0px;\">▲图 1：开源软件可以为食品和饮料设备中使用的硬件平台或特殊设备提供更多灵活性。</p><p style=\"margin-left:0px;\">对于工业HMI应用来说，需要考虑的最大缺点可能是技术支持。图尔克公司产品经理Roberto Solis认为，对于授权软件，与开发该产品的供应商有一个直接的技术支持联系是相当普遍的。该供应商可以帮助用户加快解决问题，并处理过程中出现的任何问题，而使用开放源码软件可能更难找到一个具体的联系人来提供支持。在购买之前要考虑这一点，是否明确指出了谁来提供支持？</p><p style=\"margin-left:0px;\"><strong>03</strong></p><p style=\"margin-left:0px;\"><strong>硬币的另外一面</strong></p><p style=\"margin-left:0px;\">毫无疑问，开源软件，更确切地说，自由和开源软件（FOSS）运动给自动化专业人员提供了很多新的选择。但在选择适合的开源软件解决方案时，其中的陷阱和缺点也需要注意。</p><p style=\"margin-left:0px;\">并不是所有的开源软件都是零成本的，而且有时零成本的解决方案最终可能是最昂贵的。许多公司提供混合型产品，其中既有免费的社区版，也有收费的功能更丰富的版本。或者他们会提供有偿的支持。这些选择中有许多是优秀的解决方案，但其背后的公司有明显的动机鼓励用户迁移到付费版本。如果付费版本的成本太高，从长远来看，迁移到免费版本可能是浪费精力。</p><p style=\"margin-left:0px;\">对于那些确实是零成本的解决方案，而且有许多非常有用和强大的例子，值得花一些时间考虑谁在支持这个项目以及为什么。此外，你需要评估一下，你愿意在多大程度上深入了解。</p><p style=\"margin-left:0px;\">当出现问题时，你将不得不依靠内部资源或围绕项目的社区。许多这样的项目都有一个活跃的社区随时准备提供帮助，但有些项目会随着时间的推移而失败，在这种情况下，您必须自己维护或忍受转换为其他问题的痛苦。</p><p style=\"margin-left:0px;\">这些问题当然也存在于闭源项目中。在闭源解决方案中，没有办法自己修复一些东西；你完全依赖供应商提供的更新。如果你访问许多开源项目的源代码库，通常会发现一长串需要修复的bug。对于一个闭源项目来说，毫无疑问，类似的清单也是存在的；您只是没有机会接触到它，也没有可能自己跳进去修复某些问题。</p><p style=\"margin-left:0px;\">硬件是另一种考量。Maple Systems公司工程师Mike Sheldon谈道，闭源软件往往将用户锁定在一个特定的硬件供应商。而开源解决方案，您可以货比三家，使您的产品来源多样化，并有可能降低成本。然而，这也需要用户承担起验证兼容性的责任。企业需要什么样的操作系统？是否有驱动程序或软件包需要安装？处理器的速度和结构是否足够？使用一个需要特定硬件的闭源解决方案，可以省去一些决策环节。</p><p style=\"margin-left:0px;\"><strong>04</strong></p><p style=\"margin-left:0px;\"><strong>开源需要内部专业知识</strong></p><p style=\"margin-left:0px;\">对于所有类型的应用，包括工业HMI软件，与使用专有软件相比，开源软件可以提供很多优势，例如，用户可以自由地修改源代码，使他们有完全的灵活性来根据环境定制应用程序；通常情况下，任何许可和维护费用都比市面上的软件成本低。但用户也需要在使用开源方法之前意识到其缺点。</p><p style=\"margin-left:0px;\">开源的主要缺点，包括：修改源代码需要专业技能；用户可能需要为文档、媒介和支持付费。用户必须意识到开源软件许可有不同的变体，其中一些比其他的更具限制性。需要进行仔细的软件许可证审查，以便清楚地了解人们可以用开源软件做什么和不能做什么。</p><p style=\"margin-left:0px;\">此外，维护成本也可能是一个问题，因为用户要依靠开源社区来支持该软件。在生产环境中，业务中断的风险很高，缺乏即时支持可能是一个大问题。如果社区不支持新的操作系统、驱动程序、功能、硬件平台和安全漏洞的修复，那么维护软件的责任就落在了终端用户身上。</p><p style=\"margin-left:0px;\">另一个重要的问题是，开源软件有许多选择，并且有许多不同的组合。终端用户必须建立一个软件标准，以确保整个公司都在同一个版本上，这样就很容易维护开源软件。</p><p style=\"margin-left:0px;\">同样，版本控制也是开源软件应该考虑的另一个因素。新的开源软件发布频率很高，有时是每周发布一次。每个新版本都必须与现有的应用程序和硬件进行测试，以确保解决方案适当地运行。另一项任务是验证新版本不包含任何病毒或恶意软件。</p><p style=\"margin-left:0px;\">与开源软件相比，ADISRA公司首席技术官Bruno Crepaldi认为，专有软件有其优势，即供应商负责维护该软件及其与其他软件包（如数据库）的整合。供应商还为客户提供专业的主题资源，如培训、支持和咨询。这对于终端用户可能需要参与额外支持的HMI项目非常重要。</p><p style=\"margin-left:0px;\">专有软件的另一个优势是，供应商因为与许多客户交流，并了解最新的软件趋势，因此会定期添加新的功能和需求，从而使得软件能够不断发展。对于HMI软件，这有助于确保最重要的功能始终可用（图2）。</p><figure class=\"image image_resized\" style=\"width:100%;\"><img src=\"iurl://resources/image/2023/03/17/396941065760837.png?type=resource&amp;id=396941065760837&amp;sid=1630092239507464193\" ></figure><p style=\"margin-left:0px;\">▲图 2：HMI 软件为部署和连接提供了开放的灵活性，但需要确保最终用户得到技术和安全更新的支持。</p><p style=\"margin-left:0px;\">此外，专有软件供应商还负责支持新的操作系统、驱动程序、功能和硬件平台，并解决任何安全问题。他们对客户负责，以确保有一条通向新平台或添加HMI软件功能的升级路径。</p><p style=\"margin-left:0px;\"><strong>05</strong></p><p style=\"margin-left:0px;\"><strong>平衡总拥有成本</strong></p><p style=\"margin-left:0px;\">设计的关键要素之一是了解终端用户喜欢什么。在许多情况下，企业希望根据以前安装的设备或熟悉的程度来选择特定的HMI。在考虑开源开发平台时，这可能会限制可用的选择，因为大多数HMI是特制的，需要一个特定的、商业上可用的开发平台。</p><p style=\"margin-left:0px;\">当有使用开源开发平台的需求时，有两个关键优势:灵活性和许可成本。由于可以获得开发软件的源代码，因此可以对软件进行全面控制和配置。一个技术娴熟的工程师将能够根据更独特的最终用户体验创建软件，或根据客户要求定制解决方案。</p><p style=\"margin-left:0px;\">开源软件通常意味着没有开发软件的许可费用。这可能是一个优势，但将取决于实施情况。大多数开源解决方案将需要一个以进程间通信（IPC）为中心的解决方案，这可能需要额外的设备，如不间断电源、数据集中器、主机或屏幕，这将抵消节省的费用。</p><p style=\"margin-left:0px;\">对于开发者和终端用户来说，在考虑开源平台时，BW Packaging Systems公司数字创新项目经理Joe Ambrose认为，总拥有成本（TCO）始终很重要。有必要考虑一个组织是否有合适的软件和控制工程师来支持系统的开发和维护，因为从长远来看，这可能是一笔很大的开支。对团队进行培训并适当配备人员可能会占用解决方案开发的大量资源。</p><p style=\"margin-left:0px;\">除了成本之外，可能还有一些其他的技术考虑，包括容错性、安全性和附加软件。例如，开源软件可能不支持所需要的PLC通信协议，需要额外的软件将其转换为所支持的格式。</p><p style=\"margin-left:0px;\"><strong>06</strong></p><p style=\"margin-left:0px;\"><strong>考虑开源项目的必要性</strong></p><p style=\"margin-left:0px;\">在考虑采用任何技术时，重要的是要权衡取舍。对于开源项目来说尤其如此。评估功能的好处和使用现有代码库的风险是很重要的，因为你的专业知识可能有限。有一些稳定的开源代码库(如MQTT)是很好的例子，它们具有广泛的市场应用。</p><p style=\"margin-left:0px;\">在考虑开源时，罗克韦尔自动化公司可视化平台负责人Steve Briant建议，应当询问可用的功能是否能满足你的需求或是否需要扩展。如果它需要扩展，问问自己，开放源码是否有很好的文档，你是否有专业知识来扩展它？</p><p style=\"margin-left:0px;\">你还需要考虑许可模式。一些开源项目要求将任何修改贡献给该开源项目。你还应该考虑开源项目的采用情况或受欢迎程度。采用率有限的开源项目可能会很慢，无法做出任何改变或改进。除非您准备为项目提供资源以解决这些问题，否则无论功能如何，开源可能不是最适合的方法。</p><p style=\"margin-left:0px;\"><strong>07</strong></p><p style=\"margin-left:0px;\"><strong>开放系统的测试和认证</strong></p><p style=\"margin-left:0px;\">开源 HMI 软件使任何人都可以查看和更改驱动 HMI 功能的源代码。理论上，它将允许机器设计者，甚至是客户，有能力对HMI的功能和它可能具有的功能进行修改。</p><p style=\"margin-left:0px;\">传统的HMI通常有一个封闭系统。在这个封闭的系统中，只有HMI的制造商可以修改底层的源代码，改变特性和功能。与开放系统相比，客户对操作选项的选择更为有限。</p><p style=\"margin-left:0px;\">虽然可以更改底层源代码，使HMI功能听起来很吸引人，但有充分的理由表明，今天使用的大多数HMI都是封闭系统。欧姆龙 HMI、IPC、控制器和软件产品经理Clark Kromenaker认为，开源意味着任何受过任何水平训练的人都可以修改HMI的操作方式，这可能为引入低级编程错误、函数错误或恶意软件提供了机会。</p><p style=\"margin-left:0px;\">在开放系统中，大多数情况下，功能测试、安全、功能批准和任何认证将由开放系统设计者决定。在封闭系统中，这是由HMI制造商负责处理的。</p><p style=\"margin-left:0px;\">通过购买包括来自同一制造商的控制系统、HMI、I/O 和其他组件的系统解决方案，可以获得最佳的互操作性和安全性。完整解决方案提供商将确保对所有可用功能的最佳访问。刻意将不同厂家的控制器、开放式或封闭式HMI或I/O混合在一起，将使集成和使用每个控制组件的最佳功能的能力变得复杂。</p><p style=\"margin-left:0px;\">对于开源HMI系统，可能需要Visual Basic、c++等开发工具或底层编程工具，甚至可能需要开发PC机。对于封闭式HMI系统，通常使用更高级别的配置包来选择系统需要的对象和功能。</p><p style=\"margin-left:0px;\"><strong>关键概念：&nbsp;</strong></p><p style=\"margin-left:0px;\">■&nbsp;开源 HMI 软件使任何人都可以查看和更改驱动 HMI功能的源代码。</p><p style=\"margin-left:0px;\">■&nbsp;并不是所有的开源软件都是零成本的。</p><p style=\"margin-left:0px;\"><strong>思考一下：&nbsp;</strong></p><p style=\"margin-left:0px;\">您会在工厂中部署开源 HMI 系统吗？</p><p style=\"margin-left:0px;\">▲本文来自于控制工程中文版杂志（CONTROL ENGINEERING China）2023年1-2月刊《技术文章》栏目：开源人机界面软件可行吗？</p><p>&nbsp;</p>', NULL, NULL, 'Y');
 INSERT INTO `cms_article_detail` VALUES (391605537321029, '<p>测试111</p>', NULL, NULL, 'N');
 INSERT INTO `cms_article_detail` VALUES (391605605204037, '<p>测试222</p>', NULL, NULL, 'N');
-INSERT INTO `cms_article_detail` VALUES (391605641003077, '<p>测试333</p>', NULL, NULL, 'N');
-INSERT INTO `cms_article_detail` VALUES (391605677920325, '<p>测试444</p>', NULL, NULL, 'N');
 INSERT INTO `cms_article_detail` VALUES (391605718069317, '<p>阿斯达四大111</p>', NULL, NULL, 'N');
 INSERT INTO `cms_article_detail` VALUES (391610790780997, '<p>测试666 page1</p><div class=\"page-break\" style=\"page-break-after:always;\"><span style=\"display:none;\">&nbsp;</span></div><p>测试666 page2</p><div class=\"page-break\" style=\"page-break-after:always;\"><span style=\"display:none;\">&nbsp;</span></div><p>测试666 page3</p><div class=\"page-break\" style=\"page-break-after:always;\"><span style=\"display:none;\">&nbsp;</span></div><p>测试666 page4</p><div class=\"page-break\" style=\"page-break-after:always;\"><span style=\"display:none;\">&nbsp;</span></div><p>测试666 page5</p>', NULL, NULL, 'N');
 INSERT INTO `cms_article_detail` VALUES (392223934677061, '<p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392223996751941.png?type=resource&id=392223996751941&sid=1630092239507464193\"></p><blockquote><h2 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>基本参数</strong></span></h2></blockquote><figure class=\"table\" style=\"width:98.3%;\"><table class=\"ck-table-resized\" style=\"background-color:transparent;\"><colgroup><col style=\"width:23.39%;\"><col style=\"width:22.9%;\"><col style=\"width:53.71%;\"></colgroup><tbody><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>显示</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">显示尺寸&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">10.1寸 （16 : 9）<br>&nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">分辨率（像素）</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">1024×600</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>结构</strong>&nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">外观尺寸</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">271x213x36.4 (mm)</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">开孔尺寸</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">260x202 (mm)</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">净重</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">约1.8 kg</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>电源</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">供电电源</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">DC 24V （±20%）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">功耗</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">5W</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"7\"><strong>接口</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">USB接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">下载口1个，U盘口1个</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">通信串口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\"><p style=\"margin-left:0px;\">1路</p><p style=\"margin-left:0px;\">COM1( RS232 / RS422 / RS485 )</p></td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">以太网口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无线通信</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">SD卡接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">多媒体接口<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展接扣</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">已预留</td></tr></tbody></table></figure><p style=\"margin-left:0px;\">&nbsp;</p><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>通用参数</strong></span></h3></blockquote><figure class=\"table\" style=\"width:99.14%;\"><table class=\"ck-table-resized\" style=\"background-color:transparent;\"><colgroup><col style=\"width:23.51%;\"><col style=\"width:23.37%;\"><col style=\"width:53.12%;\"></colgroup><tbody><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"4\"><strong>显示</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">色彩</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">6.5万色&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">亮度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">500流明</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">背光模块</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">LED</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">触摸面板&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">4线电阻式</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>系统</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">CPU&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">ARM926ej-s RISC</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">运行内存(RAM）</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">64 MB</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">数据存储(ROM)</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">128 (MB）</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>软件</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">行业软件</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">国佳组态开发平台&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">通用软件</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">支持Linux二次开发&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"6\"><strong>品质</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">CE认证&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">EN55032/EN55024</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">FCC兼容性</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">符合FCC，Class A</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">静电等级</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">3级，±6000V</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">耐压测试</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">1000V AC/分钟</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">防护等级</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">IP65（前面板）&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">外壳材料</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">工程塑料&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>环境</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">环境温度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">-20~60（℃）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">环境湿度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">10~90% （RH）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">防震范围</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">10~25Hz(XYZ方向 2G/30分钟）<br><br>&nbsp;</td></tr></tbody></table></figure><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>图片展示</strong></span></h3></blockquote><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392224004616261.png?type=resource&id=392224004616261&sid=1630092239507464193\"></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392224006123589.png?type=resource&id=392224006123589&sid=1630092239507464193\"></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392224007712837.png?type=resource&id=392224007712837&sid=1630092239507464193\"></p><p style=\"margin-left:0px;\"><br>&nbsp;</p>', NULL, NULL, 'Y');
@@ -391,6 +529,30 @@ INSERT INTO `cms_article_detail` VALUES (392323082739781, '<p style=\"margin-lef
 INSERT INTO `cms_article_detail` VALUES (392323760308293, '<p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392323760480325.png?type=resource&id=392323760480325&sid=1630092239507464193\"></p><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>基本参数</strong></span></h3></blockquote><figure class=\"table\" style=\"width:700px;\"><table style=\"background-color:transparent;\"><tbody><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>显示</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">显示尺寸&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">4.3寸 （16 : 9）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">分辨率（像素）</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">480×272</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>结构</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">外观尺寸</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">151x93x31 (mm)</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">开孔尺寸</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">141x84 (mm)</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">净重</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">0.3 kg</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>电源</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">供电电源</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">DC 24V （±20%）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">功耗</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">3.5W</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"7\"><strong>接口</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">USB接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">下载口1个，U盘口1个</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">通信串口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\"><p style=\"margin-left:0px;\">2路（1个DB9接口含2路串口）</p><p style=\"margin-left:0px;\">COM1( RS232 / RS422 / RS485 )</p><p style=\"margin-left:0px;\">COM2( RS485 )</p></td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">以太网口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">1个</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无线通信</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展预留（WiFi / 3G / 4G / WIFI / Sub-GHz）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">SD卡接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展预留</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">多媒体接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">支持视频播放</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展接扣</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展预留（工业总线 / 视觉识别）</td></tr></tbody></table></figure><p style=\"margin-left:0px;\">&nbsp;</p><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>通用参数</strong></span></h3></blockquote><figure class=\"table\" style=\"width:700px;\"><table style=\"background-color:transparent;\"><tbody><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"4\"><strong>显示</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">色彩</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">26万色&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">亮度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">500流明</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">背光模块</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">LED</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">触摸面板&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">4线电阻式</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>系统</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">CPU&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">32位&nbsp; 4核&nbsp; ARMv7&nbsp; 1000MHz</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">运行内存(RAM）</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">512 （MB）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">数据存储(ROM)</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">512 （MB）</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>软件</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">行业软件</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">国佳组态开发平台&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">通用软件</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">Linux&nbsp; &nbsp; Android&nbsp; &nbsp; WindOS</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"6\"><strong>品质</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">CE认证&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">EN55032/EN55024</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">FCC兼容性</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">符合FCC，Class A</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">静电等级</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">3级，±6000V</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">耐压测试</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">1000V AC/分钟</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">防护等级</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">IP65（前面板）&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">外壳材料</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">工程塑料&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>环境</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">环境温度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">-20~60（℃）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">环境湿度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">10~90% （RH）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">防震范围</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">10~25Hz(XYZ方向 2G/30分钟）</td></tr></tbody></table></figure><p>&nbsp;</p><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>图片展示</strong></span></h3></blockquote><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392323765604421.png?type=resource&id=392323765604421&sid=1630092239507464193\"></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392323767193669.png?type=resource&id=392323767193669&sid=1630092239507464193\"></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392323768545349.png?type=resource&id=392323768545349&sid=1630092239507464193\"></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/04/392323770740805.png?type=resource&id=392323770740805&sid=1630092239507464193\"></p><p style=\"margin-left:0px;\"><br>&nbsp;</p>', NULL, NULL, 'Y');
 INSERT INTO `cms_article_detail` VALUES (392325435105349, '<p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/08/393770081824837.png?type=resource&amp;id=393770081824837&amp;sid=1630092239507464193\" ></p><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>基本参数</strong></span></h3></blockquote><figure class=\"table\" style=\"width:700px;\"><table style=\"background-color:transparent;\"><tbody><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>显示</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">显示尺寸&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">4.3寸 （16 : 9）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">分辨率（像素）</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">480×272</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>结构</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">外观尺寸</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">151x93x31 (mm)</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">开孔尺寸</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">141x84 (mm)</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">净重</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">0.3 kg</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>电源</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">供电电源</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">DC 24V （±20%）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">功耗</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">3.5W</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"7\"><strong>接口</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">USB接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">下载口1个，U盘口1个</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">通信串口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\"><p style=\"margin-left:0px;\">2路（1个DB9接口含2路串口）</p><p style=\"margin-left:0px;\">COM1( RS232 / RS422 / RS485 )</p><p style=\"margin-left:0px;\">COM2( RS485 )</p></td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">以太网口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">无线通信</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展预留（WiFi / 3G / 4G / WIFI / Sub-GHz）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">SD卡接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展预留</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">多媒体接口</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">支持视频播放</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展接扣</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">扩展预留（工业总线 / 视觉识别）</td></tr></tbody></table></figure><p style=\"margin-left:0px;\">&nbsp;</p><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>通用参数</strong></span></h3></blockquote><figure class=\"table\" style=\"width:700px;\"><table style=\"background-color:transparent;\"><tbody><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"4\"><strong>显示</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">色彩</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">26万色&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">亮度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">500流明</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">背光模块</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">LED</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">触摸面板&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">4线电阻式</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>系统</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">CPU&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\">32位&nbsp; 4核&nbsp; ARMv7&nbsp; 1000MHz</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">运行内存(RAM）</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">512 （MB）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">数据存储(ROM)</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">512 （MB）</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"2\"><strong>软件</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">行业软件</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">国佳组态开发平台&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">通用软件</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">Linux&nbsp; &nbsp; Android&nbsp; &nbsp; WindOS</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"6\"><strong>品质</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">CE认证&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">EN55032/EN55024</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">FCC兼容性</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">符合FCC，Class A</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">静电等级</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">3级，±6000V</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">耐压测试</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">1000V AC/分钟</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">防护等级</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">IP65（前面板）&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">外壳材料</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">工程塑料&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td></tr><tr><td style=\"background-color:rgb(219, 238, 243);border:1px solid rgb(221, 221, 221);padding:10px;text-align:center;\" colspan=\"1\" rowspan=\"3\"><strong>环境</strong></td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">环境温度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">-20~60（℃）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">环境湿度</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">10~90% （RH）</td></tr><tr><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">防震范围</td><td style=\"border:1px solid rgb(221, 221, 221);padding:10px;vertical-align:top;\" colspan=\"1\" rowspan=\"1\">10~25Hz(XYZ方向 2G/30分钟）</td></tr></tbody></table></figure><blockquote><h3 style=\"margin-left:0px;\"><span style=\"font-size:24px;\"><strong>图片展示</strong></span></h3></blockquote><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/08/393770083500101.png?type=resource&amp;id=393770083500101&amp;sid=1630092239507464193\" ></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/08/393770084794437.png?type=resource&amp;id=393770084794437&amp;sid=1630092239507464193\" ></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/08/393770085785669.png?type=resource&amp;id=393770085785669&amp;sid=1630092239507464193\" ></p><p style=\"margin-left:0px;text-align:center;\"><img src=\"iurl://resources/image/2023/03/08/393770086772805.png?type=resource&amp;id=393770086772805&amp;sid=1630092239507464193\" ></p><p style=\"margin-left:0px;\"><br>&nbsp;</p>', NULL, NULL, 'Y');
 INSERT INTO `cms_article_detail` VALUES (393784398516293, '<blockquote><h2 style=\"margin-left:0px;\"><span style=\"background-color:rgb(246,246,246);color:rgb(102,102,102);\"><strong>品牌官网：www.goukia.com</strong></span></h2></blockquote><p style=\"margin-left:0px;\">新一代物联网组态软件，直接支持C/C++脚本编程</p><p style=\"margin-left:0px;\">支持自定义生成手机APP、window运行程序包</p><p style=\"margin-left:0px;\">支持远程监控、物联网监控</p><p style=\"margin-left:0px;\">逻辑脚本的执行速度最快达到10ms。</p><p style=\"margin-left:0px;\">地址对象管理系统</p><p style=\"margin-left:0px;\">&nbsp;</p><p style=\"margin-left:0px;\"><a href=\"https://pan.baidu.com/s/1ELSQB7rn0Zi_blEMyfcqRw\"><span style=\"font-size:16px;\"><strong><u>点击下载组态软件V4.6.1</u></strong></span></a></p>', NULL, NULL, '0');
+
+-- ----------------------------
+-- Table structure for cms_article_detail_backup
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_article_detail_backup`;
+CREATE TABLE `cms_article_detail_backup`  (
+  `content_id` bigint(20) NOT NULL,
+  `content_html` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `content_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `page_titles` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `download_remote_image` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `backup_time` datetime(0) NOT NULL,
+  `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`backup_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cms_article_detail_backup
+-- ----------------------------
+INSERT INTO `cms_article_detail_backup` VALUES (402685051154501, '<p>周星驰V型支持v</p>', NULL, NULL, '0', 2, 'admin', '2023-04-02 23:10:05', NULL);
+INSERT INTO `cms_article_detail_backup` VALUES (402684225175621, '<p>阿萨德法师的</p>', NULL, NULL, '0', 3, 'admin', '2023-04-02 23:10:06', NULL);
+INSERT INTO `cms_article_detail_backup` VALUES (402684175700037, '<p>轻微qwe无群二</p>', NULL, NULL, '0', 4, 'admin', '2023-04-02 23:10:06', NULL);
 
 -- ----------------------------
 -- Table structure for cms_audio
@@ -420,6 +582,39 @@ CREATE TABLE `cms_audio`  (
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`audio_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for cms_audio_backup
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_audio_backup`;
+CREATE TABLE `cms_audio_backup`  (
+  `audio_id` bigint(20) NOT NULL,
+  `content_id` bigint(20) NOT NULL,
+  `site_id` bigint(20) NOT NULL,
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `author` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `file_size` bigint(20) NOT NULL,
+  `format` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `duration` bigint(20) NOT NULL,
+  `decoder` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `channels` int(11) NOT NULL,
+  `bit_rate` int(11) NOT NULL,
+  `sampling_rate` int(11) NOT NULL,
+  `sort_flag` int(11) NOT NULL,
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `backup_time` datetime(0) NOT NULL,
+  `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`backup_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cms_block
@@ -491,11 +686,11 @@ CREATE TABLE `cms_catalog`  (
 -- ----------------------------
 -- Records of cms_catalog
 -- ----------------------------
-INSERT INTO `cms_catalog` VALUES (390567488348229, 1630092239507464193, 0, '新闻中心', NULL, 'news', NULL, '390567488348229', NULL, 'common', 'news/', NULL, 'Y', 'Y', 167748979300, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, 6, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:23:13', 'admin', '2023-02-27 17:23:13', NULL);
+INSERT INTO `cms_catalog` VALUES (390567488348229, 1630092239507464193, 0, '新闻中心', 'iurl://resources/image/2023/03/17/396941061038149.png?type=resource&id=396941061038149&sid=1630092239507464193', 'news', NULL, '390567488348229', NULL, 'common', 'news/', NULL, 'Y', 'Y', 167748979300, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, -4, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"detailTemplate_article\":\"\",\"detailTemplate_image\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_audio\":\"\",\"indexTemplate\":\"\",\"listTemplate\":\"\",\"detailTemplate_video\":\"\"}}', '{}', 'admin', '2023-02-27 17:23:13', 'admin', '2023-04-01 00:34:00', NULL);
 INSERT INTO `cms_catalog` VALUES (390567566614597, 1630092239507464193, 390567488348229, '行业新闻', NULL, 'xwzx_xyxw', NULL, '390567488348229:390567566614597', NULL, 'common', 'news/hy/', NULL, 'Y', 'Y', 167748981100, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:23:32', 'admin', '2023-03-11 14:40:18', NULL);
 INSERT INTO `cms_catalog` VALUES (390570590720069, 1630092239507464193, 390567488348229, '思威控新闻', NULL, 'xwzx_swkxw', NULL, '390567488348229:390570590720069', NULL, 'common', 'news/swk/', NULL, 'Y', 'Y', 167749055100, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:35:50', 'admin', '2023-03-11 14:40:18', NULL);
 INSERT INTO `cms_catalog` VALUES (390570663739461, 1630092239507464193, 0, '产品中心', NULL, 'product', NULL, '390570663739461', NULL, 'common', 'product/', NULL, 'Y', 'Y', 167749056700, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, 0, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\"},\"h5\":{}}', '{}', 'admin', '2023-02-27 17:36:08', 'admin', '2023-03-08 19:04:36', NULL);
-INSERT INTO `cms_catalog` VALUES (390570748936261, 1630092239507464193, 390570663739461, 'DK系列', NULL, 'product_dk', NULL, '390570663739461:390570748936261', NULL, 'common', 'product/dk/', NULL, 'Y', 'Y', 167749058800, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 10, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\",\"indexTemplate\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_image\":\"\"}}', '{\"ArticleImageHeight\":\"0\",\"ArticleImageWidth\":\"0\",\"EnableIndex\":\"Y\",\"RepeatTitleCheck\":\"0\",\"ContentExtendModel\":\"396563529257029\",\"ExtendModel\":\"\",\"HotWordGroups\":\"[]\"}', 'admin', '2023-02-27 17:36:29', 'admin', '2023-03-17 15:21:17', NULL);
+INSERT INTO `cms_catalog` VALUES (390570748936261, 1630092239507464193, 390570663739461, 'DK系列', NULL, 'product_dk', NULL, '390570663739461:390570748936261', NULL, 'common', 'product/dk/', NULL, 'Y', 'Y', 167749058800, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 10, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\",\"indexTemplate\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_image\":\"\"}}', '{\"HotWordGroups\":\"[]\",\"ArticleImageHeight\":\"700\",\"CatalogExtendModel\":\"\",\"EnableIndex\":\"Y\",\"RepeatTitleCheck\":\"0\",\"ContentExtendModel\":\"396563529257029\",\"ArticleImageWidth\":\"700\"}', 'admin', '2023-02-27 17:36:29', 'admin', '2023-04-01 00:33:47', NULL);
 INSERT INTO `cms_catalog` VALUES (390570814517317, 1630092239507464193, 390570663739461, 'GK系列', NULL, 'product_gk', NULL, '390570663739461:390570814517317', NULL, 'common', 'product/gk/', NULL, 'Y', 'Y', 167749060400, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, 12, NULL, NULL, NULL, NULL, NULL, '{\"pc\":{\"listTemplate\":\"list_product.template.html\",\"detailTemplate_article\":\"detail_product.template.html\"}}', '{}', 'admin', '2023-02-27 17:36:45', 'admin', '2023-03-10 19:58:41', NULL);
 INSERT INTO `cms_catalog` VALUES (390570870935621, 1630092239507464193, 0, '应用领域', NULL, 'case', NULL, '390570870935621', NULL, 'common', 'case/', NULL, 'Y', 'Y', 167749061800, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:36:59', 'admin', '2023-02-27 17:36:59', NULL);
 INSERT INTO `cms_catalog` VALUES (390570940239941, 1630092239507464193, 0, '技术支持', NULL, 'support', NULL, '390570940239941', NULL, 'common', 'support/', NULL, 'Y', 'Y', 167749063500, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, '{}', 'admin', '2023-02-27 17:37:15', 'admin', '2023-02-27 17:37:15', NULL);
@@ -561,7 +756,7 @@ CREATE TABLE `cms_content`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`content_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 399145884594246 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 402685051154502 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cms_content
@@ -581,8 +776,6 @@ INSERT INTO `cms_content` VALUES (391304549122117, 1630092239507464193, 39057074
 INSERT INTO `cms_content` VALUES (391598214479941, 1630092239507464193, 390567566614597, '390567488348229:390567566614597', 390567488348229, 100, NULL, 'article', '开源人机界面（HMI）软件可行吗？', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774143500, '[]', '[]', 0, 0, '2023-03-02 15:17:18', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:17:15', 'admin', '2023-03-17 18:02:06', NULL);
 INSERT INTO `cms_content` VALUES (391605537321029, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试111', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774322200, '[]', '[]', 0, 0, '2023-03-02 15:47:08', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:03', 'admin', '2023-03-02 15:47:03', NULL);
 INSERT INTO `cms_content` VALUES (391605605204037, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试222', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774323900, '[]', '[]', 0, 0, '2023-03-02 15:47:20', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:19', 'admin', '2023-03-02 15:47:19', NULL);
-INSERT INTO `cms_content` VALUES (391605641003077, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试333', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774324700, '[]', '[]', 0, 0, '2023-03-02 15:54:51', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:28', 'admin', '2023-03-02 15:47:28', NULL);
-INSERT INTO `cms_content` VALUES (391605677920325, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试444', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774325600, '[]', '[]', 0, 0, '2023-03-02 15:47:38', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:37', 'admin', '2023-03-02 15:47:37', NULL);
 INSERT INTO `cms_content` VALUES (391605718069317, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试555', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 24, 0, NULL, 167774326600, '[]', '[]', 0, 0, '2023-03-02 15:54:52', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:47', 'admin', '2023-03-08 17:37:50', NULL);
 INSERT INTO `cms_content` VALUES (391610790780997, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试666', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774450600, '[]', '[]', 0, 0, '2023-03-02 16:08:26', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 16:08:25', 'admin', '2023-03-11 15:01:49', NULL);
 INSERT INTO `cms_content` VALUES (392223934677061, 1630092239507464193, 390570748936261, '390570663739461:390570748936261', 390570663739461, 100, NULL, 'article', 'DK101B', NULL, 'dk', NULL, 'iurl://resources/image/2023/03/04/392224004616261.png?type=resource&id=392224004616261&sid=1630092239507464193', NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167789419800, '[]', '[]', 0, 0, '2023-03-04 09:43:20', NULL, '[\"pc\",\"h5\"]', NULL, 'N', NULL, 'N', NULL, NULL, 'admin', '2023-03-04 09:43:19', 'admin', '2023-03-04 09:43:46', NULL);
@@ -610,66 +803,66 @@ INSERT INTO `cms_content` VALUES (399084891713605, 1630092239507464193, 39057148
 INSERT INTO `cms_content` VALUES (399145884594245, 1630092239507464193, 390571481559109, '390571481559109', 390571481559109, 100, NULL, 'video', '测试视频', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167958414600, '[]', '[]', 0, 0, '2023-03-24 12:47:53', NULL, '[\"pc\"]', NULL, 'N', NULL, 'N', NULL, NULL, 'admin', '2023-03-23 23:09:05', 'admin', '2023-03-24 12:47:52', NULL);
 
 -- ----------------------------
--- Table structure for cms_error_prone_word
+-- Table structure for cms_content_backup
 -- ----------------------------
-DROP TABLE IF EXISTS `cms_error_prone_word`;
-CREATE TABLE `cms_error_prone_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '替换词',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of cms_error_prone_word
--- ----------------------------
-INSERT INTO `cms_error_prone_word` VALUES (1482979643789541377, '凑和', '凑合', 'admin', '2022-01-17 15:34:34', 'admin', '2022-01-17 15:34:34', NULL);
-INSERT INTO `cms_error_prone_word` VALUES (1482979706737655809, '脉博', '脉搏', 'admin', '2022-01-17 15:34:49', 'admin', '2022-01-17 15:34:49', NULL);
-INSERT INTO `cms_error_prone_word` VALUES (1482979792091742209, '幅射', '辐射', 'admin', '2022-01-17 15:35:10', 'admin', '2022-01-17 15:35:10', NULL);
-
--- ----------------------------
--- Table structure for cms_hot_word
--- ----------------------------
-DROP TABLE IF EXISTS `cms_hot_word`;
-CREATE TABLE `cms_hot_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
-  `url_target` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '跳转方式',
-  `use_count` int(255) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(255) NOT NULL DEFAULT 0 COMMENT '点击次数',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for cms_hot_word_group
--- ----------------------------
-DROP TABLE IF EXISTS `cms_hot_word_group`;
-CREATE TABLE `cms_hot_word_group`  (
-  `group_id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `cms_content_backup`;
+CREATE TABLE `cms_content_backup`  (
+  `content_id` bigint(20) NOT NULL,
   `site_id` bigint(20) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sort_flag` bigint(20) NULL DEFAULT NULL,
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`group_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  `catalog_id` bigint(20) NOT NULL,
+  `catalog_ancestors` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `top_catalog` bigint(20) NOT NULL,
+  `dept_id` bigint(20) NULL DEFAULT NULL,
+  `dept_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `content_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(360) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `sub_title` varchar(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `short_title` varchar(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `title_style` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `source` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `source_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `original` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `author` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `editor` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `summary` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `static_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `attributes` int(11) NULL DEFAULT NULL,
+  `top_flag` bigint(20) NOT NULL,
+  `top_date` datetime(0) NULL DEFAULT NULL,
+  `sort_flag` bigint(20) NOT NULL,
+  `keywords` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `tags` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `copy_type` tinyint(4) NOT NULL,
+  `copy_id` bigint(20) NULL DEFAULT NULL,
+  `publish_date` datetime(0) NULL DEFAULT NULL,
+  `offline_date` datetime(0) NULL DEFAULT NULL,
+  `publish_pipe` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `publish_pipe_props` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `link_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `is_lock` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `lock_user` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `config_props` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `backup_time` datetime(0) NOT NULL,
+  `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`backup_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cms_content_backup
+-- ----------------------------
+INSERT INTO `cms_content_backup` VALUES (402685051154501, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '热热热热热若', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '0', 0, 0, NULL, 168044819400, '[]', '[]', 0, 0, NULL, NULL, '[\"pc\"]', 'null', '0', NULL, 'N', NULL, 'null', 'admin', '2023-04-02 23:09:54', 'admin', '2023-04-02 23:09:54', NULL, 4, 'admin', '2023-04-02 23:10:05', NULL);
+INSERT INTO `cms_content_backup` VALUES (402684225175621, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '去玩儿人', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '0', 0, 0, NULL, 168044799000, '[]', '[]', 0, 0, NULL, NULL, '[\"pc\"]', 'null', '0', NULL, 'N', NULL, 'null', 'admin', '2023-04-02 23:06:30', 'admin', '2023-04-02 23:06:30', NULL, 5, 'admin', '2023-04-02 23:10:05', NULL);
+INSERT INTO `cms_content_backup` VALUES (402684175700037, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '轻微qwe无群二', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '0', 0, 0, NULL, 168044797400, '[]', '[]', 0, 0, NULL, NULL, '[\"pc\"]', 'null', '0', NULL, 'N', NULL, 'null', 'admin', '2023-04-02 23:06:13', 'admin', '2023-04-02 23:06:13', NULL, 6, 'admin', '2023-04-02 23:10:06', NULL);
 
 -- ----------------------------
 -- Table structure for cms_image
@@ -707,6 +900,36 @@ INSERT INTO `cms_image` VALUES (390590523232327, 390590522888261, '软著-灯光
 INSERT INTO `cms_image` VALUES (390590523232328, 390590522888261, '软著-数据转化系统.jpg', NULL, '软著-数据转化系统.jpg', 'iurl://resources/image/2023/02/27/390585766039622.jpg?type=resource&id=390585766039622&sid=1630092239507464193', 'jpg', 105742, 620, 836, NULL, NULL, 4, NULL, 'admin', '2023-02-27 18:56:56', 'admin', '2023-02-27 18:56:56');
 INSERT INTO `cms_image` VALUES (390590523232329, 390590522888261, '软著-六轴同步示教机械手.jpg', NULL, '软著-六轴同步示教机械手.jpg', 'iurl://resources/image/2023/02/27/390585766039621.jpg?type=resource&id=390585766039621&sid=1630092239507464193', 'jpg', 102688, 620, 836, NULL, NULL, 5, NULL, 'admin', '2023-02-27 18:56:56', 'admin', '2023-02-27 18:56:56');
 INSERT INTO `cms_image` VALUES (390590523232330, 390590522888261, '软著-锂电焊接系统.jpg', NULL, '软著-锂电焊接系统.jpg', 'iurl://resources/image/2023/02/27/390585766039623.jpg?type=resource&id=390585766039623&sid=1630092239507464193', 'jpg', 104923, 620, 836, NULL, NULL, 6, NULL, 'admin', '2023-02-27 18:56:56', 'admin', '2023-02-27 18:56:56');
+
+-- ----------------------------
+-- Table structure for cms_image_backup
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_image_backup`;
+CREATE TABLE `cms_image_backup`  (
+  `image_id` bigint(20) NOT NULL,
+  `content_id` bigint(20) NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `image_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `file_size` bigint(20) NOT NULL,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
+  `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `hit_count` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `sort_flag` bigint(20) NOT NULL,
+  `remark` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `backup_time` datetime(0) NOT NULL,
+  `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`backup_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cms_link
@@ -967,32 +1190,7 @@ INSERT INTO `cms_resource` VALUES (399084971860037, 1630092239507464193, 'audio'
 INSERT INTO `cms_resource` VALUES (399085007847493, 1630092239507464193, 'audio', 'Local', '11582.mp3', 'resources/audio/2023/03/23/399085007847493.mp3', '11582.mp3', 'mp3', NULL, NULL, 184549, NULL, 0, NULL, 'admin', '2023-03-23 19:01:05', 'admin', '2023-03-23 19:01:05', NULL);
 INSERT INTO `cms_resource` VALUES (399145939935301, 1630092239507464193, 'video', 'Local', 'trailer.mp4', 'resources/video/2023/03/23/399145939935301.mp4', 'trailer.mp4', 'mp4', NULL, NULL, 4372373, NULL, 0, NULL, 'admin', '2023-03-23 23:09:01', 'admin', '2023-03-23 23:09:01', NULL);
 INSERT INTO `cms_resource` VALUES (399322312380485, 1630092239507464193, 'image', 'Local', '239017.png', 'resources/image/2023/03/24/399322312380485.png', '239017.png', 'png', 710, 600, 642829, NULL, 0, NULL, 'admin', '2023-03-24 11:06:41', 'admin', '2023-03-24 11:06:41', NULL);
-
--- ----------------------------
--- Table structure for cms_sensitive_word
--- ----------------------------
-DROP TABLE IF EXISTS `cms_sensitive_word`;
-CREATE TABLE `cms_sensitive_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `type` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型：BLACK=敏感词，WHITE=白名单',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '替换词',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of cms_sensitive_word
--- ----------------------------
-INSERT INTO `cms_sensitive_word` VALUES (1482266133891878914, 'BLACK', '狗日滴', NULL, 'admin', '2022-01-15 16:19:20', 'admin', '2022-01-15 16:19:20', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1482266192272396290, 'BLACK', 'fuck', NULL, 'admin', '2022-01-15 16:19:34', 'admin', '2022-01-15 16:19:34', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1482266254880772097, 'BLACK', '妈卖批', NULL, 'admin', '2022-01-15 16:19:49', 'admin', '2022-01-15 16:19:49', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1491730556066902017, 'WHITE', '上游行业', NULL, 'admin', '2022-02-10 19:07:34', 'admin', '2022-02-10 19:07:34', NULL);
-INSERT INTO `cms_sensitive_word` VALUES (1491730583887720449, 'BLACK', '游行', NULL, 'admin', '2022-02-10 19:07:41', 'admin', '2022-02-10 19:07:41', NULL);
+INSERT INTO `cms_resource` VALUES (401996611027013, 1630092239507464193, 'image', 'Local', '5ca4adb6e358a7f3b22602973b689bee.jpg', 'resources/image/2023/04/01/401996611027013.jpg', '5ca4adb6e358a7f3b22602973b689bee.jpg', 'jpg', 680, 374, 27934, NULL, 0, NULL, 'admin', '2023-04-01 00:28:26', 'admin', '2023-04-01 00:28:26', NULL);
 
 -- ----------------------------
 -- Table structure for cms_site
@@ -1027,7 +1225,7 @@ CREATE TABLE `cms_site`  (
 -- ----------------------------
 -- Records of cms_site
 -- ----------------------------
-INSERT INTO `cms_site` VALUES (1630092239507464193, 0, '思威控', NULL, NULL, 'swikoon', '', 0, NULL, NULL, NULL, 167747925000, '{\"pc\":{\"staticSuffix\":\"shtml\",\"url\":\"http://www.swikoon.com/\",\"indexTemplate\":\"index.template.html\",\"listTemplate\":\"list.template.html\",\"detailTemplate_article\":\"detail.template.html\",\"detailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_article\":\"detail.template.html\",\"defaultListTemplate\":\"list.template.html\",\"defaultDetailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_audio\":\"detail_audio.template.html\",\"defaultDetailTemplate_video\":\"detail_video.template.html\"}}', NULL, NULL, NULL, NULL, NULL, 'admin', '2023-02-27 14:27:30', 'admin', '2023-03-24 12:49:58');
+INSERT INTO `cms_site` VALUES (1630092239507464193, 0, '思威控', NULL, 'iurl://resources/image/2023/04/01/401996611027013.jpg?type=resource&id=401996611027013&sid=1630092239507464193', 'swikoon', '', 0, NULL, NULL, NULL, 167747925000, '{\"pc\":{\"staticSuffix\":\"shtml\",\"url\":\"http://www.swikoon.com/\",\"indexTemplate\":\"index.template.html\",\"listTemplate\":\"list.template.html\",\"detailTemplate_article\":\"detail.template.html\",\"detailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_article\":\"detail.template.html\",\"defaultListTemplate\":\"list.template.html\",\"defaultDetailTemplate_image\":\"detail_image.template.html\",\"defaultDetailTemplate_audio\":\"detail_audio.template.html\",\"defaultDetailTemplate_video\":\"detail_video.template.html\"}}', '{\"ImageWatermark\":\"Y\",\"EnableIndex\":\"Y\",\"RepeatTitleCheck\":\"1\",\"ImageWatermarkArgs\":\"{\\\"image\\\":\\\"watermaker.jpg\\\",\\\"position\\\":\\\"TOP_LEFT\\\",\\\"opacity\\\":0.8,\\\"ratio\\\":30}\",\"PublishedContentEdit\":\"Y\",\"ArticleImageWidth\":\"700\",\"FileStorageType\":\"Local\",\"HotWordGroups\":\"[\\\"game\\\"]\",\"ArticleImageHeight\":\"700\",\"MaxPageOnContentPublish\":\"7\",\"SiteExtendModel\":\"\",\"AutoArticleLogo\":\"N\",\"SensitiveWordEnable\":\"Y\",\"FileStorageArgs\":\"{}\",\"ErrorProneWordEnable\":\"N\"}', NULL, NULL, NULL, NULL, 'admin', '2023-02-27 14:27:30', 'admin', '2023-04-01 00:28:29');
 
 -- ----------------------------
 -- Table structure for cms_site_property
@@ -1045,47 +1243,6 @@ CREATE TABLE `cms_site_property`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`property_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for cms_tag_word
--- ----------------------------
-DROP TABLE IF EXISTS `cms_tag_word`;
-CREATE TABLE `cms_tag_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
-  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
-  `use_count` int(11) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(20) NOT NULL DEFAULT 0 COMMENT '点击次数',
-  `sort_flag` bigint(255) NOT NULL COMMENT '排序标识',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`word_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for cms_tag_word_group
--- ----------------------------
-DROP TABLE IF EXISTS `cms_tag_word_group`;
-CREATE TABLE `cms_tag_word_group`  (
-  `group_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `parent_id` bigint(20) NOT NULL COMMENT '父级ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
-  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一编码',
-  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
-  `sort_flag` bigint(20) NULL DEFAULT NULL COMMENT '排序标识',
-  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`group_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1159,6 +1316,39 @@ CREATE TABLE `cms_video`  (
 -- Records of cms_video
 -- ----------------------------
 INSERT INTO `cms_video` VALUES (399344001900613, 399145884594245, 1630092239507464193, 'trailer.mp4', NULL, 'MP4', 'iurl://resources/video/2023/03/23/399145939935301.mp4?type=resource&id=399145939935301&sid=1630092239507464193', 4372373, 'mov', 52210, 'h264 (High) (avc1 / 0x31637661)', 854, 480, 537000, 24, 0, 'admin', '2023-03-24 12:34:56', 'admin', '2023-03-24 12:47:52', NULL);
+
+-- ----------------------------
+-- Table structure for cms_video_backup
+-- ----------------------------
+DROP TABLE IF EXISTS `cms_video_backup`;
+CREATE TABLE `cms_video_backup`  (
+  `video_id` bigint(20) NOT NULL,
+  `content_id` bigint(20) NOT NULL,
+  `site_id` bigint(20) NOT NULL,
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `file_size` bigint(20) NOT NULL,
+  `format` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `duration` bigint(20) NOT NULL,
+  `decoder` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
+  `bit_rate` int(20) NOT NULL,
+  `frame_rate` int(11) NOT NULL,
+  `sort_flag` int(11) NOT NULL,
+  `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `backup_time` datetime(0) NOT NULL,
+  `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`backup_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for gen_table
@@ -1765,7 +1955,7 @@ INSERT INTO `sys_menu` VALUES (2035, '互动运营', 0, 36, 'operations', NULL, 
 INSERT INTO `sys_menu` VALUES (2036, '友链管理', 2035, 1, 'link', 'cms/link/linkGroup', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:friendlink:list', 'link', 'admin', '2023-01-17 16:47:51', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2037, '扩展模型', 2025, 9, 'exmodel', 'cms/exmodel/model', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:exmodel:list', 'form', 'admin', '2023-01-17 16:48:38', 'admin', '2023-02-10 18:20:20', '');
 INSERT INTO `sys_menu` VALUES (2038, '广告管理', 2035, 2, 'advertisement', 'cms/ad/adSpace', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:advertisement:list', 'button', 'admin', '2023-01-17 16:49:16', 'admin', '2023-01-18 11:58:54', '');
-INSERT INTO `sys_menu` VALUES (2039, '词汇管理', 2025, 10, 'word', 'cms/word/word', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:word:list', 'input', 'admin', '2023-01-17 16:50:46', 'admin', '2023-02-10 18:20:24', '');
+INSERT INTO `sys_menu` VALUES (2039, '词汇管理', 2025, 10, 'word', 'word/word', NULL, 'N', 'Y', 'C', 'Y', '0', 'cms:word:list', 'input', 'admin', '2023-01-17 16:50:46', 'admin', '2023-03-31 22:01:53', '');
 INSERT INTO `sys_menu` VALUES (2040, '安全配置', 1, 12, 'security/config', 'system/security/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'system:security:list', 'shield-user-line', 'admin', '2023-01-17 16:52:57', 'admin', '2023-01-18 14:59:52', '');
 INSERT INTO `sys_menu` VALUES (2041, '异步任务', 2, 3, 'async', 'monitor/async/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'monitor:async:list', 'list', 'admin', '2023-02-02 11:29:24', 'admin', '2023-02-02 11:30:11', '');
 INSERT INTO `sys_menu` VALUES (2043, '系统日志', 2, 8, 'logs', 'monitor/logs/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'monitor:logs:list', 'list', 'admin', '2023-02-25 11:13:02', 'admin', '2023-02-25 11:17:07', '');
@@ -1843,7 +2033,7 @@ CREATE TABLE `sys_oper_log`  (
   `cost` bigint(20) NULL DEFAULT NULL COMMENT '操作耗时',
   `user_agent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '请求头User-Agent信息',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1050 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1056 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -1864,6 +2054,12 @@ INSERT INTO `sys_oper_log` VALUES (1046, '菜单管理', 'INSERT', 'R com.ruoyi.
 INSERT INTO `sys_oper_log` VALUES (1047, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-13 17:32:02\",\"updateBy\":\"admin\",\"updateTime\":\"2023-03-13 17:33:59\",\"remark\":\"\",\"menuId\":\"2051\",\"menuName\":\"内容索引\",\"parentId\":\"2025\",\"orderNum\":11,\"path\":\"search/index\",\"component\":\"cms/search/indexList\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:search:index\",\"icon\":\"documentation\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-28 18:46:15', 64, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36');
 INSERT INTO `sys_oper_log` VALUES (1048, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-14 16:26:55\",\"updateBy\":\"admin\",\"updateTime\":\"2023-03-14 16:29:00\",\"remark\":\"\",\"menuId\":\"2052\",\"menuName\":\"索引词库\",\"parentId\":\"2025\",\"orderNum\":12,\"path\":\"dictWord\",\"component\":\"search/dictWord\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:search:dict\",\"icon\":\"input\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-28 18:46:23', 45, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36');
 INSERT INTO `sys_oper_log` VALUES (1049, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-14 16:28:53\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2053\",\"menuName\":\"搜索日志\",\"parentId\":\"2025\",\"orderNum\":13,\"path\":\"searchLog\",\"component\":\"search/searchLog\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:search:log\",\"icon\":\"log\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-28 18:46:31', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1050, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:50:46\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-10 18:20:24\",\"remark\":\"\",\"menuId\":\"2039\",\"menuName\":\"词汇管理\",\"parentId\":\"2025\",\"orderNum\":10,\"path\":\"word\",\"component\":\"word/word\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:word:list\",\"icon\":\"input\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-03-31 22:01:53', 651, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1051, '角色管理', 'INSERT', 'R com.ruoyi.system.controller.SysRoleController.add(SysRole)', 'POST', 'sys_user', 1, 'admin', '', '/system/role', '127.0.0.1', '内网', '{\"role\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-02 14:42:54\",\"roleId\":\"4\",\"roleName\":\"asf\",\"roleKey\":\"asdf\",\"roleSort\":0,\"status\":\"0\",\"enable\":true}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-02 14:42:54', 616, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1052, '角色管理', 'DELETE', 'R com.ruoyi.system.controller.SysRoleController.remove(List)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/role', '127.0.0.1', '内网', '{\"roleIds\":[\"4\"]}', '', 500, '2023-04-02 14:42:58', 109, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1053, '角色管理', 'DELETE', 'R com.ruoyi.system.controller.SysRoleController.remove(List)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/role', '127.0.0.1', '内网', '{\"roleIds\":[\"4\"]}', 'Could not initialize class net.sf.cglib.beans.BeanMap$Generator', 500, '2023-04-02 14:43:28', 5863, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1054, '角色管理', 'DELETE', 'R com.ruoyi.system.controller.SysRoleController.remove(List)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/role', '127.0.0.1', '内网', '{\"roleIds\":[\"4\"]}', '', 500, '2023-04-02 15:06:55', 607, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1055, '角色管理', 'DELETE', 'R com.ruoyi.system.controller.SysRoleController.remove(List)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/role', '127.0.0.1', '内网', '{\"roleIds\":[\"4\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-02 15:35:09', 699, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
 
 -- ----------------------------
 -- Table structure for sys_permission
@@ -1930,7 +2126,7 @@ CREATE TABLE `sys_role`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role

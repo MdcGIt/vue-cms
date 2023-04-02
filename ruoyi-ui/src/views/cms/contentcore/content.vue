@@ -23,7 +23,7 @@
           </el-tab-pane>
           <el-tab-pane label="回收站"
                        name="recycle">
-            TODO...
+            <cms-recycle-list v-if="activeName==='recycle'" :cid="selectedCatalogId"></cms-recycle-list>
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -34,13 +34,15 @@
 import CMSCatalogTree from '@/views/cms/contentcore/catalogTree';
 import CMSContentList from '@/views/cms/contentcore/contentList';
 import CMSPageWidget from '@/views/cms/contentcore/pageWidget';
+import CMSContentRecycleList from '@/views/cms/contentcore/contentRecycleList';
 
 export default {
   name: "CMSContent",
   components: {
     'cms-catalog-tree': CMSCatalogTree,
     'cms-content-list': CMSContentList,
-    'cms-pagewidget-list': CMSPageWidget
+    'cms-pagewidget-list': CMSPageWidget,
+    'cms-recycle-list': CMSContentRecycleList
   },
   data () {
     return {

@@ -12,6 +12,7 @@ import com.ruoyi.cms.image.domain.CmsImage;
 import com.ruoyi.cms.image.domain.dto.ImageAlbumDTO;
 import com.ruoyi.cms.image.domain.vo.ImageAlbumVO;
 import com.ruoyi.cms.image.mapper.CmsImageMapper;
+import com.ruoyi.cms.image.service.IImageService;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -44,6 +45,8 @@ public class ImageContentType implements IContentType {
 	private final CmsContentMapper contentMapper;
 
 	private final CmsImageMapper imageMapper;
+
+	private final IImageService imageService;
 
 	private final ICatalogService catalogService;
 
@@ -133,8 +136,22 @@ public class ImageContentType implements IContentType {
 		}
 		vo.setCatalogName(catalog.getName());
 		// 发布通道模板数据
-		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(), PublishPipePropUseType.Content, vo.getPublishPipeProps());
+		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(),
+				PublishPipePropUseType.Content, vo.getPublishPipeProps());
 		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
+	}
+
+	@Override
+	public void recover(Long contentId) {
+		this.imageMapper.selectBackupIdsByContentId(contentId).forEach(imageBackupId -> {
+			this.imageService.recover(imageBackupId, CmsImage.class);
+		});
+	}
+	
+	@Override
+	public void deleteBackups(Long contentId) {
+		List<Long> backupIds = this.imageMapper.selectBackupIdsByContentId(contentId);
+		this.imageService.deleteBackups(backupIds, CmsImage.class);
 	}
 }

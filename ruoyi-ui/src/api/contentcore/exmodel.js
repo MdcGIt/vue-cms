@@ -36,7 +36,7 @@ export function addXModel(data) {
 }
 
 // 修改扩展模型
-export function editXMOdel(data) {
+export function editXModel(data) {
   return request({
     url: '/cms/exmodel',
     method: 'put',

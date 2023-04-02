@@ -11,7 +11,6 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.AbstractContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
-import com.ruoyi.contentcore.enums.ContentCopyType;
 import com.ruoyi.media.domain.CmsVideo;
 import com.ruoyi.media.service.IVideoService;
 
@@ -34,8 +33,7 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 		super.add();
 		this.getContentService().save(this.getContentEntity());
 
-		if (!this.getContentEntity().isLinkContent()
-				&& !ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.hasExtendEntity()) {
 			return this.getContentEntity().getContentId();
 		}
 
@@ -63,8 +61,7 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 		super.save();
 		this.getContentService().updateById(this.getContentEntity());
 		// 链接或映射内容直接删除所有视频数据
-		if (this.getContentEntity().isLinkContent()
-				|| ContentCopyType.isMapping(this.getContentEntity().getCopyType())) {
+		if (!this.hasExtendEntity()) {
 			this.getVideoService().remove(new LambdaQueryWrapper<CmsVideo>().eq(CmsVideo::getContentId,
 					this.getContentEntity().getContentId()));
 			return this.getContentEntity().getContentId();
@@ -119,23 +116,38 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 
 	@Override
 	public void delete() {
+		this.backup();
 		super.delete();
-		this.getVideoService().remove(
-				new LambdaQueryWrapper<CmsVideo>().eq(CmsVideo::getContentId, this.getContentEntity().getContentId()));
+		if (this.hasExtendEntity()) {
+			this.getVideoService().remove(new LambdaQueryWrapper<CmsVideo>().eq(CmsVideo::getContentId,
+					this.getContentEntity().getContentId()));
+		}
+	}
+
+	@Override
+	public void backup() {
+		super.backup();
+		if (this.hasExtendEntity()) {
+			this.getVideoService().lambdaQuery().eq(CmsVideo::getContentId, this.getContentEntity().getContentId())
+					.list()
+					.forEach(video -> this.getVideoService().backup(video, this.getOperator().getUsername()));
+		}
 	}
 
 	@Override
 	public void copyTo(CmsCatalog toCatalog, Integer copyType) {
 		super.copyTo(toCatalog, copyType);
 
-		Long newContentId = (Long) this.getParams().get("NewContentId");
-		List<CmsVideo> videoList = this.getVideoService().getAlbumVideoList(this.getContentEntity().getContentId());
-		for (CmsVideo video : videoList) {
-			video.createBy(this.getOperator().getUsername());
-			video.setVideoId(IdUtils.getSnowflakeId());
-			video.setContentId(newContentId);
-			video.setSiteId(toCatalog.getSiteId());
-			this.getVideoService().save(video);
+		if (this.hasExtendEntity()) {
+			Long newContentId = (Long) this.getParams().get("NewContentId");
+			List<CmsVideo> videoList = this.getVideoService().getAlbumVideoList(this.getContentEntity().getContentId());
+			for (CmsVideo video : videoList) {
+				video.createBy(this.getOperator().getUsername());
+				video.setVideoId(IdUtils.getSnowflakeId());
+				video.setContentId(newContentId);
+				video.setSiteId(toCatalog.getSiteId());
+				this.getVideoService().save(video);
+			}
 		}
 	}
 

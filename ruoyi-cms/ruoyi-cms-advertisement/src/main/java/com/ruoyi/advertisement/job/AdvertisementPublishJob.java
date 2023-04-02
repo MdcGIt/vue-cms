@@ -15,6 +15,8 @@ import com.ruoyi.contentcore.fixed.dict.PageWidgetStatus;
 import com.ruoyi.contentcore.service.IPageWidgetService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.XxlJob;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AdvertisementPublishJob {
+public class AdvertisementPublishJob extends IJobHandler {
+	
+	static final String JOB_NAME = "AdvertisementPublishJob";
 
 	private final IPageWidgetService pageWidgetService;
 
@@ -33,6 +37,8 @@ public class AdvertisementPublishJob {
 	
 	private final IPublishService publishService;
 
+	@Override
+	@XxlJob(JOB_NAME)
 	public void execute() throws Exception {
 		log.info("AdvertisementPublishJob start");
 		long s = System.currentTimeMillis();

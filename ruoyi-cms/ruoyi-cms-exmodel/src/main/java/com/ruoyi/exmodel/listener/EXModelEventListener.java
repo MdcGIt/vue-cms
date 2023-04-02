@@ -10,15 +10,17 @@ import com.ruoyi.common.utils.NumberUtils;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.vo.ContentVO;
+import com.ruoyi.contentcore.listener.event.AfterCatalogDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterCatalogSaveEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentEditorInitEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentSaveEvent;
+import com.ruoyi.contentcore.listener.event.AfterSiteDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterSiteSaveEvent;
-import com.ruoyi.contentcore.listener.event.BeforeCatalogDeleteEvent;
 import com.ruoyi.contentcore.service.ICatalogService;
+import com.ruoyi.exmodel.properties.CatalogExtendModelProperty;
 import com.ruoyi.exmodel.properties.ContentExtendModelProperty;
-import com.ruoyi.exmodel.properties.ExtendModelProperty;
+import com.ruoyi.exmodel.properties.SiteExtendModelProperty;
 import com.ruoyi.xmodel.XModelUtils;
 import com.ruoyi.xmodel.service.IModelDataService;
 
@@ -44,16 +46,25 @@ public class EXModelEventListener {
 	
 	@EventListener
 	public void afterSiteSave(AfterSiteSaveEvent event) {
-		String modelId = ExtendModelProperty.getValue(event.getSite().getConfigProps());
+		String modelId = SiteExtendModelProperty.getValue(event.getSite().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
-			String pkValue = String.valueOf(event.getSite().getSiteId());
+			String pkValue = event.getSite().getSiteId().toString();
 			this.saveModelData(Long.valueOf(modelId), pkValue, event.getSiteDTO().getParams());
 		}
 	}
 	
 	@EventListener
+	public void afterSiteDelete(AfterSiteDeleteEvent event) {
+		String modelId = SiteExtendModelProperty.getValue(event.getSite().getConfigProps());
+		if (NumberUtils.isDigits(modelId)) {
+			String pkValue = event.getSite().getSiteId().toString();
+			this.modelDataService.deleteModelData(Long.valueOf(modelId), pkValue);
+		}
+	}
+	
+	@EventListener
 	public void afterCatalogSave(AfterCatalogSaveEvent event) {
-		String modelId = ExtendModelProperty.getValue(event.getCatalog().getConfigProps());
+		String modelId =	CatalogExtendModelProperty.getValue(event.getCatalog().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
 			String pkValue = event.getCatalog().getCatalogId().toString();
 			this.saveModelData(Long.valueOf(modelId), pkValue, event.getExtendParams());
@@ -61,8 +72,8 @@ public class EXModelEventListener {
 	}
 	
 	@EventListener
-	public void beforeCatalogDelete(BeforeCatalogDeleteEvent event) {
-		String modelId = ExtendModelProperty.getValue(event.getCatalog().getConfigProps());
+	public void afterCatalogDelete(AfterCatalogDeleteEvent event) {
+		String modelId = CatalogExtendModelProperty.getValue(event.getCatalog().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
 			String pkValue = event.getCatalog().getCatalogId().toString();
 			this.modelDataService.deleteModelData(Long.valueOf(modelId), pkValue);

@@ -143,5 +143,5 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * @param configs
 	 * @param operator
 	 */
-	void saveCatalogExtends(Long catalogId, Map<String, Object> configs, String operator);
+	void saveCatalogExtends(Long catalogId, Map<String, String> configs, String operator);
 }
