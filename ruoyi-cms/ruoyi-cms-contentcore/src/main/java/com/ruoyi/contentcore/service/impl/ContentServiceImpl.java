@@ -34,6 +34,7 @@ import com.ruoyi.contentcore.domain.dto.CopyContentDTO;
 import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
+import com.ruoyi.contentcore.domain.vo.RecycleContentVO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.fixed.config.BackendContext;
 import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
@@ -51,6 +52,7 @@ import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -60,6 +62,8 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	private static final Logger logger = LoggerFactory.getLogger(ContentServiceImpl.class);
 
 	private final ApplicationContext applicationContext;
+	
+	private final CmsContentMapper contentMapper;
 
 	private final ISiteService siteService;
 
@@ -70,6 +74,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	private final AsyncTaskManager asyncTaskManager;
 	
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteContents(List<Long> contentIds, LoginUser operator) {
 		for (Long contentId : contentIds) {
 			CmsContent xContent = this.getById(contentId);
@@ -82,6 +87,29 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 
 			applicationContext.publishEvent(new AfterContentDeleteEvent(this, content));
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void recoverContents(List<Long> backupIds, LoginUser operator) {
+		List<RecycleContentVO> backupContents = this.contentMapper.selectRecycleContentByBackupIds(backupIds);
+		for (RecycleContentVO backupContent : backupContents) {
+			IContentType contentType = ContentCoreUtils.getContentType(backupContent.getContentType());
+			contentType.recover(backupContent.getContentId());
+		}
+		backupIds.forEach(backupId -> {
+			this.recover(backupId, CmsContent.class);
+		});
+	}
+	
+	@Override
+	public void deleteRecycleContents(@NotEmpty List<Long> backupIds) {
+		List<RecycleContentVO> backupContents = this.contentMapper.selectRecycleContentByBackupIds(backupIds);
+		for (RecycleContentVO backupContent : backupContents) {
+			IContentType contentType = ContentCoreUtils.getContentType(backupContent.getContentType());
+			contentType.deleteBackups(backupContent.getContentId());
+		}
+		this.deleteBackups(backupIds, CmsContent.class);
 	}
 
 	@Override
@@ -160,11 +188,12 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 
 	@Override
 	public AsyncTask addContent(IContent<?> content) {
+		ContentServiceImpl aopProxy = SpringUtils.getAopProxy(this);
 		AsyncTask task = new AsyncTask() {
 
 			@Override
 			public void run0() {
-				SpringUtils.getBean(IContentService.class).addContent0(content);
+				aopProxy.addContent0(content);
 			}
 		};
 		task.setType("SaveContent");

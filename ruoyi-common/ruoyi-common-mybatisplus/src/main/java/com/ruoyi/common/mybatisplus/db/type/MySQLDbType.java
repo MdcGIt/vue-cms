@@ -26,10 +26,10 @@ import lombok.RequiredArgsConstructor;
 public class MySQLDbType implements IDbType {
 
 	private static final List<TableColumn> BackupTableColumns_MySQL = List.of(
-			new TableColumn(COLUMN_BACKUP_ID, "bigint", TableColumn.NO, TableColumn.COLUMN_KEY),
-			new TableColumn(COLUMN_BACKUP_OPERATOR, "varchar(30)", TableColumn.NO, null),
-			new TableColumn(COLUMN_BACKUP_TIME, "datetime", TableColumn.NO, null),
-			new TableColumn(COLUMN_BACKUP_REMARK, "varchar(200)", TableColumn.YES, null));
+			new TableColumn(COLUMN_BACKUP_ID, "bigint", TableColumn.NO, TableColumn.COLUMN_KEY, TableColumn.YES),
+			new TableColumn(COLUMN_BACKUP_OPERATOR, "varchar(30)", TableColumn.NO, null, TableColumn.NO),
+			new TableColumn(COLUMN_BACKUP_TIME, "datetime", TableColumn.NO, null, TableColumn.NO),
+			new TableColumn(COLUMN_BACKUP_REMARK, "varchar(200)", TableColumn.YES, null, TableColumn.NO));
 	
 	private final MySQLMapper mySQLMapper;
 
@@ -56,29 +56,31 @@ public class MySQLDbType implements IDbType {
 	}
 	
 	@Override
-	public void recover(Long backupId, Class<?> entityClazz) {
-		BackupTable anno = entityClazz.getAnnotation(BackupTable.class);
+	public void recover(Long backupId, Class<?> entityClass) {
+		BackupTable anno = entityClass.getAnnotation(BackupTable.class);
 		if (anno == null) {
-			throw new RuntimeException("The entity '" + entityClazz.getName() + "' not annotationed by @BackupTable");
+			throw new RuntimeException("The entity '" + entityClass.getName() + "' not annotationed by @BackupTable");
 		}
-		TableName annoTableName = entityClazz.getAnnotation(TableName.class);
+		TableName annoTableName = entityClass.getAnnotation(TableName.class);
 		if (annoTableName == null) {
-			throw new RuntimeException("The entity '" + entityClazz.getName() + "' not annotationed by @TableName");
+			throw new RuntimeException("The entity '" + entityClass.getName() + "' not annotationed by @TableName");
 		}
-		Map<String, ColumnCache> sourceColumnMap = LambdaUtils.getColumnMap(entityClazz);
-		String backupTableName = IDbType.getBackupTableName(annoTableName.value());
+		String sourceTableName = annoTableName.value();
+		String backupTableName = IDbType.getBackupTableName(sourceTableName);
 		
-		List<String> columns = new ArrayList<>(sourceColumnMap.size());
+		Map<String, ColumnCache> sourceColumnMap = LambdaUtils.getColumnMap(entityClass);
+		List<String> columns = new ArrayList<>();
 		sourceColumnMap.values().forEach(columnCache -> {
 			columns.add(columnCache.getColumn());
 		});
-		this.mySQLMapper.recoverBackup(backupTableName, annoTableName.value(), columns, backupId);
-		
+		// 备份表数据插入原表
+		this.mySQLMapper.recoverBackup(backupTableName, sourceTableName, columns, backupId);
+		// 删除备份表数据
 		this.mySQLMapper.deleteBackupById(backupTableName, backupId);
 	}
 	
 	@Override
-	public <T> void backup(T entity, Long backupId, String backupOperator, String backupRemark) {
+	public <T> void backup(T entity, String backupOperator, String backupRemark) {
 		BackupTable anno = entity.getClass().getAnnotation(BackupTable.class);
 		if (anno == null) {
 			throw new RuntimeException("The entity '" + entity.getClass().getName() + "' not annotationed by @BackupTable");
@@ -87,33 +89,48 @@ public class MySQLDbType implements IDbType {
 		if (annoTableName == null) {
 			throw new RuntimeException("The entity '" + entity.getClass().getName() + "' not annotationed by @TableName");
 		}
-		Map<String, ColumnCache> sourceColumnMap = LambdaUtils.getColumnMap(entity.getClass());
 		String backupTableName = IDbType.getBackupTableName(annoTableName.value());
-		
-		List<TableColumn> backupColumns = this.mySQLMapper.selectTableColumns(backupTableName);
-		List<String> columns = new ArrayList<>(backupColumns.size());
-		List<Object> values = new ArrayList<>(backupColumns.size());
-		for (TableColumn tableColumn : backupColumns) {
-			String columnName = tableColumn.getColumnName();
-			columns.add(columnName);
-			if (COLUMN_BACKUP_OPERATOR.equals(columnName)) {
-				values.add(backupOperator);
-			} else if (COLUMN_BACKUP_TIME.equals(columnName)) {
-				values.add(LocalDateTime.now());
-			} else if (COLUMN_BACKUP_REMARK.equals(columnName)) {
-				values.add(backupRemark);
-			} else if (COLUMN_BACKUP_ID.equals(columnName)) {
-				values.add(backupId);
-			} else {
-				String fieldName = com.baomidou.mybatisplus.core.toolkit.StringUtils.underlineToCamel(columnName);
-				ColumnCache columnCache = sourceColumnMap.get(fieldName.toUpperCase());
-				Object value = ReflectASMUtils.invokeGetter(entity, fieldName);
-				if (Objects.nonNull(columnCache) && Objects.nonNull(columnCache.getMapping())) {
-					value = JacksonUtils.to(value);
-				}
-				values.add(value);
+		// 原表字段
+		Map<String, ColumnCache> entityColumnMap = LambdaUtils.getColumnMap(entity.getClass());
+		List<String> backupFields = new ArrayList<>();
+		List<Object> backupFieldValues = new ArrayList<>();
+		entityColumnMap.entrySet().forEach(e -> {
+			ColumnCache columnCache = e.getValue();
+			String entityFieldName = com.baomidou.mybatisplus.core.toolkit.StringUtils.underlineToCamel(columnCache.getColumn());
+			Object fieldValue = ReflectASMUtils.invokeGetter(entity, entityFieldName);
+			if (Objects.nonNull(columnCache) && Objects.nonNull(columnCache.getMapping())) {
+				fieldValue = JacksonUtils.to(fieldValue);
 			}
+			backupFields.add(columnCache.getColumn());
+			backupFieldValues.add(fieldValue);
+		});
+		// 备份表固定字段
+		BackupTableColumns_MySQL.forEach(tc -> {
+			if (COLUMN_BACKUP_OPERATOR.equals(tc.getColumnName())) {
+				backupFields.add(tc.getColumnName());
+				backupFieldValues.add(backupOperator);
+			} else if (COLUMN_BACKUP_TIME.equals(tc.getColumnName())) {
+				backupFields.add(tc.getColumnName());
+				backupFieldValues.add(LocalDateTime.now());
+			} else if (COLUMN_BACKUP_REMARK.equals(tc.getColumnName())) {
+				backupFields.add(tc.getColumnName());
+				backupFieldValues.add(backupRemark);
+			}
+		});
+		this.mySQLMapper.insertRow(backupTableName, backupFields, backupFieldValues);
+	}
+
+	@Override
+	public void deleteBackupByIds(List<Long> backupIds, Class<?> entityClass) {
+		BackupTable anno = entityClass.getAnnotation(BackupTable.class);
+		if (anno == null) {
+			throw new RuntimeException("The entity '" + entityClass.getName() + "' not annotationed by @BackupTable");
 		}
-		this.mySQLMapper.insertRow(backupTableName, columns, values);
+		TableName annoTableName = entityClass.getAnnotation(TableName.class);
+		if (annoTableName == null) {
+			throw new RuntimeException("The entity '" + entityClass.getName() + "' not annotationed by @TableName");
+		}
+		String backupTableName = IDbType.getBackupTableName(annoTableName.value());
+		this.mySQLMapper.deleteBackupByIds(backupTableName, backupIds);
 	}
 }

@@ -1,6 +1,5 @@
 package com.ruoyi.article.mapper;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -17,9 +16,6 @@ import com.ruoyi.article.domain.CmsArticleDetail;
  */
 public interface CmsArticleDetailMapper extends BaseMapper<CmsArticleDetail> {
 
-	@Select("SELECT * FROM cms_article_detail_backup WHERE content_id = #{contentId}")
-	CmsArticleDetail selectBackupByContentId(@Param("contentId") Long contentId);
-	
-	@Delete("DELETE FROM cms_article_detail_backup WHERE content_id = #{contentId}")
-	Long deleteBackupByContentId(@Param("contentId") Long contentId);
+	@Select("SELECT backup_id FROM cms_article_detail_backup WHERE content_id = #{contentId}")
+	Long selectBackupIdByContentId(@Param("contentId") Long contentId);
 }

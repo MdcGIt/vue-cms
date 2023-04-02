@@ -95,21 +95,20 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 
 	@Override
 	public void delete() {
+		this.backup();
 		super.delete();
 		if (this.hasExtendEntity()) {
-			this.getArticleService().removeById(this.getExtendEntity().getContentId());
+			this.getArticleService().removeById(this.getContentEntity().getContentId());
 		}
-		this.backup();
 	}
-	
+
 	@Override
-	public Long backup() {
-		Long backupId = super.backup();
+	public void backup() {
+		super.backup();
 		if (this.hasExtendEntity()) {
-			CmsArticleDetail extendEntity = this.getExtendEntity();
-			this.getArticleService().backup(extendEntity, backupId, this.getOperator().getUsername());
+			CmsArticleDetail extendEntity = this.getArticleService().getById(this.getContentEntity().getContentId());
+			this.getArticleService().backup(extendEntity, this.getOperator().getUsername());
 		}
-		return backupId;
 	}
 
 	@Override

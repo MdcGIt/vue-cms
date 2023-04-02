@@ -116,20 +116,22 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 
 	@Override
 	public void delete() {
+		this.backup();
 		super.delete();
 		if (this.hasExtendEntity()) {
-			this.getVideoService().removeBatchByIds(this.getExtendEntity().stream().map(CmsVideo::getVideoId).toList());
+			this.getVideoService().remove(new LambdaQueryWrapper<CmsVideo>().eq(CmsVideo::getContentId,
+					this.getContentEntity().getContentId()));
 		}
-		this.backup();
 	}
 
 	@Override
-	public Long backup() {
-		Long backupId = super.backup();
+	public void backup() {
+		super.backup();
 		if (this.hasExtendEntity()) {
-			this.getExtendEntity().forEach(v -> this.getVideoService().backup(v, backupId, this.getOperator().getUsername()));
+			this.getVideoService().lambdaQuery().eq(CmsVideo::getContentId, this.getContentEntity().getContentId())
+					.list()
+					.forEach(video -> this.getVideoService().backup(video, this.getOperator().getUsername()));
 		}
-		return backupId;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.ruoyi.common.mybatisplus.db;
 
+import java.util.List;
+
 public interface IDbType {
 	
 	static final String COLUMN_BACKUP_ID = "backup_id";
@@ -33,7 +35,7 @@ public interface IDbType {
 	 * @param backupOperator
 	 * @param backupRemark
 	 */
-	<T> void backup(T entity, Long backupId, String backupOperator, String backupRemark);
+	<T> void backup(T entity, String backupOperator, String backupRemark);
 
 	/**
 	 * 恢复备份数据
@@ -42,4 +44,13 @@ public interface IDbType {
 	 * @param entityClazz
 	 */
 	void recover(Long backupId, Class<?> entityClazz);
+
+	/**
+	 * 删除备份数据
+	 * 
+	 * @param backupIds
+	 * @param entityClass
+	 * @return
+	 */
+	void deleteBackupByIds(List<Long> backupIds, Class<?> entityClass);
 }

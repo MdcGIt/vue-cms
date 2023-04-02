@@ -71,17 +71,24 @@ public class BackupTableService implements CommandLineRunner {
 	 * @param backupOperator
 	 * @param backupRemark
 	 */
-	public <T> void backup(T entity, Long backupId, String backupOperator, String backupRemark) {
+	public <T> void backup(T entity, String backupOperator, String backupRemark) {
 		DbType dbType = StringUtils.isEmpty(dbTypeStr) ? DbType.MYSQL : DbType.getDbType(dbTypeStr);
 		this.dbTypes.stream().filter(dt -> dbType.getDb().equals(dt.getType())).findFirst().ifPresentOrElse(
-				dt -> dt.backup(entity, backupId, backupOperator, backupRemark),
+				dt -> dt.backup(entity, backupOperator, backupRemark),
 				() -> log.warn("IDbType not found: " + dbTypeStr));
 	}
 
-	public void recover(Long backupId, Class<?> entityClazz) {
+	public void recover(Long backupId, Class<?> entityClass) {
 		DbType dbType = StringUtils.isEmpty(dbTypeStr) ? DbType.MYSQL : DbType.getDbType(dbTypeStr);
 		this.dbTypes.stream().filter(dt -> dbType.getDb().equals(dt.getType())).findFirst().ifPresentOrElse(
-				dt -> dt.recover(backupId, entityClazz),
+				dt -> dt.recover(backupId, entityClass),
+				() -> log.warn("IDbType not found: " + dbTypeStr));
+	}
+
+	public void deleteByBackupIds(List<Long> backupIds, Class<?> entityClass) {
+		DbType dbType = StringUtils.isEmpty(dbTypeStr) ? DbType.MYSQL : DbType.getDbType(dbTypeStr);
+		this.dbTypes.stream().filter(dt -> dbType.getDb().equals(dt.getType())).findFirst().ifPresentOrElse(
+				dt -> dt.deleteBackupByIds(backupIds, entityClass),
 				() -> log.warn("IDbType not found: " + dbTypeStr));
 	}
 

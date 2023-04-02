@@ -124,24 +124,14 @@
                 :page.sync="queryParams.pageNum"
                 :limit.sync="queryParams.pageSize"
                 @pagination="loadRecyclecontentRecycleList" />
-    <!-- 栏目选择组件 -->
-    <cms-catalog-selector
-      :open="openCatalogSelector"
-      :showCopyToolbar="false"
-      @ok="handleCatalogSelectorOk"
-      @close="handleCatalogSelectorClose"></cms-catalog-selector>
   </div>
 </template>
 <script>
 import { getContentTypes } from "@/api/contentcore/catalog";
-import { getRecycleContentList, recoverRecycleContent } from "@/api/contentcore/recycle";
-import CMSCatalogSelector from "@/views/cms/contentcore/catalogSelector";
+import { getRecycleContentList, recoverRecycleContent, deleteRecycleContents } from "@/api/contentcore/recycle";
 
 export default {
   name: "CMScontentRecycleList",
-  components: { 
-    'cms-catalog-selector': CMSCatalogSelector
-  },
   dicts: ['CMSContentStatus'],
   props: {
     cid: {
@@ -250,9 +240,9 @@ export default {
       this.handleQuery();
     },
     handleDelete (row) {
-      const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(row => row.contentId);
+      const backupIds = row.backupId ? [ row.backupId ] : this.selectedRows.map(row => row.backupId);
       this.$modal.confirm("是否确认删除?").then(function () {
-        return delRecycleContent(contentIds);
+        return deleteRecycleContents(backupIds);
       }).then(() => {
         this.loadRecyclecontentRecycleList();
         this.$modal.msgSuccess("删除成功");
@@ -265,19 +255,10 @@ export default {
     },
     handleRecover(row) {
       const backupIds = row.backupId ? [ row.backupId ] : this.selectedRows.map(row => row.backupId);
-      recoverRecycleContent({ backupIds: backupIds }).then(response => {
+      recoverRecycleContent(backupIds).then(response => {
         this.loadRecyclecontentRecycleList();
         this.$modal.msgSuccess("操作成功");
       });
-    },
-    handleRecoverToCatalog() {
-
-    },
-    handleCatalogSelectorOk(catalogs) {
-      
-    },
-    handleCatalogSelectorClose() {
-      this.openCatalogSelector = false; 
     }
   }
 };

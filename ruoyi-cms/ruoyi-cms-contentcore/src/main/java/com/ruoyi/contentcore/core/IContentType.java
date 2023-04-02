@@ -77,9 +77,18 @@ public interface IContentType extends Comparable<IContentType> {
     /**
      * 恢复内容扩展实体备份表数据
      * 
-     * @param content
+     * @param contentId
      */
-	default public void recover(CmsContent content) {
+	default public void recover(Long contentId) {
+		
+	}
+
+	/**
+	 * 删除内容扩展实体备份表数据
+	 * 
+	 * @param contentId
+	 */
+	default public void deleteBackups(Long contentId) {
 		
 	}
 }

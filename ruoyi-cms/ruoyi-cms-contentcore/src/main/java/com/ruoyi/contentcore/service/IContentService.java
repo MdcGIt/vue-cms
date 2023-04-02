@@ -14,6 +14,8 @@ import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public interface IContentService extends IBackupService<CmsContent> {
 
 	/**
@@ -23,6 +25,9 @@ public interface IContentService extends IBackupService<CmsContent> {
 	 * @return
 	 */
 	public AsyncTask addContent(IContent<?> content);
+
+
+	public void addContent0(IContent<?> content);
 	
 	/**
 	 * 更新内容
@@ -39,6 +44,15 @@ public interface IContentService extends IBackupService<CmsContent> {
 	 * @return
 	 */
 	public void deleteContents(List<Long> contentIds, LoginUser operator);
+
+
+	/**
+	 * 恢复回收站删除的内容到指定栏目
+	 * 
+	 * @param dto
+	 * @param operator
+	 */
+	void recoverContents(List<Long> backupIds, LoginUser operator);
 	
 	/**
 	 * 删除指定栏目内容
@@ -150,6 +164,10 @@ public interface IContentService extends IBackupService<CmsContent> {
 	 */
 	public void deleteStaticFiles(CmsContent contentEntity) throws IOException;
 
-
-	public void addContent0(IContent<?> content);
+	/**
+	 * 删除备份表数据
+	 * 
+	 * @param backupIds
+	 */
+	public void deleteRecycleContents(@NotEmpty List<Long> backupIds);
 }

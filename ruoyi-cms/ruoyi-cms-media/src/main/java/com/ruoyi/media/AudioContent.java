@@ -104,20 +104,22 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 
 	@Override
 	public void delete() {
+		this.backup();
 		super.delete();
 		if (this.hasExtendEntity()) {
-			this.getAudioService().removeBatchByIds(getExtendEntity().stream().map(CmsAudio::getAudioId).toList());
+			this.getAudioService().remove(new LambdaQueryWrapper<CmsAudio>().eq(CmsAudio::getContentId,
+					this.getContentEntity().getContentId()));
 		}
-		this.backup();
 	}
 
 	@Override
-	public Long backup() {
-		Long backupId = super.backup();
+	public void backup() {
+		super.backup();
 		if (this.hasExtendEntity()) {
-			this.getExtendEntity().forEach(audio -> getAudioService().backup(audio, backupId, this.getOperator().getUsername()));
+			this.getAudioService().lambdaQuery().eq(CmsAudio::getContentId, this.getContentEntity().getContentId())
+					.list()
+					.forEach(audio -> getAudioService().backup(audio, this.getOperator().getUsername()));
 		}
-		return backupId;
 	}
 
 	@Override

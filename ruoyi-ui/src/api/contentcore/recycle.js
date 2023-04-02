@@ -8,10 +8,18 @@ export function getRecycleContentList(query) {
   })
 }
 
-export function recoverRecycleContent(data) {
+export function recoverRecycleContent(backupIds) {
   return request({
     url: '/cms/content/recycle/recover',
     method: 'post',
-    data: data
+    data: backupIds
+  })
+}
+
+export function deleteRecycleContents(backupIds) {
+  return request({
+    url: '/cms/content/recycle',
+    method: 'delete',
+    data: backupIds
   })
 }

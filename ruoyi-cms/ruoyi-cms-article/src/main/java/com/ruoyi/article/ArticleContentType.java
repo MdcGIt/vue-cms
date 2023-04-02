@@ -10,6 +10,7 @@ import com.ruoyi.article.domain.CmsArticleDetail;
 import com.ruoyi.article.domain.dto.ArticleDTO;
 import com.ruoyi.article.domain.vo.ArticleVO;
 import com.ruoyi.article.mapper.CmsArticleDetailMapper;
+import com.ruoyi.article.service.IArticleService;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -44,6 +45,8 @@ public class ArticleContentType implements IContentType {
     private final CmsArticleDetailMapper articleMapper;
     
     private final ICatalogService catalogService;
+    
+    private final IArticleService articleService;
     
     private final IPublishPipeService publishPipeService;
     
@@ -95,6 +98,9 @@ public class ArticleContentType implements IContentType {
 		content.setContentEntity(contentEntity);
 		content.setExtendEntity(extendEntity);
 		content.setParams(dto.getParams());
+		if (content.hasExtendEntity() && StringUtils.isEmpty(extendEntity.getContentHtml())) {
+			throw CommonErrorCode.NOT_EMPTY.exception("contentHtml");
+		}
 		return content;
 	}
 
@@ -129,11 +135,18 @@ public class ArticleContentType implements IContentType {
 	}
 	
 	@Override
-	public void recover(CmsContent content) {
-		CmsArticleDetail articleDetail = this.articleMapper.selectBackupByContentId(content.getContentId());
-		if (articleDetail != null) {
-			this.articleMapper.insert(articleDetail);
-			this.articleMapper.deleteBackupByContentId(content.getContentId());
+	public void recover(Long contentId) {
+		Long backupId = this.articleMapper.selectBackupIdByContentId(contentId);
+		if (IdUtils.validate(backupId)) {
+			this.articleService.recover(backupId, CmsArticleDetail.class);
+		}
+	}
+	
+	@Override
+	public void deleteBackups(Long contentId) {
+		Long backupId = this.articleMapper.selectBackupIdByContentId(contentId);
+		if (IdUtils.validate(backupId)) {
+			this.articleService.deleteBackups(List.of(backupId), CmsArticleDetail.class);
 		}
 	}
 }

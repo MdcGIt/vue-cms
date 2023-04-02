@@ -22,19 +22,37 @@ public class TableColumn {
 	 */
 	public static final String NO = "NO";
 
+	/**
+	 * 字段名称
+	 */
 	private String columnName;
 
+	/**
+	 * 字段类型
+	 */
 	private String columnType;
 
+	/**
+	 * 是否可为空
+	 */
 	private String isNullable;
 
+	/**
+	 * 主键标识
+	 */
 	private String columnKey;
 	
-	public TableColumn(String columnName, String columnType, String isNullable, String columnKey) {
+	/**
+	 * 是否自增
+	 */
+	private String autoIncrement;
+	
+	public TableColumn(String columnName, String columnType, String isNullable, String columnKey, String autoIncrement) {
 		this.columnName = columnName;
 		this.columnType = columnType;
 		this.isNullable = isNullable;
 		this.columnKey = columnKey;
+		this.autoIncrement = autoIncrement;
 	}
 
 	public boolean isPrimary() {

@@ -33,6 +33,7 @@ public interface MySQLMapper {
 			CREATE TABLE `${tableName}` (
 				<foreach item="column" collection="columns" open="" separator="," close="">
 				`${column.columnName}` ${column.columnType} <choose><when test=' column.isNullable == "NO" '>NOT NULL</when><otherwise>DEFAULT NULL</otherwise></choose>
+				<if test = 'column.autoIncrement == "YES"'> AUTO_INCREMENT</if>
 				</foreach>,
 				PRIMARY KEY (
 				<foreach item="primaryKey" collection="primaryKeys" open="" separator="," close="">
@@ -79,4 +80,15 @@ public interface MySQLMapper {
 
 	@Delete("DELETE FROM `${backupTableName}` WHERE backup_id = #{backupId}")
 	public void deleteBackupById(@Param("backupTableName") String backupTableName, @Param("backupId") Long backupId);
+
+	@Delete("""
+			<script>
+			DELETE FROM `${backupTableName}` WHERE backup_id in (
+			<foreach item="backupId" collection="backupIds" separator=",">
+			#{backupId}
+			</foreach>
+			)
+			</script>
+			""")
+	public void deleteBackupByIds(@Param("backupTableName") String backupTableName, @Param("backupIds") List<Long> backupIds);
 }

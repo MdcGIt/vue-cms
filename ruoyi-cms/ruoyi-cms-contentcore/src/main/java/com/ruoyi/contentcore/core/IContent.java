@@ -62,10 +62,8 @@ public interface IContent<T> {
 
 	/**
 	 * 备份数据到备份表
-	 * 
-	 * @return backupId
 	 */
-	public Long backup();
+	public void backup();
 
 	/**
 	 * 发布内容

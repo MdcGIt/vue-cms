@@ -84,20 +84,22 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 
 	@Override
 	public void delete() {
+		this.backup();
 		super.delete();
 		if (this.hasExtendEntity()) {
-			this.getImageService().removeBatchByIds(this.getExtendEntity().stream().map(CmsImage::getImageId).toList());
+			this.getImageService().remove(new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId,
+					this.getContentEntity().getContentId()));
 		}
-		this.backup();
 	}
 
 	@Override
-	public Long backup() {
-		Long backupId = super.backup();
+	public void backup() {
+		super.backup();
 		if (this.hasExtendEntity()) {
-			this.getExtendEntity().forEach(v -> this.getImageService().backup(v, backupId, this.getOperator().getUsername()));
+			this.getImageService().lambdaQuery().eq(CmsImage::getContentId, this.getContentEntity().getContentId())
+					.list()
+					.forEach(image -> this.getImageService().backup(image, this.getOperator().getUsername()));
 		}
-		return backupId;
 	}
 
 	@Override

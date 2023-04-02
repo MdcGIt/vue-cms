@@ -189,10 +189,8 @@ public abstract class AbstractContent<T> implements IContent<T> {
 	}
 	
 	@Override
-	public Long backup() {
-		long backupId = IdUtils.getSnowflakeId();
-		this.getContentService().backup(this.getContentEntity(), backupId, this.getOperator().getUsername());
-		return backupId;
+	public void backup() {
+		this.getContentService().backup(this.getContentEntity(), this.getOperator().getUsername());
 	}
 
 	@Override
