@@ -44,7 +44,7 @@ public class TagWordServiceImpl extends ServiceImpl<TagWordMapper, TagWord> impl
     }
 	
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteTagWords(List<Long> tagWordIds) {
 		this.removeByIds(tagWordIds);
 	}

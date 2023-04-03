@@ -232,7 +232,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void copy(CopyContentDTO dto) {
 		List<Long> contentIds = dto.getContentIds();
 		for (Long contentId : contentIds) {
@@ -258,7 +258,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void move(MoveContentDTO dto) {
 		Long[] contentIds = dto.getContentIds();
 		for (Long contentId : contentIds) {
@@ -283,7 +283,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void setTop(SetTopContentDTO dto) {
 		List<CmsContent> contents = this.listByIds(dto.getContentIds());
 		for (CmsContent c : contents) {
@@ -295,7 +295,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void cancelTop(List<Long> contentIds, LoginUser operator) {
 		List<CmsContent> contents = this.listByIds(contentIds);
 		for (CmsContent c : contents) {
@@ -307,7 +307,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void offline(List<Long> contentIds, LoginUser operator) {
 		List<CmsContent> contents = this.listByIds(contentIds);
 		for (CmsContent c : contents) {
@@ -321,7 +321,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void sort(SortContentDTO dto) {
 		CmsContent c = this.getById(dto.getContentId());
 		IContentType ct = ContentCoreUtils.getContentType(c.getContentType());
@@ -331,7 +331,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void archive(List<Long> contentIds, LoginUser operator) {
 
 	}

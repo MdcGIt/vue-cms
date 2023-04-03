@@ -10,7 +10,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-s-promotion" size="mini" @click="handleExecute">执行</el-button>
+        <el-button v-loading="loading" type="primary" icon="el-icon-s-promotion" size="mini" @click="handleExecute">执行</el-button>
       </el-form-item>
     </el-form>
 
@@ -22,7 +22,6 @@
   </div>
 </template>
 <script>
-import { Loading } from 'element-ui';
 import { executeGroovySrcity } from "@/api/system/groovy";
 
 export default {
@@ -46,20 +45,13 @@ export default {
     handleExecute: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.startLoading();
+          this.loading = true;
           executeGroovySrcity(this.form).then(response => {
             this.$modal.msgSuccess(this.$t('Common.Success'));
             this.resultString = response.data;
-            this.loading.close();
+            this.loading = false;
           });
         }
-      });
-    },
-    startLoading: function() {
-      this.loading = Loading.service({
-        lock: true,
-        text: '执行中...',
-        background: 'rgba(0, 0, 0, 0.7)'
       });
     }
   }

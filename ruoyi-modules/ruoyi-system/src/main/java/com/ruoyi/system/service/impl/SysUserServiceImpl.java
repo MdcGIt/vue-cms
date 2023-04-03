@@ -202,7 +202,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	 * @return 结果
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void updateUser(SysUser user) {
 		SysUser db = this.getById(user.getUserId());
 		Assert.notNull(db, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(user.getUserId()));
@@ -239,7 +239,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	 * @param roleIds 角色组
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void insertUserAuth(final Long userId, final List<Long> roleIds) {
 		userRoleMapper.delete(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getUserId, userId));
 		if (StringUtils.isNotEmpty(roleIds)) {
@@ -289,7 +289,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	 * @return 结果
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteUserByIds(List<Long> userIds) {
 		for (Long userId : userIds) {
 			Assert.isFalse(SecurityUtils.isSuperAdmin(userId), SysErrorCode.SUPERADMIN_DELETE::exception);

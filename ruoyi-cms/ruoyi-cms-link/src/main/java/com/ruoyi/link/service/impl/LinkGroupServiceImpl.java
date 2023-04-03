@@ -22,7 +22,7 @@ public class LinkGroupServiceImpl extends ServiceImpl<CmsLinkGroupMapper, CmsLin
 	private final ILinkService linkService;
 	
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public boolean deleteLinkGroup(List<Long> linkGroupIds) {
 		for (Long linkGroupId : linkGroupIds) {
 			this.removeById(linkGroupId);
