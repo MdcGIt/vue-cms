@@ -144,4 +144,12 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * @param operator
 	 */
 	void saveCatalogExtends(Long catalogId, Map<String, String> configs, String operator);
+	
+	/**
+	 * 栏目排序
+	 * 
+	 * @param catalogId
+	 * @param sort
+	 */
+	void sortCatalog(Long catalogId, Integer sort);
 }

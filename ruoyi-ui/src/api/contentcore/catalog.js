@@ -110,3 +110,10 @@ export function changeVisible(catlaogId, visible) {
     data: { catalogId: catlaogId, visible: visible }
   })
 }
+export function sortCatalog(data) {
+  return request({
+    url: '/cms/catalog/sort',
+    method: 'put',
+    data: data
+  })
+}

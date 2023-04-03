@@ -89,6 +89,13 @@
             inactive-value="N">
           </el-switch>
         </el-form-item>
+        <el-form-item label="回收站内容保留天数"
+                      prop="RecycleKeepDays">
+          <el-input-number v-model="form_extend.RecycleKeepDays" controls-position="right" :min="0"></el-input-number>
+          <div style="color: #909399;font-size:12px;line-height: 30px;">
+            <i class="el-icon-info mr5"></i>永久保留填0
+          </div>
+        </el-form-item>
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">

@@ -38,6 +38,7 @@ import com.ruoyi.contentcore.domain.dto.CatalogDTO;
 import com.ruoyi.contentcore.domain.dto.ChangeCatalogVisibleDTO;
 import com.ruoyi.contentcore.domain.dto.PublishCatalogDTO;
 import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
+import com.ruoyi.contentcore.domain.dto.SortCatalogDTO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
@@ -184,7 +185,7 @@ public class CatalogController extends BaseRestController {
 	public R<?> treeData() {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<CmsCatalog>().eq(CmsCatalog::getSiteId,
-				site.getSiteId());
+				site.getSiteId()).orderByAsc(CmsCatalog::getSortFlag);
 		List<CmsCatalog> catalogs = this.catalogService.list(q);
 		List<TreeNode<String>> treeData = catalogService.buildCatalogTreeData(catalogs);
 		return R.ok(Map.of("rows", treeData, "siteName", site.getName()));
@@ -237,7 +238,8 @@ public class CatalogController extends BaseRestController {
 		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
 
-		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(), UseType.Catalog);
+		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(),
+				UseType.Catalog);
 		configProps.put("siteId", catalog.getSiteId());
 		configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(this.siteService.getSite(catalog.getSiteId())));
 		return R.ok(configProps);
@@ -294,5 +296,14 @@ public class CatalogController extends BaseRestController {
 		}
 		AsyncTask task = this.catalogService.moveCatalog(fromCatalog, toCatalog);
 		return R.ok(task.getTaskId());
+	}
+
+	@PutMapping("/sort")
+	public R<?> sortCatalog(@RequestBody SortCatalogDTO dto) {
+		if (dto.getSort() == 0) {
+			return R.fail("排序数值不能为0");
+		}
+		this.catalogService.sortCatalog(dto.getCatalogId(), dto.getSort());
+		return R.ok();
 	}
 }

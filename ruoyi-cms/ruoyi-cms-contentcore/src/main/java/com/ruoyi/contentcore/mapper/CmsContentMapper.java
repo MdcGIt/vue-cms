@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -26,7 +27,7 @@ public interface CmsContentMapper extends BaseMapper<CmsContent> {
 	public Page<RecycleContentVO> selectRecycleContentList(IPage<RecycleContentVO> page, @Param("siteId") Long siteId,
 			@Param("catalogId") Long catalogId, @Param("contentType") String contentType, @Param("status") String status,
 			@Param("title") String title);
-
+	
 	/**
 	 * 获取内容备份表数据
 	 * 
@@ -43,4 +44,23 @@ public interface CmsContentMapper extends BaseMapper<CmsContent> {
 			</script>
 			""")
 	public List<RecycleContentVO> selectRecycleContentByBackupIds(@Param("backupIds") List<Long> backupIds);
+	
+	/**
+	 * 获取指定备份时间之前的内容备份表数据总数
+	 * 
+	 * @param backupTime
+	 * @return
+	 */
+	@Select("SELECT count(*) FROM cms_content_backup WHERE backup_time < #{backupTime}")
+	public Long selectRecycleContentCountBefore(@Param("backupTime") LocalDateTime backupTime);
+	
+	/**
+	 * 获取指定备份时间之前的内容备份表数据
+	 * 
+	 * @param page
+	 * @param backupTime
+	 * @return
+	 */
+	@Select("SELECT * FROM cms_content_backup WHERE backup_time < #{backupTime}")
+	public List<RecycleContentVO> selectRecycleContentBefore(IPage<RecycleContentVO> page, @Param("backupTime") LocalDateTime backupTime);
 }

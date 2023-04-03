@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.async.AsyncTaskManager;
@@ -68,6 +69,8 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	private final ISiteService siteService;
 
 	private final RedisCache redisCache;
+
+	private final CmsCatalogMapper catalogMapper;
 
 	private final CmsContentMapper contentMapper;
 
@@ -298,7 +301,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		this.redisCache.deleteObject(CACHE_PREFIX_ID + catalog.getCatalogId());
 		this.redisCache.deleteObject(CACHE_PREFIX_ALIAS + catalog.getSiteId() + ":" + catalog.getAlias());
 	}
-
+	
 	private void setCatalogCache(CmsCatalog catalog) {
 		this.redisCache.setCacheObject(CACHE_PREFIX_ID + catalog.getCatalogId(), catalog);
 		this.redisCache.setCacheObject(CACHE_PREFIX_ALIAS + catalog.getSiteId() + ":" + catalog.getAlias(), catalog);
@@ -391,7 +394,8 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		AsyncTaskManager.setTaskProgressInfo(40, "更新转移栏目及其子栏目内容");
 		invokedCatalogs.values().forEach(catalog -> {
 			if (toCatalog == null || catalog.getCatalogId() != toCatalog.getCatalogId()) {
-				new LambdaUpdateChainWrapper<>(contentMapper).set(CmsContent::getCatalogAncestors, catalog.getAncestors())
+				new LambdaUpdateChainWrapper<>(contentMapper)
+						.set(CmsContent::getCatalogAncestors, catalog.getAncestors())
 						.eq(CmsContent::getCatalogId, catalog.getCatalogId()).update();
 			}
 		});
@@ -418,6 +422,48 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		catalog.setConfigProps(configs);
 		catalog.updateBy(operator);
 		this.updateById(catalog);
+		this.clearCache(catalog);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void sortCatalog(Long catalogId, Integer sort) {
+		CmsCatalog catalog = this.getCatalog(catalogId);
+		if (sort < 0) {
+			// 上移
+			List<CmsCatalog> beforeCatalogs = this.lambdaQuery()
+					.select(CmsCatalog::getSiteId, CmsCatalog::getCatalogId, CmsCatalog::getAlias,
+							CmsCatalog::getSortFlag)
+					.eq(CmsCatalog::getSiteId, catalog.getSiteId()).eq(CmsCatalog::getParentId, catalog.getParentId())
+					.lt(CmsCatalog::getSortFlag, catalog.getSortFlag()).orderByDesc(CmsCatalog::getSortFlag)
+					.page(new Page<>(1, Math.abs(sort), false)).getRecords();
+			if (beforeCatalogs.size() == 0) {
+				return; // 无需排序
+			}
+			CmsCatalog targetCatalog = beforeCatalogs.get(beforeCatalogs.size() - 1);
+			// 更新排序值
+			this.catalogMapper.catalogSortPlusOne(targetCatalog.getSortFlag(), catalog.getSortFlag());
+			this.lambdaUpdate().set(CmsCatalog::getSortFlag, targetCatalog.getSortFlag())
+					.eq(CmsCatalog::getCatalogId, catalog.getCatalogId()).update();
+			beforeCatalogs.forEach(this::clearCache);
+		} else {
+			// 下移
+			List<CmsCatalog> afterCatalogs = this.lambdaQuery()
+					.select(CmsCatalog::getSiteId, CmsCatalog::getCatalogId, CmsCatalog::getAlias,
+							CmsCatalog::getSortFlag)
+					.eq(CmsCatalog::getSiteId, catalog.getSiteId()).eq(CmsCatalog::getParentId, catalog.getParentId())
+					.gt(CmsCatalog::getSortFlag, catalog.getSortFlag()).orderByAsc(CmsCatalog::getSortFlag)
+					.page(new Page<>(1, sort, false)).getRecords();
+			if (afterCatalogs.size() == 0) {
+				return; // 无需排序
+			}
+			CmsCatalog targetCatalog = afterCatalogs.get(afterCatalogs.size() - 1);
+			// 更新排序值
+			this.catalogMapper.catalogSortMinusOne(catalog.getSortFlag(), targetCatalog.getSortFlag());
+			this.lambdaUpdate().set(CmsCatalog::getSortFlag, targetCatalog.getSortFlag())
+					.eq(CmsCatalog::getCatalogId, catalog.getCatalogId()).update();
+			afterCatalogs.forEach(this::clearCache);
+		}
 		this.clearCache(catalog);
 	}
 }
