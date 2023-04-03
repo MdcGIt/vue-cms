@@ -33,10 +33,15 @@ public class GroovyController {
 	@Priv(type = AdminUserType.TYPE, value = "sys:groovy:exec")
 	@PostMapping("/exec")
 	public R<?> execGroovyScript(@RequestBody ScriptBody scriptBody) throws Exception {
-		BaseGroovyScript script = GroovyScriptFactory.getInstance().loadNewInstance(scriptBody.getScriptText());
 		StringWriter writer = new StringWriter();
-		script.setPrintWriter(new PrintWriter(writer));
-		script.run();
+		PrintWriter printWriter = new PrintWriter(writer);
+		try {
+			BaseGroovyScript script = GroovyScriptFactory.getInstance().loadNewInstance(scriptBody.getScriptText());
+			script.setPrintWriter(printWriter);
+			script.run();
+		} catch (Exception e) {
+			e.printStackTrace(printWriter);
+		}
 		return R.ok(writer.toString());
 	}
 	
