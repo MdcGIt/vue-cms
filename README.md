@@ -37,7 +37,6 @@ services:
 ```
 
 ``
-`- '33066:3306'`
 - 修改redis配置密码和端口，请与application-dev.yml保持一致：
 
 ```
