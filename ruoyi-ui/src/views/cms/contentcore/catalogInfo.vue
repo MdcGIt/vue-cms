@@ -50,14 +50,36 @@
                     @click="handleMoveCatalog">移动</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-popconfirm title="删除栏目会删除包括子栏目下所有数据确定删除吗？"
-                        @confirm="handleDelete">
-            <el-button type="danger" 
-                        icon="el-icon-delete"
-                        size="mini"
-                        plain
-                        :disabled="!this.catalogId"
-                        slot="reference">删除</el-button>
+        <el-popover
+          width="226"
+          :disabled="!this.catalogId"
+          v-model="showSortPop">
+          <el-input-number v-model="sortValue" size="small" style="width:200px;" />
+          <div style="color: #909399;font-size:12px;line-height: 30px;">
+            <i class="el-icon-info mr5"></i>正数下移，负数上移
+          </div>
+          <div style="text-align: right; margin-top: 5px;">
+            <el-button size="mini" type="text" @click="handleSortCatalogCancel">取消</el-button>
+            <el-button type="primary" size="mini" @click="handleSortCatalog">确定</el-button>
+          </div>
+          <el-button 
+            slot="reference" 
+            size="mini"
+            plain
+            type="primary"
+            icon="el-icon-edit"
+          >排序</el-button>
+        </el-popover>
+      </el-col>
+      <el-col :span="1.5">
+        <el-popconfirm title="删除栏目会删除包括子栏目下所有数据确定删除吗？" @confirm="handleDelete">
+            <el-button 
+              type="danger" 
+              icon="el-icon-delete"
+              size="mini"
+              plain
+              :disabled="!this.catalogId"
+              slot="reference">删除</el-button>
           </el-popconfirm>
       </el-col>
     </el-row>
@@ -296,6 +318,8 @@ export default {
       publishStatus: -1,
       publishPipeActiveName: "pc", // 当前选中的发布通道Tab
       catalogId: parseInt(this.cid),
+      showSortPop: false,
+      sortValue: 0,
       // 栏目信息表单
       form_info: {
         siteId: ""
@@ -474,7 +498,6 @@ export default {
     handleCatalogSelectorOk(catalogs) {
       if (this.catalogSelectorFor == 'MoveCatalog') {
         let toCatalog = "0";
-        console.log(catalogs)
         if (catalogs && catalogs.length > 0) {
           toCatalog = catalogs[0].id;
         }
@@ -504,6 +527,23 @@ export default {
     },
     handleContentSelectorClose() {
       this.openContentSelector = false;
+    },
+    handleSortCatalog() {
+      if (this.sortValue == 0) {
+        this.$modal.msgWarning("排序值不能为0");
+        return;
+      }
+      let data = { catalogId: this.catalogId, sort: this.sortValue }
+      catalogApi.sortCatalog(data).then(response => {
+          this.$modal.msgSuccess(response.msg);
+          this.showSortPop = false;
+          this.sortValue = 0;
+          this.$emit("update"); 
+      });
+    },
+    handleSortCatalogCancel() {
+      this.showSortPop = false;
+      this.sortValue = 0;
     }
   }
 };

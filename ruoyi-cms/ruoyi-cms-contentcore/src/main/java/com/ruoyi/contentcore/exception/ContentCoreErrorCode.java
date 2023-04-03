@@ -128,7 +128,12 @@ public enum ContentCoreErrorCode implements ErrorCode {
 	/**
 	 * 文件已存在
 	 */
-	FILE_ALREADY_EXISTS;
+	FILE_ALREADY_EXISTS,
+	
+	/**
+	 * 栏目排序值不能为0
+	 */
+	CATALOG_SORT_VALUE_ZERO;
 
 	@Override
 	public String value() {
