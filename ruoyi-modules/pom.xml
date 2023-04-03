@@ -22,6 +22,5 @@
 		<module>ruoyi-comment</module>
 		<module>ruoyi-vote</module>
 		<module>ruoyi-word</module>
-		<module>ruoyi-backup</module>
 	</modules>
 </project>
