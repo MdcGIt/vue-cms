@@ -67,7 +67,7 @@
             size="mini"
             plain
             type="primary"
-            icon="el-icon-edit"
+            icon="el-icon-sort"
           >排序</el-button>
         </el-popover>
       </el-col>

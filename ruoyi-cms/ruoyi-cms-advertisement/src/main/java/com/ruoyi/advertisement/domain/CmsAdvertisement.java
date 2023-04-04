@@ -31,6 +31,11 @@ public class CmsAdvertisement extends BaseEntity {
     private Long advertisementId;
 	
 	/**
+	 * 所属站点ID
+	 */
+	private Long siteId;
+	
+	/**
 	 * 所属广告版位ID（等同页面部件ID）
 	 */
 	private Long adSpaceId;

@@ -2,6 +2,7 @@ package com.ruoyi.advertisement.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.advertisement.IAdvertisementType;
@@ -12,8 +13,13 @@ import com.ruoyi.advertisement.pojo.dto.AdvertisementDTO;
  * 广告数据管理Service
  */
 public interface IAdvertisementService extends IService<CmsAdvertisement> {
-	
-	
+
+	/**
+	 * 广告<ID, NAME>缓存集合
+	 * 
+	 * @return
+	 */
+	Map<String, String> getAdvertisementMap();
 	
 	/**
 	 * 添加广告数据

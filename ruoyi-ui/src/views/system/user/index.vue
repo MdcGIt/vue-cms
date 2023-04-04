@@ -29,46 +29,6 @@
       </el-col>
       <!--用户数据-->
       <el-col :span="20" :xs="24">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
-          <el-form-item :label="$t('System.User.UserName')" prop="userName">
-            <el-input
-              v-model="queryParams.userName"
-              :placeholder="$t('System.User.Placeholder.UserName')"
-              clearable
-              style="width: 140px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item :label="$t('System.User.PhoneNumber')" prop="phonenumber">
-            <el-input
-              v-model="queryParams.phonenumber"
-              :placeholder="$t('System.User.Placeholder.PhoneNumber')"
-              clearable
-              style="width: 140px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item :label="$t('System.User.Status')" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              :placeholder="$t('System.User.Placeholder.Status')"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="dict in dict.type.SysUserStatus"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-          </el-form-item>
-        </el-form>
-
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button
@@ -124,6 +84,45 @@
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
+        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px" style="float:right;">
+          <el-form-item :label="$t('System.User.UserName')" prop="userName">
+            <el-input
+              v-model="queryParams.userName"
+              :placeholder="$t('System.User.Placeholder.UserName')"
+              clearable
+              style="width: 140px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item :label="$t('System.User.PhoneNumber')" prop="phonenumber">
+            <el-input
+              v-model="queryParams.phonenumber"
+              :placeholder="$t('System.User.Placeholder.PhoneNumber')"
+              clearable
+              style="width: 140px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item :label="$t('System.User.Status')" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              :placeholder="$t('System.User.Placeholder.Status')"
+              clearable
+              style="width: 140px"
+            >
+              <el-option
+                v-for="dict in dict.type.SysUserStatus"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-form-item>
+        </el-form>
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />

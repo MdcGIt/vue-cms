@@ -66,28 +66,20 @@ export default {
       var series = Object.keys(datas).map(key => {
           var arr = datas[key];
           return {
-            name: 'key',
-            smooth: true,
+            name: key,
+            // smooth: true,
             type: 'line',
-            itemStyle: {
-              normal: {
-                color: '#3888fa',
-                lineStyle: {
-                  color: '#3888fa',
-                  width: 2
-                },
-                areaStyle: {
-                  color: '#f3f8ff'
-                }
-              }
-            },
+            stack: 'Total',
             data: arr,
-            animationDuration: 2800,
-            animationEasing: 'quadraticOut'
+            // animationDuration: 2800,
+            // animationEasing: 'quadraticOut'
           }
       });
+      console.log(legendDatas)
+      console.log(series)
       this.chart.setOption({
         xAxis: {
+          type: 'category',
           data: xAxisDatas,
           boundaryGap: false,
           axisTick: {
@@ -109,6 +101,7 @@ export default {
           padding: [5, 10]
         },
         yAxis: {
+          type: 'value',
           axisTick: {
             show: false
           }

@@ -31,6 +31,6 @@ public class StatController extends BaseRestController {
 	@GetMapping("/menu/tree")
 	public R<?> bindStatTreeData() {
 		List<TreeNode<String>> treeMenus = this.statService.getStatMenuTree();
-		return R.ok(TreeNode.build(treeMenus));
+		return R.ok(treeMenus);
 	}
 }

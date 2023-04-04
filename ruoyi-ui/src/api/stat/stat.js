@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function listStatTypes() {
+export function getStatMenuTreeData() {
   return request({
-    url: '/stat/tree',
+    url: '/stat/menu/tree',
     method: 'get'
   })
 }

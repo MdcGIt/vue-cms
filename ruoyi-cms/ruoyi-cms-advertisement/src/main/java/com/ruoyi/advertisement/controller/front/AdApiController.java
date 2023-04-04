@@ -12,7 +12,6 @@ import com.ruoyi.advertisement.domain.CmsAdViewLog;
 import com.ruoyi.advertisement.service.IAdvertisementStatService;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/adv")
