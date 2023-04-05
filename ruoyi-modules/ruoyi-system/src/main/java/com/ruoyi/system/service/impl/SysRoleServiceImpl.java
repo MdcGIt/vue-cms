@@ -95,7 +95,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 	 * @return 结果
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void insertRole(SysRole role) {
 		boolean checkRoleUnique = this.checkRoleUnique(role.getRoleName(), role.getRoleKey(), null);
 		Assert.isTrue(checkRoleUnique, () -> CommonErrorCode.DATA_CONFLICT.exception("RoleName,RoleKey"));
@@ -114,7 +114,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 	 * @return 结果
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void updateRole(SysRole role) {
 		SysRole db = this.getById(role.getRoleId());
 		Assert.notNull(db, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(role.getRoleId()));
@@ -158,7 +158,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 	 * @return 结果
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteRoleByIds(List<Long> roleIds) {
 		for (Long roleId : roleIds) {
 			SysRole role = this.getById(roleId);
@@ -199,7 +199,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 	 * @return 结果
 	 */
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void insertAuthUsers(Long roleId, List<Long> userIds) {
 		// 新增用户与角色管理
 		for (Long userId : userIds) {

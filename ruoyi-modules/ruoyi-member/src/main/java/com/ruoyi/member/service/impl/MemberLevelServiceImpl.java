@@ -26,7 +26,7 @@ public class MemberLevelServiceImpl extends ServiceImpl<MemberLevelMapper, Membe
 
 	@Override
 	public MemberLevel getMemberLevel(Long memberId, String levelType) {
-		MemberLevel memberLevel = this.redisCache.getCacheMapValue(CACHE_PREFIX + memberId, levelType, () -> {
+		return this.redisCache.getCacheObject(CACHE_PREFIX + memberId + ":" +levelType, () -> {
 			MemberLevel ml = this.lambdaQuery().eq(MemberLevel::getMemberId, memberId)
 					.eq(MemberLevel::getLevelType, levelType).one();
 			if (Objects.isNull(ml)) {
@@ -40,7 +40,6 @@ public class MemberLevelServiceImpl extends ServiceImpl<MemberLevelMapper, Membe
 			}
 			return ml;
 		});
-		return memberLevel;
 	}
 
 	@Override

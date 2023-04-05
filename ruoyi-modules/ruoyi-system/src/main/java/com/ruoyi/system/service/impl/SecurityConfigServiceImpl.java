@@ -76,7 +76,7 @@ public class SecurityConfigServiceImpl extends ServiceImpl<SysSecurityConfigMapp
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void changeConfigStatus(Long configId) {
 		SysSecurityConfig config = this.getById(configId);
 		Assert.notNull(config, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(configId));

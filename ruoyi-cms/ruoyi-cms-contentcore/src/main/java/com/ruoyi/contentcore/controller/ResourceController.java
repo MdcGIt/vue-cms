@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +36,7 @@ import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
 import com.ruoyi.contentcore.service.IResourceService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
+import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -85,6 +87,7 @@ public class ResourceController extends BaseRestController {
 					r.setSrc(resourceLink);
 				}
 				r.setInternalUrl(InternalDataType_Resource.getInternalUrl(r));
+				r.setFileSizeName(FileUtils.byteCountToDisplaySize(r.getFileSize()));
 			});
 		}
 		return bindDataTable(page);
@@ -129,7 +132,7 @@ public class ResourceController extends BaseRestController {
 		ResourceUploadDTO dto = ResourceUploadDTO.builder().site(site).file(multipartFile).build();
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		CmsResource resource = this.resourceService.addResource(dto);
-		resource.setSrc(SiteUtils.getResourcePrefix(site) + resource.getPath());
+		resource.setSrc(InternalUrlUtils.getActualPreviewUrl(resource.getInternalUrl()));
 		return R.ok(resource);
 	}
 

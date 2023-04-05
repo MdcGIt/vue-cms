@@ -61,7 +61,7 @@ public class TagWordGroupServiceImpl extends ServiceImpl<TagWordGroupMapper, Tag
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteTagWordGroups(List<Long> groupIds) {
 		for (Long groupId : groupIds) {
 			this.removeById(groupId);

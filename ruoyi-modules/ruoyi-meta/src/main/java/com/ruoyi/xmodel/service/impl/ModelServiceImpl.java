@@ -51,7 +51,7 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void addModel(XModelDTO dto) {
 		if (StringUtils.isEmpty(dto.getTableName())) {
 			dto.setTableName(XModelUtils.DEFAULT_MODEL_VALUE_TABLE);
@@ -100,7 +100,7 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteModel(List<Long> modelIds) {
 		for (Long modelId : modelIds) {
 			XModel model = this.getById(modelId);

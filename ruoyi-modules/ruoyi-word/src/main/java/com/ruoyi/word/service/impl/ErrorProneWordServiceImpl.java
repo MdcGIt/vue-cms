@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class ErrorProneWordServiceImpl extends ServiceImpl<ErrorProneWordMapper, ErrorProneWord>
 		implements IErrorProneWordService {
 
-	private static final String CACHE_KEY = "cms:err_prone_word";
+	private static final String CACHE_KEY = "err_prone_word:";
 
 	private final RedisCache redisCache;
 
@@ -52,7 +52,7 @@ public class ErrorProneWordServiceImpl extends ServiceImpl<ErrorProneWordMapper,
 
 	@Override
 	public Map<String, String> getErrorProneWords() {
-		Map<String, String> cacheMap = this.redisCache.getCacheMap(CACHE_KEY, () -> this.list().stream()
+		Map<String, String> cacheMap = this.redisCache.getCacheObject(CACHE_KEY, () -> this.list().stream()
 				.collect(Collectors.toMap(ErrorProneWord::getWord, ErrorProneWord::getReplaceWord)));
 		return cacheMap;
 	}

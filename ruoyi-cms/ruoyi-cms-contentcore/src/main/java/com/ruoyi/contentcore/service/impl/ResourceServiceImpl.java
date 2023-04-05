@@ -170,6 +170,10 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		builder.bucket(fileStorageArgs.getBucket());
 		if (LocalFileStorageType.TYPE.equals(fst.getType())) {
 			builder.bucket(SiteUtils.getSiteResourceRoot(site));
+		} else {
+			builder.accessKey(fileStorageArgs.getAccessKey());
+			builder.accessSecret(fileStorageArgs.getAccessSecret());
+			builder.endpoint(fileStorageArgs.getEndpoint());
 		}
 		builder.path(resource.getPath());
 		builder.inputStream(new ByteArrayInputStream(bytes));

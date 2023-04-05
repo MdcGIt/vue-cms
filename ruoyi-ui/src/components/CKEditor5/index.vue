@@ -43,15 +43,10 @@ class ImageUploadAdapter {
       },
       withCredentials: true, // true 为不允许带 token, false 为允许
     });
-
-    console.log(res);
-    // 后台返回数据：
-    // {"code":0,"msg":"success","data":{"url":"/upload/struts2.jpeg"}}
-
     // 方法返回数据格式： {default: "url"}
     return {
       default: res.data.data.src,
-      alt: res.data.data.internalUrl
+      iurl: res.data.data.internalUrl
     };
   }
 
@@ -172,14 +167,23 @@ export default {
             }
           }
         },
-        // 允许img等标签存在iurl属性
+        // 允许所有标签存在iurl属性和cc-开头的属性，允许class存在cc-开头的样式名称
         htmlSupport: {
           allow: [
             {
-              name: /^(img|a|video|audio|source)$/,
-              attributes: {
-                  iurl: true
-              }
+              // name: /^(img|a|video|audio|source)$/,
+              name: /[\s\S]+/,
+              classes: /^cc-.*$/,
+              attributes: [
+                {
+                  key: /^cc-.*$/,
+                  value: true
+                },
+                {
+                  key: "iurl",
+                  value: true
+                }
+              ]
             }
           ]
         },
@@ -292,6 +296,43 @@ export default {
       editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
         return new ImageUploadAdapter(loader, process.env.VUE_APP_BASE_API + "/cms/resource/upload")
       }
+      // 设置图片iurl属性
+      const imageUploadEditing = editor.plugins.get( 'ImageUploadEditing' );
+      imageUploadEditing.on( 'uploadComplete', ( evt, { data, imageElement } ) => {
+        console.log("uploadComplete", data, imageElement)
+        editor.model.change( writer => {
+          writer.setAttribute( 'iurl', data.iurl, imageElement );
+        });
+      });
+      editor.model.schema.extend('imageBlock', {
+        allowAttributes: ['iurl'],
+      });
+      editor.model.schema.extend('imageInline', {
+        allowAttributes: ['iurl'],
+      });
+      editor.conversion.for('downcast').add((dispatcher) => {
+          dispatcher.on('attribute:iurl:imageInline', (evt, data, conversionApi) => {
+            const viewWriter = conversionApi.writer;
+            const img = conversionApi.mapper.toViewElement(data.item);
+            if (img.name === 'img' && data.attributeNewValue !== null) {
+              viewWriter.setAttribute('iurl', data.attributeNewValue, img);
+            }
+          });
+          
+          dispatcher.on('attribute:iurl:imageBlock', (evt, data, conversionApi) => {
+            const viewWriter = conversionApi.writer;
+            let figure = conversionApi.mapper.toViewElement(data.item);
+            if (figure.name === 'figure' && figure.childCount > 0) {
+              figure._children.forEach(item => {
+                if (item.name === 'img') {
+                  viewWriter.setAttribute('iurl', data.attributeNewValue, item);
+                }
+              })
+            }
+          })
+        }
+      );
+      // ready event
       this.$emit("ready", editor);
     },
     onEditorFocus(editor) {

@@ -83,6 +83,10 @@
             :href="scope.row.src">{{ scope.row.name }}</el-link>
         </template>
       </el-table-column>
+      <el-table-column label="存储方式"
+                       align="center"
+                       width="80"
+                       prop="storageType" />
       <el-table-column label="大小"
                        align="center"
                        width="80"

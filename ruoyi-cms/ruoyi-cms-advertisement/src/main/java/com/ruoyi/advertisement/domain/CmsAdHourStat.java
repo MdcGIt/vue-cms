@@ -11,27 +11,32 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 广告日点击/展现统计数据
+ * 广告小时点击/展现统计数据
  *
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
 @Getter
 @Setter
-@TableName(CmsAdDayStat.TABLE_NAME)
-public class CmsAdDayStat implements Serializable {
+@TableName(CmsAdHourStat.TABLE_NAME)
+public class CmsAdHourStat implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	public final static String TABLE_NAME = "cms_ad_daystat";
+	public final static String TABLE_NAME = "cms_ad_hour_stat";
 
-	@TableId(value = "stat_id", type = IdType.AUTO)
+	@TableId(value = "stat_id", type = IdType.INPUT)
 	private Long statId;
 	
 	/**
-	 * 统计日期，格式：yyyyMMdd
+	 * 所属站点ID
 	 */
-	private String day;
+	private Long siteId;
+	
+	/**
+	 * 统计周期，格式：yyyyMMddHH
+	 */
+	private String hour;
 	
 	/**
 	 * 广告ID

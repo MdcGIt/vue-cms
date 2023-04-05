@@ -88,7 +88,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void updateDictType(SysDictType dict) {
 		SysDictType dbDict = this.getById(dict.getDictId());
 		Assert.notNull(dbDict, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("dictId", dict.getDictId()));

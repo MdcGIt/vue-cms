@@ -163,6 +163,12 @@ export default {
         ],
         code :[
           { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+        ],
+        state :[
+          { required: true, message: "状态不能为空", trigger: "blur" }
+        ],
+        sort :[
+          { required: true, message: "排序值不能为空", trigger: "blur" }
         ]
       }
     };
@@ -217,23 +223,15 @@ export default {
         if (valid) {
           if (this.form.publishpipeId != undefined) {
             updatePublishPipe(this.form).then(response => {
-              if (response.code === 200) {
-                this.$modal.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              } else {
-                this.$modal.msgError(response.msg);
-              }
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
             });
           } else {
             addPublishPipe(this.form).then(response => {
-              if (response.code === 200) {
-                this.$modal.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              } else {
-                this.$modal.msgError(response.msg);
-              }
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
             });
           }
         }

@@ -1,8 +1,8 @@
 package com.ruoyi.advertisement.job;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.ruoyi.advertisement.domain.CmsAdDayStat;
-import com.ruoyi.advertisement.mapper.CmsAdDayStatMapper;
+import com.ruoyi.advertisement.domain.CmsAdHourStat;
+import com.ruoyi.advertisement.domain.CmsAdvertisement;
+import com.ruoyi.advertisement.mapper.CmsAdvertisementMapper;
+import com.ruoyi.advertisement.service.IAdHourStatService;
 import com.ruoyi.advertisement.service.impl.AdvertisementStatServiceImpl;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.IdUtils;
@@ -31,77 +33,76 @@ public class AdvertisementStatJob extends IJobHandler {
 
 	static final String JOB_NAME = "AdvertisementStatJob";
 
-	private final CmsAdDayStatMapper dayStatMapper;
-	
+	private final IAdHourStatService adStatService;
+
+	private final CmsAdvertisementMapper advMapper;
+
 	private final RedisCache redisCache;
 
 	/**
-	 * 默认每5分钟执行一次，更新广告日点击数和展现数到统计表中
+	 * 更新广告小时点击数和展现数到统计表中
 	 */
 	@Override
 	@XxlJob(JOB_NAME)
 	public void execute() throws Exception {
 		log.info("AdvertisementStatJob start");
 		long s = System.currentTimeMillis();
-		// 当日数据更新
-		String day = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-		this.saveToDb(day, false);
-		// 尝试更新昨日数据并删除cache
-		String yestoday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-		this.saveToDb(yestoday, true);
+		try {
+			// 数据更新
+			String hour = LocalDateTime.now().format(AdvertisementStatServiceImpl.DATE_TIME_FORMAT);
+			this.saveToDb(hour, false);
+			// 尝试更新上一个小时数据并删除cache
+			String yestoday = LocalDateTime.now().minusHours(1).format(AdvertisementStatServiceImpl.DATE_TIME_FORMAT);
+			this.saveToDb(yestoday, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 		log.info("AdvertisementPublishJob completed, cost: {}ms", System.currentTimeMillis() - s);
 	}
-	
-	private void saveToDb(String day, boolean deleteCache) {
-		String cacheKey = AdvertisementStatServiceImpl.CACHE_PREFIX + day;
-		Map<String, Integer> clickMap = this.redisCache.hasKey(cacheKey + "-click") ? this.redisCache.getCacheMap(cacheKey + "-click") : new HashMap<>();
-		Map<String, Integer> viewMap = this.redisCache.hasKey(cacheKey + "-view") ? this.redisCache.getCacheMap(cacheKey + "-view") : new HashMap<>();
 
-		if (clickMap.size() == 0 && viewMap.size() == 0) {
-			return;
+	private void saveToDb(String hour, boolean deleteCache) {
+		String clickCacheKey = AdvertisementStatServiceImpl.CLIC_CACHE_PREFIX + hour;
+		String viewCacheKey = AdvertisementStatServiceImpl.VIEW_CACHE_PREFIX + hour;
+
+		Map<Long, CmsAdHourStat> stats = this.adStatService.lambdaQuery().eq(CmsAdHourStat::getHour, hour).list()
+				.stream().collect(Collectors.toMap(CmsAdHourStat::getAdvertisementId, stat -> stat));
+
+		Map<Long, Long> advertisements = new LambdaQueryChainWrapper<>(this.advMapper)
+				.select(CmsAdvertisement::getAdvertisementId, CmsAdvertisement::getSiteId).list().stream()
+				.collect(Collectors.toMap(CmsAdvertisement::getAdvertisementId, CmsAdvertisement::getSiteId));
+
+		List<Long> insertAdvIds = new ArrayList<>();
+		for (Long advertisementId : advertisements.keySet()) {
+			int click = this.redisCache.getZsetScore(clickCacheKey, advertisementId.toString()).intValue();
+			int view = this.redisCache.getZsetScore(viewCacheKey, advertisementId.toString()).intValue();
+			if (click > 0 || view > 0) {
+				CmsAdHourStat stat = stats.get(advertisementId);
+				if (Objects.isNull(stat)) {
+					stat = new CmsAdHourStat();
+					stat.setStatId(IdUtils.getSnowflakeId());
+					stat.setSiteId(advertisements.get(advertisementId));
+					stat.setHour(hour);
+					stat.setAdvertisementId(advertisementId);
+
+					stats.put(advertisementId, stat);
+					insertAdvIds.add(advertisementId);
+				}
+				stat.setClick(click > 0 ? click : 0);
+				stat.setView(view > 0 ? view : 0);
+			}
 		}
-
-		Map<Long, CmsAdDayStat> stats = new LambdaQueryChainWrapper<>(this.dayStatMapper).eq(CmsAdDayStat::getDay, day).list().stream()
-				.collect(Collectors.toMap(CmsAdDayStat::getAdvertisementId, stat -> stat));
-		// 点击数
-		clickMap.entrySet().forEach(e -> {
-			Long advId = Long.valueOf(e.getKey());
-			CmsAdDayStat stat = stats.get(advId);
-			if (Objects.nonNull(stat)) {
-				stat = new CmsAdDayStat();
-				stat.setDay(day);
-				stat.setAdvertisementId(advId);
-				stat.setClick(0);
-				stat.setView(0);
-				stats.put(advId, stat);
-			}
-			stat.setClick(e.getValue());
-		});
-		// 展现数
-		viewMap.entrySet().forEach(e -> {
-			Long advId = Long.valueOf(e.getKey());
-			CmsAdDayStat stat = stats.get(advId);
-			if (Objects.nonNull(stat)) {
-				stat = new CmsAdDayStat();
-				stat.setDay(day);
-				stat.setAdvertisementId(advId);
-				stat.setClick(0);
-				stat.setView(0);
-				stats.put(advId, stat);
-			}
-			stat.setView(e.getValue());
-		});
 		// 更新数据库
-		stats.values().forEach(stat -> {
-			if (IdUtils.validate(stat.getStatId())) {
-				this.dayStatMapper.updateById(stat);
-			} else {
-				this.dayStatMapper.insert(stat);
-			}
-		});
+		List<CmsAdHourStat> inserts = stats.values().stream()
+				.filter(stat -> insertAdvIds.contains(stat.getAdvertisementId())).toList();
+		this.adStatService.saveBatch(inserts);
+		List<CmsAdHourStat> updates = stats.values().stream()
+				.filter(stat -> !insertAdvIds.contains(stat.getAdvertisementId())).toList();
+		this.adStatService.updateBatchById(updates);
+		// 清理过期缓存
 		if (deleteCache) {
-			this.redisCache.deleteObject(cacheKey + "-click");
-			this.redisCache.deleteObject(cacheKey + "-view");
+			this.redisCache.deleteObject(clickCacheKey);
+			this.redisCache.deleteObject(viewCacheKey);
 		}
 	}
 }

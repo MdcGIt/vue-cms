@@ -54,7 +54,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void addPageWidget(IPageWidget pw) {
 		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
 				pw.getPageWidgetEntity().getCode(), null);
@@ -65,7 +65,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void savePageWidget(IPageWidget pw) {
 		CmsPageWidget pageWidget = this.getById(pw.getPageWidgetEntity().getPageWidgetId());
 		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId",
@@ -80,7 +80,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void deletePageWidgets(List<Long> pageWidgetIds) {
 		List<CmsPageWidget> pageWidgets = this.listByIds(pageWidgetIds);
 		for (CmsPageWidget pageWidget : pageWidgets) {

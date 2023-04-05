@@ -1,6 +1,8 @@
 package com.ruoyi.advertisement.service.impl;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -9,44 +11,64 @@ import com.ruoyi.advertisement.domain.CmsAdClickLog;
 import com.ruoyi.advertisement.domain.CmsAdViewLog;
 import com.ruoyi.advertisement.mapper.CmsAdClickLogMapper;
 import com.ruoyi.advertisement.mapper.CmsAdViewLogMapper;
+import com.ruoyi.advertisement.service.IAdvertisementService;
 import com.ruoyi.advertisement.service.IAdvertisementStatService;
 import com.ruoyi.common.redis.RedisCache;
+import com.ruoyi.common.utils.IdUtils;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdvertisementStatServiceImpl implements IAdvertisementStatService {
-	
-	private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-	public static final String CACHE_PREFIX = "adv:daystat-";
-	
+	public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHH");
+
+	public static final String CLIC_CACHE_PREFIX = "adv:stat-click:";
+
+	public static final String VIEW_CACHE_PREFIX = "adv:stat-view:";
+
 	private final CmsAdClickLogMapper clickLogMapper;
-	
+
 	private final CmsAdViewLogMapper viewLogMapper;
-	
+
 	private final RedisCache redisCache;
+
+	private final IAdvertisementService advService;
 
 	@Async
 	@Override
-	public void adClick(CmsAdClickLog log) {
-		// TODO 重复访问验证策略
-		// redis 广告日点击数+1
-		String cacheKey = CACHE_PREFIX + log.getEvtTime().format(DATE_TIME_FORMAT);
-		redisCache.incrMapValue(cacheKey, log.getAdId().toString(), 1);
+	public void adClick(CmsAdClickLog clickLog) {
+		Map<String, String> advMap = advService.getAdvertisementMap();
+		if (Objects.isNull(advMap) || Objects.isNull(clickLog.getAdId())
+				|| !advMap.containsKey(clickLog.getAdId().toString())) {
+			log.warn("Cms adv click log err, invalid id: " + clickLog.getAdId());
+			return;
+		}
+		// redis 广告小时点击数+1
+		String cacheKey = CLIC_CACHE_PREFIX + clickLog.getEvtTime().format(DATE_TIME_FORMAT);
+		redisCache.zsetIncr(cacheKey, clickLog.getAdId().toString(), 1);
 		// 记录点击日志
-		this.clickLogMapper.insert(log);
+		clickLog.setLogId(IdUtils.getSnowflakeId());
+		this.clickLogMapper.insert(clickLog);
 	}
 
 	@Async
 	@Override
-	public void adView(CmsAdViewLog log) {
-		// TODO 重复访问验证策略
+	public void adView(CmsAdViewLog viewLog) {
+		Map<String, String> advMap = advService.getAdvertisementMap();
+		if (Objects.isNull(advMap) || Objects.isNull(viewLog.getAdId())
+				|| !advMap.containsKey(viewLog.getAdId().toString())) {
+			log.warn("Cms adv view log err, invalid id: " + viewLog.getAdId());
+			return;
+		}
 		// redis 广告日展现数+1
-		String cacheKey = CACHE_PREFIX + log.getEvtTime().format(DATE_TIME_FORMAT);
-		redisCache.incrMapValue(cacheKey, log.getAdId().toString(), 1);
+		String cacheKey = VIEW_CACHE_PREFIX + viewLog.getEvtTime().format(DATE_TIME_FORMAT);
+		redisCache.zsetIncr(cacheKey, viewLog.getAdId().toString(), 1);
 		// 记录展现日志
-		this.viewLogMapper.insert(log);
+		viewLog.setLogId(IdUtils.getSnowflakeId());
+		this.viewLogMapper.insert(viewLog);
 	}
 }

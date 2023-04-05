@@ -13,7 +13,7 @@
         </div>
         <div class="head-container">
           <el-tree
-            :data="statOptions"
+            :data="statMenuTree"
             :props="defaultProps"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
@@ -26,30 +26,42 @@
         </div>
       </el-col>
       <el-col :span="20" :xs="24">
-        
+        <cms-ad-stat v-if="currentMenu=='CmsAdStat'"></cms-ad-stat>
+        <cms-ad-click v-if="currentMenu=='CmsAdClickLog'"></cms-ad-click>
+        <cms-ad-view v-if="currentMenu=='CmsAdViewLog'"></cms-ad-view>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import { listStatTypes } from "@/api/stat/stat";
+import { getStatMenuTreeData } from "@/api/stat/stat";
+import CMSAdvertisementStat from '@/views/cms/ad/adStat';
+import CMSAdvertisementClickLog from '@/views/cms/ad/adClickLog';
+import CMSAdvertisementViewLog from '@/views/cms/ad/adViewLog';
+
+
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "StatIndex",
-  components: { Treeselect },
+  components: { 
+    Treeselect,
+    'cms-ad-stat': CMSAdvertisementStat,
+    'cms-ad-click': CMSAdvertisementClickLog,
+    'cms-ad-view': CMSAdvertisementViewLog,
+  },
   data() {
     return {
       loading: true,
-      statOptions: undefined,
-      statType: undefined,
-      queryParams: {}
+      statMenuTree: [],
+      currentMenu: undefined,
+      statName: undefined,
+      defaultProps: {}
     };
   },
   watch: {
-    // 根据名称筛选部门树
     statName(val) {
       this.$refs.tree.filter(val);
     }
@@ -59,8 +71,8 @@ export default {
   },
   methods: {
     getStatType() {
-      listStatTypes().then(response => {
-        this.statOptions = response.data;
+      getStatMenuTreeData().then(response => {
+        this.statMenuTree = response.data;
       });
     },
     filterNode(value, data) {
@@ -68,7 +80,7 @@ export default {
       return data.label.indexOf(value) !== -1;
     },
     handleNodeClick(data) {
-      this.statType = data.type;
+      this.currentMenu = data.id;
     }
   }
 };

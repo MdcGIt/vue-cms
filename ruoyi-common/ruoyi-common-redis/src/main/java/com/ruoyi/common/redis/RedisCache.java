@@ -142,7 +142,7 @@ public class RedisCache {
 		ValueOperations<String, T> operation = redisTemplate.opsForValue();
 		return operation.get(key);
 	}
-	
+
 	/**
 	 * 获得缓存的基本对象，如果不存在调用supplier获取数据。
 	 * 
@@ -160,7 +160,7 @@ public class RedisCache {
 			}
 		}
 		return cacheObject;
-	} 
+	}
 
 	/**
 	 * 删除单个对象
@@ -243,6 +243,32 @@ public class RedisCache {
 	public <T> Set<T> getCacheSet(final String key) {
 		return redisTemplate.opsForSet().members(key);
 	}
+	
+	/**
+	 * set缓存添加值
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void addSetValue(final String key, final Object... value) {
+		if (Objects.isNull(value) || value.length == 0) {
+			return;
+		}
+		this.redisTemplate.opsForSet().add(key, value);
+	}
+	
+	/**
+	 * 移除set中的指定值
+	 * 
+	 * @param key
+	 * @param value 
+	 */
+	public void removeSetValue(final String key, final Object... values) {
+		if (StringUtils.isEmpty(values)) {
+			return;
+		}
+		this.redisTemplate.opsForSet().remove(key, values);
+	}
 
 	/**
 	 * 缓存Map
@@ -278,14 +304,13 @@ public class RedisCache {
 	}
 
 	public <T> Map<String, T> getCacheMap(final String key, Supplier<Map<String, T>> supplier) {
-		Map entries = redisTemplate.opsForHash().entries(key);
-		if (entries == null) {
-			entries = supplier.get();
-			if (entries != null) {
-				this.setCacheMap(key, entries);
+		if (!redisTemplate.hasKey(key)) {
+			Map<String, T> map = supplier.get();
+			if (map != null) {
+				this.setCacheMap(key, map);
 			}
 		}
-		return entries;
+		return redisTemplate.opsForHash().entries(key);
 	}
 
 	/**
@@ -310,17 +335,6 @@ public class RedisCache {
 		HashOperations<String, String, T> opsForHash = redisTemplate.opsForHash();
 		return opsForHash.get(key, hKey);
 	}
-	
-	public <T> T getCacheMapValue(final String key, final String hKey, Supplier<T> supplier) {
-		T cacheMapValue = this.getCacheMapValue(key, hKey);
-		if (cacheMapValue == null) {
-			cacheMapValue = supplier.get();
-			if (cacheMapValue != null) {
-				this.setCacheMapValue(key, hKey, cacheMapValue);
-			}
-		}
-		return cacheMapValue;
-	}
 
 	/**
 	 * 获取多个Hash中的数据
@@ -337,11 +351,14 @@ public class RedisCache {
 	 * 删除Hash中的某条数据
 	 *
 	 * @param key  Redis键
-	 * @param hKey Hash键
+	 * @param hKeys Hash键
 	 * @return 是否成功
 	 */
-	public boolean deleteCacheMapValue(final String key, final String hKey) {
-		return redisTemplate.opsForHash().delete(key, hKey) > 0;
+	public boolean deleteCacheMapValue(final String key, final Object... hKeys) {
+		if (StringUtils.isEmpty(hKeys)) {
+			return false;
+		}
+		return redisTemplate.opsForHash().delete(key, hKeys) > 0;
 	}
 
 	/**
@@ -378,7 +395,8 @@ public class RedisCache {
 		}
 		return (Set<String>) redisTemplate.execute((RedisCallback<Set<String>>) connection -> {
 			Set<String> keysTmp = new HashSet<>();
-			KeyScanOptions options = (KeyScanOptions) KeyScanOptions.scanOptions(dataType).match(pattern).count(count).build();
+			KeyScanOptions options = (KeyScanOptions) KeyScanOptions.scanOptions(dataType).match(pattern).count(count)
+					.build();
 			Cursor<byte[]> cursor = connection.scan(options);
 			while (cursor.hasNext()) {
 				keysTmp.add(new String(cursor.next(), StandardCharsets.UTF_8));
@@ -397,16 +415,86 @@ public class RedisCache {
 		RedisAtomicLong redisAtomicLong = new RedisAtomicLong(key, this.redisTemplate);
 		return redisAtomicLong.incrementAndGet();
 	}
-	
+
 	/**
-	 * 计数+delta
+	 * 添加zset
+	 * 
+	 * @param key
+	 * @param value
+	 * @param seqNo
+	 * @return
+	 */
+	public Boolean addZset(String key, Object value, double score) {
+		return redisTemplate.opsForZSet().add(key, value, score);
+	}
+
+	/**
+	 * ZSet.score + delta
 	 * 
 	 * @param key
 	 * @param value
 	 * @param delta
 	 * @return
 	 */
-	public Long incrMapValue(String cacheKey, String mapKey, int delta) {
-		return this.redisTemplate.opsForHash().increment(cacheKey, mapKey, delta);
+	public long zsetIncr(String key, String value, int delta) {
+		return this.redisTemplate.opsForZSet().incrementScore(key, value, delta).longValue();
+	}
+
+	/**
+	 * 获取zset.score，不存在返回-1
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public Double getZsetScore(String key, String value) {
+		Double score = this.redisTemplate.opsForZSet().score(key, value);
+		return Objects.isNull(score) ? -1 :score;
+	}
+
+	/**
+	 * 删除zset
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public void removeZsetValue(String key, Object... values) {
+		if (StringUtils.isEmpty(values)) {
+			return;
+		}
+		this.redisTemplate.opsForZSet().remove(key, values);
+	}
+
+	/**
+	 * zset.size
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public long getZsetSize(String key) {
+		return this.redisTemplate.opsForZSet().size(key).longValue();
+	}
+
+	/**
+	 * 获取指定范围zset数据，end=-1表示取所有
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public <T> Set<T> getZset(String key, int start, int end) {
+		return this.redisTemplate.opsForZSet().range(key, start, end);
+	}
+
+	/**
+	 * 获取指定值排名，不存在返回-1，0表示第一位
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public long getZsetRank(String key, Object value) {
+		Long rank = redisTemplate.opsForZSet().rank(key, value);
+		return Objects.isNull(rank) ? -1 : rank.longValue();
 	}
 }

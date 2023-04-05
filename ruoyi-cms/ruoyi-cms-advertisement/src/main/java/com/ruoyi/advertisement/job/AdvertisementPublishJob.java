@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 广告定时发布任务
+ * 广告定时发布下线任务
  */
 @Slf4j
 @Component
