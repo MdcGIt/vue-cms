@@ -86,6 +86,9 @@ public class CmsResource extends BaseEntity {
      * 文件大小
      */
     private Long fileSize;
+    
+    @TableField(exist = false)
+    private String fileSizeName;
 
     /**
      * 来源地址
