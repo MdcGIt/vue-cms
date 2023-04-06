@@ -174,7 +174,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	@Override
 	public void saveSiteExtend(Long siteId, Map<String, String> configs, String operator) {
 		CmsSite site = this.getSite(siteId);
-		ConfigPropertyUtils.filterConfigProps(configs, IProperty.UseType.Site);
+		ConfigPropertyUtils.filterConfigProps(configs, site.getConfigProps(), IProperty.UseType.Site);
 
 		site.setConfigProps(configs);
 		site.updateBy(operator);

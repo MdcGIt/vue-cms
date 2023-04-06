@@ -2,8 +2,6 @@ package com.ruoyi.cms.stat.domain;
 
 import java.io.Serializable;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.stat.RequestEvent;
 
@@ -19,9 +17,6 @@ public class CmsSiteVisitLog extends RequestEvent implements Serializable {
 
 	public final static String TABLE_NAME = "cms_site_visit_log";
 
-	@TableId(value = "log_id", type = IdType.AUTO)
-	private Long logId;
-	
 	/**
 	 * 站点ID
 	 */

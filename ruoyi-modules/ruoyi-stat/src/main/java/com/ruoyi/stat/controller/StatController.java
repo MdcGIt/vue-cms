@@ -1,6 +1,7 @@
 package com.ruoyi.stat.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,10 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.stat.service.IStatService;
+import com.ruoyi.stat.user.preference.StatIndexPreference;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.StpAdminUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +35,7 @@ public class StatController extends BaseRestController {
 	@GetMapping("/menu/tree")
 	public R<?> bindStatTreeData() {
 		List<TreeNode<String>> treeMenus = this.statService.getStatMenuTree();
-		return R.ok(treeMenus);
+		SysUser user = (SysUser) StpAdminUtil.getLoginUser().getUser();
+		return R.ok(Map.of("treeData", treeMenus, "defaultMenu", StatIndexPreference.getValue(user.getPreferences())));
 	}
 }

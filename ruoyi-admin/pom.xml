@@ -123,6 +123,12 @@
 			<groupId>com.ruoyi</groupId>
 			<artifactId>ruoyi-cms-vote</artifactId>
 		</dependency>
+		
+		<!-- CMS访问统计模块 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-cms-stat</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

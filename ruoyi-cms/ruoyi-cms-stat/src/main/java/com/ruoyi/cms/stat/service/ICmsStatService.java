@@ -1,13 +1,14 @@
 package com.ruoyi.cms.stat.service;
 
-import com.ruoyi.cms.stat.domain.CmsSiteVisitLog;
+import com.ruoyi.contentcore.domain.CmsSite;
 
 public interface ICmsStatService {
 
 	/**
-	 * 添加站点访问统计
+	 * 刷新百度统计AccessToken
 	 * 
-	 * @param log
+	 * @param site
+	 * @return
 	 */
-	void addSiteVisitLog(CmsSiteVisitLog log);
+	String refreshBaiduAccessToken(CmsSite site);
 }

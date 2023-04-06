@@ -39,7 +39,7 @@ public class CmsStatController extends BaseRestController {
 		PageRequest pr = this.getPageRequest();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		Page<CmsSiteVisitLog> page = new LambdaQueryChainWrapper<CmsSiteVisitLog>(this.siteVisitLogMapper)
-				.eq(CmsSiteVisitLog::getSiteId, site.getSiteId()).orderByDesc(CmsSiteVisitLog::getLogId)
+				.eq(CmsSiteVisitLog::getSiteId, site.getSiteId()).orderByDesc(CmsSiteVisitLog::getEvtTime)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 		return this.bindDataTable(page);
 	}

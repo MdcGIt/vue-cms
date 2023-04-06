@@ -10,18 +10,25 @@
         <shortcut></shortcut>
       </el-col>
     </el-row>
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <cms-site-stat></cms-site-stat>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
 import SysUserInfo from '@/views/system/dashboard/userInfo'
 import SysShortcut from '@/views/system/dashboard/shortcut'
+import CmsSiteStat from '@/views/cms/dashboard/siteStat'
 
 export default {
   name: 'Index',
   components: {
     'user-info': SysUserInfo,
-    'shortcut': SysShortcut
+    'shortcut': SysShortcut,
+    'cms-site-stat': CmsSiteStat
   },
   data() {
     return {
