@@ -67,24 +67,20 @@ export default {
           var arr = datas[key];
           return {
             name: key,
-            // smooth: true,
+            smooth: false, // 平滑曲线
             type: 'line',
             stack: 'Total',
             data: arr,
-            // animationDuration: 2800,
-            // animationEasing: 'quadraticOut'
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut',
           }
       });
-      console.log(legendDatas)
-      console.log(series)
+
       this.chart.setOption({
         xAxis: {
           type: 'category',
           data: xAxisDatas,
-          boundaryGap: false,
-          axisTick: {
-            show: false
-          }
+          boundaryGap: false
         },
         grid: {
           left: 20,
@@ -93,18 +89,20 @@ export default {
           top: 30,
           containLabel: true
         },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
         tooltip: {
+          show: true,
           trigger: 'axis',
           axisPointer: {
-            type: 'cross'
-          },
-          padding: [5, 10]
+            type: 'line'
+          }
         },
         yAxis: {
-          type: 'value',
-          axisTick: {
-            show: false
-          }
+          type: 'value'
         },
         legend: {
           data: legendDatas

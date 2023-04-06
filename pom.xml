@@ -485,6 +485,13 @@
 				<artifactId>ruoyi-cms-vote</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
+			
+			<!-- CMS访问统计模块 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-cms-stat</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
 			<!-- CMS Modules End -->
 		</dependencies>
 	</dependencyManagement>

@@ -17,7 +17,12 @@ import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 
 public class ConfigPropertyUtils {
-
+	
+	/**
+	 * 敏感数据替换占位符
+	 */
+	public static final String SensitivePlaceholder = "******";
+	
 	private static final Map<String, IProperty> ConfigProperties = SpringUtils.getBeanMap(IProperty.class);
 
 	/**
@@ -45,6 +50,9 @@ public class ConfigPropertyUtils {
 		List<IProperty> props = ConfigPropertyUtils.getConfigPropertiesByUseType(useType);
 		for (IProperty prop : props) {
 			map.put(prop.getId(), prop.getPropValue(configProps));
+			if (prop.isSensitive() && StringUtils.isNotEmpty(configProps.get(prop.getId()))) {
+				map.put(prop.getId(), SensitivePlaceholder);
+			}
 		}
 		return map;
 	}
@@ -55,7 +63,7 @@ public class ConfigPropertyUtils {
 	 * @param configProps
 	 * @param useType
 	 */
-	public static void filterConfigProps(Map<String, String> configProps, UseType useType) {
+	public static void filterConfigProps(Map<String, String> configProps, Map<String, String> oldConfigProps, UseType useType) {
 		for (Iterator<Entry<String, String>> iterator = configProps.entrySet().iterator(); iterator.hasNext();) {
 			Entry<String, String> e = iterator.next();
 			IProperty property = getConfigProperty(e.getKey());
@@ -65,6 +73,9 @@ public class ConfigPropertyUtils {
 			}
 			if (!property.validate(e.getValue())) {
 				throw ContentCoreErrorCode.INVALID_PROPERTY.exception(property.getId(), e.getValue());
+			}
+			if (property.isSensitive() && SensitivePlaceholder.equals(e.getValue())) {
+				e.setValue(oldConfigProps.get(e.getKey())); // 敏感数据未改变
 			}
 		}
 	}

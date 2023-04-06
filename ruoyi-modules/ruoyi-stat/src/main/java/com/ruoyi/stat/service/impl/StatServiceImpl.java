@@ -38,7 +38,8 @@ public class StatServiceImpl implements IStatService {
 	@Override
 	public List<TreeNode<String>> getStatMenuTree() {
 		List<StatMenu> menus = new ArrayList<>();
-		this.statTypeMap.values().forEach(st -> menus.addAll(st.getStatMenus()));
+		this.statTypeMap.values().stream().forEach(st -> menus.addAll(st.getStatMenus()));
+		menus.sort((m1, m2) -> m1.sort() - m2.sort());
 		List<TreeNode<String>> list = menus.stream().map(m -> {
 			return new TreeNode<>(m.menuId(), m.parentId(), I18nUtils.get(m.name()), StringUtils.isEmpty(m.parentId()));
 		}).toList();

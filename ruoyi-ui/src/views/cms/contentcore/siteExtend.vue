@@ -226,6 +226,31 @@
           </el-checkbox-group>
         </el-form-item>
       </el-card>
+      <el-card shadow="hover">
+        <div slot="header" class="clearfix">
+          <span>统计配置</span>
+        </div>
+        <el-form-item 
+          label="百度统计ApiKey"
+          prop="BaiduTjApiKey">
+          <el-input v-model="form_extend.BaiduTjApiKey"></el-input>
+        </el-form-item>
+        <el-form-item 
+          label="百度统计SecretKey"
+          prop="BaiduTjSecretKey">
+          <el-input v-model="form_extend.BaiduTjSecretKey"></el-input>
+        </el-form-item>
+        <el-form-item 
+          label="百度统计RefreshToken"
+          prop="BaiduTjRefreshToken">
+          <el-input v-model="form_extend.BaiduTjRefreshToken"></el-input>
+        </el-form-item>
+        <el-form-item 
+          label="百度统计AccessToken"
+          prop="BaiduTjAccessToken">
+          <el-input v-model="form_extend.BaiduTjAccessToken"></el-input>
+        </el-form-item>
+      </el-card>
     </el-form>
   </div>
 </template>

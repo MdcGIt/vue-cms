@@ -29,6 +29,7 @@
         <cms-ad-stat v-if="currentMenu=='CmsAdStat'"></cms-ad-stat>
         <cms-ad-click v-if="currentMenu=='CmsAdClickLog'"></cms-ad-click>
         <cms-ad-view v-if="currentMenu=='CmsAdViewLog'"></cms-ad-view>
+        <cms-site-trend-overview v-if="currentMenu=='BdSiteTrendOverview'"></cms-site-trend-overview>
       </el-col>
     </el-row>
   </div>
@@ -39,6 +40,7 @@ import { getStatMenuTreeData } from "@/api/stat/stat";
 import CMSAdvertisementStat from '@/views/cms/ad/adStat';
 import CMSAdvertisementClickLog from '@/views/cms/ad/adClickLog';
 import CMSAdvertisementViewLog from '@/views/cms/ad/adViewLog';
+import CMSBdSiteTrendOverview from '@/views/cms/stat/bdSiteStat';
 
 
 import Treeselect from "@riophae/vue-treeselect";
@@ -51,6 +53,7 @@ export default {
     'cms-ad-stat': CMSAdvertisementStat,
     'cms-ad-click': CMSAdvertisementClickLog,
     'cms-ad-view': CMSAdvertisementViewLog,
+    'cms-site-trend-overview': CMSBdSiteTrendOverview,
   },
   data() {
     return {
@@ -72,7 +75,8 @@ export default {
   methods: {
     getStatType() {
       getStatMenuTreeData().then(response => {
-        this.statMenuTree = response.data;
+        this.statMenuTree = response.data.treeData;
+        this.currentMenu = response.data.defaultMenu
       });
     },
     filterNode(value, data) {

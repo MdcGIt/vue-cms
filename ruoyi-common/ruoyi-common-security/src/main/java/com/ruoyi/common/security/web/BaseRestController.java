@@ -3,6 +3,7 @@ package com.ruoyi.common.security.web;
 import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +38,13 @@ public class BaseRestController {
 		binder.registerCustomEditor(LocalDateTime.class, new PropertyEditorSupport() {
 			@Override
 			public void setAsText(String text) {
-				setValue(LocalDateTime.parse(text));
+				setValue(LocalDateTime.parse(text, DateUtils.FORMAT_YYYY_MM_DD_HH_MM_SS));
+			}
+		});
+		binder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport() {
+			@Override
+			public void setAsText(String text) {
+				setValue(LocalDate.parse(text, DateUtils.FORMAT_YYYY_MM_DD));
 			}
 		});
 	}

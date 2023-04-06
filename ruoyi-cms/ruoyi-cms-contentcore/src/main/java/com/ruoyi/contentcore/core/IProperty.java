@@ -56,6 +56,13 @@ public interface IProperty {
 	}
 	
 	/**
+	 * 是否敏感数据
+	 */
+	default public boolean isSensitive() {
+		return false;
+	}
+	
+	/**
 	 * 属性默认值
 	 */
 	default public Object defaultValue() {
