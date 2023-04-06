@@ -22,7 +22,7 @@ public class BaiduOverviewReport {
 	private List<String> fields;
 	
 	/**
-	 * x轴时间
+	 * x轴
 	 */
 	private List<String> xAxisDatas;
 	
