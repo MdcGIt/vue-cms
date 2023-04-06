@@ -18,6 +18,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -96,6 +98,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+	@Log(title = "新增发布通道", businessType = BusinessType.INSERT)
     @PostMapping
     public R<?> addSave(@RequestBody CmsPublishPipe publishPipe) throws IOException {
     	CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -112,6 +115,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+	@Log(title = "编辑发布通道", businessType = BusinessType.UPDATE)
     @PutMapping
     public R<?> editSave(@RequestBody CmsPublishPipe publishPipe) throws IOException {
     	publishPipe.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -126,6 +130,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+	@Log(title = "删除发布通道", businessType = BusinessType.DELETE)
     @DeleteMapping
     public R<String> remove(@RequestBody List<Long> publishPipeIds) throws IOException {
     	this.publishPipeService.deletePublishPipe(publishPipeIds);
@@ -139,6 +144,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+	@Log(title = "启用发布通道", businessType = BusinessType.UPDATE)
     @PostMapping("/enable/{publishPipeId}")
     public R<String> enable(@PathVariable("publishPipeId") Long publishPipeId) throws IOException {
     	CmsPublishPipe publishPipe = this.publishPipeService.getById(publishPipeId);
@@ -158,6 +164,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+	@Log(title = "禁用发布通道", businessType = BusinessType.UPDATE)
     @PostMapping("/disable/{publishPipeId}")
     public R<String> disable(@PathVariable("publishPipeId") Long publishPipeId) throws IOException {
     	CmsPublishPipe publishPipe = this.publishPipeService.getById(publishPipeId);

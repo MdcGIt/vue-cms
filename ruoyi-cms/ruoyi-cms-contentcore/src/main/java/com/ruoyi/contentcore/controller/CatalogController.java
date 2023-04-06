@@ -22,6 +22,8 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -123,6 +125,7 @@ public class CatalogController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "新增栏目", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addSave(@RequestBody CatalogDTO dto) throws IOException {
 		CmsSite currentSite = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -138,6 +141,7 @@ public class CatalogController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "编辑栏目", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> editSave(@RequestBody CatalogDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -151,6 +155,7 @@ public class CatalogController extends BaseRestController {
 	 * @param catalogId 栏目ID
 	 * @return
 	 */
+	@Log(title = "删除", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{catalogId}")
 	public R<String> remove(@PathVariable("catalogId") @Min(1) Long catalogId) {
 		AsyncTask task = new AsyncTask() {
@@ -170,6 +175,7 @@ public class CatalogController extends BaseRestController {
 	 * @param dto
 	 * @return
 	 */
+	@Log(title = "显隐栏目", businessType = BusinessType.UPDATE)
 	@PutMapping("/visible")
 	public R<String> changeVisible(@RequestBody ChangeCatalogVisibleDTO dto) {
 		catalogService.changeVisible(dto.getCatalogId(), dto.getVisible());
@@ -219,6 +225,7 @@ public class CatalogController extends BaseRestController {
 	 * @param publishCatalogDTO
 	 * @return
 	 */
+	@Log(title = "发布栏目", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
 	public R<String> publish(@RequestBody PublishCatalogDTO publishCatalogDTO) {
 		CmsCatalog catalog = this.catalogService.getCatalog(publishCatalogDTO.getCatalogId());
@@ -252,6 +259,7 @@ public class CatalogController extends BaseRestController {
 	 * @param configs   扩展配置数据
 	 * @return
 	 */
+	@Log(title = "栏目扩展", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/extends/{catalogId}")
 	public R<?> saveCatalogExtends(@PathVariable("catalogId") Long catalogId,
 			@RequestBody Map<String, String> configs) {
@@ -265,6 +273,7 @@ public class CatalogController extends BaseRestController {
 	 * @param dto
 	 * @return
 	 */
+	@Log(title = "应用扩展", businessType = BusinessType.UPDATE)
 	@PutMapping("/apply_children")
 	public R<?> applyChildren(@RequestBody CatalogApplyChildrenDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -279,6 +288,7 @@ public class CatalogController extends BaseRestController {
 	 * @param toCatalogId   目标栏目ID
 	 * @return
 	 */
+	@Log(title = "移动栏目", businessType = BusinessType.UPDATE)
 	@PostMapping("/move/{from}/{to}")
 	public R<?> moveCatalog(@PathVariable("from") @Min(1) Long fromCatalogId, @PathVariable("to") Long toCatalogId) {
 		CmsCatalog fromCatalog = this.catalogService.getCatalog(fromCatalogId);
@@ -298,6 +308,7 @@ public class CatalogController extends BaseRestController {
 		return R.ok(task.getTaskId());
 	}
 
+	@Log(title = "栏目排序", businessType = BusinessType.UPDATE)
 	@PutMapping("/sort")
 	public R<?> sortCatalog(@RequestBody SortCatalogDTO dto) {
 		if (dto.getSort() == 0) {

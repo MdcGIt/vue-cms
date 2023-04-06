@@ -23,6 +23,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -101,6 +103,7 @@ public class ResourceController extends BaseRestController {
 		return R.ok(resource);
 	}
 
+	@Log(title = "新增素材", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<CmsResource> addResource(@RequestParam("file") MultipartFile resourceFile, String name, String remark) {
 		Assert.isFalse(resourceFile.isEmpty(), () -> CommonErrorCode.NOT_EMPTY.exception("file"));
@@ -116,6 +119,7 @@ public class ResourceController extends BaseRestController {
 		}
 	}
 
+	@Log(title = "删除素材", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<String> delResources(@RequestBody @NotEmpty List<Long> resourceIds) {
 		Assert.notEmpty(resourceIds, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception("resourceIds"));
@@ -123,6 +127,7 @@ public class ResourceController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "上传素材", businessType = BusinessType.INSERT)
 	@PostMapping("/upload")
 	public R<CmsResource> uploadFile(@RequestParam("file") MultipartFile multipartFile) throws Exception {
 		Assert.notNull(multipartFile, () -> CommonErrorCode.NOT_EMPTY.exception("file"));
@@ -142,6 +147,7 @@ public class ResourceController extends BaseRestController {
 		this.resourceService.downloadResource(resource, response);
 	}
 
+	@Log(title = "图片裁剪", businessType = BusinessType.UPDATE)
 	@PostMapping("/image/cut")
 	public R<?> cutImage(@RequestBody ImageCropDTO imageCutDTO) {
 

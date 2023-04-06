@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -55,12 +57,14 @@ public class RecycleContentController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Log(title = "恢复回收站内容", businessType = BusinessType.INSERT)
 	@PostMapping("/recover")
 	public R<?> recoverContent(@RequestBody @NotEmpty List<Long> backupIds) {
 		this.contentService.recoverContents(backupIds, StpAdminUtil.getLoginUser());
 		return R.ok();
 	}
-	
+
+	@Log(title = "删除回收站内容", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> deleteRecycleContents(@RequestBody @NotEmpty List<Long> backupIds) {
 		this.contentService.deleteRecycleContents(backupIds);

@@ -2,9 +2,9 @@ package com.ruoyi.cms.stat.baidu;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +14,10 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ruoyi.cms.stat.baidu.domain.BaiduOverviewReport;
-import com.ruoyi.cms.stat.baidu.domain.BaiduSite;
+import com.ruoyi.cms.stat.baidu.dto.BaiduTimeTrendDTO;
+import com.ruoyi.cms.stat.baidu.vo.BaiduOverviewReportVO;
+import com.ruoyi.cms.stat.baidu.vo.BaiduSiteVO;
+import com.ruoyi.cms.stat.baidu.vo.BaiduTimeTrendVO;
 import com.ruoyi.common.utils.HttpUtils;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -64,7 +66,7 @@ public class BaiduTongjiUtils {
 	 * @throws JsonMappingException
 	 * @throws JsonProcessingException
 	 */
-	public static List<BaiduSite> getSiteList(String accessToken) {
+	public static List<BaiduSiteVO> getSiteList(String accessToken) {
 		String url = StringUtils.messageFormat(API_SITE_LIST, accessToken);
 		String reponseJson = HttpUtils.get(URI.create(url));
 		String errorMsg = JacksonUtils.getAsString(reponseJson, "error_msg");
@@ -72,7 +74,76 @@ public class BaiduTongjiUtils {
 			log.error("BaiduTongji api faild: " + errorMsg);
 			throw new RuntimeException(errorMsg);
 		}
-		return JacksonUtils.getAsList(reponseJson, "list", BaiduSite.class);
+		return JacksonUtils.getAsList(reponseJson, "list", BaiduSiteVO.class);
+	}
+	
+	public static BaiduTimeTrendVO getSiteTimeTrend(String accessToken, BaiduTimeTrendDTO dto) {
+		String url = StringUtils.messageFormat(API_DATA, accessToken, dto.getSiteId().toString(), "trend/time/a",
+				dto.getStartDate().format(DATE_FORMAT), dto.getEndDate().format(DATE_FORMAT),
+				dto.getMetrics().stream().collect(Collectors.joining(",")));
+		url += "&gran=" + dto.getGran();
+		if (StringUtils.isNotEmpty(dto.getArea())) {
+			url += "&area=" + dto.getArea();
+		}
+		if (StringUtils.isNotEmpty(dto.getSource())) {
+			url += "&source=" + dto.getSource();
+		}
+		if (StringUtils.isNotEmpty(dto.getDeviceType())) {
+			url += "&deviceType=" + dto.getDeviceType();
+		}
+		if (StringUtils.isNotEmpty(dto.getVisitor())) {
+			url += "&visitor=" + dto.getVisitor();
+		}
+		
+		String reponseJson = HttpUtils.get(URI.create(url));
+		String errorMsg = JacksonUtils.getAsString(reponseJson, "error_msg");
+		if (StringUtils.isNotEmpty(errorMsg)) {
+			log.error("BaiduTongji api faild: " + errorMsg);
+			throw new RuntimeException(errorMsg);
+		}
+		JsonNode jsonNode = JacksonUtils.getAsJsonObject(reponseJson, "result");
+		
+		BaiduTimeTrendVO baiduTimeTrend = new BaiduTimeTrendVO();
+
+		List<String> fields = new ArrayList<>();
+		jsonNode.get("fields").forEach(jn -> {
+			fields.add(jn.asText());
+		});;
+		baiduTimeTrend.setFields(fields);
+		baiduTimeTrend.setOffset(jsonNode.get("offset").asInt());
+		baiduTimeTrend.setTimeSpan(jsonNode.get("timeSpan").get(0).asText());
+		baiduTimeTrend.setTotal(jsonNode.get("total").asInt());
+		JsonNode jnSum = jsonNode.get("sum").get(0);
+		baiduTimeTrend.setSum(new HashMap<>(fields.size() - 1));
+		for (int i = 1; i < fields.size(); i++) {
+			baiduTimeTrend.getSum().put(fields.get(i), jnSum.get(i - 1).asDouble());
+		}
+		JsonNode jnPageSum = jsonNode.get("pageSum").get(0);
+		baiduTimeTrend.setPageSum(new HashMap<>(fields.size() - 1));
+		for (int i = 1; i < fields.size(); i++) {
+			baiduTimeTrend.getPageSum().put(fields.get(i), jnPageSum.get(i - 1).asDouble());
+		}
+		
+		List<String> xAxisDatas = new ArrayList<>();
+		jsonNode.get("items").get(0).forEach(node -> xAxisDatas.add(node.get(0).asText()));
+		Collections.reverse(xAxisDatas);
+		baiduTimeTrend.setXAxisDatas(xAxisDatas);
+		
+		Map<String, List<Object>> datas = fields.stream().filter(k -> dto.getMetrics().contains(k))
+				.collect(Collectors.toMap(k -> k, k -> new ArrayList<Object>(xAxisDatas.size())));
+		jsonNode.get("items").get(1).forEach(node -> {
+			for (int i = 1; i < fields.size(); i++) {
+				String key = fields.get(i);
+				List<Object> list = datas.get(key);
+				if (list != null) {
+					String v = node.get(i - 1).asText();
+					list.add("--".equals(v) ? "0" : v);
+				}
+			}
+		});
+		datas.values().forEach(list -> Collections.reverse(list));
+		baiduTimeTrend.setDatas(datas);
+		return baiduTimeTrend;
 	}
 
 	/**
@@ -83,7 +154,7 @@ public class BaiduTongjiUtils {
 	 * @param startDate
 	 * @param endDate
 	 */
-	public static BaiduOverviewReport getSiteOverviewTimeTrend(String accessToken, Long siteId, LocalDateTime startDate,
+	public static BaiduOverviewReportVO getSiteOverviewTimeTrend(String accessToken, Long siteId, LocalDateTime startDate,
 			LocalDateTime endDate) {
 		List<String> metrics = List.of("pv_count", "visitor_count", "ip_count", "avg_visit_time");
 		String url = StringUtils.messageFormat(API_DATA, accessToken, siteId.toString(), "overview/getTimeTrendRpt",
@@ -98,7 +169,7 @@ public class BaiduTongjiUtils {
 
 		JsonNode jsonNode = JacksonUtils.getAsJsonObject(reponseJson, "result");
 
-		BaiduOverviewReport report = new BaiduOverviewReport();
+		BaiduOverviewReportVO report = new BaiduOverviewReportVO();
 		List<String> fields = new ArrayList<>();
 		jsonNode.get("fields").forEach(node -> fields.add(node.asText()));
 		report.setFields(fields);
@@ -135,7 +206,7 @@ public class BaiduTongjiUtils {
 	 * @param startDate
 	 * @param endDate
 	 */
-	public static BaiduOverviewReport getSiteOverviewDistrict(String accessToken, Long siteId, LocalDateTime startDate,
+	public static BaiduOverviewReportVO getSiteOverviewDistrict(String accessToken, Long siteId, LocalDateTime startDate,
 			LocalDateTime endDate) {
 		List<String> metrics = List.of("pv_count");
 		String url = StringUtils.messageFormat(API_DATA, accessToken, siteId.toString(), "overview/getDistrictRpt",
@@ -150,7 +221,7 @@ public class BaiduTongjiUtils {
 
 		JsonNode jsonNode = JacksonUtils.getAsJsonObject(reponseJson, "result");
 		
-		BaiduOverviewReport report = new BaiduOverviewReport();
+		BaiduOverviewReportVO report = new BaiduOverviewReportVO();
 		List<String> fields = new ArrayList<>();
 		jsonNode.get("fields").forEach(node -> fields.add(node.asText()));
 		report.setFields(fields);
@@ -186,7 +257,7 @@ public class BaiduTongjiUtils {
 	 * @param endDate
 	 * @return
 	 */
-	public static Map<String, BaiduOverviewReport> getSiteOverviewOthers(String accessToken, Long siteId,
+	public static Map<String, BaiduOverviewReportVO> getSiteOverviewOthers(String accessToken, Long siteId,
 			LocalDateTime startDate, LocalDateTime endDate) {
 		List<String> metrics = List.of("pv_count");
 		String url = StringUtils.messageFormat(API_DATA, accessToken, siteId.toString(), "overview/getCommonTrackRpt",
@@ -203,23 +274,23 @@ public class BaiduTongjiUtils {
 
 		// 来源网站
 		JsonNode sourceSiteJsonNode = jsonNode.get("sourceSite");
-		BaiduOverviewReport sourceSiteRpt = parseJsonToBaiduOverviewReport(sourceSiteJsonNode,
+		BaiduOverviewReportVO sourceSiteRpt = parseJsonToBaiduOverviewReport(sourceSiteJsonNode,
 				List.of("pv_count", "ratio"));
 		// 搜索词
 		JsonNode wordJsonNode = jsonNode.get("word");
-		BaiduOverviewReport wordRpt = parseJsonToBaiduOverviewReport(wordJsonNode,
+		BaiduOverviewReportVO wordRpt = parseJsonToBaiduOverviewReport(wordJsonNode,
 				List.of("pv_count", "ratio"));
 		// 入口页面
 		JsonNode landingPageJsonNode = jsonNode.get("landingPage");
-		BaiduOverviewReport landingPageRpt = parseJsonToBaiduOverviewReport(landingPageJsonNode,
+		BaiduOverviewReportVO landingPageRpt = parseJsonToBaiduOverviewReport(landingPageJsonNode,
 				List.of("pv_count", "ratio"));
 		// 访问页面
 		JsonNode visitPageJsonNode = jsonNode.get("visitPage");
-		BaiduOverviewReport visitPageRpt = parseJsonToBaiduOverviewReport(visitPageJsonNode,
+		BaiduOverviewReportVO visitPageRpt = parseJsonToBaiduOverviewReport(visitPageJsonNode,
 				List.of("pv_count", "ratio"));
 		// 新老用户
 		JsonNode visitTypeJsonNode = jsonNode.get("visitType");
-		BaiduOverviewReport visitTypeRpt = new BaiduOverviewReport();
+		BaiduOverviewReportVO visitTypeRpt = new BaiduOverviewReportVO();
 		visitTypeRpt.setFields(
 				List.of("pv_count", "visitor_count", "bounce_ratio", "avg_visit_time", "avg_visit_pages", "ratio"));
 		visitTypeRpt.setXAxisDatas(List.of("newVisitor", "oldVisitor"));
@@ -247,8 +318,8 @@ public class BaiduTongjiUtils {
 	 * @param jsonNode
 	 * @param metrics  响应结果实际指标
 	 */
-	private static BaiduOverviewReport parseJsonToBaiduOverviewReport(JsonNode jsonNode, List<String> metrics) {
-		BaiduOverviewReport report = new BaiduOverviewReport();
+	private static BaiduOverviewReportVO parseJsonToBaiduOverviewReport(JsonNode jsonNode, List<String> metrics) {
+		BaiduOverviewReportVO report = new BaiduOverviewReportVO();
 		List<String> fields = new ArrayList<>();
 		jsonNode.get("fields").forEach(node -> fields.add(node.asText()));
 		report.setFields(fields);
@@ -274,7 +345,7 @@ public class BaiduTongjiUtils {
 		return report;
 	}
 
-	public static List<Map<String, Object>> parseOverviewReportToTableData(BaiduOverviewReport report) {
+	public static List<Map<String, Object>> parseOverviewReportToTableData(BaiduOverviewReportVO report) {
 		List<Map<String, Object>> list = new ArrayList<>(report.getXAxisDatas().size());
 		List<String> xAxisDatas = report.getXAxisDatas();
 		for (int i = 0; i < xAxisDatas.size(); i++) {
@@ -288,15 +359,5 @@ public class BaiduTongjiUtils {
 			list.add(rowMap);
 		}
 		return list;
-	}
-
-	public static void main(String[] args) {
-		String ACCESS_TOKEN = "121.27a068c170ac1b1616a72b203de2582b.YllRbjClqMAccsWJZeZYel5zEMGGnLzHEYmL3cO.tKTICA";
-		LocalDateTime startDate = LocalDateTime.of(2023, Month.APRIL, 1, 0, 0, 0);
-		LocalDateTime endDate = LocalDateTime.of(2023, Month.APRIL, 5, 0, 0, 0);
-		BaiduOverviewReport siteOverviewTimeTrend = getSiteOverviewTimeTrend(ACCESS_TOKEN, 18942851L, startDate,
-				endDate);
-
-		System.out.println(siteOverviewTimeTrend.getFields().toString());
 	}
 }

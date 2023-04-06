@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.system.groovy.BaseGroovyScript;
 import com.ruoyi.system.groovy.GroovyScriptFactory;
@@ -29,7 +31,8 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @RequestMapping("/groovy")
 public class GroovyController {
-	
+
+	@Log(title = "执行Groovy脚本", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = "sys:groovy:exec")
 	@PostMapping("/exec")
 	public R<?> execGroovyScript(@RequestBody ScriptBody scriptBody) throws Exception {

@@ -25,6 +25,8 @@ import com.ruoyi.advertisement.service.IAdvertisementService;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
@@ -83,6 +85,7 @@ public class AdvertisementController extends BaseRestController {
 		return R.ok(new AdvertisementVO(ad).dealPreviewResourcePath());
 	}
 
+	@Log(title = "新增广告", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addAdvertisement(@RequestBody AdvertisementDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -90,6 +93,7 @@ public class AdvertisementController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑广告", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> editAdvertisement(@RequestBody AdvertisementDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -97,6 +101,7 @@ public class AdvertisementController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除广告", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> deleteAdvertisements(@RequestBody List<Long> advertisementIds) {
 		if (StringUtils.isEmpty(advertisementIds)) {
@@ -106,6 +111,7 @@ public class AdvertisementController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "启用广告", businessType = BusinessType.UPDATE)
 	@PutMapping("/enable")
 	public R<?> enableAdvertisements(@RequestBody List<Long> advertisementIds) {
 		if (StringUtils.isEmpty(advertisementIds)) {
@@ -116,6 +122,7 @@ public class AdvertisementController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "禁用广告", businessType = BusinessType.UPDATE)
 	@PutMapping("/disable")
 	public R<?> disableAdvertisements(@RequestBody List<Long> advertisementIds) {
 		if (StringUtils.isEmpty(advertisementIds)) {

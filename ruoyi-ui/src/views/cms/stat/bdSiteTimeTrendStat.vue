@@ -10,7 +10,7 @@
             <div class="card-panel-text">
               浏览量（PV）
             </div>
-            {{ sum.pv }}
+            {{ sum.pv_count }}
           </div>
         </div>
       </el-col>
@@ -23,7 +23,7 @@
             <div class="card-panel-text">
               访客数（UV）
             </div>
-            {{ sum.uv }}
+            {{ sum.visitor_count }}
           </div>
         </div>
       </el-col>
@@ -36,27 +36,27 @@
             <div class="card-panel-text">
               IP数
             </div>
-            {{ sum.ip }}
+            {{ sum.ip_count }}
           </div>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div v-loading="loading" class="card-panel" @click="handleSetLineChartData('avgVisitTime')">
           <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="time-range" class-name="card-panel-icon" />
+            <svg-icon icon-class="home" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              平均访问时长
+              访问次数
             </div>
-            {{ sum.avgVisitTime }} 秒
+            {{ sum.visit_count }}
           </div>
         </div>
       </el-col>
     </el-row>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-select v-model="queryParams.bdSiteId" size="small">
+        <el-select v-model="queryParams.siteId" size="small">
           <el-option
             v-for="site in siteOptions"
             :key="site.site_id"
@@ -67,6 +67,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-date-picker
+          v-if="queryParams.gran!='hour'"
           v-model="dateRange"
           value-format="yyyy-MM-dd HH:mm:ss"
           type="daterange"
@@ -77,6 +78,22 @@
           :picker-options="pickerOptions"
           style="width:235px"
         ></el-date-picker>
+        <el-date-picker
+          v-if="queryParams.gran=='hour'"
+          v-model="hourDate"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          size="small"
+          :clearable="false"
+          type="date">
+        </el-date-picker>
+      </el-col>
+      <el-col :span="1.5">
+        <el-radio-group v-model="queryParams.gran" size="small">
+          <el-radio-button label="hour">按小时</el-radio-button>
+          <el-radio-button label="day">按天</el-radio-button>
+          <el-radio-button label="week">按周</el-radio-button>
+          <el-radio-button label="month">按月</el-radio-button>
+        </el-radio-group>
       </el-col>
       <el-col :span="1.5">
         <el-button 
@@ -89,65 +106,10 @@
     <el-row :gutter="10" class="mb8">
         <el-card v-loading="loading" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>访问趋势</span>
+            <span>趋势分析</span>
           </div>
           <line-chart :chart-data="lineChartData" />
         </el-card>
-    </el-row>
-    
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="12">
-        <el-card v-loading="loading" shadow="hover">
-          <div slot="header" class="clearfix">
-            <span>Top10入口页面</span>
-          </div>
-          <el-table v-loading="loadingOther" :data="top10LandingPage" height="405" size="mini">
-            <el-table-column 
-              label="页面地址"
-              align="left"
-              prop="name" />
-            <el-table-column 
-              label="PV"
-              align="right"
-              width="70"
-              prop="pv_count" />
-            <el-table-column 
-              label="占比"
-              align="right"
-              width="70"
-              prop="ratio">
-              <template slot-scope="scope">
-                {{ scope.row.ratio }} %
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card shadow="hover">
-          <div slot="header" class="clearfix">
-            <span>地域分布</span>
-          </div>
-          <el-table v-loading="loadingDistrict" :data="districtList" height="405" size="mini">
-            <el-table-column 
-              label="区域"
-              align="center"
-              prop="name" />
-            <el-table-column 
-              label="PV"
-              align="center"
-              prop="pv_count" />
-            <el-table-column 
-              label="占比"
-              align="center"
-              prop="ratio">
-              <template slot-scope="scope">
-                {{ scope.row.ratio }} %
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
     </el-row>
   </div>
 </template>
@@ -166,9 +128,10 @@ export default {
     return {
       loading: false,
       queryParams: {
-        bdSiteId: undefined,
+        siteId: undefined,
         startDate: undefined,
-        endDate: undefined
+        endDate: undefined,
+        gran: 'day'
       },
       pickerOptions: {
         shortcuts: [{
@@ -198,21 +161,13 @@ export default {
         }]
       },
       dateRange: [],
+      hourDate: undefined,
       siteOptions: [],
       lineChartData: {
         xAxisDatas:[],
         datas: []
       },
-      sum: {
-        pv: 0,
-        uv: 0,
-        ip: 0,
-        avgVisitTime: 0
-      },
-      loadingDistrict: false,
-      districtList: [],
-      loadingOther: false,
-      top10LandingPage: []
+      sum: {},
     };
   },
   created() {
@@ -224,66 +179,39 @@ export default {
       baiduTongjiApi.getSiteList().then(response => {
         this.siteOptions = response.data;
         if (this.siteOptions.length > 0) {
-          this.queryParams.bdSiteId = this.siteOptions[0].site_id;
-          this.loadSiteTrendOverviewDatas();
-          this.loadSiteDistrictOverviewDatas();
-          this.loadSiteOtherOverviewDatas();
+          this.queryParams.siteId = this.siteOptions[0].site_id;
+          this.loadSiteTimeTrendDatas();
         }
       });
     },
-    loadSiteTrendOverviewDatas () {
+    loadSiteTimeTrendDatas () {
       if (this.siteOptions.length == 0) {
         this.$modal.msgWarning("无可用站点数据");
         return;
       }
       this.loading = true;
-      this.queryParams.startDate = this.dateRange[0];
-      this.queryParams.endDate = this.dateRange[1];
-      baiduTongjiApi.getSiteTrendOverviewDatas(this.queryParams).then(response => {
+      if (this.queryParams.gran == 'hour') {
+        this.queryParams.startDate = this.hourDate;
+        this.queryParams.endDate = this.hourDate;
+      } else {
+        this.queryParams.startDate = this.dateRange[0];
+        this.queryParams.endDate = this.dateRange[1];
+      }
+      baiduTongjiApi.getSiteTimeTrendDatas(this.queryParams).then(response => {
           this.lineChartData.xAxisDatas = response.data.xaxisDatas;
           this.lineChartData.datas = response.data.datas;
-          this.sum = { pv: 0, uv: 0, ip: 0, avgVisitTime: 0 };
-          this.lineChartData.datas.pv_count.forEach(v => this.sum.pv+=v);
-          this.lineChartData.datas.ip_count.forEach(v => this.sum.ip+=v);
-          this.lineChartData.datas.visitor_count.forEach(v => this.sum.uv+=v);
-          this.lineChartData.datas.avg_visit_time.forEach(v => this.sum.avgVisitTime+=v);
-          this.sum.avgVisitTime = Math.round(this.sum.avgVisitTime / this.lineChartData.datas.avg_visit_time.length);
+          this.sum = response.data.sum;
           this.loading = false;
       });
     },
-    loadSiteDistrictOverviewDatas () {
-      if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
-        return;
-      }
-      this.loadingDistrict = true;
-      this.queryParams.startDate = this.dateRange[0];
-      this.queryParams.endDate = this.dateRange[1];
-      baiduTongjiApi.getSiteDistrictOverviewDatas(this.queryParams).then(response => {
-          this.districtList = response.data;
-          this.loadingDistrict = false;
-      });
-    },
-    loadSiteOtherOverviewDatas () {
-      if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
-        return;
-      }
-      this.loadingOther = true;
-      this.queryParams.startDate = this.dateRange[0];
-      this.queryParams.endDate = this.dateRange[1];
-      baiduTongjiApi.getSiteOtherOverviewDatas(this.queryParams).then(response => {
-          this.top10LandingPage = response.data.landingPage;
-          this.loadingOther = false;
-      });
-    },
     handleQuery() {
-     this.loadSiteTrendOverviewDatas();
+     this.loadSiteTimeTrendDatas();
     },
     resetQuery() {
       var endDate = this.parseTime(new Date());
       var startDate = this.parseTime(new Date(new Date().getTime() - 3600 * 24 * 30 *1000));
       this.dateRange = [ startDate, endDate ];
+      this.hourDate = this.parseTime(new Date());
     },
     handleSetLineChartData(type) {
      // this.$emit('handleSetLineChartData', type)

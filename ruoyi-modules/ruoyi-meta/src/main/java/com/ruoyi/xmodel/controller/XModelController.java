@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
@@ -66,6 +68,7 @@ public class XModelController extends BaseRestController {
 		return this.bindDataTable(list);
 	}
 
+	@Log(title = "新增元数据", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@RequestBody XModelDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -73,6 +76,7 @@ public class XModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑元数据", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@RequestBody XModelDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -80,6 +84,7 @@ public class XModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除元数据", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody @NotEmpty List<XModelDTO> dtoList) {
 		List<Long> modelIds = dtoList.stream().map(XModelDTO::getModelId).toList();

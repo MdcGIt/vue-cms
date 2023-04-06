@@ -22,6 +22,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -111,6 +113,7 @@ public class PageWidgetController extends BaseRestController {
 		return R.ok(vo);
 	}
 
+	@Log(title = "新增页面组件", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addPageWidget(@RequestBody PageWidgetAddDTO dto)
 			throws IOException {
@@ -135,6 +138,7 @@ public class PageWidgetController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑页面组件", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> editPageWidget(@RequestBody PageWidgetEditDTO dto)
 			throws IOException {
@@ -152,12 +156,14 @@ public class PageWidgetController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除页面组件", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> deletePageWidgets(@RequestBody @NotEmpty List<Long> pageWidgetIds) {
 		this.pageWidgetService.deletePageWidgets(pageWidgetIds);
 		return R.ok();
 	}
 
+	@Log(title = "发布页面组件", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
 	public R<?> publishPageWdigets(@RequestBody @NotEmpty List<Long> pageWidgetIds) throws TemplateException, IOException {
 		this.pageWidgetService.publishPageWidgets(pageWidgetIds);

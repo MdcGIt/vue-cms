@@ -23,6 +23,8 @@ import com.google.common.io.Files;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -88,6 +90,7 @@ public class SiteController extends BaseRestController {
 	 * @param siteId 站点ID
 	 * @return
 	 */
+	@Log(title = "切换站点", businessType = BusinessType.UPDATE)
 	@PostMapping("/setCurrentSite/{siteId}")
 	public R<Map<String, Object>> setCurrentSite(@PathVariable("siteId") @Min(1) Long siteId) {
 		CmsSite site = this.siteService.getSite(siteId);
@@ -144,6 +147,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "新增站点", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addSave(@RequestBody SiteDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -158,6 +162,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "编辑站点", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> editSave(@RequestBody SiteDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -172,6 +177,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "删除站点", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{siteId}")
 	public R<String> remove(@PathVariable("siteId") Long siteId) throws IOException {
 		this.siteService.deleteSite(siteId);
@@ -186,6 +192,7 @@ public class SiteController extends BaseRestController {
 	 * @throws IOException
 	 * @throws TemplateException
 	 */
+	@Log(title = "发布站点", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
 	public R<String> publishAll(@RequestBody PublishSiteDTO dto) throws IOException, TemplateException {
 		CmsSite site = siteService.getById(dto.getSiteId());
@@ -221,6 +228,7 @@ public class SiteController extends BaseRestController {
 	 * @param configs 扩展配置数据
 	 * @return
 	 */
+	@Log(title = "站点扩展", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PostMapping("/extends/{siteId}")
 	public R<?> saveSiteExtends(@PathVariable("siteId") Long siteId, @RequestBody Map<String, String> configs) {
 		this.siteService.saveSiteExtend(siteId, configs, StpAdminUtil.getLoginUser().getUsername());
@@ -254,6 +262,7 @@ public class SiteController extends BaseRestController {
 	 * @param dto
 	 * @return
 	 */
+	@Log(title = "默认模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/default_template")
 	public R<?> saveDefaultTemplates(@RequestBody SiteDefaultTemplateDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -267,6 +276,7 @@ public class SiteController extends BaseRestController {
 	 * @param dto
 	 * @return
 	 */
+	@Log(title = "应用默认模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/apply_default_template")
 	public R<?> applyDefaultTemplateToCatalog(@RequestBody SiteDefaultTemplateDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -282,6 +292,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Log(title = "上传水印图", businessType = BusinessType.UPDATE)
 	@PostMapping("/upload_watermarkimage")
 	public R<?> uploadFile(@RequestParam("siteId") @Min(1) Long siteId,
 			@RequestParam("file") @NotNull MultipartFile multipartFile) throws Exception {

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.search.domain.DictWord;
@@ -47,6 +49,7 @@ public class DictWordController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Log(title = "新增检索词", businessType = BusinessType.UPDATE)
 	@SaAdminCheckLogin
 	@PostMapping
 	public R<?> add(@RequestBody DictWordDTO dto) {
@@ -55,6 +58,7 @@ public class DictWordController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除检索词", businessType = BusinessType.DELETE)
 	@SaAdminCheckLogin
 	@DeleteMapping
 	public R<String> delete(@RequestBody @NotEmpty List<Long> dictWordIds) {

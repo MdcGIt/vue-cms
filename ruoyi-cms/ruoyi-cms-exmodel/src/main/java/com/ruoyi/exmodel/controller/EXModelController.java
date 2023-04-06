@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.ServletUtils;
@@ -73,6 +75,7 @@ public class EXModelController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Log(title = "新增扩展模型", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.ADD)
 	@PostMapping
 	public R<?> add(@RequestBody XModelDTO dto) {
@@ -84,6 +87,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑扩展模板", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@PutMapping
 	public R<?> edit(@RequestBody XModelDTO dto) {
@@ -92,6 +96,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除扩展模型", businessType = BusinessType.DELETE)
 	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<XModelDTO> dtoList) {
@@ -114,6 +119,7 @@ public class EXModelController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Log(title = "新增扩展模型字段", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@PostMapping("/field")
 	public R<?> addField(@RequestBody XModelFieldDTO dto) {
@@ -122,6 +128,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑扩展模型字段", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@PutMapping("/field")
 	public R<?> editField(@RequestBody XModelFieldDTO dto) {
@@ -130,6 +137,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除扩展模型字段", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
 	@DeleteMapping("/field")
 	public R<?> removeField(@RequestBody @NotEmpty List<Long> fieldIds) {

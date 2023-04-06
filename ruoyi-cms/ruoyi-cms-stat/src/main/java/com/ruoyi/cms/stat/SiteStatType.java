@@ -11,7 +11,8 @@ import com.ruoyi.stat.StatMenu;
 public class SiteStatType implements IStatType {
 
 	private final static List<StatMenu> STAT_MENU = List.of(new StatMenu("CmsSiteStat", "", "网站访问统计", 1),
-			new StatMenu("BdSiteTrendOverview", "CmsSiteStat", "网站概况", 1));
+			new StatMenu("BdSiteTrendOverview", "CmsSiteStat", "网站概况", 1),
+			new StatMenu("BdSiteTimeTrend", "CmsSiteStat", "趋势分析", 2));
 
 	@Override
 	public List<StatMenu> getStatMenus() {

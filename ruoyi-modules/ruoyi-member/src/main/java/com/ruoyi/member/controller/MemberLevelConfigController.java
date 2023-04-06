@@ -18,6 +18,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
@@ -70,6 +72,7 @@ public class MemberLevelConfigController extends BaseRestController {
 		return R.ok(levelTypes);
 	}
 
+	@Log(title = "新增会员等级配置", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addMemberConfig(@RequestBody LevelConfigDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -77,6 +80,7 @@ public class MemberLevelConfigController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑会员等级配置", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> updateMemberConfig(@RequestBody LevelConfigDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -84,6 +88,7 @@ public class MemberLevelConfigController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除会员等级配置", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> deleteConfig(@RequestBody @NotEmpty List<Long> configIds) {
 		this.memberLevelConfigService.deleteLevelConfig(configIds);

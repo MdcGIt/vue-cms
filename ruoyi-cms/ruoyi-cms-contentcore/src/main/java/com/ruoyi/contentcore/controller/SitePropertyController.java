@@ -18,6 +18,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
@@ -86,6 +88,7 @@ public class SitePropertyController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "新增站点属性", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<String> addSiteProperty(@RequestBody CmsSiteProperty siteProperty) throws IOException {
 		siteProperty.createBy(StpAdminUtil.getLoginUser().getUsername());
@@ -99,6 +102,7 @@ public class SitePropertyController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "编辑站点属性", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<String> editSiteProperty(@RequestBody CmsSiteProperty siteProperty) throws IOException {
 		siteProperty.updateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -113,6 +117,7 @@ public class SitePropertyController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "删除站点属性", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<String> removeSiteProperties(@RequestBody Long[] propertyIds) throws IOException {
 		if (propertyIds == null || propertyIds.length == 0) {

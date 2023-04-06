@@ -19,6 +19,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.extend.annotation.XssIgnore;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.utils.Assert;
@@ -106,6 +108,7 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "新增模板", businessType = BusinessType.INSERT)
 	@XssIgnore
 	@PostMapping
 	public R<?> add(@RequestBody TemplateAddDTO dto) throws IOException {
@@ -123,6 +126,7 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "重命名模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/rename")
 	public R<?> rename(@RequestBody TemplateRenameDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -137,6 +141,7 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "编辑模板", businessType = BusinessType.UPDATE)
 	@XssIgnore
 	@PutMapping
 	public R<?> save(@RequestBody TemplateUpdateDTO dto) throws IOException {
@@ -152,6 +157,7 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "删除模板", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> delete(@RequestBody List<Long> templateIds) throws IOException {
 		Assert.notEmpty(templateIds, () -> CommonErrorCode.NOT_EMPTY.exception());
@@ -159,6 +165,7 @@ public class TemplateController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "清理模板缓存", businessType = BusinessType.OTHER)
 	@PostMapping("/clearTemplateCache")
 	public R<?> clearTemplateCache() {
 		this.staticizeService.clearTemplateCache();

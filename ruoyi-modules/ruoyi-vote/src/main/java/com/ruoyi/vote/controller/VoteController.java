@@ -18,6 +18,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
@@ -81,6 +83,7 @@ public class VoteController extends BaseRestController {
 		return R.ok(list);
 	}
 
+	@Log(title = "新增问卷调查", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = VotePriv.ADD)
 	@PostMapping
 	public R<?> add(@RequestBody Vote vote) {
@@ -89,6 +92,7 @@ public class VoteController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑问卷调查", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PutMapping
 	public R<?> update(@RequestBody Vote vote) {
@@ -97,6 +101,7 @@ public class VoteController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除问卷调查", businessType = BusinessType.DELETE)
 	@Priv(type = AdminUserType.TYPE, value = VotePriv.DELETE)
 	@DeleteMapping
 	public R<String> delete(@RequestBody @NotEmpty List<Long> dictWordIds) {

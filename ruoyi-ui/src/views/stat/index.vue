@@ -30,6 +30,7 @@
         <cms-ad-click v-if="currentMenu=='CmsAdClickLog'"></cms-ad-click>
         <cms-ad-view v-if="currentMenu=='CmsAdViewLog'"></cms-ad-view>
         <cms-site-trend-overview v-if="currentMenu=='BdSiteTrendOverview'"></cms-site-trend-overview>
+        <cms-site-timetrend v-if="currentMenu=='BdSiteTimeTrend'"></cms-site-timetrend>
       </el-col>
     </el-row>
   </div>
@@ -41,6 +42,7 @@ import CMSAdvertisementStat from '@/views/cms/ad/adStat';
 import CMSAdvertisementClickLog from '@/views/cms/ad/adClickLog';
 import CMSAdvertisementViewLog from '@/views/cms/ad/adViewLog';
 import CMSBdSiteTrendOverview from '@/views/cms/stat/bdSiteStat';
+import CMSBdSiteTimeTrend from '@/views/cms/stat/bdSiteTimeTrendStat';
 
 
 import Treeselect from "@riophae/vue-treeselect";
@@ -54,6 +56,7 @@ export default {
     'cms-ad-click': CMSAdvertisementClickLog,
     'cms-ad-view': CMSAdvertisementViewLog,
     'cms-site-trend-overview': CMSBdSiteTrendOverview,
+    'cms-site-timetrend': CMSBdSiteTimeTrend,
   },
   data() {
     return {

@@ -26,6 +26,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.extend.annotation.XssIgnore;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -140,6 +142,7 @@ public class ContentController extends BaseRestController {
 		return R.ok(vo);
 	}
 
+	@Log(title = "新增内容", businessType = BusinessType.INSERT)
 	@XssIgnore
 	@PostMapping
 	public R<?> addContent(@RequestParam("contentType") String contentType, HttpServletRequest request)
@@ -152,6 +155,7 @@ public class ContentController extends BaseRestController {
 		return R.ok(Map.of("taskId", task.getTaskId()));
 	}
 
+	@Log(title = "编辑内容", businessType = BusinessType.UPDATE)
 	@XssIgnore
 	@PutMapping
 	public R<?> saveContent(@RequestParam("contentType") String contentType, HttpServletRequest request)
@@ -164,9 +168,7 @@ public class ContentController extends BaseRestController {
 		return R.ok(Map.of("taskId", task.getTaskId()));
 	}
 
-	/**
-	 * 删除内容
-	 */
+	@Log(title = "删除内容", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> deleteContent(@RequestBody @NotEmpty List<Long> contentIds) {
 		this.contentService.deleteContents(contentIds, StpAdminUtil.getLoginUser());
@@ -176,6 +178,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 发布内容
 	 */
+	@Log(title = "发布内容", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
 	public R<String> publish(@RequestBody PublishContentDTO publishContentDTO) throws TemplateException, IOException {
 		this.publishService.publishContent(publishContentDTO.getContentIds());
@@ -185,6 +188,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 锁定内容
 	 */
+	@Log(title = "锁定内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/lock/{contentId}")
 	public R<String> lock(@PathVariable("contentId") @Min(1) Long contentId) {
 		this.contentService.lock(contentId, StpAdminUtil.getLoginUser().getUsername());
@@ -194,6 +198,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 解锁内容
 	 */
+	@Log(title = "解锁内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/unlock/{contentId}")
 	public R<String> unLock(@PathVariable("contentId") @Min(1) Long contentId) {
 		this.contentService.unLock(contentId, StpAdminUtil.getLoginUser().getUsername());
@@ -203,6 +208,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 复制内容
 	 */
+	@Log(title = "复制内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/copy")
 	public R<?> copy(@RequestBody CopyContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -213,6 +219,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 转移内容
 	 */
+	@Log(title = "转移内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/move")
 	public R<?> move(@RequestBody MoveContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -223,6 +230,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 置顶
 	 */
+	@Log(title = "置顶", businessType = BusinessType.UPDATE)
 	@PostMapping("/set_top")
 	public R<?> setTop(@RequestBody SetTopContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -233,6 +241,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 取消置顶
 	 */
+	@Log(title = "取消置顶", businessType = BusinessType.UPDATE)
 	@PostMapping("/cancel_top")
 	public R<?> cancelTop(@RequestBody List<Long> contentIds) {
 		this.contentService.cancelTop(contentIds, StpAdminUtil.getLoginUser());
@@ -242,6 +251,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 排序
 	 */
+	@Log(title = "内容排序", businessType = BusinessType.UPDATE)
 	@PostMapping("/sort")
 	public R<?> sort(@RequestBody SortContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -252,6 +262,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 下线
 	 */
+	@Log(title = "下线内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/offline")
 	public R<?> offline(@RequestBody @NotEmpty List<Long> contentIds) {
 		this.contentService.offline(contentIds, StpAdminUtil.getLoginUser());
@@ -261,6 +272,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 归档
 	 */
+	@Log(title = "归档内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/archive")
 	public R<?> archive(@RequestBody @NotEmpty List<Long> contentIds) {
 		this.contentService.archive(contentIds, StpAdminUtil.getLoginUser());

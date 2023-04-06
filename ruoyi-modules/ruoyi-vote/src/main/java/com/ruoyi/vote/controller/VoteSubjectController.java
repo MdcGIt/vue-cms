@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
@@ -54,6 +56,7 @@ public class VoteSubjectController extends BaseRestController {
 		return R.ok(subject);
 	}
 
+	@Log(title = "新增调查主题", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PostMapping
 	public R<?> add(@RequestBody VoteSubject voteSubject) {
@@ -62,6 +65,7 @@ public class VoteSubjectController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑调查主题", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PutMapping
 	public R<?> update(@RequestBody VoteSubject voteSubject) {
@@ -70,6 +74,7 @@ public class VoteSubjectController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除调查主题", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@DeleteMapping
 	public R<String> delete(@RequestBody @NotEmpty List<Long> subjectIds) {
@@ -85,6 +90,7 @@ public class VoteSubjectController extends BaseRestController {
 		return this.bindDataTable(list);
 	}
 
+	@Log(title = "保存调查主题选项", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
 	@PostMapping("/items")
 	public R<?> saveSubjectItems(@RequestBody SaveSubjectItemsDTO dto) {
