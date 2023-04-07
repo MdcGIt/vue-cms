@@ -11,7 +11,7 @@
  Target Server Version : 50735
  File Encoding         : 65001
 
- Date: 06/04/2023 14:54:09
+ Date: 07/04/2023 16:59:45
 */
 
 SET NAMES utf8mb4;
@@ -1936,7 +1936,7 @@ CREATE TABLE `sys_i18n_dict`  (
   `lang_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '国际化字符键',
   `lang_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '国际化字符值',
   PRIMARY KEY (`dict_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 166 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 186 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_i18n_dict
@@ -1999,6 +1999,26 @@ INSERT INTO `sys_i18n_dict` VALUES (162, 'en', 'MENU.NAME.2049', 'User Operation
 INSERT INTO `sys_i18n_dict` VALUES (163, 'zh-CN', 'MENU.NAME.2034', '模板指令');
 INSERT INTO `sys_i18n_dict` VALUES (164, 'zh-CN', 'MENU.NAME.2059', '任务调度');
 INSERT INTO `sys_i18n_dict` VALUES (165, 'en', 'MENU.NAME.2059', 'XXL-JOB');
+INSERT INTO `sys_i18n_dict` VALUES (166, 'zh-CN', 'MENU.NAME.2060', '会员管理');
+INSERT INTO `sys_i18n_dict` VALUES (167, 'en', 'MENU.NAME.2060', 'Member');
+INSERT INTO `sys_i18n_dict` VALUES (168, 'zh-CN', 'MENU.NAME.2080', '统计分析');
+INSERT INTO `sys_i18n_dict` VALUES (169, 'en', 'MENU.NAME.2080', 'Statistics');
+INSERT INTO `sys_i18n_dict` VALUES (170, 'zh-CN', 'MENU.NAME.2052', '索引词库');
+INSERT INTO `sys_i18n_dict` VALUES (171, 'en', 'MENU.NAME.2052', 'Index Dict');
+INSERT INTO `sys_i18n_dict` VALUES (172, 'zh-CN', 'MENU.NAME.2053', '搜索日志');
+INSERT INTO `sys_i18n_dict` VALUES (173, 'en', 'MENU.NAME.2053', 'Search Log');
+INSERT INTO `sys_i18n_dict` VALUES (174, 'zh-CN', 'MENU.NAME.2065', '评论管理');
+INSERT INTO `sys_i18n_dict` VALUES (175, 'en', 'MENU.NAME.2065', 'Comment');
+INSERT INTO `sys_i18n_dict` VALUES (176, 'zh-CN', 'MENU.NAME.2066', '调查问卷');
+INSERT INTO `sys_i18n_dict` VALUES (177, 'en', 'MENU.NAME.2066', 'Vote');
+INSERT INTO `sys_i18n_dict` VALUES (178, 'zh-CN', 'MENU.NAME.2063', '会员列表');
+INSERT INTO `sys_i18n_dict` VALUES (179, 'en', 'MENU.NAME.2063', 'Member List');
+INSERT INTO `sys_i18n_dict` VALUES (180, 'zh-CN', 'MENU.NAME.2062', '等级配置');
+INSERT INTO `sys_i18n_dict` VALUES (181, 'en', 'MENU.NAME.2062', 'Level Config');
+INSERT INTO `sys_i18n_dict` VALUES (182, 'zh-CN', 'MENU.NAME.2061', '经验配置');
+INSERT INTO `sys_i18n_dict` VALUES (183, 'en', 'MENU.NAME.2061', 'Exp Config');
+INSERT INTO `sys_i18n_dict` VALUES (184, 'zh-CN', 'MENU.NAME.2064', 'GroovyScript');
+INSERT INTO `sys_i18n_dict` VALUES (185, 'en', 'MENU.NAME.2064', 'GroovyScript');
 
 -- ----------------------------
 -- Table structure for sys_logininfor
@@ -2166,7 +2186,7 @@ INSERT INTO `sys_menu` VALUES (2076, '删除', 2036, 3, '', NULL, NULL, 'N', 'Y'
 INSERT INTO `sys_menu` VALUES (2077, '新增', 2037, 1, '', NULL, NULL, 'N', 'Y', 'F', 'Y', '0', 'cms:exmodel:add', '#', 'admin', '2023-03-28 18:45:23', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2078, '编辑', 2037, 2, '', NULL, NULL, 'N', 'Y', 'F', 'Y', '0', 'cms:exmodel:edit', '#', 'admin', '2023-03-28 18:45:36', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2079, '删除', 2037, 3, '', NULL, NULL, 'N', 'Y', 'F', 'Y', '0', 'cms:exmodel:delete', '#', 'admin', '2023-03-28 18:45:45', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2080, '统计分析', 0, 38, 'statistics', 'stat/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'stat:view', 'chart', 'admin', '2023-04-04 09:36:09', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2080, '统计分析', 0, 38, 'statistics', 'stat/index', NULL, 'N', 'Y', 'C', 'Y', '0', 'stat:view', 'chart', 'admin', '2023-04-04 09:36:09', 'admin', '2023-04-07 16:55:29', '');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -2215,7 +2235,7 @@ CREATE TABLE `sys_oper_log`  (
   `cost` bigint(20) NULL DEFAULT NULL COMMENT '操作耗时',
   `user_agent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '请求头User-Agent信息',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1066 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1077 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -2252,6 +2272,17 @@ INSERT INTO `sys_oper_log` VALUES (1062, '菜单管理', 'UPDATE', 'R com.ruoyi.
 INSERT INTO `sys_oper_log` VALUES (1063, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-25 13:16:16\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-25 13:17:23\",\"remark\":\"\",\"menuId\":\"2050\",\"menuName\":\"用户登录日志\",\"parentId\":\"2048\",\"orderNum\":2,\"path\":\"/monitor/logs/logininfo\",\"component\":\"monitor/logs/logininfo\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"log:userlogin\",\"icon\":\"logininfor\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-04 09:37:38', 46, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
 INSERT INTO `sys_oper_log` VALUES (1064, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-25 13:13:55\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-25 13:24:17\",\"remark\":\"\",\"menuId\":\"2049\",\"menuName\":\"用户操作日志\",\"parentId\":\"2048\",\"orderNum\":3,\"path\":\"/monitor/logs/operation\",\"component\":\"monitor/logs/operation\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"log:user:operation\",\"icon\":\"button\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-04 09:37:53', 47, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
 INSERT INTO `sys_oper_log` VALUES (1065, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-25 13:16:16\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-04 09:37:38\",\"remark\":\"\",\"menuId\":\"2050\",\"menuName\":\"用户登录日志\",\"parentId\":\"2048\",\"orderNum\":2,\"path\":\"/monitor/logs/logininfo\",\"component\":\"monitor/logs/logininfo\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"log:user:login\",\"icon\":\"logininfor\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-04 09:37:58', 66, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1066, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"166\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2060\",\"langValue\":\"会员管理\"},{\"dictId\":\"167\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2060\",\"langValue\":\"Member\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:54:44', 590, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1067, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"168\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2080\",\"langValue\":\"统计分析\"},{\"dictId\":\"169\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2080\",\"langValue\":\"Statistics\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:55:27', 61, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1068, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-04 09:36:09\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2080\",\"menuName\":\"统计分析\",\"parentId\":\"0\",\"orderNum\":38,\"path\":\"statistics\",\"component\":\"stat/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"stat:view\",\"icon\":\"chart\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:55:29', 108, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1069, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"170\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2052\",\"langValue\":\"索引词库\"},{\"dictId\":\"171\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2052\",\"langValue\":\"Index Dict\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:56:10', 57, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1070, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"172\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2053\",\"langValue\":\"搜索日志\"},{\"dictId\":\"173\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2053\",\"langValue\":\"Search Log\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:56:27', 63, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1071, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"174\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2065\",\"langValue\":\"评论管理\"},{\"dictId\":\"175\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2065\",\"langValue\":\"Comment\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:56:43', 72, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1072, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"176\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2066\",\"langValue\":\"调查问卷\"},{\"dictId\":\"177\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2066\",\"langValue\":\"Vote\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:56:56', 65, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1073, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"178\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2063\",\"langValue\":\"会员列表\"},{\"dictId\":\"179\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2063\",\"langValue\":\"Member List\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:57:15', 80, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1074, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"180\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2062\",\"langValue\":\"等级配置\"},{\"dictId\":\"181\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2062\",\"langValue\":\"Level Config\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:57:32', 89, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1075, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"182\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2061\",\"langValue\":\"经验配置\"},{\"dictId\":\"183\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2061\",\"langValue\":\"Exp Config\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:57:49', 86, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+INSERT INTO `sys_oper_log` VALUES (1076, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"184\",\"langTag\":\"zh-CN\",\"langKey\":\"MENU.NAME.2064\",\"langValue\":\"GroovyScript\"},{\"dictId\":\"185\",\"langTag\":\"en\",\"langKey\":\"MENU.NAME.2064\",\"langValue\":\"GroovyScript\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-07 16:58:12', 60, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
 
 -- ----------------------------
 -- Table structure for sys_permission
