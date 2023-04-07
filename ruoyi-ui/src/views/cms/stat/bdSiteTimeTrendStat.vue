@@ -190,13 +190,13 @@ export default {
         return;
       }
       this.loading = true;
-      // if (this.queryParams.gran == 'hour') {
-      //   this.queryParams.startDate = this.hourDate;
-      //   this.queryParams.endDate = this.hourDate;
-      // } else {
-      //   this.queryParams.startDate = this.dateRange[0];
-      //   this.queryParams.endDate = this.dateRange[1];
-      // }
+      if (this.queryParams.gran == 'hour') {
+        this.queryParams.startDate = this.hourDate;
+        this.queryParams.endDate = this.hourDate;
+      } else {
+        this.queryParams.startDate = this.dateRange[0];
+        this.queryParams.endDate = this.dateRange[1];
+      }
       baiduTongjiApi.getSiteTimeTrendDatas(this.queryParams).then(response => {
           this.lineChartData.xAxisDatas = response.data.xaxisDatas;
           this.lineChartData.datas = response.data.datas;

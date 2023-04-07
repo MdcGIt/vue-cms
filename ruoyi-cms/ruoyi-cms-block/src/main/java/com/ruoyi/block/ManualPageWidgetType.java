@@ -32,6 +32,7 @@ import lombok.Setter;
 public class ManualPageWidgetType implements IPageWidgetType {
 
 	public final static String ID = "manual";
+	public final static String NAME = "{CMS.CONTENCORE.PAGEWIDGET." + ID + "}";
 	
 	@Override
 	public String getId() {
@@ -40,7 +41,7 @@ public class ManualPageWidgetType implements IPageWidgetType {
 
 	@Override
 	public String getName() {
-		return "CONTENTCORE.PAGEWIDGET." + ID;
+		return NAME;
 	}
 
 	@Override

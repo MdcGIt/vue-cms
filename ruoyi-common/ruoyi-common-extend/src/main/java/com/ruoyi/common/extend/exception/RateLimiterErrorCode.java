@@ -16,6 +16,6 @@ public enum RateLimiterErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.EXTEND." + this.name();
+		return "{ERRCODE.EXTEND." + this.name() + "}";
 	}
 }

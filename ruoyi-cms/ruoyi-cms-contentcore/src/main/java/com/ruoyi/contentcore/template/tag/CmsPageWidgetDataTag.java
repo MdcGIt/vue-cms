@@ -30,8 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsPageWidgetDataTag extends AbstractTag {
 
 	public final static String TAG_NAME = "cms_pagewidget_data";
-	
-	public final static String NAME = "页面部件数据标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 	
 	final static String TagAttr_Code = "code";
 	
@@ -46,7 +46,12 @@ public class CmsPageWidgetDataTag extends AbstractTag {
 	public String getName() {
 		return NAME;
 	}
+
 	
+	@Override
+	public String getDescription() {
+		return DESC;
+	}
 	@Override
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = new ArrayList<>();
@@ -76,10 +81,5 @@ public class CmsPageWidgetDataTag extends AbstractTag {
 		Object contentObj = pwt.parseContent(pageWidget, context.getPublishPipeCode(), context.isPreview());
 		pageWidget.setContentObj(contentObj);
 		return Map.of(StaticizeConstants.TemplateVariable_Data, this.wrap(env, pageWidget));
-	}
-	
-	@Override
-	public String getDescription() {
-		return "页面部件数据标签，标签体内可使用${Data.name}获取数据";
 	}
 }

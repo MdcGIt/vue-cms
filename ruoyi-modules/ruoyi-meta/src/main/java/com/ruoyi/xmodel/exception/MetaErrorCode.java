@@ -31,6 +31,6 @@ public enum MetaErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.META." + this.name();
+		return "{ERRCODE.META." + this.name() + "}";
 	}
 }

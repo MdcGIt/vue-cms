@@ -17,7 +17,7 @@ public class SysCaptchaEnable extends FixedConfig {
 	private static final ISysConfigService configService = SpringUtils.getBean(ISysConfigService.class);
 	
 	public SysCaptchaEnable() {
-		super(ID, "CONFIG." + ID, DEFAULT_VALUE, null);
+		super(ID, "{CONFIG." + ID + "}", DEFAULT_VALUE, null);
 	}
 	
 	public static boolean isEnable() {

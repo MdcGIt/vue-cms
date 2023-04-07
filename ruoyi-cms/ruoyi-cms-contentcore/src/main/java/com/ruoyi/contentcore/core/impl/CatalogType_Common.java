@@ -8,6 +8,8 @@ import com.ruoyi.contentcore.core.ICatalogType;
 public class CatalogType_Common implements ICatalogType {
 
 	public final static String ID = "common";
+    
+    private final static String NAME = "{CMS.CONTENTCORE.CATALOG_TYPE." + ID + "}";
 
 	@Override
 	public String getId() {
@@ -16,6 +18,6 @@ public class CatalogType_Common implements ICatalogType {
 
 	@Override
 	public String getName() {
-		return "普通栏目";
+		return NAME;
 	}
 }

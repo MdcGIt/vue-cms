@@ -22,6 +22,8 @@ public class ClearHtmlTagFunction extends AbstractFunc  {
 
 	private static final String FUNC_NAME = "clearHtmlTag";
 	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
+	
 	@Override
 	public String getFuncName() {
 		return FUNC_NAME;
@@ -29,7 +31,7 @@ public class ClearHtmlTagFunction extends AbstractFunc  {
 	
 	@Override
 	public String getDesc() {
-		return "清除Html标签，例如：${clearHtmlTag(ArticleContent)}";
+		return DESC;
 	}
 	
 	@Override

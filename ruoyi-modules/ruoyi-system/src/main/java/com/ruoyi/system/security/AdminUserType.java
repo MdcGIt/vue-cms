@@ -33,7 +33,7 @@ public class AdminUserType implements IUserType {
 
 	@Override
 	public String getName() {
-		return I18nUtils.get("SATOKEN.USERTYPE.ADMIN");
+		return I18nUtils.get("{SATOKEN.USERTYPE.ADMIN}");
 	}
 	
 	@Override

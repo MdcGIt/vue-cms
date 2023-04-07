@@ -27,10 +27,10 @@ public class CommentAuditStatus extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public CommentAuditStatus() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + TO_AUDIT, String.valueOf(TO_AUDIT), 1);
-		super.addDictData("DICT." + TYPE + "." + PASSED, String.valueOf(PASSED), 2);
-		super.addDictData("DICT." + TYPE + "." + NOT_PASSED, String.valueOf(NOT_PASSED), 3);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + TO_AUDIT + "}", String.valueOf(TO_AUDIT), 1);
+		super.addDictData("{DICT." + TYPE + "." + PASSED + "}", String.valueOf(PASSED), 2);
+		super.addDictData("{DICT." + TYPE + "." + NOT_PASSED + "}", String.valueOf(NOT_PASSED), 3);
 	}
 	
 	public static boolean isPassed(int v) {

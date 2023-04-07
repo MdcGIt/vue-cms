@@ -15,7 +15,7 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = DictValidator.class)
 public @interface Dict {
 
-	String message() default "{SYSTEM.VALIDATOR.DICT.MESSAGE}";
+	String message() default "{VALIDATOR.SYSTEM.INVALID_DICT_VALUE}";
 
 	Class<?>[] groups() default { };
 

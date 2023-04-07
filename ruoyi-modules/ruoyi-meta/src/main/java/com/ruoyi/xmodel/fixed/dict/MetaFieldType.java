@@ -42,7 +42,7 @@ public class MetaFieldType extends FixedDictType {
 	 * 字典项备注=可用字段数量
 	 */
 	public MetaFieldType() {
-		super(TYPE, "DICT." + TYPE);
+		super(TYPE, "{DICT." + TYPE + "}");
 		super.addDictData("VARCHAR(50)", SHORT_TEXT, 1, "25");
 		super.addDictData("VARCHAR(200)", MEDIUM_TEXT, 2, "25");
 		super.addDictData("VARCHAR(2000)", LARGE_TEXT, 3, "4");

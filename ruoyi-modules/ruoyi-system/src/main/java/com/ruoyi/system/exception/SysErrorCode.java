@@ -151,6 +151,6 @@ public enum SysErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.SYS." + this.name();
+		return "{ERRCODE.SYS." + this.name() + "}";
 	}
 }

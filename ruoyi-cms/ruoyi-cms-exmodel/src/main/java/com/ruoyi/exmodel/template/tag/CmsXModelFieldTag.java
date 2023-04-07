@@ -26,9 +26,9 @@ import lombok.RequiredArgsConstructor;
 public class CmsXModelFieldTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_xmodel_field";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 	
-	public final static String NAME = "扩展模型字段列表标签";
-
 	public final static String TagAttr_ModelId = "modelid";
 
 	private final IModelService modelService;
@@ -78,6 +78,6 @@ public class CmsXModelFieldTag extends AbstractListTag {
 	
 	@Override
 	public String getDescription() {
-		return "获取模型字段列表数据，内嵌<#list DataList as field>${field.name}</#list>遍历数据，可内嵌于<@cms_xmodel_data>使用${ModelData[field.fieldName]}获取字段数据";
+		return DESC; // 获取模型字段列表数据，内嵌<#list DataList as field>${field.name}</#list>遍历数据，可内嵌于<@cms_xmodel_data>使用${ModelData[field.fieldName]}获取字段数据
 	}
 }

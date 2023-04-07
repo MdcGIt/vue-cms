@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
-import com.ruoyi.system.fixed.dict.UserStatus;
 import com.ruoyi.system.validator.Dict;
+import com.ruoyi.vote.fixed.dict.VoteStatus;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -82,7 +82,7 @@ public class Vote extends BaseEntity {
 	 * 
 	 * @see com.ruoyi.vote.fixed.dict.VoteStatus
 	 */
-	@Dict(UserStatus.TYPE)
+	@Dict(VoteStatus.TYPE)
 	private String status;
 
 	/**

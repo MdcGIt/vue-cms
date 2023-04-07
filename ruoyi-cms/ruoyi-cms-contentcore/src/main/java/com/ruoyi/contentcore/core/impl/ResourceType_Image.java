@@ -32,6 +32,8 @@ import net.coobird.thumbnailator.Thumbnails;
 public class ResourceType_Image implements IResourceType {
 
 	public final static String ID = "image";
+	
+	public static final  String NAME = "{CMS.CONTENTCORE.RESOURCE_TYPE." + ID + "}";
 
 	public final static String[] SuffixArray = { "jpg", "jpeg", "gif", "png", "ico", "webp" };
 
@@ -44,7 +46,7 @@ public class ResourceType_Image implements IResourceType {
 	
 	@Override
 	public String getName() {
-		return "CMS.CONTENTCORE.RESOURCE_TYPE." + ID;
+		return NAME;
 	}
 
 	@Override

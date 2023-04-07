@@ -31,7 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsCatalogTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_catalog";
-	public final static String NAME = "栏目标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 	
 	private static final String TAG_ATTR_ID = "id";
 	private static final String TAG_ATTR_ALIAS = "alias";
@@ -99,7 +100,7 @@ public class CmsCatalogTag extends AbstractListTag {
 
 	@Override
 	public String getDescription() {
-		return "获取栏目列表数据，内嵌<#list DataList as catalog>${catalog.name}</#list>遍历数据";
+		return DESC;
 	}
 	
 	private enum CatalogTagLevel {

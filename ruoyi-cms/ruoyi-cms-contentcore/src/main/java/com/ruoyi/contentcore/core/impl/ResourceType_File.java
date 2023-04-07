@@ -12,6 +12,8 @@ public class ResourceType_File implements IResourceType {
 	
 	public final static String ID = "file";
 	
+	public static final  String NAME = "{CMS.CONTENTCORE.RESOURCE_TYPE." + ID + "}";
+	
 	private final static String[] SuffixArray = { ".zip", "" };
 	
 	@Override
@@ -21,7 +23,7 @@ public class ResourceType_File implements IResourceType {
 	
 	@Override
 	public String getName() {
-		return "CMS.CONTENTCORE.RESOURCE_TYPE." + ID;
+		return NAME;
 	}
 	
 	@Override

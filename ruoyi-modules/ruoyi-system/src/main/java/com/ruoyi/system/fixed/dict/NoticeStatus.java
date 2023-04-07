@@ -25,9 +25,9 @@ public class NoticeStatus extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public NoticeStatus() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + NORMAL, NORMAL, 1);
-		super.addDictData("DICT." + TYPE + "." + CLOSED, CLOSED, 2);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + NORMAL + "}", NORMAL, 1);
+		super.addDictData("{DICT." + TYPE + "." + CLOSED + "}", CLOSED, 2);
 	}
 
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

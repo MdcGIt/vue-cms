@@ -26,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class DateFormatFunction extends AbstractFunc {
 
 	static final String FUNC_NAME = "dateFormat";
+	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
 
 	private static final SimpleDateFormat DEFAULT_SIMPLE_DATE_FORMAT = new SimpleDateFormat(
 			DateUtils.YYYY_MM_DD_HH_MM_SS);
@@ -37,7 +39,7 @@ public class DateFormatFunction extends AbstractFunc {
 
 	@Override
 	public String getDesc() {
-		return "日期格式化，例如：${dateFormat(content.publishDate)}";
+		return DESC;
 	}
 
 	@Override

@@ -30,7 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsAdvertisementTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_advertisement";
-	public final static String NAME = "广告数据标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 	
 	final static String TagAttr_Code = "code";
 
@@ -79,6 +80,6 @@ public class CmsAdvertisementTag extends AbstractListTag {
 	
 	@Override
 	public String getDescription() {
-		return "获取广告数据列表，内嵌<#list DataList as ad>${ad.name}</#list>遍历数据";
+		return DESC;
 	}
 }

@@ -33,7 +33,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsArticleTag extends AbstractTag {
 
 	public static final String TAG_NAME = "cms_article";
-	public static final String NAME = "文章内容标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	public static final String TagAttr_ContentId = "contentId";
 
@@ -112,6 +113,6 @@ public class CmsArticleTag extends AbstractTag {
 
 	@Override
 	public String getDescription() {
-		return "获取文章内容详情，支持分页显示";
+		return DESC;
 	}
 }

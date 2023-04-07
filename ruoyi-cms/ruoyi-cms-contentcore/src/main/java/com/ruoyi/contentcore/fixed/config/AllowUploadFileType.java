@@ -31,7 +31,7 @@ public class AllowUploadFileType extends FixedConfig {
 		);
 
 	public AllowUploadFileType() {
-		super(ID, "CONFIG." + ID, StringUtils.EMPTY, null);
+		super(ID, "{CONFIG." + ID + "}", StringUtils.EMPTY, null);
 	}
 	
 	/**

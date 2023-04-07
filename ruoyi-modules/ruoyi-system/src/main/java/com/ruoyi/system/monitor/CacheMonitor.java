@@ -17,7 +17,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.REPEAT_SUBMIT");
+				return I18nUtils.get("{MONITORED.CACHE.REPEAT_SUBMIT}");
 			}
 			
 			@Override
@@ -33,7 +33,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.RATE_LIMITER");
+				return I18nUtils.get("{MONITORED.CACHE.RATE_LIMITER}");
 			}
 			
 			@Override
@@ -49,7 +49,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.CAPTCHA");
+				return I18nUtils.get("{MONITORED.CACHE.CAPTCHA}");
 			}
 			
 			@Override
@@ -65,7 +65,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.CONFIG");
+				return I18nUtils.get("{MONITORED.CACHE.CONFIG}");
 			}
 			
 			@Override
@@ -81,7 +81,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.DICT");
+				return I18nUtils.get("{MONITORED.CACHE.DICT}");
 			}
 			
 			@Override
@@ -97,7 +97,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.DEPT");
+				return I18nUtils.get("{MONITORED.CACHE.DEPT}");
 			}
 			
 			@Override
@@ -113,7 +113,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.ROLE");
+				return I18nUtils.get("{MONITORED.CACHE.ROLE}");
 			}
 			
 			@Override
@@ -129,7 +129,7 @@ public class CacheMonitor {
 			
 			@Override
 			public String getCacheName() {
-				return I18nUtils.get("MONITORED.CACHE.POST");
+				return I18nUtils.get("{MONITORED.CACHE.POST}");
 			}
 			
 			@Override

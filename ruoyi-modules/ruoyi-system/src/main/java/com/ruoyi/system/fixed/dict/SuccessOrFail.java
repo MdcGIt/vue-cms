@@ -25,9 +25,9 @@ public class SuccessOrFail extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public SuccessOrFail() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + SUCCESS, SUCCESS, 1);
-		super.addDictData("DICT." + TYPE + "." + FAIL, FAIL, 2);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + SUCCESS + "}", SUCCESS, 1);
+		super.addDictData("{DICT." + TYPE + "." + FAIL + "}", FAIL, 2);
 	}
 	
 	public static boolean isSuccess(String v) {

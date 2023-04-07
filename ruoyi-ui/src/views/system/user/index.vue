@@ -589,6 +589,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.userId != undefined) {
+            this.form.sex=3
             updateUser(this.form).then(response => {
               this.$modal.msgSuccess(this.$t('Common.EditSuccess'));
               this.open = false;

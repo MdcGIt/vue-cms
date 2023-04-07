@@ -31,6 +31,6 @@ public enum VoteErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.VOTE." + this.name();
+		return "{ERRCODE.VOTE." + this.name() + "}";
 	}
 }

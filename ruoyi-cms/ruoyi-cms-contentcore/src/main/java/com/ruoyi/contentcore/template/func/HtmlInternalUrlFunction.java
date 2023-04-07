@@ -23,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 public class HtmlInternalUrlFunction extends AbstractFunc  {
 
 	static final String FUNC_NAME = "htmlInternalUrl";
+	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
 
 	@Override
 	public String getFuncName() {
@@ -31,7 +33,7 @@ public class HtmlInternalUrlFunction extends AbstractFunc  {
 
 	@Override
 	public String getDesc() {
-		return "将类似html文本中的内部链接地址“iurl://”解析为正常http(s)访问地址，例如：${internalUrl(ArticleContent)}";
+		return DESC;
 	}
 	
 	@Override

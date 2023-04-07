@@ -15,7 +15,7 @@ public class UserOperationLogMenu implements ILogMenu {
 
 	@Override
 	public String getName() {
-		return I18nUtils.get("LOG.MENU." + getId());
+		return I18nUtils.get("{LOG.MENU." + getId() + "}");
 	}
 
 	@Override

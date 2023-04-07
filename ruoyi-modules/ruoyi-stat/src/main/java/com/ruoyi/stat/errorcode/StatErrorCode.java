@@ -16,6 +16,6 @@ public enum StatErrorCode implements ErrorCode {
 
 	@Override
 	public String value() {
-		return "ERRCODE.STAT." + this.name();
+		return "{ERRCODE.STAT." + this.name() + "}";
 	}
 }

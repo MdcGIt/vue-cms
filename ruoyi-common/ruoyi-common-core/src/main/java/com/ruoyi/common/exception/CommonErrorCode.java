@@ -74,6 +74,6 @@ public enum CommonErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.COMMON." + this.name();
+		return "{ERRCODE.COMMON." + this.name() + "}";
 	}
 }

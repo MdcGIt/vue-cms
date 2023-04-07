@@ -40,7 +40,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsPageWidgetTag extends AbstractTag {
 
 	public final static String TAG_NAME = "cms_pagewidget";
-	public final static String NAME = "引用页面部件标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	@Override
 	public String getTagName() {
@@ -54,7 +55,7 @@ public class CmsPageWidgetTag extends AbstractTag {
 	
 	@Override
 	public String getDescription() {
-		return "引用页面部件内容，支持ssi引用标签";
+		return DESC;
 	}
 
 	final static String TagAttr_Code = "code";

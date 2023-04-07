@@ -26,6 +26,6 @@ public enum SecurityErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.SECURITY." + this.name();
+		return "{ERRCODE.SECURITY." + this.name() + "}";
 	}
 }

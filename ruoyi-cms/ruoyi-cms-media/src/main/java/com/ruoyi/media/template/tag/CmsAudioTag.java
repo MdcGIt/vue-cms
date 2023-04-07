@@ -28,7 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsAudioTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_audio";
-	public final static String NAME = "音频集音频列表标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	private final IContentService contentService;
 
@@ -77,6 +78,6 @@ public class CmsAudioTag extends AbstractListTag {
 
 	@Override
 	public String getDescription() {
-		return "获取音频集中的音频数据列表，内嵌<#list DataList as audio>${audio.path}</#list>遍历数据";
+		return DESC;
 	}
 }

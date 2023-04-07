@@ -29,11 +29,11 @@ public class StaticSuffix extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public StaticSuffix() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + SHTML, SHTML, 1);
-		super.addDictData("DICT." + TYPE + "." + HTML, HTML, 2);
-		super.addDictData("DICT." + TYPE + "." + XML, XML, 3);
-		super.addDictData("DICT." + TYPE + "." + JSON, JSON, 4);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + SHTML + "}", SHTML, 1);
+		super.addDictData("{DICT." + TYPE + "." + HTML + "}", HTML, 2);
+		super.addDictData("{DICT." + TYPE + "." + XML + "}", XML, 3);
+		super.addDictData("{DICT." + TYPE + "." + JSON + "}", JSON, 4);
 	}
 
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

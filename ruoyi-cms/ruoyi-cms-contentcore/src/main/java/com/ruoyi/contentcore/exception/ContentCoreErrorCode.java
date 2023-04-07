@@ -137,6 +137,6 @@ public enum ContentCoreErrorCode implements ErrorCode {
 
 	@Override
 	public String value() {
-		return "ERRCODE.CMS.CONTENTCORE." + this.name();
+		return "{ERRCODE.CMS.CONTENTCORE." + this.name() + "}";
 	}
 }

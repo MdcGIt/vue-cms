@@ -25,7 +25,7 @@ public class SysUploadTypeLimit extends FixedConfig {
 	private static final String[] DEFAULT_VALUE = { "jpg", "jpeg", "gif", "png", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pdf", "html", "txt", "zip" };
 	
 	public SysUploadTypeLimit() {
-		super(ID, "CONFIG." + ID, String.join(",", DEFAULT_VALUE), null);
+		super(ID, "{CONFIG." + ID + "}", String.join(",", DEFAULT_VALUE), null);
 	}
 	
 	public static void check(String ext) {

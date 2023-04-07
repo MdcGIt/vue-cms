@@ -25,9 +25,9 @@ public class EnableOrDisable extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public EnableOrDisable() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + ENABLE, ENABLE, 1);
-		super.addDictData("DICT." + TYPE + "." + DISABLE, DISABLE, 2);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + ENABLE + "}", ENABLE, 1);
+		super.addDictData("{DICT." + TYPE + "." + DISABLE + "}", DISABLE, 2);
 	}
 
 	public static boolean isEnable(String v) {

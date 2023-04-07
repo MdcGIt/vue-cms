@@ -61,6 +61,6 @@ public enum MemberErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.MEMBER." + this.name();
+		return "{ERRCODE.MEMBER." + this.name() + "}";
 	}
 }

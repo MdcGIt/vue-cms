@@ -26,7 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsXModelDataTag extends AbstractTag {
 
 	public final static String TAG_NAME = "cms_xmodel_data";
-	public final static String NAME = "扩展模型数据标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	public final static String TagAttr_ModelId = "modelid";
 
@@ -77,6 +78,6 @@ public class CmsXModelDataTag extends AbstractTag {
 	
 	@Override
 	public String getDescription() {
-		return "获取扩展模型数据，标签内部通过${ModelData.xxx}获取数据展示";
+		return DESC;
 	}
 }

@@ -35,7 +35,7 @@ public class SysMenu extends BaseEntity {
 	private Long menuId;
 
 	/** 菜单名称 */
-	@I18nField("MENU.NAME.{menuId}")
+	@I18nField("{MENU.NAME.#{menuId}}")
 	private String menuName;
 
 	/** 父菜单名称 */

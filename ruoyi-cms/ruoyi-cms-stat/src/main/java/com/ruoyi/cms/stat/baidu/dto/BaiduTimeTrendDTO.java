@@ -15,19 +15,19 @@ public class BaiduTimeTrendDTO {
 	/**
 	 * 站点ID
 	 */
-	@NotNull(message = "{VALID.CMS.STAT.BD_SITE_ID_NOT_NULL}")
+	@NotNull(message = "{VALIDATOR.CMS.STAT.BD_SITE_ID_NOT_NULL}")
 	private Long siteId;
 	
 	/**
 	 * 开始时间
 	 */
-	@NotNull(message = "{VALID.CMS.STAT.START_DATE_NOT_NULL}")
+	@NotNull(message = "{VALIDATOR.CMS.STAT.START_DATE_NOT_NULL}")
 	private LocalDateTime startDate;
 	
 	/**
 	 * 结束时间
 	 */
-	@NotNull(message = "{VALID.CMS.STAT.END_DATE_NOT_NULL}")
+	@NotNull(message = "{VALIDATOR.CMS.STAT.END_DATE_NOT_NULL}")
 	private LocalDateTime endDate;
 	
 	/**
@@ -38,7 +38,7 @@ public class BaiduTimeTrendDTO {
 	/**
 	 * 时间粒度
 	 */
-	@NotEmpty(message = "{VALID.CMS.STAT.TIME_GRAN_NOT_NULL}")
+	@NotEmpty(message = "{VALIDATOR.CMS.STAT.TIME_GRAN_NOT_NULL}")
 	private String gran;
 	
 	/**

@@ -27,10 +27,10 @@ public class Gender extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 	
 	public Gender() {
-		super(TYPE, "DICT." + TYPE, true);
-		super.addDictData("DICT." + TYPE + "." + MALE, MALE, 1);
-		super.addDictData("DICT." + TYPE + "." + FEMAIL, FEMAIL, 2);
-		super.addDictData("DICT." + TYPE + "." + UNKNOW, UNKNOW, 3);
+		super(TYPE, "{DICT." + TYPE + "}", true);
+		super.addDictData("{DICT." + TYPE + "." + MALE + "}", MALE, 1);
+		super.addDictData("{DICT." + TYPE + "." + FEMAIL + "}", FEMAIL, 2);
+		super.addDictData("{DICT." + TYPE + "." + UNKNOW + "}", UNKNOW, 3);
 	}
 
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

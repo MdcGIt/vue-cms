@@ -25,7 +25,7 @@ public class SysUploadSizeLimit extends FixedConfig {
 	private static final long DEFAULT_VALUE = 5 * 1024 * 1024;
 	
 	public SysUploadSizeLimit() {
-		super(ID, "CONFIG." + ID, String.valueOf(DEFAULT_VALUE), null);
+		super(ID, "{CONFIG." + ID + "}", String.valueOf(DEFAULT_VALUE), null);
 	}
 	
 	public static void check(long fileSize) {

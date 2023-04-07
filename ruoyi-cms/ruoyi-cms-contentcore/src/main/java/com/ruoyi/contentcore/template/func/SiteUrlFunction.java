@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class SiteUrlFunction extends AbstractFunc {
 
 	private static final String FUNC_NAME = "siteUrl";
+	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
 
 	private final ISiteService siteService;
 
@@ -35,7 +37,7 @@ public class SiteUrlFunction extends AbstractFunc {
 
 	@Override
 	public String getDesc() {
-		return "获取站点指定发布通道访问链接，例如：${siteUrl(Site.siteId, 'h5')}";
+		return DESC;
 	}
 
 	@Override

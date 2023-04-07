@@ -25,9 +25,9 @@ public class I18nDictType extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 	
 	public I18nDictType() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + ZH_CN, ZH_CN, 1);
-		super.addDictData("DICT." + TYPE + "." + EN, EN, 2);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + ZH_CN + "}", ZH_CN, 1);
+		super.addDictData("{DICT." + TYPE + "." + EN + "}", EN, 2);
 	}
 	
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

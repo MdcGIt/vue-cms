@@ -21,6 +21,7 @@ import com.ruoyi.contentcore.domain.vo.PageWidgetVO;
 public class AdSpacePageWidgetType implements IPageWidgetType {
 
 	public final static String ID = "ads";
+	public final static String NAME = "{CMS.CONTENCORE.PAGEWIDGET." + ID + "}";
 	
 	@Override
 	public String getId() {
@@ -29,7 +30,7 @@ public class AdSpacePageWidgetType implements IPageWidgetType {
 
 	@Override
 	public String getName() {
-		return "CONTENTCORE.PAGEWIDGET." + ID;
+		return NAME;
 	}
 
 	@Override

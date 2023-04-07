@@ -11,6 +11,6 @@ public enum StorageErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.STORAGE." + this.name();
+		return "{ERRCODE.STORAGE." + this.name() + "}";
 	}
 }

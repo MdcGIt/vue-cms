@@ -216,7 +216,8 @@ public class CatalogController extends BaseRestController {
 	 */
 	@GetMapping("/getCatalogTypes")
 	public R<?> getCatalogTypes() {
-		return R.ok(this.catalogTypes);
+		List<Map<String, String>> list = this.catalogTypes.stream().map(ct -> Map.of("id", ct.getId(), "name", I18nUtils.get(ct.getName()))).toList();
+		return R.ok(list);
 	}
 
 	/**

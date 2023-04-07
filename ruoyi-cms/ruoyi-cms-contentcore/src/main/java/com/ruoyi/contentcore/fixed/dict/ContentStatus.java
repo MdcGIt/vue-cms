@@ -31,12 +31,12 @@ public class ContentStatus extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public ContentStatus() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + DRAFT, DRAFT, 1);
-		super.addDictData("DICT." + TYPE + "." + TO_PUBLISHED, TO_PUBLISHED, 2);
-		super.addDictData("DICT." + TYPE + "." + PUBLISHED, PUBLISHED, 3);
-		super.addDictData("DICT." + TYPE + "." + OFFLINE, OFFLINE, 4);
-		super.addDictData("DICT." + TYPE + "." + EDITING, EDITING, 5);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + DRAFT + "}", DRAFT, 1);
+		super.addDictData("{DICT." + TYPE + "." + TO_PUBLISHED + "}", TO_PUBLISHED, 2);
+		super.addDictData("{DICT." + TYPE + "." + PUBLISHED + "}", PUBLISHED, 3);
+		super.addDictData("{DICT." + TYPE + "." + OFFLINE + "}", OFFLINE, 4);
+		super.addDictData("{DICT." + TYPE + "." + EDITING + "}", EDITING, 5);
 	}
 
 	public static boolean isPublished(String v) {

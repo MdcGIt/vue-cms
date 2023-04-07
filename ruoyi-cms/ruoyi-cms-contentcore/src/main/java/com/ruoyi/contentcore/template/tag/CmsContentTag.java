@@ -37,7 +37,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsContentTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_content";
-	public final static String NAME = "内容标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	final static Map<String, String> AttrOptions_Level = Map.of("Root", "所有栏目", "Current", "当前栏目", "Child",
 			"子栏目", "CurrentAndChild", "当前栏目和子栏目");
@@ -141,6 +142,6 @@ public class CmsContentTag extends AbstractListTag {
 	
 	@Override
 	public String getDescription() {
-		return "获取内容列表数据，内嵌<#list DataList as content>${content.title}</#list>遍历数据";
+		return DESC;
 	}
 }

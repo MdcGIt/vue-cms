@@ -9,6 +9,8 @@ public class DefaultLevelType implements ILevelType {
 
 	public static final String ID = "Default";
 	
+	private static final String NAME = "{MEMBER.LEVEL_TYPE." + ID + "}";
+	
 	@Override
 	public String getId() {
 		return ID;
@@ -16,6 +18,6 @@ public class DefaultLevelType implements ILevelType {
 
 	@Override
 	public String getName() {
-		return "默认等级类型";
+		return NAME;
 	}
 }

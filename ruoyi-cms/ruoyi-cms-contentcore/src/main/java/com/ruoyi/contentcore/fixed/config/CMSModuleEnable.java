@@ -15,6 +15,6 @@ public class CMSModuleEnable extends FixedConfig {
 	private static final String DEFAULT_VALUE = "true";
 	
 	public CMSModuleEnable() {
-		super(ID, "CONFIG." + ID, DEFAULT_VALUE, null);
+		super(ID, "{CONFIG." + ID + "}", DEFAULT_VALUE, null);
 	}
 }

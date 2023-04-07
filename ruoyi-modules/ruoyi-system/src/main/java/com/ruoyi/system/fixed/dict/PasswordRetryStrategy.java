@@ -27,10 +27,10 @@ public class PasswordRetryStrategy extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public PasswordRetryStrategy() {
-		super(TYPE, "DICT." + TYPE, true);
-		super.addDictData("DICT." + TYPE + "." + NONE, NONE, 1);
-		super.addDictData("DICT." + TYPE + "." + DISABLE, DISABLE, 2);
-		super.addDictData("DICT." + TYPE + "." + LOCK, LOCK, 3);
+		super(TYPE, "{DICT." + TYPE + "}", true);
+		super.addDictData("{DICT." + TYPE + "." + NONE + "}", NONE, 1);
+		super.addDictData("{DICT." + TYPE + "." + DISABLE + "}", DISABLE, 2);
+		super.addDictData("{DICT." + TYPE + "." + LOCK + "}", LOCK, 3);
 	}
 
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

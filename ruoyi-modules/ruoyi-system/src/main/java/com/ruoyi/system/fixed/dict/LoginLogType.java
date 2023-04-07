@@ -27,10 +27,10 @@ public class LoginLogType extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 	
 	public LoginLogType() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + LOGIN, LOGIN, 1);
-		super.addDictData("DICT." + TYPE + "." + LOGOUT, LOGOUT, 2);
-		super.addDictData("DICT." + TYPE + "." + REGIST, REGIST, 3);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + LOGIN + "}", LOGIN, 1);
+		super.addDictData("{DICT." + TYPE + "." + LOGOUT + "}", LOGOUT, 2);
+		super.addDictData("{DICT." + TYPE + "." + REGIST + "}", REGIST, 3);
 	}
 	
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

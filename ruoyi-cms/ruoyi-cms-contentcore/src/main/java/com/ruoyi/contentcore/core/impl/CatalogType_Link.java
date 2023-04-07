@@ -8,6 +8,8 @@ import com.ruoyi.contentcore.core.ICatalogType;
 public class CatalogType_Link implements ICatalogType {
 
 	public final static String ID = "link";
+    
+    private final static String NAME = "{CMS.CONTENTCORE.CATALOG_TYPE." + ID + "}";
 
 	@Override
 	public String getId() {
@@ -16,6 +18,6 @@ public class CatalogType_Link implements ICatalogType {
 
 	@Override
 	public String getName() {
-		return "链接栏目";
+		return NAME;
 	}
 }

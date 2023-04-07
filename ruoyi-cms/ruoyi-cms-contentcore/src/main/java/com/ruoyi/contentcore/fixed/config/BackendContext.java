@@ -20,7 +20,7 @@ public class BackendContext extends FixedConfig {
 	private static final String DEFAULT_VALUE = "http://localhost/dev-api/";
 	
 	public BackendContext() {
-		super(ID, "CONFIG." + ID, DEFAULT_VALUE, null);
+		super(ID, "{CONFIG." + ID + "}", DEFAULT_VALUE, null);
 	}
 	
 	public static String getValue() {

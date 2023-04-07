@@ -26,7 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsLinkTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_link";
-	public final static String NAME = "友情链接标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	private final ILinkGroupService linkGroupService;
 	
@@ -67,6 +68,6 @@ public class CmsLinkTag extends AbstractListTag {
 	
 	@Override
 	public String getDescription() {
-		return "获取友情链接数据列表，内嵌<#list DataList as link>${link.name}</#list>遍历数据";
+		return DESC;
 	}
 }

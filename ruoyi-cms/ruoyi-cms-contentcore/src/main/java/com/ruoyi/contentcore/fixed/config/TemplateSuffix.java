@@ -20,7 +20,7 @@ public class TemplateSuffix extends FixedConfig {
 	private static final String DEFAULT_VALUE = ".template.html";
 	
 	public TemplateSuffix() {
-		super(ID, "CONFIG." + ID, DEFAULT_VALUE, null);
+		super(ID, "{CONFIG." + ID + "}", DEFAULT_VALUE, null);
 	}
 	
 	public static String getValue() {

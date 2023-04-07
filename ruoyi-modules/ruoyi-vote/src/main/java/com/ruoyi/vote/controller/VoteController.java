@@ -71,7 +71,7 @@ public class VoteController extends BaseRestController {
 	@GetMapping("/userTypes")
 	public R<?> getVoteUserTypes() {
 		List<Map<String, String>> list = this.userTypes.stream()
-				.map(vut -> Map.of("id", vut.getId(), "name", I18nUtils.parse(vut.getName()))).toList();
+				.map(vut -> Map.of("id", vut.getId(), "name", I18nUtils.get(vut.getName()))).toList();
 		return R.ok(list);
 	}
 
@@ -79,7 +79,7 @@ public class VoteController extends BaseRestController {
 	@GetMapping("/item/types")
 	public R<?> getVoteItemTypes() {
 		List<Map<String, String>> list = this.itemTypes.stream()
-				.map(vut -> Map.of("id", vut.getId(), "name", I18nUtils.parse(vut.getName()))).toList();
+				.map(vut -> Map.of("id", vut.getId(), "name", I18nUtils.get(vut.getName()))).toList();
 		return R.ok(list);
 	}
 

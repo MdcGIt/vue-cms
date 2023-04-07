@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NotLoginException.class)
 	public R<?> handleNotLoginException(NotLoginException e, HttpServletRequest request) {
 		log.error("NotLogin[code: {}, type: {}]{}", e.getCode(), e.getType(), e.getMessage());
-		return R.fail(HttpStatus.UNAUTHORIZED.value(), I18nUtils.get(SecurityErrorCode.NOT_LOGIN.name()));
+		return R.fail(HttpStatus.UNAUTHORIZED.value(), I18nUtils.get(SecurityErrorCode.NOT_LOGIN.value()));
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
 	public R<?> handleSecurityPermissionException(NotPermissionException e, HttpServletRequest request) {
 		String requestURI = request.getRequestURI();
 		log.error("请求地址'{}',权限校验失败'{}'", requestURI, e.getMessage());
-		return R.fail(HttpStatus.FORBIDDEN.value(), I18nUtils.get(SecurityErrorCode.NOT_PERMISSION.name()));
+		return R.fail(HttpStatus.FORBIDDEN.value(), I18nUtils.get(SecurityErrorCode.NOT_PERMISSION.value()));
 	}
 
 	/**

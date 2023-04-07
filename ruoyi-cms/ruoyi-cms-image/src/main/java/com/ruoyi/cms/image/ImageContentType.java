@@ -41,6 +41,8 @@ import lombok.RequiredArgsConstructor;
 public class ImageContentType implements IContentType {
 
 	public final static String ID = "image";
+    
+    private final static String NAME = "{CMS.CONTENTCORE.CONTENT_TYPE." + ID + "}";
 
 	private final CmsContentMapper contentMapper;
 
@@ -59,7 +61,7 @@ public class ImageContentType implements IContentType {
 
 	@Override
 	public String getName() {
-		return "CONTENTCORE.CONTENTTYPE." + ID;
+		return NAME;
 	}
 
 	@Override
