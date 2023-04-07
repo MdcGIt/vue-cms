@@ -76,7 +76,7 @@ public class MemberController extends BaseRestController {
 		return R.ok(vo);
 	}
 
-	@Log(title = "新增会员", businessType = BusinessType.INSERT)
+	@Log(title = "新增会员", businessType = BusinessType.INSERT, isSaveRequestData = false)
 	@PostMapping
 	public R<?> addMember(@RequestBody MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -100,7 +100,7 @@ public class MemberController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Log(title = "重置会员密码", businessType = BusinessType.UPDATE)
+	@Log(title = "重置会员密码", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/resetPassword")
 	public R<?> resetPassword(@RequestBody MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());

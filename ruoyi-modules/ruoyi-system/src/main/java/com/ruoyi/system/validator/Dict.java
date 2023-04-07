@@ -22,7 +22,9 @@ public @interface Dict {
 	Class<? extends Payload>[] payload() default { };
 
 	/**
-	 * @return fixedDictType
+	 * 字典类型
+	 * 
+	 * @return dictType
 	 */
 	String value();
 }

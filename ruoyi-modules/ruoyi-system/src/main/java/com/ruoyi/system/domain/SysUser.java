@@ -80,7 +80,7 @@ public class SysUser extends BaseEntity implements ISecurityUser {
 	/** 用户性别 */
 	@ExcelProperty(converter = DictConverter.class)
 	@ExcelDictField(Gender.TYPE)
-	@Dict(Gender.TYPE)
+	@Dict(value = Gender.TYPE, message = "{VALIDATOR.SYSTEM.USER_GENDER}")
 	private String sex;
 
 	/** 出生日期 */
@@ -102,6 +102,7 @@ public class SysUser extends BaseEntity implements ISecurityUser {
 	/** 帐号状态 */
 	@ExcelProperty(converter = DictConverter.class)
 	@ExcelDictField(UserStatus.TYPE)
+	@Dict(UserStatus.TYPE)
 	private String status;
 
 	/** 最后登录IP */
