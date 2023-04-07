@@ -1,10 +1,14 @@
 package com.ruoyi.system.intercepter;
 
+import java.util.Objects;
+
 import org.springframework.http.HttpMethod;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.exception.SecurityErrorCode;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,8 +28,14 @@ public class DemoModeIntercepter implements HandlerInterceptor {
 		if (StpAdminUtil.isLogin() && SecurityUtils.isSuperAdmin(StpAdminUtil.getLoginIdAsLong())) {
 			return true; // 超级管理员允许操作
 		}
+		// 非Get且无忽略演示模式注解则抛出异常
 		if (HttpMethod.POST.matches(method) || HttpMethod.PUT.matches(method) || HttpMethod.DELETE.matches(method)) {
-			throw SecurityErrorCode.DEMO_EXCEPTION.exception();
+			if (handler instanceof HandlerMethod handlerMethod) {
+				IgnoreDemoMode ignoreDemoMode = handlerMethod.getMethodAnnotation(IgnoreDemoMode.class);
+				if (Objects.isNull(ignoreDemoMode)) {
+					throw SecurityErrorCode.DEMO_EXCEPTION.exception();
+				}
+			}
 		}
 		return true;
 	}
