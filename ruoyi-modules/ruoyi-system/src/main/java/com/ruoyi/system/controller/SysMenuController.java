@@ -27,7 +27,7 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.enums.MenuType;
-import com.ruoyi.system.enums.PermissionType;
+import com.ruoyi.system.permission.MenuPermissionType;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -99,7 +99,7 @@ public class SysMenuController extends BaseRestController {
 
 		Map<String, List<String>> permissions = this.permissionService
 				.getPermissionMapByUser(StpAdminUtil.getLoginUser().getUserId());
-		List<String> menuPerms = permissions.get(PermissionType.Menu.name());
+		List<String> menuPerms = permissions.get(MenuPermissionType.ID);
 		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());

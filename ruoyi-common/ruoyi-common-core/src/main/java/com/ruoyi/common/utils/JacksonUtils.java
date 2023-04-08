@@ -300,6 +300,18 @@ public class JacksonUtils {
             throw new JacksonException(StringUtils.messageFormat("jackson from error, json: {0}, type: {1}", json), e);
         }
     }
+    
+    public static <T> Map<String, T> fromMap(String json, Class<T> clazz) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        try {
+            MapType mapType = mapper.getTypeFactory().constructMapType(HashMap.class, String.class, clazz);
+            return mapper.readValue(json, mapType);
+        } catch (IOException e) {
+            throw new JacksonException(StringUtils.messageFormat("jackson from error, json: {0}, type: {1}", json), e);
+        }
+    }
 
     /**
      * 序列化为JSON

@@ -2,9 +2,7 @@ package com.ruoyi.system.security;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.stereotype.Component;
@@ -20,7 +18,6 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.SysConstants;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.enums.PermissionType;
 import com.ruoyi.system.exception.SysErrorCode;
 import com.ruoyi.system.fixed.config.SysCaptchaEnable;
 import com.ruoyi.system.fixed.dict.LoginLogType;
@@ -128,8 +125,8 @@ public class SysLoginService {
 		loginUser.setBrowser(ua.getBrowser() + "/" + ua.getBrowserVersion());
 		loginUser.setUser(user);
 
-		Map<String, List<String>> permissions = permissionService.getPermissionMapByUser(user.getUserId());
-		loginUser.setPermissions(permissions.getOrDefault(PermissionType.Menu.name(), Collections.emptyList()));
+		List<String> permissions = permissionService.getPermissionListByUser(user.getUserId());
+		loginUser.setPermissions(permissions);
 		return loginUser;
 	}
 

@@ -3,7 +3,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="12">
         <el-row :gutter="10" class="mb8">
-            <el-card shadow="hover">
+            <el-card v-loading="loading" shadow="hover">
               <div slot="header" class="clearfix">
                 <span>访问趋势</span>
                 <el-row :gutter="10" class="mb8" style="float:right;">
@@ -146,7 +146,6 @@ export default {
           this.queryParams.bdSiteId = this.siteOptions[0].site_id;
           this.loadSiteTrendOverviewDatas();
           this.loadSiteDistrictOverviewDatas();
-          this.loadSiteOtherOverviewDatas();
         }
       });
     },

@@ -20,9 +20,9 @@ import com.ruoyi.system.config.SystemConfig;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.dto.LoginBody;
-import com.ruoyi.system.enums.PermissionType;
 import com.ruoyi.system.fixed.dict.LoginLogType;
 import com.ruoyi.system.fixed.dict.SuccessOrFail;
+import com.ruoyi.system.permission.MenuPermissionType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.security.SysLoginService;
@@ -110,8 +110,8 @@ public class SysLoginController extends BaseRestController {
 
 		Map<String, List<String>> permissions = this.permissionService
 				.getPermissionMapByUser(StpAdminUtil.getLoginUser().getUserId());
-		List<String> menuPerms = permissions.get(PermissionType.Menu.name());
-		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
+		List<String> menuPerms = permissions.get(MenuPermissionType.ID);
+		if (menuPerms != null && !menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());
 			}).toList();

@@ -1,25 +1,27 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.security.SecurityUtils;
+import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.dto.SysPermissionDTO;
 import com.ruoyi.system.enums.PermissionOwnerType;
-import com.ruoyi.system.enums.PermissionType;
 import com.ruoyi.system.mapper.SysPermissionMapper;
 import com.ruoyi.system.mapper.SysRoleMapper;
+import com.ruoyi.system.permission.IPermissionType;
 import com.ruoyi.system.service.ISysPermissionService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,8 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 		implements ISysPermissionService {
 
 	private final SysRoleMapper roleMapper;
+	
+	private final Map<String, IPermissionType> permissionTypes;
 	
 	private final RedisCache redisCache;
 	
@@ -53,7 +57,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 		SysPermission db = opt.orElseGet(SysPermission::new);
 		db.setOwnerType(dto.getOwnerType());
 		db.setOwner(dto.getOwner());
-		db.getPermissions().put(dto.getPermType(), dto.getPermissions().stream().toList());
+		db.getPermissions().put(dto.getPermType(), JacksonUtils.to(dto.getPermissions()));
 		db.updateBy(dto.getOperator().getUsername());
 		if (StringUtils.isEmpty(db.getCreateBy())) {
 			db.createBy(dto.getOperator().getUsername());
@@ -67,31 +71,32 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	public Map<String, List<String>> getPermissionMapByUser(Long userId) {
 		Map<String, List<String>> permissions = new HashMap<>();
 		if (SecurityUtils.isSuperAdmin(userId)) {
-			PermissionType[] values = PermissionType.values();
-			for (PermissionType pt : values) {
-				permissions.put(pt.name(), List.of(ALL_PERMISSION));
-			}
+			permissionTypes.entrySet().forEach(e -> permissions.put(e.getKey(), List.of(ALL_PERMISSION)));
 		} else {
 			List<SysRole> roles = this.roleMapper.selectRolesByUserId(userId);
 			roles.forEach(r -> {
 				SysPermission permission = this.getPermissions(PermissionOwnerType.Role.name(), r.getRoleId().toString());
 				if (Objects.nonNull(permission)) {
 					permission.getPermissions().entrySet().forEach(e -> {
-						List<String> permKeys = permissions.get(e.getKey());
-						if (Objects.isNull(permKeys)) {
-							permissions.put(e.getKey(), e.getValue());
-						} else {
-							permKeys.addAll(e.getValue());
+						IPermissionType pt = permissionTypes.get(e.getKey());
+						if (pt != null) {
+							String json = permission.getPermissions().get(e.getKey());
+							List<String> ptPerms = pt.parsePermissionKeys(json);
+							List<String> perms = permissions.get(pt.getId());
+							if (Objects.isNull(perms)) {
+								permissions.put(e.getKey(), ptPerms);
+							} else {
+								perms.addAll(ptPerms);
+							}
 						}
 					});
 				}
 			});
-			PermissionType[] values = PermissionType.values();
-			for (PermissionType pt : values) {
-				if (!permissions.containsKey(pt.name())) {
-					permissions.put(pt.name(), List.of());
+			this.permissionTypes.keySet().forEach(type -> {
+				if (!permissions.containsKey(type)) {
+					permissions.put(type, List.of());
 				}
-			}
+			});
 		}
 		return permissions;
 	}
@@ -101,14 +106,21 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 		if (SecurityUtils.isSuperAdmin(userId)) {
 			return List.of(ALL_PERMISSION);
 		}
-		ArrayList<String> permissions = new ArrayList<>();
+		Set<String> permissions = new HashSet<>();
 		List<SysRole> roles = this.roleMapper.selectRolesByUserId(userId);
 		roles.forEach(r -> {
 			SysPermission permission = this.getPermissions(PermissionOwnerType.Role.name(), r.getRoleId().toString());
 			if (Objects.nonNull(permission)) {
-				permission.getPermissions().values().forEach(permissions::addAll);
+				permission.getPermissions().entrySet().forEach(e -> {
+					IPermissionType pt = permissionTypes.get(e.getKey());
+					if (pt != null) {
+						String json = permission.getPermissions().get(e.getKey());
+						List<String> ptPerms = pt.parsePermissionKeys(json);
+						permissions.addAll(ptPerms);
+					}
+				});
 			}
 		});
-		return permissions;
+		return permissions.stream().toList();
 	}
 }
