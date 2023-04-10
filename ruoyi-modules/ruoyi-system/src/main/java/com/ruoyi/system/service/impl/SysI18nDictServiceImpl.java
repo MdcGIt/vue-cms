@@ -1,9 +1,15 @@
 package com.ruoyi.system.service.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -13,13 +19,16 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.config.I18nMessageSource;
 import com.ruoyi.system.domain.SysI18nDict;
 import com.ruoyi.system.mapper.SysI18nDictMapper;
 import com.ruoyi.system.service.ISysI18nDictService;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI18nDict> implements ISysI18nDictService {
@@ -89,22 +98,48 @@ public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI1
 			redisCache.setCacheMapValue(CACHE_PREFIX + dict.getLangTag(), dict.getLangKey(), dict.getLangValue());
 		});
 	}
-	
-	@PostConstruct
-	public void init() {
-		this.resetCache();
-	}
 
 	@Override
-	public void resetCache() {
-		this.redisCache.keys(CACHE_PREFIX + "**").forEach(key -> redisCache.deleteObject(key));
-		Map<String, List<SysI18nDict>> map = this.list().stream()
-				.collect(Collectors.groupingBy(SysI18nDict::getLangTag));
-		map.entrySet().stream().forEach(e -> {
-			String langId = e.getKey();
-			Map<String, String> kv = e.getValue().stream()
-					.collect(Collectors.toMap(SysI18nDict::getLangKey, SysI18nDict::getLangValue));
-			redisCache.setCacheMap(CACHE_PREFIX + langId, kv);
+	public void loadMessages(I18nMessageSource messageSource) throws IOException {
+		long s = System.currentTimeMillis();
+		// 读取配置文件数据
+		this.loadMessagesFromResources(messageSource);
+		// 加载数据库数据，如果与配置文件重复则直接覆盖掉
+		this.loadMessagesFromDB();
+		log.debug("Load i18n messages cost: {}ms", System.currentTimeMillis() - s);
+	}
+
+	private void loadMessagesFromDB() {
+		Map<String, Map<String, String>> map = this.list().stream().collect(Collectors.groupingBy(
+				SysI18nDict::getLangTag, Collectors.toMap(SysI18nDict::getLangKey, SysI18nDict::getLangValue)));
+		map.entrySet().forEach(e -> {
+			e.getValue().entrySet().forEach(kv -> {
+				redisCache.setCacheMapValue(CACHE_PREFIX + e.getKey(), kv.getKey(), kv.getValue());
+			});
 		});
+	}
+
+	private void loadMessagesFromResources(I18nMessageSource messageSource) throws IOException {
+		if (StringUtils.isEmpty(messageSource.getBasename())) {
+			return;
+		}
+		String target = messageSource.getBasename().replace('.', '/');
+		Resource[] resources = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader())
+				.getResources("classpath*:" + target + "*.properties");
+		for (Resource resource : resources) {
+			String langTag = messageSource.getDefaultLocale().toLanguageTag();
+			if (resource.getFilename().indexOf("_") > 0) {
+				langTag = resource.getFilename().substring(resource.getFilename().indexOf("_") + 1,
+						resource.getFilename().lastIndexOf("."));
+				langTag = StringUtils.replace(langTag, "_", "-");
+			}
+			try (InputStream is = resource.getInputStream()) {
+				List<String> lines = IOUtils.readLines(is, messageSource.getEncoding());
+				Map<String, String> map = lines.stream().map(s -> StringUtils.split(s, "="))
+						.filter(a -> Objects.nonNull(a) && a.length == 2)
+						.collect(Collectors.toMap(a -> a[0], a -> a[1]));
+				redisCache.setCacheMap(CACHE_PREFIX + langTag, map);
+			}
+		}
 	}
 }

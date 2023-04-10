@@ -1,8 +1,10 @@
 package com.ruoyi.system.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.system.config.I18nMessageSource;
 import com.ruoyi.system.domain.SysI18nDict;
 
 public interface ISysI18nDictService extends IService<SysI18nDict> {
@@ -53,7 +55,9 @@ public interface ISysI18nDictService extends IService<SysI18nDict> {
 	public void deleteI18nDictByIds(List<Long> i18nDictIds);
 
 	/**
-	 * 刷新缓存
+	 * 加载国际化资源
+	 * @param i18nMessageSource 
+	 * @throws IOException 
 	 */
-	public void resetCache();
+	public void loadMessages(I18nMessageSource i18nMessageSource) throws IOException;
 }
