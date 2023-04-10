@@ -2,6 +2,7 @@ package com.ruoyi.contentcore.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -37,10 +39,12 @@ import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
 import com.ruoyi.contentcore.domain.dto.PublishSiteDTO;
 import com.ruoyi.contentcore.domain.dto.SiteDTO;
 import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
+import com.ruoyi.contentcore.perms.SitePermissionType.SitePrivItem;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
@@ -109,12 +113,28 @@ public class SiteController extends BaseRestController {
 		LambdaQueryWrapper<CmsSite> q = new LambdaQueryWrapper<CmsSite>().like(StringUtils.isNotEmpty(siteName),
 				CmsSite::getName, siteName);
 		Page<CmsSite> page = siteService.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true), q);
-		page.getRecords().forEach(site -> {
+		LoginUser loginUser = StpAdminUtil.getLoginUser();
+		List<CmsSite> list = page.getRecords().stream()
+				.filter(site -> CmsPrivUtils.hasSitePermission(site.getSiteId(), SitePrivItem.View, loginUser))
+				.toList();
+		list.forEach(site -> {
 			if (StringUtils.isNotEmpty(site.getLogo())) {
 				site.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(site.getLogo()));
 			}
 		});
-		return this.bindDataTable(page);
+		return this.bindDataTable(list, page.getTotal());
+	}
+
+	@GetMapping("/options")
+	public R<?> getSiteOptions() {
+		List<Map<String, Object>> list = this.siteService.lambdaQuery().select(CmsSite::getSiteId, CmsSite::getName)
+				.list().stream().map(site -> {
+					Map<String, Object> map = new HashMap<>();
+					map.put("id", site.getSiteId());
+					map.put("name", site.getName());
+					return map;
+				}).toList();
+		return this.bindDataTable(list);
 	}
 
 	/**
@@ -132,6 +152,7 @@ public class SiteController extends BaseRestController {
 		if (StringUtils.isNotEmpty(site.getLogo())) {
 			site.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(site.getLogo()));
 		}
+		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.View, StpAdminUtil.getLoginUser());
 		SiteDTO dto = SiteDTO.newInstance(site);
 		// 发布通道数据
 		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(site.getSiteId(),
@@ -165,6 +186,7 @@ public class SiteController extends BaseRestController {
 	@Log(title = "编辑站点", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> editSave(@RequestBody SiteDTO dto) throws IOException {
+		CmsPrivUtils.checkSitePermission(dto.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.siteService.saveSite(dto);
 		return R.ok();
@@ -180,6 +202,7 @@ public class SiteController extends BaseRestController {
 	@Log(title = "删除站点", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{siteId}")
 	public R<String> remove(@PathVariable("siteId") Long siteId) throws IOException {
+		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.Delete, StpAdminUtil.getLoginUser());
 		this.siteService.deleteSite(siteId);
 		return R.ok();
 	}
@@ -197,6 +220,7 @@ public class SiteController extends BaseRestController {
 	public R<String> publishAll(@RequestBody PublishSiteDTO dto) throws IOException, TemplateException {
 		CmsSite site = siteService.getById(dto.getSiteId());
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
+		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Publish, StpAdminUtil.getLoginUser());
 
 		if (!dto.isPublishIndex()) {
 			AsyncTask task = publishService.publishAll(site, dto.getContentStatus());
@@ -215,6 +239,8 @@ public class SiteController extends BaseRestController {
 	@GetMapping("/extends")
 	public R<?> getSiteExtends(@RequestParam("siteId") Long siteId) {
 		CmsSite site = this.siteService.getSite(siteId);
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
+		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.View, StpAdminUtil.getLoginUser());
 
 		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(site.getConfigProps(), UseType.Site);
 		configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(site));
@@ -231,7 +257,11 @@ public class SiteController extends BaseRestController {
 	@Log(title = "站点扩展", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PostMapping("/extends/{siteId}")
 	public R<?> saveSiteExtends(@PathVariable("siteId") Long siteId, @RequestBody Map<String, String> configs) {
-		this.siteService.saveSiteExtend(siteId, configs, StpAdminUtil.getLoginUser().getUsername());
+		CmsSite site = this.siteService.getSite(siteId);
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
+		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
+
+		this.siteService.saveSiteExtend(site, configs, StpAdminUtil.getLoginUser().getUsername());
 		return R.ok();
 	}
 
@@ -243,10 +273,10 @@ public class SiteController extends BaseRestController {
 	 */
 	@GetMapping("/default_template")
 	public R<?> getDefaultTemplates(@RequestParam("siteId") Long siteId) {
-		CmsSite site = siteService.getById(siteId);
-		if (site == null) {
-			return R.fail("数据ID错误：" + siteId);
-		}
+		CmsSite site = this.siteService.getSite(siteId);
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
+		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
+
 		SiteDefaultTemplateDTO dto = new SiteDefaultTemplateDTO();
 		dto.setSiteId(siteId);
 		// 发布通道数据
@@ -265,6 +295,10 @@ public class SiteController extends BaseRestController {
 	@Log(title = "默认模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/default_template")
 	public R<?> saveDefaultTemplates(@RequestBody SiteDefaultTemplateDTO dto) {
+		CmsSite site = this.siteService.getSite(dto.getSiteId());
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
+		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
+
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.siteService.saveSiteDefaultTemplate(dto);
 		return R.ok();
@@ -279,6 +313,10 @@ public class SiteController extends BaseRestController {
 	@Log(title = "应用默认模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/apply_default_template")
 	public R<?> applyDefaultTemplateToCatalog(@RequestBody SiteDefaultTemplateDTO dto) {
+		CmsSite site = this.siteService.getSite(dto.getSiteId());
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
+		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
+
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.catalogService.applySiteDefaultTemplateToCatalog(dto);
 		return R.ok();
@@ -298,8 +336,10 @@ public class SiteController extends BaseRestController {
 			@RequestParam("file") @NotNull MultipartFile multipartFile) throws Exception {
 		try {
 			CmsSite site = this.siteService.getSite(siteId);
-			String dir = SiteUtils.getSiteResourceRoot(site.getPath());
+			Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
+			CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
 
+			String dir = SiteUtils.getSiteResourceRoot(site.getPath());
 			String suffix = FileExUtils.getExtension(multipartFile.getOriginalFilename());
 			String path = "watermaker" + StringUtils.DOT + suffix;
 			File file = new File(dir + path);

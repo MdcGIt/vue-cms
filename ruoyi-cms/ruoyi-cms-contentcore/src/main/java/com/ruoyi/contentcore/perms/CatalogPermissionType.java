@@ -8,15 +8,15 @@ import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.system.permission.IPermissionType;
 
 /**
- * 站点权限类型
+ * 栏目权限类型
  * 
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@Component(IPermissionType.BEAN_PREFIX + SitePermissionType.ID)
-public class SitePermissionType implements IPermissionType {
+@Component(IPermissionType.BEAN_PREFIX + CatalogPermissionType.ID)
+public class CatalogPermissionType implements IPermissionType {
 
-	public static final String ID = "Site";
+	public static final String ID = "Catalog";
 
 	@Override
 	public String getId() {
@@ -25,12 +25,12 @@ public class SitePermissionType implements IPermissionType {
 
 	@Override
 	public String getName() {
-		return "站点权限";
+		return "栏目权限";
 	}
 
 	@Override
 	public String convert(List<String> permissionKeys) {
-		return CmsPrivUtils.convertSitePermissionKeys(permissionKeys);
+		return CmsPrivUtils.convertCatalogPermissionKeys(permissionKeys);
 	}
 
 	/**
@@ -38,13 +38,13 @@ public class SitePermissionType implements IPermissionType {
 	 */
 	@Override
 	public List<String> parse(String json) {
-		return CmsPrivUtils.parseSitePermissionJson(json);
+		return CmsPrivUtils.parseCatalogPermissionJson(json);
 	}
 
 	/**
-	 * 站点权限项
+	 * 栏目权限项
 	 */
-	public enum SitePrivItem {
+	public enum CatalogPrivItem {
 
 		View(0, "查看"),
 
@@ -52,7 +52,13 @@ public class SitePermissionType implements IPermissionType {
 
 		Delete(2, "删除"),
 
-		Publish(3, "发布");
+		Publish(3, "发布"),
+
+		ShowHide(4, "显示/隐藏"),
+
+		Move(5, "移动"),
+
+		Sort(6, "排序");
 
 		/**
 		 * 权限项在bitset中的位置序号，从0开始，不可随意变更，变更后会导致原权限信息错误
@@ -61,7 +67,7 @@ public class SitePermissionType implements IPermissionType {
 
 		private String label;
 
-		SitePrivItem(int bitIndex, String label) {
+		CatalogPrivItem(int bitIndex, String label) {
 			this.bitIndex = bitIndex;
 			this.label = label;
 		}
@@ -74,8 +80,8 @@ public class SitePermissionType implements IPermissionType {
 			return this.label;
 		}
 
-		public String getPermissionKey(String siteId) {
-			return ID + ":" + this.name() + ":" + siteId;
+		public String getPermissionKey(String catalogId) {
+			return ID + ":" + this.name() + ":" + catalogId;
 		}
 	}
 }

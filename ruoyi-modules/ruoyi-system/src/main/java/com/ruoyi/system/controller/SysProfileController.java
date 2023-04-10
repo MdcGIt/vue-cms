@@ -1,8 +1,8 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -168,10 +168,9 @@ public class SysProfileController extends BaseRestController {
 		List<SysMenu> menus = this.menuService.lambdaQuery().eq(SysMenu::getMenuType, MenuType.Menu.value())
 				.in(menuIds.size() > 0, SysMenu::getMenuId, menuIds).last("limit 8").list();
 
-		Map<String, List<String>> permissions = this.permissionService
-				.getPermissionMapByUser(StpAdminUtil.getLoginUser().getUserId());
-		List<String> menuPerms = permissions.get(MenuPermissionType.ID);
-		if (menuPerms != null && !menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
+		Set<String> menuPerms = this.permissionService.getPermissionsByUser(StpAdminUtil.getLoginUser().getUserId(),
+				MenuPermissionType.ID);
+		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());
 			}).toList();

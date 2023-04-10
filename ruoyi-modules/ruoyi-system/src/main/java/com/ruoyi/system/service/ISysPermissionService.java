@@ -1,7 +1,6 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.SysPermission;
@@ -44,7 +43,7 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	 * @param userId
 	 * @return
 	 */
-	public Map<String, List<String>> getPermissionMapByUser(Long userId);
+	public Set<String> getPermissionsByUser(Long userId, String permissionType);
 
 	/**
 	 * 获取用户权限集合
@@ -52,5 +51,5 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	 * @param userId
 	 * @return
 	 */
-	public List<String> getPermissionListByUser(Long userId);
+	public Set<String> getPermissionListByUser(Long userId);
 }

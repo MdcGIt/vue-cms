@@ -1,23 +1,41 @@
 <template>
   <div class="app-container">
     <el-tabs v-model="activeName" @tab-click="handleTabClick">
-      <el-tab-pane label="菜单权限" name="menu">
+      <el-tab-pane label="菜单权限" name="Menu">
         <permission-menu 
-          v-if="this.activeName=='menu'" 
+          v-if="this.activeName=='Menu'" 
           :ownerType="permsOwnerType"
           :owner="permsOwner">
         </permission-menu>
+      </el-tab-pane>
+      <el-tab-pane label="站点权限" name="Site">
+        <permission-site 
+          v-if="this.activeName=='Site'" 
+          :ownerType="permsOwnerType"
+          :owner="permsOwner">
+        </permission-site>
+      </el-tab-pane>
+      <el-tab-pane label="栏目权限" name="Catalog">
+        <permission-catalog 
+          v-if="this.activeName=='Catalog'" 
+          :ownerType="permsOwnerType"
+          :owner="permsOwner">
+        </permission-catalog>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import MenuPermission from './menuPerms';
+import SitePermission from '@/views/cms/contentcore/sitePerms';
+import CatalogPermission from '@/views/cms/contentcore/catalogPerms';
 
 export default {
   name: "PermisisonTab",
   components: {
     'permission-menu': MenuPermission,
+    'permission-site': SitePermission,
+    'permission-catalog': CatalogPermission,
   },
   props: {
     ownerType: {
@@ -39,7 +57,7 @@ export default {
   },
   data () {
     return {
-      activeName: 'menu',
+      activeName: 'Menu',
       permsOwnerType: this.ownerType,
       permsOwner: this.owner
     };

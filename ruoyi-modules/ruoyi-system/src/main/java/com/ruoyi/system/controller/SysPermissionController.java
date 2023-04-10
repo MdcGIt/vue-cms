@@ -60,7 +60,7 @@ public class SysPermissionController extends BaseRestController {
 		List<String> perms = List.of();
 		if (Objects.nonNull(permission)) {
 			String json  = permission.getPermissions().get(menuPermissionType.getId());
-			perms = menuPermissionType.parsePermissionKeys(json);
+			perms = menuPermissionType.parse(json);
 		}
 		return R.ok(Map.of("menus", menus, "perms", perms));
 	}

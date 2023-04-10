@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
@@ -42,10 +40,12 @@ import com.ruoyi.contentcore.domain.dto.PublishCatalogDTO;
 import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
 import com.ruoyi.contentcore.domain.dto.SortCatalogDTO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
+import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
@@ -89,8 +89,8 @@ public class CatalogController extends BaseRestController {
 	 */
 	@GetMapping
 	public R<?> list(CmsCatalog catalog) {
-		QueryWrapper<CmsCatalog> queryWrapper = new QueryWrapper<>(catalog);
-		List<CmsCatalog> list = catalogService.list(queryWrapper);
+		List<CmsCatalog> list = catalogService.lambdaQuery().list().stream().filter(c -> CmsPrivUtils
+				.hasCatalogPermission(c.getCatalogId(), CatalogPrivItem.View, StpAdminUtil.getLoginUser())).toList();
 		return this.bindDataTable(list);
 	}
 
@@ -103,9 +103,9 @@ public class CatalogController extends BaseRestController {
 	@GetMapping("/{catalogId}")
 	public R<?> catalogInfo(@PathVariable Long catalogId) {
 		CmsCatalog catalog = catalogService.getById(catalogId);
-		if (catalog == null) {
-			return R.fail("栏目ID错误：" + catalogId);
-		}
+		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
+		CmsPrivUtils.checkCatalogPermission(catalog.getCatalogId(), CatalogPrivItem.View, StpAdminUtil.getLoginUser());
+
 		CatalogDTO dto = CatalogDTO.newInstance(catalog);
 		CmsSite site = siteService.getById(dto.getSiteId());
 		if (StringUtils.isNotEmpty(dto.getLogo())) {
@@ -144,6 +144,8 @@ public class CatalogController extends BaseRestController {
 	@Log(title = "编辑栏目", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> editSave(@RequestBody CatalogDTO dto) throws IOException {
+		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.Edit, StpAdminUtil.getLoginUser());
+
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.catalogService.editCatalog(dto);
 		return R.ok();
@@ -158,6 +160,8 @@ public class CatalogController extends BaseRestController {
 	@Log(title = "删除", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{catalogId}")
 	public R<String> remove(@PathVariable("catalogId") @Min(1) Long catalogId) {
+		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.Delete, StpAdminUtil.getLoginUser());
+
 		AsyncTask task = new AsyncTask() {
 
 			@Override
@@ -178,6 +182,8 @@ public class CatalogController extends BaseRestController {
 	@Log(title = "显隐栏目", businessType = BusinessType.UPDATE)
 	@PutMapping("/visible")
 	public R<String> changeVisible(@RequestBody ChangeCatalogVisibleDTO dto) {
+		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.ShowHide, StpAdminUtil.getLoginUser());
+
 		catalogService.changeVisible(dto.getCatalogId(), dto.getVisible());
 		return R.ok();
 	}
@@ -190,9 +196,10 @@ public class CatalogController extends BaseRestController {
 	@GetMapping("/treeData")
 	public R<?> treeData() {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<CmsCatalog>().eq(CmsCatalog::getSiteId,
-				site.getSiteId()).orderByAsc(CmsCatalog::getSortFlag);
-		List<CmsCatalog> catalogs = this.catalogService.list(q);
+		List<CmsCatalog> catalogs = this.catalogService.lambdaQuery().eq(CmsCatalog::getSiteId, site.getSiteId())
+				.orderByAsc(CmsCatalog::getSortFlag).list().stream().filter(c -> CmsPrivUtils
+						.hasCatalogPermission(c.getCatalogId(), CatalogPrivItem.View, StpAdminUtil.getLoginUser()))
+				.toList();
 		List<TreeNode<String>> treeData = catalogService.buildCatalogTreeData(catalogs);
 		return R.ok(Map.of("rows", treeData, "siteName", site.getName()));
 	}
@@ -216,22 +223,27 @@ public class CatalogController extends BaseRestController {
 	 */
 	@GetMapping("/getCatalogTypes")
 	public R<?> getCatalogTypes() {
-		List<Map<String, String>> list = this.catalogTypes.stream().map(ct -> Map.of("id", ct.getId(), "name", I18nUtils.get(ct.getName()))).toList();
+		List<Map<String, String>> list = this.catalogTypes.stream()
+				.map(ct -> Map.of("id", ct.getId(), "name", I18nUtils.get(ct.getName()))).toList();
 		return R.ok(list);
 	}
 
 	/**
 	 * 发布栏目
 	 * 
-	 * @param publishCatalogDTO
+	 * @param dto
 	 * @return
 	 */
 	@Log(title = "发布栏目", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
-	public R<String> publish(@RequestBody PublishCatalogDTO publishCatalogDTO) {
-		CmsCatalog catalog = this.catalogService.getCatalog(publishCatalogDTO.getCatalogId());
-		AsyncTask task = this.publishService.publishCatalog(catalog, publishCatalogDTO.isPublishChild(),
-				publishCatalogDTO.isPublishDetail(), publishCatalogDTO.getPublishStatus());
+	public R<String> publish(@RequestBody PublishCatalogDTO dto) {
+		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
+		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
+		CmsPrivUtils.checkCatalogPermission(catalog.getCatalogId(), CatalogPrivItem.Publish,
+				StpAdminUtil.getLoginUser());
+
+		AsyncTask task = this.publishService.publishCatalog(catalog, dto.isPublishChild(), dto.isPublishDetail(),
+				dto.getPublishStatus());
 		return R.ok(task.getTaskId());
 	}
 
@@ -245,6 +257,7 @@ public class CatalogController extends BaseRestController {
 	public R<?> getCatalogExtends(@RequestParam("catalogId") @Min(1) Long catalogId) {
 		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
+		CmsPrivUtils.checkCatalogPermission(catalog.getCatalogId(), CatalogPrivItem.View, StpAdminUtil.getLoginUser());
 
 		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(),
 				UseType.Catalog);
@@ -264,6 +277,10 @@ public class CatalogController extends BaseRestController {
 	@PutMapping("/extends/{catalogId}")
 	public R<?> saveCatalogExtends(@PathVariable("catalogId") Long catalogId,
 			@RequestBody Map<String, String> configs) {
+		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
+		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
+		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.Edit, StpAdminUtil.getLoginUser());
+
 		this.catalogService.saveCatalogExtends(catalogId, configs, StpAdminUtil.getLoginUser().getUsername());
 		return R.ok();
 	}
@@ -277,6 +294,10 @@ public class CatalogController extends BaseRestController {
 	@Log(title = "应用扩展", businessType = BusinessType.UPDATE)
 	@PutMapping("/apply_children")
 	public R<?> applyChildren(@RequestBody CatalogApplyChildrenDTO dto) {
+		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
+		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
+		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.Edit, StpAdminUtil.getLoginUser());
+
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.catalogService.applyChildren(dto);
 		return R.ok();
@@ -295,10 +316,13 @@ public class CatalogController extends BaseRestController {
 		CmsCatalog fromCatalog = this.catalogService.getCatalog(fromCatalogId);
 		Assert.notNull(fromCatalog,
 				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("fromCatalogId", fromCatalogId));
+		CmsPrivUtils.checkCatalogPermission(fromCatalogId, CatalogPrivItem.Move, StpAdminUtil.getLoginUser());
+
 		CmsCatalog toCatalog = null;
 		if (IdUtils.validate(toCatalogId)) {
 			toCatalog = this.catalogService.getCatalog(toCatalogId);
 			Assert.notNull(toCatalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("toCatalogId", toCatalogId));
+			CmsPrivUtils.checkCatalogPermission(toCatalogId, CatalogPrivItem.Move, StpAdminUtil.getLoginUser());
 
 			// 目标栏目不能是源栏目的子栏目或自身，且目标栏目不是当前栏目的父级栏目
 			boolean isSelfOfChild = toCatalog.getAncestors().startsWith(fromCatalog.getAncestors())
@@ -315,6 +339,7 @@ public class CatalogController extends BaseRestController {
 		if (dto.getSort() == 0) {
 			return R.fail("排序数值不能为0");
 		}
+		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.Move, StpAdminUtil.getLoginUser());
 		this.catalogService.sortCatalog(dto.getCatalogId(), dto.getSort());
 		return R.ok();
 	}

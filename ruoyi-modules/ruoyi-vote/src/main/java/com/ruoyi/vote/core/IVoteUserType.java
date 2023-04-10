@@ -8,7 +8,7 @@ package com.ruoyi.vote.core;
  */
 public interface IVoteUserType {
 
-	public static final String BEAN_PREFIX = "VoteUserType_";
+	public String BEAN_PREFIX = "VoteUserType_";
 	
 	/**
 	 * 问卷调查用户类型ID，唯一标识

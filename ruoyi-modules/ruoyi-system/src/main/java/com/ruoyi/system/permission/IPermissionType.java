@@ -5,12 +5,31 @@ import java.util.List;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
 
+/**
+ * 权限类型
+ * 
+ * 系统模块提供权限持久化，各类型权限存储格式各自定义
+ *
+ * @author 兮玥
+ * @email liweiyimwz@126.com
+ */
 public interface IPermissionType {
 
-	public static final String BEAN_PREFIX = "PermissionType_";
+	public String BEAN_PREFIX = "PermissionType_";
 	
+	/**
+	 * 权限字符串分隔符
+	 */
+	public String Spliter = ":";
+	
+	/**
+	 * 类型唯一标识
+	 */
 	public String getId();
-	
+
+	/**
+	 * 类型名称
+	 */
 	public String getName();
 	
 	/**
@@ -19,7 +38,7 @@ public interface IPermissionType {
 	 * @param json
 	 * @return
 	 */
-	default public List<String> parsePermissionKeys(String json) {
+	default public List<String> parse(String json) {
 		if (StringUtils.isEmpty(json)) {
 			return List.of();
 		}

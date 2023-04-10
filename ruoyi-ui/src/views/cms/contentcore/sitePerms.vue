@@ -4,62 +4,45 @@
       <el-col>
         <el-button plain type="success" icon="el-icon-edit" size="mini" @click="handleSave">保存</el-button>
         <el-button plain type="primary" icon="el-icon-check" size="mini" @click="handleSelectAll">{{ this.selectAll ? '全不选' : '全选' }}</el-button>
-        <el-button plain type="primary" icon="el-icon-bottom-right" size="mini" @click="handleExpandAll">{{ this.expandAll ? '收起' : '展开' }}</el-button>
       </el-col>
     </el-row>
     <el-row>
       <el-col>
         <el-table 
           v-loading="loading"
-          :data="siteList"
+          :data="sitePrivs"
           style="width:100%;line-height: normal;">
-          <el-table-column label="ID"
-                            width="200"
-                            prop="siteId" />
-          <el-table-column label="站点名称">
+          <el-table-column
+            type="index"
+            label="序号"
+            width="50">
+          </el-table-column>
+          <el-table-column label="站点名称" width="200">
             <template slot-scope="scope">
-              <el-link type="primary"
-                        @click="handleEdit(scope.row)"
-                        class="link-type">
-                <span>{{ scope.row.name }}</span>
-              </el-link>
+                <el-checkbox @change="handleRowSelectAll($event, scope.row.siteId)" v-model="scope.row.perms['View']">{{ scope.row.name }}</el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="目录名"
-                            width="200"
-                            prop="path" />
-          <el-table-column label="操作"
-                            align="center"
-                            width="300" 
-                            class-name="small-padding fixed-width">
-            <template slot-scope="scope">
-              <el-button size="mini"
-                          type="text"
-                          icon="el-icon-s-promotion"
-                          @click="handlePublish(scope.row)">发布首页</el-button>
-              <el-button size="mini"
-                          type="text"
-                          @click="handlePreview(scope.row)"><svg-icon icon-class="eye-open" class="mr1"></svg-icon>预览</el-button>
-              <el-button size="mini"
-                          type="text"
-                          icon="el-icon-edit"
-                          @click="handleEdit(scope.row)">修改</el-button>
-              <el-button size="mini"
-                          type="text"
-                          icon="el-icon-delete"
-                          @click="handleDelete(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
+          <template v-for="(item, index) in sitePrivItems">
+            <el-table-column :key="index" :label="item.name" v-if="item.id!='View'">
+              <template slot="header">
+                <el-checkbox @change="handleColumnSelectAll(item.id)">{{ item.name }}</el-checkbox>
+              </template>
+              <template slot-scope="scope">
+                <el-checkbox v-model="scope.row.perms[item.id]" @change="handleRowColumnChange($event, scope.row)"></el-checkbox>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
-import { savePermissions, getMenuPerms } from "@/api/system/perms";
+import { getSitePermissions } from "@/api/contentcore/perms"
+import { savePermissions } from "@/api/system/perms";
 
 export default {
-  name: "MenuPermission",
+  name: "SitePermission",
   props: {
     ownerType: {
       type: String,
@@ -97,81 +80,69 @@ export default {
     return {
       loading: true,
       selectAll: false,
-      expandAll: true,
-      menuTreeData: [],
-      perms: [],
-      form: {},
-      defaultProps: {
-        children: 'children',
-        label: 'menuName'
-      }
+      selectColumnAll: {},
+      sitePrivs: [],
+      sitePrivItems: []
     };
   }, 
   methods: {
     loadData() {
       this.loading = true;
       const params = { ownerType: this.ownerType, owner: this.owner }
-      getMenuPerms(params).then(response => {
-        this.menuTreeData = this.handleTree(response.data.menus, '0', "menuId");
-        this.perms = response.data.perms;
-        this.$nextTick(() => {
-          this.setCheckedMenu(this.menuTreeData);
-          this.loading = false;
-        })
+      getSitePermissions(params).then(response => {
+        this.sitePrivs = response.data.sitePrivs;
+        this.sitePrivItems = response.data.sitePrivItems;
+        this.loading = false;
       });
-    },
-    setCheckedMenu(menus) {
-      menus.forEach(m => {
-        if (this.perms.includes(m.perms)) {
-          this.$refs.menu.setChecked(m.menuId, true);
-        }
-        if (m.children && m.children.length > 0) {
-          this.setCheckedMenu(m.children);
-        }
-      });
-    },
-    handleTreeNodeCheckChange(node, checked) {
-      if (node.perms && node.perms.length > 0) {
-        if (checked) {
-            this.perms.push(node.perms);
-        } else {
-          for(let i = 0; i < this.perms.length; i++) {
-            if(this.perms[i] == node.perms) {
-              this.perms.splice(i, 1);
-              break;
-            }
-          }
-        }
-      }
     },
     handleSelectAll() {
-      this.$refs.menu.setCheckedNodes(!this.selectAll ? this.menuTreeData : []);
       this.selectAll = !this.selectAll;
+      this.sitePrivs.forEach(row => {
+        Object.keys(row.perms).forEach(key => row.perms[key] = this.selectAll)
+      })
     },
-    handleExpandAll() {
-      let treeList = this.menuTreeData;
-      for (let i = 0; i < treeList.length; i++) {
-        this.$refs.menu.store.nodesMap[treeList[i].menuId].expanded = !this.expandAll;
+    handleRowSelectAll(value, siteId) {
+      this.sitePrivs.some(row => {
+        if (row.siteId == siteId) {
+          Object.keys(row.perms).forEach(key => {
+            row.perms[key] = value;
+          })
+          return true;
+        }
+        return false;
+      })
+    },
+    handleColumnSelectAll(column) {
+      this.selectColumnAll[column] = !this.selectColumnAll[column];
+      this.sitePrivs.forEach(row => {
+        Object.keys(row.perms).forEach(key => {
+          if (key == column) {
+            row.perms[key] = this.selectColumnAll[column];
+            if (this.selectColumnAll[column]) {
+              row.perms['View'] = this.selectColumnAll[column]
+            }
+          }
+        })
+      })
+    },
+    handleRowColumnChange(value, row) {
+      if (value) {
+        row.perms['View'] = true;
       }
-      this.expandAll = !this.expandAll;
-    },
-    getMenuAllCheckedKeys() {
-      let checkedKeys = this.$refs.menu.getCheckedNodes();
-      let halfCheckedKeys = this.$refs.menu.getHalfCheckedNodes();
-      checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
-      return checkedKeys;
     },
     handleSave() {
       let permissions = [];
-      this.getMenuAllCheckedKeys().forEach(node => {
-        if (node.perms && node.perms != '') {
-          permissions.push(node.perms);
-        }
-      });
+      this.sitePrivs.forEach(row => {
+        Object.keys(row.perms).forEach(key => {
+          if (row.perms[key]) {
+            permissions.push(key + ":" + row.siteId);
+          }
+        })
+      })
       const data = {
         ownerType: this.ownerType,
         owner: this.owner,
-        permType: 'Menu',
+        permType: 'Site',
         permissions: permissions
       };
       savePermissions(data).then(response => {

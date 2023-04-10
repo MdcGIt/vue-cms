@@ -2,8 +2,8 @@ package com.ruoyi.system.security;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -125,7 +125,7 @@ public class SysLoginService {
 		loginUser.setBrowser(ua.getBrowser() + "/" + ua.getBrowserVersion());
 		loginUser.setUser(user);
 
-		List<String> permissions = permissionService.getPermissionListByUser(user.getUserId());
+		Set<String> permissions = permissionService.getPermissionListByUser(user.getUserId());
 		loginUser.setPermissions(permissions);
 		return loginUser;
 	}

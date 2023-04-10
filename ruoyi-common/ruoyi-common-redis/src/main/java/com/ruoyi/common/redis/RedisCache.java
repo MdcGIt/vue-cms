@@ -497,4 +497,26 @@ public class RedisCache {
 		Long rank = redisTemplate.opsForZSet().rank(key, value);
 		return Objects.isNull(rank) ? -1 : rank.longValue();
 	}
+	
+	/**
+     * 设置cacheKey字段第offset位bit数值
+     *
+     * @param cacheKey    
+     * @param offset 位置
+     * @param value  值
+     */
+    public void setBit(String cacheKey, long offset, boolean value) {
+		this.redisTemplate.opsForValue().setBit(cacheKey, offset, value);
+    }
+ 
+    /**
+     * 判断该key字段offset位否为1
+     *
+     * @param cacheKey
+     * @param offset 位置
+     * @return
+     */
+    public boolean getBit(String cacheKey, long offset) {
+        return this.redisTemplate.opsForValue().getBit(cacheKey, offset);
+    }
 }

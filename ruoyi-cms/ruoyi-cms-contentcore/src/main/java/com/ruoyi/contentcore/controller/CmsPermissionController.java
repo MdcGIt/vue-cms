@@ -1,9 +1,10 @@
 package com.ruoyi.contentcore.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +13,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsSite;
+import com.ruoyi.contentcore.domain.vo.CatalogPrivVO;
+import com.ruoyi.contentcore.domain.vo.SitePrivVO;
+import com.ruoyi.contentcore.perms.CatalogPermissionType;
+import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.perms.SitePermissionType;
-import com.ruoyi.contentcore.perms.SitePermissionType.SiteSubPriv;
+import com.ruoyi.contentcore.perms.SitePermissionType.SitePrivItem;
+import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.service.ISysPermissionService;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * 站点/栏目/内容权限
@@ -37,20 +46,13 @@ public class CmsPermissionController extends BaseRestController {
 
 	private final ISiteService siteService;
 
+	private final ICatalogService catalogService;
+
 	private final ISysPermissionService permissionService;
 
 	private final SitePermissionType sitePermissionType;
 
-	@Getter
-	@Setter
-	static class SitePrivVO {
-
-		private Long siteId;
-
-		private String name;
-
-		private Map<String, Boolean> perms = new HashMap<>();
-	}
+	private final CatalogPermissionType catalogPermissionType;
 
 	@GetMapping("/site")
 	public R<?> getSitePermissions(@RequestParam String ownerType, @RequestParam String owner) {
@@ -60,7 +62,7 @@ public class CmsPermissionController extends BaseRestController {
 		List<String> perms;
 		if (Objects.nonNull(permission)) {
 			String json = permission.getPermissions().get(SitePermissionType.ID);
-			perms = this.sitePermissionType.parsePermissionKeys(json);
+			perms = this.sitePermissionType.parse(json);
 		} else {
 			perms = List.of();
 		}
@@ -69,16 +71,66 @@ public class CmsPermissionController extends BaseRestController {
 			SitePrivVO vo = new SitePrivVO();
 			vo.setSiteId(site.getSiteId());
 			vo.setName(site.getName());
-			SiteSubPriv[] values = SiteSubPriv.values();
-			for (SiteSubPriv subPriv : values) {
-				String permKey = subPriv.getPermissionKey(site.getSiteId().toString());
-				vo.getPerms().put(subPriv.name(), perms.contains(permKey));
+			SitePrivItem[] values = SitePrivItem.values();
+			for (SitePrivItem privItem : values) {
+				String permKey = privItem.getPermissionKey(site.getSiteId().toString());
+				vo.getPerms().put(privItem.name(), perms.contains(permKey));
 			}
 			return vo;
 		}).toList();
 
-		List<Map<String, String>> siteSubPrivs = Stream.of(SiteSubPriv.values())
+		List<Map<String, String>> siteSubPrivs = Stream.of(SitePrivItem.values())
 				.map(ssp -> Map.of("id", ssp.name(), "name", ssp.label())).toList();
-		return R.ok(Map.of("sitePrivs", sitePrivs, "siteSubPrivs", siteSubPrivs));
+		return R.ok(Map.of("sitePrivs", sitePrivs, "sitePrivItems", siteSubPrivs));
+	}
+
+	@GetMapping("/catalog")
+	public R<?> getCatalogPermissions(@RequestParam String ownerType, @RequestParam String owner,
+			@RequestParam(required = false) Long siteId) {
+		CmsSite site = IdUtils.validate(siteId) ? this.siteService.getSite(siteId)
+				: this.siteService.getCurrentSite(ServletUtils.getRequest());
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
+		
+		List<CmsCatalog> catalogs = this.catalogService.lambdaQuery().eq(CmsCatalog::getSiteId, site.getSiteId())
+				.list();
+
+		SysPermission permission = this.permissionService.getPermissions(ownerType, owner);
+		List<String> perms;
+		if (Objects.nonNull(permission)) {
+			String json = permission.getPermissions().get(CatalogPermissionType.ID);
+			perms = this.catalogPermissionType.parse(json);
+		} else {
+			perms = List.of();
+		}
+
+		List<CatalogPrivVO> catalogPrivs = catalogs.stream().map(catalog -> {
+			CatalogPrivVO vo = new CatalogPrivVO();
+			vo.setCatalogId(catalog.getCatalogId());
+			vo.setParentId(catalog.getParentId());
+			vo.setName(catalog.getName());
+			CatalogPrivItem[] values = CatalogPrivItem.values();
+			for (CatalogPrivItem privItem : values) {
+				String permKey = privItem.getPermissionKey(catalog.getCatalogId().toString());
+				vo.getPerms().put(privItem.name(), perms.contains(permKey));
+			}
+			return vo;
+		}).toList();
+		List<CatalogPrivVO> treeTable = buildTreeTable(catalogPrivs);
+		List<Map<String, String>> siteSubPrivs = Stream.of(CatalogPrivItem.values())
+				.map(ssp -> Map.of("id", ssp.name(), "name", ssp.label())).toList();
+		return R.ok(Map.of("siteId", site.getSiteId(), "catalogPrivs", treeTable, "catalogPrivItems", siteSubPrivs));
+	}
+
+	public List<CatalogPrivVO> buildTreeTable(List<CatalogPrivVO> list) {
+		Map<Long, List<CatalogPrivVO>> mapChildren = list.stream().filter(n -> n.getParentId() > 0)
+				.collect(Collectors.groupingBy(CatalogPrivVO::getParentId));
+		List<CatalogPrivVO> result = new ArrayList<>();
+		list.forEach(n -> {
+			n.setChildren(mapChildren.get(n.getCatalogId()));
+			if (n.getParentId() == 0) {
+				result.add(n);
+			}
+		});
+		return result;
 	}
 }
