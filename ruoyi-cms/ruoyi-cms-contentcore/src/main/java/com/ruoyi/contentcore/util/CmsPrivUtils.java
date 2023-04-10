@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -19,6 +20,12 @@ import com.ruoyi.system.domain.SysPermission;
 import cn.dev33.satoken.error.SaErrorCode;
 import cn.dev33.satoken.exception.NotPermissionException;
 
+/**
+ * 内容核心权限工具类
+ * 
+ * @author 兮玥
+ * @email liweiyimwz@126.com
+ */
 public class CmsPrivUtils {
 	
 	/**
@@ -101,6 +108,9 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static void checkSitePermission(Long siteId, SitePrivItem privItem, LoginUser loginUser) {
+		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
+			return;
+		}
 		String permissionKey = privItem.getPermissionKey(siteId.toString());
 		if (!loginUser.getPermissions().contains(permissionKey)) {
 			throw new NotPermissionException(permissionKey, loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
@@ -116,6 +126,9 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static boolean hasSitePermission(Long siteId, SitePrivItem privItem, LoginUser loginUser) {
+		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
+			return true;
+		}
 		String permissionKey = privItem.getPermissionKey(siteId.toString());
 		return loginUser.getPermissions().contains(permissionKey);
 	}
