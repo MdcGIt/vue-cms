@@ -1,8 +1,8 @@
 package com.ruoyi.contentcore.intercepter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import org.aspectj.lang.JoinPoint;
@@ -14,6 +14,7 @@ import org.springframework.util.PropertyPlaceholderHelper;
 
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.permission.IPermissionType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import cn.dev33.satoken.annotation.SaMode;
@@ -33,6 +34,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsPrivAspect {
 
 	private static final PropertyPlaceholderHelper PlaceholderHelper = new PropertyPlaceholderHelper("{", "}");
+	
+	private final Map<String, IPermissionType<?>> permissionTypes;
 
 	@Before("@annotation(cmsPriv)")
 	public void before(JoinPoint joinPoint, CmsPriv cmsPriv) {
@@ -49,30 +52,26 @@ public class CmsPrivAspect {
 			List<String> checkPerms = Stream.of(values).map(v -> PlaceholderHelper.replacePlaceholders(v, properties))
 					.toList();
 			if (cmsPriv.mode() == SaMode.AND) {
-				checkAnd(checkPerms, StpAdminUtil.getLoginUser());
+				checkAnd(checkPerms, cmsPriv.type(), StpAdminUtil.getLoginUser());
 			} else {
-				checkOr(checkPerms, StpAdminUtil.getLoginUser());
+				checkOr(checkPerms, cmsPriv.type(), StpAdminUtil.getLoginUser());
 			}
 		}
 	}
 
-	private void checkAnd(List<String> checkPerms, LoginUser loginUser) {
-		Set<String> permissions = loginUser.getPermissions();
-		for (String perm : checkPerms) {
-			if (!permissions.contains(perm)) {
-				throw new NotPermissionException(perm, loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
-			}
+	private void checkAnd(List<String> checkPerms, String permissionType, LoginUser loginUser) {
+		String json = loginUser.getPermissions().get(permissionType);
+		IPermissionType<?> pt = permissionTypes.get(permissionType);
+		if (!pt.hasPermission(checkPerms, json, SaMode.AND)) {
+			throw new NotPermissionException(StringUtils.join(checkPerms, "&&"), loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
 		}
 	}
 
-	private void checkOr(List<String> checkPerms, LoginUser loginUser) {
-		Set<String> permissions = loginUser.getPermissions();
-		for (String perm : checkPerms) {
-			if (permissions.contains(perm)) {
-				return;
-			}
+	private void checkOr(List<String> checkPerms, String permissionType, LoginUser loginUser) {
+		String json = loginUser.getPermissions().get(permissionType);
+		IPermissionType<?> pt = permissionTypes.get(permissionType);
+		if (!pt.hasPermission(checkPerms, json, SaMode.OR)) {
+			throw new NotPermissionException(StringUtils.join(checkPerms, "||"), loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
 		}
-		throw new NotPermissionException(StringUtils.join(checkPerms), loginUser.getUserType())
-				.setCode(SaErrorCode.CODE_11051);
 	}
 }

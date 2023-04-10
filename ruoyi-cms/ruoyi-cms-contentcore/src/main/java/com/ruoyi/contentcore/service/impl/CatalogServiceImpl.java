@@ -180,7 +180,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		// 授权给添加人
 		SysPermission permissions = this.permissionService.getPermissions(PermissionOwnerType.User.name(),
 				dto.getOperator().getUserId().toString());
-		CmsPrivUtils.grantSitePermission(catalog.getCatalogId(), permissions);
+		CmsPrivUtils.grantCatalogPermission(catalog.getCatalogId(), permissions);
 		this.permissionService.updateById(permissions);
 		return catalog;
 	}

@@ -508,7 +508,7 @@ public class RedisCache {
     public void setBit(String cacheKey, long offset, boolean value) {
 		this.redisTemplate.opsForValue().setBit(cacheKey, offset, value);
     }
- 
+    
     /**
      * 判断该key字段offset位否为1
      *

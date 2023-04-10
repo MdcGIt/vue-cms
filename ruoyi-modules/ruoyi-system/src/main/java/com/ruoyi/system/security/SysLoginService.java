@@ -3,7 +3,6 @@ package com.ruoyi.system.security;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,6 @@ import com.ruoyi.system.fixed.dict.UserStatus;
 import com.ruoyi.system.service.ISecurityConfigService;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysLogininforService;
-import com.ruoyi.system.service.ISysPermissionService;
 import com.ruoyi.system.service.ISysUserService;
 
 import cn.dev33.satoken.session.SaSession;
@@ -51,8 +49,6 @@ public class SysLoginService {
 	private final ISysLogininforService logininfoService;
 
 	private final ISecurityConfigService securityConfigService;
-
-	private final ISysPermissionService permissionService;
 
 	private final AsyncTaskManager asyncTaskManager;
 
@@ -121,12 +117,8 @@ public class SysLoginService {
 		loginUser.setIpaddr(user.getLoginIp());
 		UserAgent ua = UserAgent.parseUserAgentString(ServletUtils.getUserAgent());
 		loginUser.setOs(ua.getOperatingSystem().name());
-		;
 		loginUser.setBrowser(ua.getBrowser() + "/" + ua.getBrowserVersion());
 		loginUser.setUser(user);
-
-		Set<String> permissions = permissionService.getPermissionListByUser(user.getUserId());
-		loginUser.setPermissions(permissions);
 		return loginUser;
 	}
 

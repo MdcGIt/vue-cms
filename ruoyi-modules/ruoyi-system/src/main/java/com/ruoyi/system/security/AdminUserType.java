@@ -38,7 +38,7 @@ public class AdminUserType implements IUserType {
 
 	@Override
 	public List<String> getPermissionList(Long loginUid) {
-		return this.permissionService.getPermissionListByUser(loginUid).stream().toList();
+		return this.permissionService.getMenuPermissionsByUser(loginUid).stream().toList();
 	}
 
 	@Override

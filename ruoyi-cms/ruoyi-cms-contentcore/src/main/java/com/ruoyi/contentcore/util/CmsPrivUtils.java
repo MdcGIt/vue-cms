@@ -1,16 +1,14 @@
 package com.ruoyi.contentcore.util;
 
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.Objects;
 
 import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.JacksonUtils;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.perms.CatalogPermissionType;
 import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.perms.SitePermissionType;
@@ -57,20 +55,9 @@ public class CmsPrivUtils {
 	 * @param permissionKeys
 	 * @return
 	 */
-	public static String convertSitePermissionKeys(List<String> permissionKeys) {
-		Map<String, BitSet> map = new HashMap<>(); // <SiteId, List<SitePrivItem>>
-		permissionKeys.forEach(key -> {
-			String[] split = StringUtils.split(key, ":");
-			String siteId = split[1];
-			BitSet bitSet = map.get(siteId);
-			if (bitSet == null) {
-				bitSet = new BitSet(SitePrivItem.values().length);
-				map.put(siteId, bitSet);
-			}
-			bitSet.set(SitePrivItem.valueOf(split[0]).bitIndex());
-		});
+	public static String convertSitePermissionKeys(Map<String, BitSet> sitePermissions) {
 		Map<String, long[]> permsMap = new HashMap<>();
-		map.entrySet().forEach(e -> {
+		sitePermissions.entrySet().forEach(e -> {
 			permsMap.put(e.getKey(), e.getValue().toLongArray());
 		});
 		return JacksonUtils.to(permsMap);
@@ -82,21 +69,16 @@ public class CmsPrivUtils {
 	 * @param json
 	 * @return
 	 */
-	public static List<String> parseSitePermissionJson(String json) {
-		List<String> permissions = new ArrayList<>();
-		Map<String, Long[]> sitePrivs = JacksonUtils.fromMap(json, Long[].class);
-		if (sitePrivs != null) {
-			sitePrivs.entrySet().forEach(e -> {
-				BitSet bitSet = BitSet.valueOf(Stream.of(e.getValue()).mapToLong(Long::longValue).toArray());
-				SitePrivItem[] values = SitePrivItem.values();
-				for (int i = 0; i < values.length; i++) {
-					if (bitSet.get(i)) {
-						permissions.add(values[i].getPermissionKey(e.getKey()));
-					}
-				}
+	public static Map<String, BitSet> parseSitePermissionJson(String json) {
+		Map<String, BitSet> sitePermissions = new HashMap<>();
+		Map<String, long[]> catalogPrivs = JacksonUtils.fromMap(json, long[].class);
+		if (catalogPrivs != null) {
+			catalogPrivs.entrySet().forEach(e -> {
+				BitSet bitSet = BitSet.valueOf(e.getValue());
+				sitePermissions.put(e.getKey(), bitSet);
 			});
 		}
-		return permissions;
+		return sitePermissions;
 	}
 
 	/**
@@ -111,10 +93,15 @@ public class CmsPrivUtils {
 		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
 			return;
 		}
-		String permissionKey = privItem.getPermissionKey(siteId.toString());
-		if (!loginUser.getPermissions().contains(permissionKey)) {
-			throw new NotPermissionException(permissionKey, loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
+		String json = loginUser.getPermissions().get(SitePermissionType.ID);
+		List<Long> list = JacksonUtils.getAsList(json, siteId.toString(), Long.class);
+		if (list != null) {
+			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
+			if (bitSet.get(privItem.bitIndex())) {
+				return;
+			}
 		}
+		throw new NotPermissionException(privItem.getPermissionKey(siteId), loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
 	}
 	
 	/**
@@ -129,8 +116,20 @@ public class CmsPrivUtils {
 		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
 			return true;
 		}
-		String permissionKey = privItem.getPermissionKey(siteId.toString());
-		return loginUser.getPermissions().contains(permissionKey);
+		String json = loginUser.getPermissions().get(SitePermissionType.ID);
+		List<Long> list = JacksonUtils.getAsList(json, siteId.toString(), Long.class);
+		if (list != null) {
+			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
+			if (bitSet.get(privItem.bitIndex())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean hasSitePermission(Long catalogId, SitePrivItem privItem, Map<String, BitSet> perms) {
+		BitSet bitSet = perms.get(catalogId.toString());
+		return Objects.nonNull(bitSet) && bitSet.get(privItem.bitIndex());
 	}
 
 	/**
@@ -140,12 +139,12 @@ public class CmsPrivUtils {
 	 * @param userId
 	 */
 	public static void grantSitePermission(Long siteId, SysPermission permission) {
-		List<String> list = Stream.of(SitePrivItem.values()).map(item -> item.getPermissionKey(siteId.toString())).toList();
-		
+		BitSet bitSet = SitePrivItem.getBitSet();
+
 		String json = permission.getPermissions().get(SitePermissionType.ID);
-		List<String> permissionKeys = parseSitePermissionJson(json);
-		permissionKeys.addAll(list);
-		json = convertSitePermissionKeys(permissionKeys);
+		Map<String, BitSet> sitePrivs = parseSitePermissionJson(json);
+		sitePrivs.put(siteId.toString(), bitSet);
+		json = convertSitePermissionKeys(sitePrivs);
 		permission.getPermissions().put(SitePermissionType.ID, json);
 	}
 	
@@ -155,20 +154,9 @@ public class CmsPrivUtils {
 	 * @param permissionKeys
 	 * @return
 	 */
-	public static String convertCatalogPermissionKeys(List<String> permissionKeys) {
-		Map<String, BitSet> map = new HashMap<>(); // <CatalogId, List<CatalogPrivItem>>
-		permissionKeys.forEach(key -> {
-			String[] split = StringUtils.split(key, ":");
-			String catalogId = split[1];
-			BitSet bitSet = map.get(catalogId);
-			if (bitSet == null) {
-				bitSet = new BitSet(CatalogPrivItem.values().length);
-				map.put(catalogId, bitSet);
-			}
-			bitSet.set(CatalogPrivItem.valueOf(split[0]).bitIndex());
-		});
+	public static String convertCatalogPermissionKeys(Map<String, BitSet> catalogPermissions) {
 		Map<String, long[]> permsMap = new HashMap<>();
-		map.entrySet().forEach(e -> {
+		catalogPermissions.entrySet().forEach(e -> {
 			permsMap.put(e.getKey(), e.getValue().toLongArray());
 		});
 		return JacksonUtils.to(permsMap);
@@ -180,21 +168,16 @@ public class CmsPrivUtils {
 	 * @param json
 	 * @return
 	 */
-	public static List<String> parseCatalogPermissionJson(String json) {
-		List<String> permissions = new ArrayList<>();
-		Map<String, Long[]> catalogPrivs = JacksonUtils.fromMap(json, Long[].class);
+	public static Map<String, BitSet> parseCatalogPermissionJson(String json) {
+		Map<String, BitSet> catalogPermissions = new HashMap<>();
+		Map<String, long[]> catalogPrivs = JacksonUtils.fromMap(json, long[].class);
 		if (catalogPrivs != null) {
 			catalogPrivs.entrySet().forEach(e -> {
-				BitSet bitSet = BitSet.valueOf(Stream.of(e.getValue()).mapToLong(Long::longValue).toArray());
-				CatalogPrivItem[] values = CatalogPrivItem.values();
-				for (int i = 0; i < values.length; i++) {
-					if (bitSet.get(i)) {
-						permissions.add(values[i].getPermissionKey(e.getKey()));
-					}
-				}
+				BitSet bitSet = BitSet.valueOf(e.getValue());
+				catalogPermissions.put(e.getKey(), bitSet);
 			});
 		}
-		return permissions;
+		return catalogPermissions;
 	}
 
 	/**
@@ -206,10 +189,18 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static void checkCatalogPermission(Long catalogId, CatalogPrivItem privItem, LoginUser loginUser) {
-		String permissionKey = privItem.getPermissionKey(catalogId.toString());
-		if (!loginUser.getPermissions().contains(permissionKey)) {
-			throw new NotPermissionException(permissionKey, loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
+		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
+			return;
 		}
+		String json = loginUser.getPermissions().get(CatalogPermissionType.ID);
+		List<Long> list = JacksonUtils.getAsList(json, catalogId.toString(), Long.class);
+		if (list != null) {
+			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
+			if (bitSet.get(privItem.bitIndex())) {
+				return;
+			}
+		}
+		throw new NotPermissionException(privItem.getPermissionKey(catalogId), loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
 	}
 	
 	/**
@@ -221,8 +212,23 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static boolean hasCatalogPermission(Long catalogId, CatalogPrivItem privItem, LoginUser loginUser) {
-		String permissionKey = privItem.getPermissionKey(catalogId.toString());
-		return loginUser.getPermissions().contains(permissionKey);
+		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
+			return true;
+		}
+		String json = loginUser.getPermissions().get(CatalogPermissionType.ID);
+		List<Long> list = JacksonUtils.getAsList(json, catalogId.toString(), Long.class);
+		if (list != null) {
+			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
+			if (bitSet.get(privItem.bitIndex())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean hasCatalogPermission(Long catalogId, CatalogPrivItem privItem, Map<String, BitSet> perms) {
+		BitSet bitSet = perms.get(catalogId.toString());
+		return Objects.nonNull(bitSet) && bitSet.get(privItem.bitIndex());
 	}
 
 	/**
@@ -231,13 +237,13 @@ public class CmsPrivUtils {
 	 * @param catlaogId
 	 * @param userId
 	 */
-	public static void grantCatalogPermission(Long catlaogId, SysPermission permission) {
-		List<String> list = Stream.of(CatalogPrivItem.values()).map(item -> item.getPermissionKey(catlaogId.toString())).toList();
-		
+	public static void grantCatalogPermission(Long catalogId, SysPermission permission) {
+		BitSet bitSet = CatalogPrivItem.getBitSet();
+
 		String json = permission.getPermissions().get(CatalogPermissionType.ID);
-		List<String> permissionKeys = parseCatalogPermissionJson(json);
-		permissionKeys.addAll(list);
-		json = convertCatalogPermissionKeys(permissionKeys);
+		Map<String, BitSet> catalogPrivs = parseCatalogPermissionJson(json);
+		catalogPrivs.put(catalogId.toString(), bitSet);
+		json = convertCatalogPermissionKeys(catalogPrivs);
 		permission.getPermissions().put(CatalogPermissionType.ID, json);
 	}
 }

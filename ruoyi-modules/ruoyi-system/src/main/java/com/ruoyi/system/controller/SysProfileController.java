@@ -32,7 +32,6 @@ import com.ruoyi.system.domain.vo.DashboardUserVO;
 import com.ruoyi.system.domain.vo.ShortcutVO;
 import com.ruoyi.system.domain.vo.UserProfileVO;
 import com.ruoyi.system.enums.MenuType;
-import com.ruoyi.system.permission.MenuPermissionType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISecurityConfigService;
@@ -168,8 +167,7 @@ public class SysProfileController extends BaseRestController {
 		List<SysMenu> menus = this.menuService.lambdaQuery().eq(SysMenu::getMenuType, MenuType.Menu.value())
 				.in(menuIds.size() > 0, SysMenu::getMenuId, menuIds).last("limit 8").list();
 
-		Set<String> menuPerms = this.permissionService.getPermissionsByUser(StpAdminUtil.getLoginUser().getUserId(),
-				MenuPermissionType.ID);
+		Set<String> menuPerms = this.permissionService.getMenuPermissionsByUser(StpAdminUtil.getLoginUser().getUserId());
 		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());

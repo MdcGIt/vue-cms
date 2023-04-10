@@ -48,7 +48,7 @@ public class SysPermissionController extends BaseRestController {
 	@PostMapping
 	public R<?> savePermission(@RequestBody SysPermissionDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
-		this.permissionService.savePermissions(dto);
+		this.permissionService.saveMenuPermissions(dto);
 		return R.ok();
 	}
 

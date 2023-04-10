@@ -22,7 +22,6 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.dto.LoginBody;
 import com.ruoyi.system.fixed.dict.LoginLogType;
 import com.ruoyi.system.fixed.dict.SuccessOrFail;
-import com.ruoyi.system.permission.MenuPermissionType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.security.SysLoginService;
@@ -96,7 +95,7 @@ public class SysLoginController extends BaseRestController {
 		// 角色集合
 		List<String> roles = this.roleService.selectRoleKeysByUserId(user.getUserId());
 		// 菜单权限集合
-		Set<String> permissions = this.permissionService.getPermissionsByUser(user.getUserId(), MenuPermissionType.ID);
+		Set<String> permissions = this.permissionService.getMenuPermissionsByUser(user.getUserId());
 		return R.ok(Map.of("user", user, "roles", roles, "permissions", permissions));
 	}
 
@@ -110,8 +109,7 @@ public class SysLoginController extends BaseRestController {
 	public R<?> getRouters() {
 		List<SysMenu> menus = this.menuService.lambdaQuery().orderByAsc(SysMenu::getOrderNum).list();
 
-		Set<String> permissions = this.permissionService.getPermissionsByUser(StpAdminUtil.getLoginUser().getUserId(),
-				MenuPermissionType.ID);
+		Set<String> permissions = this.permissionService.getMenuPermissionsByUser(StpAdminUtil.getLoginUser().getUserId());
 		if (!permissions.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || permissions.contains(m.getPerms());

@@ -2,8 +2,7 @@ package com.ruoyi.system.permission;
 
 import java.util.List;
 
-import com.ruoyi.common.utils.JacksonUtils;
-import com.ruoyi.common.utils.StringUtils;
+import cn.dev33.satoken.annotation.SaMode;
 
 /**
  * 权限类型
@@ -13,7 +12,7 @@ import com.ruoyi.common.utils.StringUtils;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-public interface IPermissionType {
+public interface IPermissionType<T> {
 
 	public String BEAN_PREFIX = "PermissionType_";
 	
@@ -38,12 +37,7 @@ public interface IPermissionType {
 	 * @param json
 	 * @return
 	 */
-	default public List<String> parse(String json) {
-		if (StringUtils.isEmpty(json)) {
-			return List.of();
-		}
-		return JacksonUtils.fromList(json, String.class);
-	}
+	public T parse(String json);
 
 	/**
 	 * 转权限项列表转成持久化存储字符串
@@ -51,7 +45,23 @@ public interface IPermissionType {
 	 * @param permissionKeys
 	 * @return
 	 */
-	default public String convert(List<String> permissionKeys) {
-		return JacksonUtils.to(permissionKeys);
-	}
+	public String convert(T permissionKeys);
+	
+	/**
+	 * 合并权限项
+	 * 
+	 * @param permissionJsonList
+	 * @return
+	 */
+	public String merge(List<String> permissionJsonList);
+	
+	/**
+	 * 是否有权限
+	 * 
+	 * @param permissionKeys
+	 * @param json
+	 * @param mode
+	 * @return
+	 */
+	public boolean hasPermission(List<String> permissionKeys, String json, SaMode mode);
 }

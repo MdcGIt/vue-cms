@@ -20,13 +20,6 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	public static final String ALL_PERMISSION = "*";
 
 	public static final String DELIMETER = ",";
-	
-	/**
-	 * 保存权限信息
-	 * 
-	 * @param dto
-	 */
-	public void savePermissions(SysPermissionDTO dto);
 
 	/**
 	 * 获取权限信息
@@ -38,18 +31,17 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	public SysPermission getPermissions(String ownerType, String owner);
 
 	/**
-	 * 获取用户权限分类集合
+	 * 获取用户菜单权限集合
 	 * 
 	 * @param userId
 	 * @return
 	 */
-	public Set<String> getPermissionsByUser(Long userId, String permissionType);
-
+	public Set<String> getMenuPermissionsByUser(Long userId);
+	
 	/**
-	 * 获取用户权限集合
+	 * 保存菜单权限信息
 	 * 
-	 * @param userId
-	 * @return
+	 * @param dto
 	 */
-	public Set<String> getPermissionListByUser(Long userId);
+	public void saveMenuPermissions(SysPermissionDTO dto);
 }

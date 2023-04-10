@@ -16,6 +16,11 @@ import cn.dev33.satoken.annotation.SaMode;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface CmsPriv {
+	
+	/**
+	 * 权限类型
+	 */
+	String type();
 
     /**
      * 需要校验的权限码
