@@ -17,6 +17,7 @@ import com.ruoyi.system.domain.SysI18nDict;
 import com.ruoyi.system.mapper.SysI18nDictMapper;
 import com.ruoyi.system.service.ISysI18nDictService;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -87,6 +88,11 @@ public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI1
 		dicts.forEach(dict -> {
 			redisCache.setCacheMapValue(CACHE_PREFIX + dict.getLangTag(), dict.getLangKey(), dict.getLangValue());
 		});
+	}
+	
+	@PostConstruct
+	public void init() {
+		this.resetCache();
 	}
 
 	@Override
