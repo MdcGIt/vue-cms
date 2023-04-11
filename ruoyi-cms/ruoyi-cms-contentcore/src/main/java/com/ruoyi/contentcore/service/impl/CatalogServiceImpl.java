@@ -184,7 +184,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 			permission = new SysPermission();
 			permission.setOwnerType(PermissionOwnerType.User.name());
 			permission.setOwner(dto.getOperator().getUserId().toString());
-			permission.setCreateBy(dto.getOperator().getUsername());
+			permission.createBy(dto.getOperator().getUsername());
 		}
 		CmsPrivUtils.grantCatalogPermission(catalog.getCatalogId(), permission);
 		this.permissionService.saveOrUpdate(permission);

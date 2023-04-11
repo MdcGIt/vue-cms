@@ -114,15 +114,21 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- 进度条 -->
+    <cms-progress title="删除站点" :open.sync="openProgress" :taskId="taskId" @close="handleCloseProgress"></cms-progress>
   </div>
 </template>
 <style scoped>
 </style>
 <script>
 import { delSite, addSite, listSite, publishSite  } from "@/api/contentcore/site";
+import CMSProgress from '@/views/components/Progress';
 
 export default {
   name: "Site",
+  components: {
+    'cms-progress': CMSProgress,
+  },
   data () {
     return {
       open: false,
@@ -145,7 +151,9 @@ export default {
         path: [
           { required: true, message: "目录不能为空", trigger: "blur" }
         ]
-      }
+      },
+      openProgress: false,
+      taskId: ""
     };
   },
   created () {
@@ -218,14 +226,13 @@ export default {
       const siteId = row.siteId;
       this.$modal.confirm("是否确认删除？").then(function () {
         return delSite(siteId);
-      }).then(() => {
-        this.$modal.msgSuccess("删除成功");
-        if (siteId == this.$cache.local.get("CurrentSite")) {
-          this.$router.go(0); // 删除当前站点时刷新下重置当前站点
-        } else {
-          this.loadSiteList();
-        }
+      }).then(response => {
+        this.taskId = response.data;
+        this.openProgress = true;
       }).catch(function () { });
+    },
+    handleCloseProgress() {
+        this.$router.go(0); // 删除站点时刷新下，当前站点删除需要重置当前站点
     },
     handlePreview(row) {
       const siteId = row.siteId;

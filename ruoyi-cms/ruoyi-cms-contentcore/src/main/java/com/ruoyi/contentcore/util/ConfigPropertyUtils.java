@@ -108,10 +108,6 @@ public class ConfigPropertyUtils {
 				return v;
 			}
 			v = MapUtils.getString(secondProps, prop.getId());
-			if (StringUtils.isNotEmpty(v)) {
-				return v;
-			}
-			return prop.defaultValue().toString();
 		}
 		return null;
 	}
@@ -146,7 +142,6 @@ public class ConfigPropertyUtils {
 			if (NumberUtils.isDigits(v)) {
 				return NumberUtils.toInt(v);
 			}
-			return (int) prop.defaultValue();
 		}
 		return 0;
 	}

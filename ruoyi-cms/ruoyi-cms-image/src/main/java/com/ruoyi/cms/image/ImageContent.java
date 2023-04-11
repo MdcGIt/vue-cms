@@ -32,12 +32,13 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 		List<CmsImage> images = this.getExtendEntity();
 		if (StringUtils.isNotEmpty(images)) {
 			for (int i = 0; i < images.size(); i++) {
-				CmsImage cmsImage = images.get(i);
-				cmsImage.setImageId(IdUtils.getSnowflakeId());
-				cmsImage.setContentId(this.getContentEntity().getContentId());
-				cmsImage.setImageType(FileExUtils.getExtension(cmsImage.getPath()));
-				cmsImage.setSortFlag(i);
-				cmsImage.createBy(this.getOperator().getUsername());
+				CmsImage image = images.get(i);
+				image.setImageId(IdUtils.getSnowflakeId());
+				image.setContentId(this.getContentEntity().getContentId());
+				image.setSiteId(this.getContentEntity().getSiteId());
+				image.setImageType(FileExUtils.getExtension(image.getPath()));
+				image.setSortFlag(i);
+				image.createBy(this.getOperator().getUsername());
 			}
 			this.getImageService().saveBatch(images);
 		}
@@ -73,6 +74,7 @@ public class ImageContent extends AbstractContent<List<CmsImage>> {
 			} else {
 				image.setImageId(IdUtils.getSnowflakeId());
 				image.setContentId(this.getContentEntity().getContentId());
+				image.setSiteId(this.getContentEntity().getSiteId());
 				image.setImageType(FileExUtils.getExtension(image.getPath()));
 				image.setSortFlag(i);
 				image.createBy(this.getOperator().getUsername());

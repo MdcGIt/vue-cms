@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.storage.local.LocalFileStorageType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 
@@ -39,6 +40,7 @@ public class FileStorageTypeProperty implements IProperty {
 	}
 	
 	public static String getValue(Map<String, String> props) {
-		return ConfigPropertyUtils.getStringValue(ID, props);
+		String value = ConfigPropertyUtils.getStringValue(ID, props);
+		return StringUtils.isEmpty(value) ? LocalFileStorageType.TYPE : value;
 	}
 }

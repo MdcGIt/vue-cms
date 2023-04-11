@@ -33,6 +33,11 @@ public class CmsImage extends BaseEntity {
      * 所属内容ID
      */
     private Long contentId;
+    
+    /**
+     * 站点ID
+     */
+    private Long siteId;
 
     /**
      * 图片标题

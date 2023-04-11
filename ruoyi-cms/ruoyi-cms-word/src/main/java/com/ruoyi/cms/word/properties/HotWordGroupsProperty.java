@@ -20,6 +20,8 @@ public class HotWordGroupsProperty implements IProperty {
 	
 	static UseType[] UseTypes = new UseType[] { UseType.Site, UseType.Catalog };
 	
+	private static final String[] DEFAULT_VALUE = {};
+	
 	@Override
 	public UseType[] getUseTypes() {
 		return UseTypes;
@@ -37,7 +39,7 @@ public class HotWordGroupsProperty implements IProperty {
 	
 	@Override
 	public String[] defaultValue() {
-		return new String[0];
+		return DEFAULT_VALUE;
 	}
 	
 	@Override
@@ -51,6 +53,9 @@ public class HotWordGroupsProperty implements IProperty {
 	
 	public static String[] getHotWordGroupCodes(Map<String, String> firstProps, Map<String, String> secondProps) {
 		String propValue = ConfigPropertyUtils.getStringValue(ID, firstProps, secondProps);
-		return JacksonUtils.from(propValue, String[].class);
+		if (StringUtils.isNotEmpty(propValue)) {
+			return JacksonUtils.from(propValue, String[].class);
+		}
+		return DEFAULT_VALUE;
 	}
 }

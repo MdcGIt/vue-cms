@@ -49,6 +49,7 @@ public class RepeatTitleCheckProperty implements IProperty {
 	}
 
 	public static String getValue(Map<String, String> firstConfigProps, Map<String, String> secondConfigProps) {
-		return ConfigPropertyUtils.getStringValue(ID, firstConfigProps, secondConfigProps);
+		String value = ConfigPropertyUtils.getStringValue(ID, firstConfigProps, secondConfigProps);
+		return StringUtils.isEmpty(value) ? CheckType_None : value;
 	}
 }

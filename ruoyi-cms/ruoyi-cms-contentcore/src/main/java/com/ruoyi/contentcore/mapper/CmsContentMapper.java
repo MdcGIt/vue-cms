@@ -3,6 +3,7 @@ package com.ruoyi.contentcore.mapper;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -63,4 +64,19 @@ public interface CmsContentMapper extends BaseMapper<CmsContent> {
 	 */
 	@Select("SELECT * FROM cms_content_backup WHERE backup_time < #{backupTime}")
 	public List<RecycleContentVO> selectRecycleContentBefore(IPage<RecycleContentVO> page, @Param("backupTime") LocalDateTime backupTime);
+	
+	/**
+	 * 删除指定站点下备份内容数据
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	@Delete("DELETE FROM cms_content_backup WHERE site_id = #{siteId} limit ${limit}")
+	public Long deleteRecycleContentsBySiteId(@Param("siteId") Long siteId, @Param("limit") Integer limit);
+	
+	@Select("SELECT count(*) FROM cms_content_backup WHERE site_id = #{siteId}")
+	Long selectBackupCountBySiteId(@Param("siteId") Long siteId);
+	
+	@Delete("DELETE FROM cms_content_backup WHERE site_id = #{siteId} limit ${limit}")
+	Long deleteBackupBySiteId(@Param("siteId") Long siteId, @Param("limit") Integer limit);
 }

@@ -160,8 +160,8 @@ public abstract class AbstractContent<T> implements IContent<T> {
 			throw ContentCoreErrorCode.TITLE_REPLEAT.exception();
 		}
 		if (ContentStatus.isPublished(content.getStatus())) {
-			String editPublishedContent = PublishedContentEditProperty.getValue(this.getSite().getConfigProps());
-			if (!YesOrNo.isYes(editPublishedContent)) {
+			boolean editPublishedContent = PublishedContentEditProperty.getValue(this.getSite().getConfigProps());
+			if (!editPublishedContent) {
 				throw ContentCoreErrorCode.CANNOT_EDIT_PUBLISHED_CONTENT.exception();
 			}
 		}

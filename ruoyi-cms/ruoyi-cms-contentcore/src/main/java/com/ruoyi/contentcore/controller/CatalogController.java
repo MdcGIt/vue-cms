@@ -169,6 +169,7 @@ public class CatalogController extends BaseRestController {
 				catalogService.deleteCatalog(catalogId);
 			}
 		};
+		task.setTaskId("DeleteCatalog_" + catalogId);
 		this.asyncTaskManager.execute(task);
 		return R.ok(task.getTaskId());
 	}

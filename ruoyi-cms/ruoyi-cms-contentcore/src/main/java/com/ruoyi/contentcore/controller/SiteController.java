@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.io.Files;
 import com.ruoyi.common.async.AsyncTask;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
@@ -75,6 +76,8 @@ public class SiteController extends BaseRestController {
 	private final IPublishPipeService publishPipeService;
 
 	private final IPublishService publishService;
+	
+	private final AsyncTaskManager asyncTaskManager;
 
 	/**
 	 * 获取当前站点数据
@@ -146,13 +149,12 @@ public class SiteController extends BaseRestController {
 	@GetMapping(value = "/{siteId}")
 	public R<?> getInfo(@PathVariable Long siteId) {
 		CmsSite site = siteService.getById(siteId);
-		if (site == null) {
-			return R.fail("站点数据未找到：" + siteId);
-		}
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
+		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.View, StpAdminUtil.getLoginUser());
+		
 		if (StringUtils.isNotEmpty(site.getLogo())) {
 			site.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(site.getLogo()));
 		}
-		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.View, StpAdminUtil.getLoginUser());
 		SiteDTO dto = SiteDTO.newInstance(site);
 		// 发布通道数据
 		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(site.getSiteId(),
@@ -202,9 +204,20 @@ public class SiteController extends BaseRestController {
 	@Log(title = "删除站点", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{siteId}")
 	public R<String> remove(@PathVariable("siteId") Long siteId) throws IOException {
+		CmsSite site = siteService.getById(siteId);
+		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.Delete, StpAdminUtil.getLoginUser());
-		this.siteService.deleteSite(siteId);
-		return R.ok();
+		
+		AsyncTask task = new AsyncTask() {
+
+			@Override
+			public void run0() throws Exception {
+				siteService.deleteSite(siteId);
+			}
+		};
+		task.setTaskId("DeleteSite_" + siteId);
+		this.asyncTaskManager.execute(task);
+		return R.ok(task.getTaskId());
 	}
 
 	/**

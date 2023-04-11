@@ -29,6 +29,7 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 		}
 		CmsArticleDetail articleDetail = this.getExtendEntity();
 		articleDetail.setContentId(this.getContentEntity().getContentId());
+		articleDetail.setSiteId(this.getContentEntity().getSiteId());
 		// 处理内部链接
 		String contentHtml = this.getArticleService().saveInternalUrl(articleDetail.getContentHtml());
 		// 处理文章正文远程图片
