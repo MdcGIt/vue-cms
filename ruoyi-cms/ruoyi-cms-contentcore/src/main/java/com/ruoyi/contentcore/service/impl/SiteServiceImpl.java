@@ -98,6 +98,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 		FileExUtils.mkdirs(siteRoot);
 
 		CmsSite site = new CmsSite();
+		site.setSiteId(IdUtils.getSnowflakeId());
 		BeanUtils.copyProperties(dto, site, "siteId");
 		if (StringUtils.isNotEmpty(site.getResourceUrl()) && !site.getResourceUrl().endsWith("/")) {
 			site.setResourceUrl(site.getResourceUrl() + "/");
@@ -107,10 +108,17 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 		this.save(site);
 		this.clearCache(site.getSiteId());
 		// 授权给添加人
-		SysPermission permissions = this.permissionService.getPermissions(PermissionOwnerType.User.name(),
+		SysPermission permission = this.permissionService.getPermissions(PermissionOwnerType.User.name(),
 				dto.getOperator().getUserId().toString());
-		CmsPrivUtils.grantSitePermission(site.getSiteId(), permissions);
-		this.permissionService.updateById(permissions);
+		if (permission == null) {
+			permission = new SysPermission();
+			permission.setOwnerType(PermissionOwnerType.User.name());
+			permission.setOwner(dto.getOperator().getUserId().toString());
+			permission.setCreateBy(dto.getOperator().getUsername());
+		}
+		CmsPrivUtils.grantSitePermission(site.getSiteId(), permission);
+		this.permissionService.updateById(permission);
+		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return site;
 	}
 

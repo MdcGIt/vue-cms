@@ -178,10 +178,17 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		catalog.createBy(dto.getOperator().getUsername());
 		this.save(catalog);
 		// 授权给添加人
-		SysPermission permissions = this.permissionService.getPermissions(PermissionOwnerType.User.name(),
+		SysPermission permission = this.permissionService.getPermissions(PermissionOwnerType.User.name(),
 				dto.getOperator().getUserId().toString());
-		CmsPrivUtils.grantCatalogPermission(catalog.getCatalogId(), permissions);
-		this.permissionService.updateById(permissions);
+		if (permission == null) {
+			permission = new SysPermission();
+			permission.setOwnerType(PermissionOwnerType.User.name());
+			permission.setOwner(dto.getOperator().getUserId().toString());
+			permission.setCreateBy(dto.getOperator().getUsername());
+		}
+		CmsPrivUtils.grantCatalogPermission(catalog.getCatalogId(), permission);
+		this.permissionService.saveOrUpdate(permission);
+		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return catalog;
 	}
 

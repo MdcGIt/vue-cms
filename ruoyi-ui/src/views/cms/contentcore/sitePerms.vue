@@ -38,8 +38,7 @@
   </div>
 </template>
 <script>
-import { getSitePermissions } from "@/api/contentcore/perms"
-import { savePermissions } from "@/api/system/perms";
+import { getSitePermissions, saveSitePermissions } from "@/api/contentcore/perms"
 
 export default {
   name: "SitePermission",
@@ -131,21 +130,12 @@ export default {
       }
     },
     handleSave() {
-      let permissions = [];
-      this.sitePrivs.forEach(row => {
-        Object.keys(row.perms).forEach(key => {
-          if (row.perms[key]) {
-            permissions.push(key + ":" + row.siteId);
-          }
-        })
-      })
       const data = {
         ownerType: this.ownerType,
         owner: this.owner,
-        permType: 'Site',
-        permissions: permissions
+        perms: this.sitePrivs
       };
-      savePermissions(data).then(response => {
+      saveSitePermissions(data).then(response => {
         this.$modal.msgSuccess("保存成功");
       });
     }

@@ -48,8 +48,7 @@
 </template>
 <script>
 import { getSiteOptions } from "@/api/contentcore/site"
-import { getCatalogPermissions } from "@/api/contentcore/perms"
-import { savePermissions } from "@/api/system/perms";
+import { getCatalogPermissions, saveCatalogPermissions } from "@/api/contentcore/perms"
 
 export default {
   name: "CatalogPermission",
@@ -171,15 +170,13 @@ export default {
       }
     },
     handleSave() {
-      let permissions = [];
-      this.getPermissionKeys(this.catalogPrivs, permissions);
       const data = {
         ownerType: this.ownerType,
         owner: this.owner,
-        permType: 'Catalog',
-        permissions: permissions
+        siteId: this.siteId,
+        perms: this.catalogPrivs
       };
-      savePermissions(data).then(response => {
+      saveCatalogPermissions(data).then(response => {
         this.$modal.msgSuccess("保存成功");
       });
     },

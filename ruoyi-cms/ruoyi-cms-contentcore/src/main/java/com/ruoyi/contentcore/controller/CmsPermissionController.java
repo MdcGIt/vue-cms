@@ -69,7 +69,7 @@ public class CmsPermissionController extends BaseRestController {
 		SysPermission permission = this.permissionService.getPermissions(ownerType, owner);
 		Map<String, BitSet> perms;
 		if (Objects.nonNull(permission)) {
-			String json = permission.getPermissions().get(CatalogPermissionType.ID);
+			String json = permission.getPermissions().get(SitePermissionType.ID);
 			perms = this.sitePermissionType.parse(json);
 		} else {
 			perms = Map.of();
@@ -199,7 +199,14 @@ public class CmsPermissionController extends BaseRestController {
 		} else {
 			map = new HashMap<>();
 		}
-		dto.getPerms().forEach(vo -> {
+		this.invokeCatalogPerms(dto.getPerms(), map);
+		permissions.getPermissions().put(CatalogPermissionType.ID, this.catalogPermissionType.convert(map));
+		this.permissionService.updateById(permissions);
+		return R.ok();
+	}
+	
+	private void invokeCatalogPerms(List<CatalogPrivVO> list, Map<String, BitSet> map) {
+		for (CatalogPrivVO vo : list) {
 			Long catalogId = vo.getCatalogId();
 			BitSet bs = new BitSet(CatalogPrivItem.values().length);
 			vo.getPerms().entrySet().forEach(e -> {
@@ -213,9 +220,9 @@ public class CmsPermissionController extends BaseRestController {
 			} else {
 				map.remove(catalogId.toString());
 			}
-		});
-		permissions.getPermissions().put(CatalogPermissionType.ID, this.catalogPermissionType.convert(map));
-		this.permissionService.updateById(permissions);
-		return R.ok();
+			if (StringUtils.isNotEmpty(vo.getChildren())) {
+				this.invokeCatalogPerms(vo.getChildren(), map);
+			}
+		}
 	}
 }

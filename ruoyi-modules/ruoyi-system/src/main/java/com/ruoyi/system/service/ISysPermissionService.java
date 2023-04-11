@@ -1,8 +1,10 @@
 package com.ruoyi.system.service;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.domain.dto.SysPermissionDTO;
 
@@ -44,4 +46,17 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	 * @param dto
 	 */
 	public void saveMenuPermissions(SysPermissionDTO dto);
+
+	/**
+	 * 获取用户权限列表
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public Map<String, String> getUserPermissions(Long userId);
+
+	/**
+	 * 重置登录用户权限信息
+	 */
+	public void resetLoginUserPermissions(LoginUser loginUser);
 }
