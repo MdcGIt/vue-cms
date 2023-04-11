@@ -39,8 +39,8 @@ public class StaticizeController extends BaseRestController {
 	@GetMapping("/tags")
 	public R<?> getTemplateTags() {
 		List<TemplateTagVO> list = this.tags.stream().map(tag -> {
-			TemplateTagVO vo = TemplateTagVO.builder().name(tag.getName()).tagName(tag.getTagName())
-					.description(tag.getDescription()).tagAttrs(tag.getTagAttrs()).build();
+			TemplateTagVO vo = TemplateTagVO.builder().name(I18nUtils.get(tag.getName())).tagName(tag.getTagName())
+					.description(I18nUtils.get(tag.getDescription())).tagAttrs(tag.getTagAttrs()).build();
 			vo.getTagAttrs().forEach(attr -> {
 				attr.setName(I18nUtils.get(attr.getName()));
 				attr.setUsage(I18nUtils.get(attr.getUsage()));
@@ -56,7 +56,8 @@ public class StaticizeController extends BaseRestController {
 	@GetMapping("/functions")
 	public R<?> getTemplateFunctions() {
 		List<TemplateFuncVO> list = this.functions.stream().map(func -> {
-			TemplateFuncVO vo = TemplateFuncVO.builder().funcName(func.getFuncName()).desc(func.getDesc()).funcArgs(func.getFuncArgs()).build();
+			TemplateFuncVO vo = TemplateFuncVO.builder().funcName(func.getFuncName())
+					.desc(I18nUtils.get(func.getDesc())).funcArgs(func.getFuncArgs()).build();
 			vo.getFuncArgs().forEach(arg -> {
 				arg.setName(I18nUtils.get(arg.getName()));
 				arg.setDesc(I18nUtils.get(arg.getDesc()));

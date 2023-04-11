@@ -29,7 +29,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsImageTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_image";
-	public final static String NAME = "图集图片标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	private final IContentService contentService;
 
@@ -78,6 +79,6 @@ public class CmsImageTag extends AbstractListTag {
 
 	@Override
 	public String getDescription() {
-		return "获取图集中的图片数据列表，内嵌<#list DataList as img>${img.path}</#list>遍历数据";
+		return DESC;
 	}
 }

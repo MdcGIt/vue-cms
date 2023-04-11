@@ -27,10 +27,10 @@ public class VoteSubjectType extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public VoteSubjectType() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + RADIO, RADIO, 1);
-		super.addDictData("DICT." + TYPE + "." + CHECKBOX, CHECKBOX, 2);
-		super.addDictData("DICT." + TYPE + "." + INPUT, INPUT, 3);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + RADIO + "}", RADIO, 1);
+		super.addDictData("{DICT." + TYPE + "." + CHECKBOX + "}", CHECKBOX, 2);
+		super.addDictData("{DICT." + TYPE + "." + INPUT + "}", INPUT, 3);
 	}
 	
 	public static boolean isInput(String type) {

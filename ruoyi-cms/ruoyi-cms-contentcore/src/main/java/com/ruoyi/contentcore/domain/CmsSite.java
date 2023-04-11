@@ -34,7 +34,7 @@ public class CmsSite extends BaseEntity {
     /**
      * 站点ID
      */
-    @TableId(value = "site_id", type = IdType.ASSIGN_ID)
+    @TableId(value = "site_id", type = IdType.INPUT)
     private Long siteId;
 
     /**

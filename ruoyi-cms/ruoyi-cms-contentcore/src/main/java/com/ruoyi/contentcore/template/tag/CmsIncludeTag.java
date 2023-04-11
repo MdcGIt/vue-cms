@@ -37,7 +37,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsIncludeTag extends AbstractTag {
 
 	public static final String TAG_NAME = "cms_include";
-	public static final String NAME = "引用模板标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	@Override
 	public String getTagName() {
@@ -51,7 +52,7 @@ public class CmsIncludeTag extends AbstractTag {
 
 	@Override
 	public String getDescription() {
-		return "引用其他模板内容，支持ssi引用标签";
+		return DESC;
 	}
 
 	private static final String TagAttr_FILE = "file";

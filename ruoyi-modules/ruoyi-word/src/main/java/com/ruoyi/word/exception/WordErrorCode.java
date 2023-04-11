@@ -32,6 +32,6 @@ public enum WordErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.WORD." + this.name();
+		return "{ERRCODE.WORD." + this.name() + "}";
 	}
 }

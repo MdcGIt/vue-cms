@@ -38,13 +38,13 @@ public class PasswordSensitive extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public PasswordSensitive() {
-		super(TYPE, "DICT." + TYPE, true);
-		super.addDictData("DICT." + TYPE + "." + ACCOUNT, ACCOUNT, 1);
-		super.addDictData("DICT." + TYPE + "." + PHONE_NUMBER, PHONE_NUMBER, 2);
-		super.addDictData("DICT." + TYPE + "." + EMAIL, EMAIL, 3);
-		super.addDictData("DICT." + TYPE + "." + NICK_NAME, NICK_NAME, 4);
-		super.addDictData("DICT." + TYPE + "." + REAL_NAME, REAL_NAME, 5);
-		super.addDictData("DICT." + TYPE + "." + BIRTHDAY, BIRTHDAY, 6);
+		super(TYPE, "{DICT." + TYPE + "}", true);
+		super.addDictData("{DICT." + TYPE + "." + ACCOUNT + "}", ACCOUNT, 1);
+		super.addDictData("{DICT." + TYPE + "." + PHONE_NUMBER + "}", PHONE_NUMBER, 2);
+		super.addDictData("{DICT." + TYPE + "." + EMAIL + "}", EMAIL, 3);
+		super.addDictData("{DICT." + TYPE + "." + NICK_NAME + "}", NICK_NAME, 4);
+		super.addDictData("{DICT." + TYPE + "." + REAL_NAME + "}", REAL_NAME, 5);
+		super.addDictData("{DICT." + TYPE + "." + BIRTHDAY + "}", BIRTHDAY, 6);
 	}
 
 	public static boolean check(String[] values, String password, ISecurityUser user) {

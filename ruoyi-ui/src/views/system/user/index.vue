@@ -169,6 +169,8 @@
                     v-hasPermi="['system:user:resetPwd']">{{ $t('System.User.ResetPwd') }}</el-dropdown-item>
                   <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
                     v-hasPermi="['system:user:edit']">{{ $t('System.User.RoleSetting') }}</el-dropdown-item>
+                  <el-dropdown-item command="handleGrantPerms" icon="el-icon-circle-check"
+                    v-hasPermi="['system:user:edit']">{{ $t('System.Role.PermissionSetting') }}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -312,6 +314,15 @@
         </el-row>
       </div>
     </el-drawer>
+    <!-- 权限设置 -->
+    <el-drawer
+      direction="rtl"
+      size="60%"
+      :with-header="false"
+      :visible.sync="openPermissionDialog"
+      :before-close="handleGrantPermsClose">
+      <role-permission owner-type='User' :owner='owner'></role-permission>
+    </el-drawer>
   </div>
 </template>
 
@@ -320,11 +331,15 @@ import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUs
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import RolePermission from '@/views/system/permission/permsTab';
 
 export default {
   name: "User",
   dicts: ['SysUserStatus', 'Gender', 'EnableOrDisable'],
-  components: { Treeselect },
+  components: { 
+    Treeselect,
+    'role-permission': RolePermission  
+  },
   data() {
     return {
       // 遮罩层
@@ -360,6 +375,8 @@ export default {
         children: "children",
         label: "label"
       },
+      openPermissionDialog: false,
+      owner: undefined,
       // 用户导入参数
       upload: {
         // 是否显示弹出层（用户导入）
@@ -520,9 +537,20 @@ export default {
         case "handleAuthRole":
           this.handleAuthRole(row);
           break;
+        case "handleGrantPerms":
+          this.handleGrantPerms(row);
+          break;
         default:
           break;
       }
+    },
+    handleGrantPerms(row) {
+      this.openPermissionDialog = true;
+      this.owner = row.userId;
+    },
+    // 取消按钮（授权）
+    handleGrantPermsClose() {
+      this.openPermissionDialog = false;
     },
     /** 新增按钮操作 */
     handleAdd() {

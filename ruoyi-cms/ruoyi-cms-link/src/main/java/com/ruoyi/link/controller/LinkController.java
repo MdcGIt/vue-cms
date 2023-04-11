@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.IdUtils;
@@ -70,6 +72,7 @@ public class LinkController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Log(title = "新增友链", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.ADD)
 	@PostMapping
 	public R<?> add(@RequestBody LinkDTO dto) {
@@ -85,6 +88,7 @@ public class LinkController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑友链", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.ADD, FriendLinkPriv.EDIT } )
 	@PutMapping
 	public R<String> edit(@RequestBody LinkDTO dto) {
@@ -95,6 +99,7 @@ public class LinkController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除友链", businessType = BusinessType.DELETE)
 	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.DELETE)
 	@DeleteMapping
 	public R<String> remove(@RequestBody @NotEmpty List<LinkDTO> dtoList) {

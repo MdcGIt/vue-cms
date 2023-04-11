@@ -1,7 +1,7 @@
 package com.ruoyi.common.security.domain;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.security.SecurityUtils;
 
@@ -75,7 +75,7 @@ public class LoginUser implements Serializable {
 	/**
 	 * 权限列表
 	 */
-	private List<String> permissions;
+	private Map<String, String> permissions;
 
 	/**
 	 * 用户信息
@@ -84,20 +84,5 @@ public class LoginUser implements Serializable {
 	
 	public boolean isSuperAdministrator() {
 		return SecurityUtils.isSuperAdmin(userId);
-	}
-
-	public LoginUser() {
-	}
-
-	public LoginUser(Object user, List<String> permissions) {
-		this.user = user;
-		this.permissions = permissions;
-	}
-
-	public LoginUser(Long userId, Long deptId, Object user, List<String> permissions) {
-		this.userId = userId;
-		this.deptId = deptId;
-		this.user = user;
-		this.permissions = permissions;
 	}
 }

@@ -16,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 public class AdminUserType implements IUserType {
 
 	public static final String TYPE = "sys_user";
-	
+
 	private final ISysPermissionService permissionService;
-	
+
 	private final ISysRoleService roleService;
 
 	static {
@@ -33,14 +33,13 @@ public class AdminUserType implements IUserType {
 
 	@Override
 	public String getName() {
-		return I18nUtils.get("SATOKEN.USERTYPE.ADMIN");
+		return I18nUtils.get("{SATOKEN.USERTYPE.ADMIN}");
 	}
-	
+
 	@Override
 	public List<String> getPermissionList(Long loginUid) {
-		return this.permissionService.getPermissionListByUser(loginUid);
+		return this.permissionService.getMenuPermissionsByUser(loginUid).stream().toList();
 	}
-	
 
 	@Override
 	public List<String> getRoleList(Long loginUid) {

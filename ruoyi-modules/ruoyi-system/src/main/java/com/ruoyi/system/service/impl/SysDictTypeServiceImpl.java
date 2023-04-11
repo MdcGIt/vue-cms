@@ -161,11 +161,11 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
 		Map<String, String> map = this.selectDictDatasByType(dictType).stream()
 				.collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getDictLabel));
 		list.forEach(dt -> {
-			String value = getter.apply(dt);
-			if (map.containsKey(value)) {
-				setter.accept(dt, I18nUtils.get("DICT." + dictType + "." + value));
+			String dictValue = getter.apply(dt);
+			if (map.containsKey(dictValue)) {
+				setter.accept(dt, I18nUtils.get(map.get(dictValue)));
 			} else {
-				setter.accept(dt, value);
+				setter.accept(dt, dictValue);
 			}
 		});
 	}

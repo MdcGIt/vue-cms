@@ -2,8 +2,6 @@ package com.ruoyi.system.security;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -20,7 +18,6 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.SysConstants;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.enums.PermissionType;
 import com.ruoyi.system.exception.SysErrorCode;
 import com.ruoyi.system.fixed.config.SysCaptchaEnable;
 import com.ruoyi.system.fixed.dict.LoginLogType;
@@ -54,7 +51,7 @@ public class SysLoginService {
 	private final ISysLogininforService logininfoService;
 
 	private final ISecurityConfigService securityConfigService;
-
+	
 	private final ISysPermissionService permissionService;
 
 	private final AsyncTaskManager asyncTaskManager;
@@ -124,12 +121,11 @@ public class SysLoginService {
 		loginUser.setIpaddr(user.getLoginIp());
 		UserAgent ua = UserAgent.parseUserAgentString(ServletUtils.getUserAgent());
 		loginUser.setOs(ua.getOperatingSystem().name());
-		;
 		loginUser.setBrowser(ua.getBrowser() + "/" + ua.getBrowserVersion());
 		loginUser.setUser(user);
-
-		Map<String, List<String>> permissions = permissionService.getPermissionMapByUser(user.getUserId());
-		loginUser.setPermissions(permissions.getOrDefault(PermissionType.Menu.name(), Collections.emptyList()));
+		
+		Map<String, String> permissions = this.permissionService.getUserPermissions(user.getUserId());
+		loginUser.setPermissions(permissions);
 		return loginUser;
 	}
 

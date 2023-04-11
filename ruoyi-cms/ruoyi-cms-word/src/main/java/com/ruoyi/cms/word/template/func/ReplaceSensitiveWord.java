@@ -28,6 +28,8 @@ public class ReplaceSensitiveWord extends AbstractFunc {
 	private final ISensitiveWordService sensitiveWordService;
 
 	static final String FUNC_NAME = "replaceSensitiveWord";
+	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
 
 	@Override
 	public String getFuncName() {
@@ -36,7 +38,7 @@ public class ReplaceSensitiveWord extends AbstractFunc {
 
 	@Override
 	public String getDesc() {
-		return "替换敏感词，例如：${replaceSensitiveWord(content, 'xxx')}";
+		return DESC;
 	}
 
 	@Override

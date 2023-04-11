@@ -29,6 +29,8 @@ public class ReplaceHotWord extends AbstractFunc  {
 	
 	static final String FUNC_NAME = "replaceHotWord";
 	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
+	
 	@Override
 	public String getFuncName() {
 		return FUNC_NAME;
@@ -36,7 +38,7 @@ public class ReplaceHotWord extends AbstractFunc  {
 
 	@Override
 	public String getDesc() {
-		return "添加热词链接，例如：${replaceHotWord(content, 'default', '[a href='{0}' target='{2}']{1}[/a]')}";
+		return DESC;
 	}
 	
 	@Override

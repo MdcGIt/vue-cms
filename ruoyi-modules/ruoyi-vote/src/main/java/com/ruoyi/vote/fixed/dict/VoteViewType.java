@@ -27,10 +27,10 @@ public class VoteViewType extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public VoteViewType() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + INVISIBLE, INVISIBLE, 1);
-		super.addDictData("DICT." + TYPE + "." + AFTER_VOTE, AFTER_VOTE, 2);
-		super.addDictData("DICT." + TYPE + "." + VISIBLE, VISIBLE, 3);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + INVISIBLE + "}", INVISIBLE, 1);
+		super.addDictData("{DICT." + TYPE + "." + AFTER_VOTE + "}", AFTER_VOTE, 2);
+		super.addDictData("{DICT." + TYPE + "." + VISIBLE + "}", VISIBLE, 3);
 	}
 	
 	public static boolean isInvisible(String type) {

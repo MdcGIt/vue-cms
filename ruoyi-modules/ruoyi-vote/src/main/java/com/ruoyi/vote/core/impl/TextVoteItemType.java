@@ -16,6 +16,6 @@ public class TextVoteItemType implements IVoteItemType {
 
 	@Override
 	public String getName() {
-		return "$t{VOTE.ITEM_TYPE.TEXT}";
+		return "{VOTE.ITEM_TYPE.TEXT}";
 	}
 }

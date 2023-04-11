@@ -25,6 +25,6 @@ public class MemberUserType implements IUserType {
 
 	@Override
 	public String getName() {
-		return I18nUtils.get("SATOKEN.USERTYPE.MEMBER");
+		return I18nUtils.get("{SATOKEN.USERTYPE.MEMBER}");
 	}
 }

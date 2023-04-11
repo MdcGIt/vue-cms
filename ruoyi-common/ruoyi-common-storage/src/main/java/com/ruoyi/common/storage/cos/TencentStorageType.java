@@ -40,7 +40,7 @@ public class TencentStorageType implements IFileStorageType {
 	
 	@Override
 	public String getName() {
-		return I18nUtils.get("STORAGE.TYPE." + TYPE);
+		return I18nUtils.get("{STORAGE.TYPE." + TYPE + "}");
 	}
 	
 	@Override

@@ -21,6 +21,6 @@ public enum SearchErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.SEARCH." + this.name();
+		return "{ERRCODE.SEARCH." + this.name() + "}";
 	}
 }

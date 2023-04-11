@@ -22,6 +22,7 @@ import com.ruoyi.system.fixed.dict.UserStatus;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.ISecurityUser;
+import com.ruoyi.system.validator.Dict;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -79,6 +80,7 @@ public class SysUser extends BaseEntity implements ISecurityUser {
 	/** 用户性别 */
 	@ExcelProperty(converter = DictConverter.class)
 	@ExcelDictField(Gender.TYPE)
+	@Dict(value = Gender.TYPE, message = "{VALIDATOR.SYSTEM.USER_GENDER}")
 	private String sex;
 
 	/** 出生日期 */
@@ -100,6 +102,7 @@ public class SysUser extends BaseEntity implements ISecurityUser {
 	/** 帐号状态 */
 	@ExcelProperty(converter = DictConverter.class)
 	@ExcelDictField(UserStatus.TYPE)
+	@Dict(UserStatus.TYPE)
 	private String status;
 
 	/** 最后登录IP */

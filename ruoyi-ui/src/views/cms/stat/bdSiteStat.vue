@@ -2,7 +2,7 @@
   <div class="bdsite-container">
     <el-row :gutter="20" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('pv')">
+        <div v-loading="loading" class="card-panel" @click="handleSetLineChartData('pv')">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="server" class-name="card-panel-icon" />
           </div>
@@ -15,7 +15,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('uv')">
+        <div v-loading="loading" class="card-panel" @click="handleSetLineChartData('uv')">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="peoples" class-name="card-panel-icon" />
           </div>
@@ -28,7 +28,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('ip')">
+        <div v-loading="loading" class="card-panel" @click="handleSetLineChartData('ip')">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="international" class-name="card-panel-icon" />
           </div>
@@ -41,7 +41,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('avgVisitTime')">
+        <div v-loading="loading" class="card-panel" @click="handleSetLineChartData('avgVisitTime')">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="time-range" class-name="card-panel-icon" />
           </div>
@@ -87,7 +87,7 @@
       </el-col>
     </el-row>
     <el-row :gutter="10" class="mb8">
-        <el-card shadow="hover">
+        <el-card v-loading="loading" shadow="hover">
           <div slot="header" class="clearfix">
             <span>访问趋势</span>
           </div>
@@ -97,11 +97,11 @@
     
     <el-row :gutter="10" class="mb8">
       <el-col :span="12">
-        <el-card shadow="hover">
+        <el-card v-loading="loading" shadow="hover">
           <div slot="header" class="clearfix">
             <span>Top10入口页面</span>
           </div>
-          <el-table v-loading="loadingDistrict" :data="top10LandingPage" height="405" size="mini">
+          <el-table v-loading="loadingOther" :data="top10LandingPage" height="405" size="mini">
             <el-table-column 
               label="页面地址"
               align="left"
@@ -211,6 +211,7 @@ export default {
       },
       loadingDistrict: false,
       districtList: [],
+      loadingOther: false,
       top10LandingPage: []
     };
   },
@@ -248,19 +249,6 @@ export default {
           this.lineChartData.datas.avg_visit_time.forEach(v => this.sum.avgVisitTime+=v);
           this.sum.avgVisitTime = Math.round(this.sum.avgVisitTime / this.lineChartData.datas.avg_visit_time.length);
           this.loading = false;
-      });
-    },
-    loadSiteDistrictOverviewDatas () {
-      if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
-        return;
-      }
-      this.loadingDistrict = true;
-      this.queryParams.startDate = this.dateRange[0];
-      this.queryParams.endDate = this.dateRange[1];
-      baiduTongjiApi.getSiteDistrictOverviewDatas(this.queryParams).then(response => {
-          this.districtList = response.data;
-          this.loadingDistrict = false;
       });
     },
     loadSiteDistrictOverviewDatas () {

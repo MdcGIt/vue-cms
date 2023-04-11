@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class ResourceType_Audio implements IResourceType {
 
 	public final static String ID = "audio";
+	
+	public static final  String NAME = "{CMS.CONTENTCORE.RESOURCE_TYPE." + ID + "}";
 
 	public final static String[] SuffixArray = { "mp3", "wav", "wma", "ogg", "aiff", "aac", "flac", "mid" };
 
@@ -27,7 +29,7 @@ public class ResourceType_Audio implements IResourceType {
 	
 	@Override
 	public String getName() {
-		return "CMS.CONTENTCORE.RESOURCE_TYPE." + ID;
+		return NAME;
 	}
 
 	@Override

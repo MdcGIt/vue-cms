@@ -46,7 +46,7 @@ public enum GenErrorCode implements ErrorCode {
 
 	@Override
 	public String value() {
-		return "ERRCODE.GEN." + this.name();
+		return "{ERRCODE.GEN." + this.name() + "}";
 	}
 
 }

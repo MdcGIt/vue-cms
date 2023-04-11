@@ -24,7 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsVoteTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_vote";
-	public final static String NAME = "问卷调查列表标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	private final IVoteService voteService;
 
@@ -59,6 +60,6 @@ public class CmsVoteTag extends AbstractListTag {
 
 	@Override
 	public String getDescription() {
-		return "获取当前站点问卷调查接数据列表，内嵌<#list DataList as vote>${vote.title}</#list>遍历数据";
+		return DESC;
 	}
 }

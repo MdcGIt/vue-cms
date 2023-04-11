@@ -8,7 +8,7 @@ package com.ruoyi.vote.core;
  */
 public interface IVoteItemType {
 
-	public static final String BEAN_PREFIX = "VoteItemType_";
+	public String BEAN_PREFIX = "VoteItemType_";
 	
 	/**
 	 * 问卷调查选项类型ID，唯一标识

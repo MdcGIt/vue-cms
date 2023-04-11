@@ -49,10 +49,14 @@ import com.ruoyi.contentcore.mapper.CmsContentMapper;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CatalogUtils;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
+import com.ruoyi.system.domain.SysPermission;
+import com.ruoyi.system.enums.PermissionOwnerType;
 import com.ruoyi.system.fixed.dict.YesOrNo;
+import com.ruoyi.system.service.ISysPermissionService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -73,6 +77,8 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	private final CmsCatalogMapper catalogMapper;
 
 	private final CmsContentMapper contentMapper;
+	
+	private final ISysPermissionService permissionService;
 
 	private final AsyncTaskManager asyncTaskManager;
 
@@ -171,7 +177,18 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		catalog.setVisibleFlag(YesOrNo.YES);
 		catalog.createBy(dto.getOperator().getUsername());
 		this.save(catalog);
-
+		// 授权给添加人
+		SysPermission permission = this.permissionService.getPermissions(PermissionOwnerType.User.name(),
+				dto.getOperator().getUserId().toString());
+		if (permission == null) {
+			permission = new SysPermission();
+			permission.setOwnerType(PermissionOwnerType.User.name());
+			permission.setOwner(dto.getOperator().getUserId().toString());
+			permission.setCreateBy(dto.getOperator().getUsername());
+		}
+		CmsPrivUtils.grantCatalogPermission(catalog.getCatalogId(), permission);
+		this.permissionService.saveOrUpdate(permission);
+		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return catalog;
 	}
 
@@ -301,7 +318,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 		this.redisCache.deleteObject(CACHE_PREFIX_ID + catalog.getCatalogId());
 		this.redisCache.deleteObject(CACHE_PREFIX_ALIAS + catalog.getSiteId() + ":" + catalog.getAlias());
 	}
-	
+
 	private void setCatalogCache(CmsCatalog catalog) {
 		this.redisCache.setCacheObject(CACHE_PREFIX_ID + catalog.getCatalogId(), catalog);
 		this.redisCache.setCacheObject(CACHE_PREFIX_ALIAS + catalog.getSiteId() + ":" + catalog.getAlias(), catalog);

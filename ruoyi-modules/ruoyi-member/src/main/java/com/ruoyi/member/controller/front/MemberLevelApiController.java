@@ -1,4 +1,4 @@
-package com.ruoyi.member.controller;
+package com.ruoyi.member.controller.front;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 @SaMemberCheckLogin
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/member/level")
-public class MemberLevelController extends BaseRestController {
+@RequestMapping("/api/member/level")
+public class MemberLevelApiController extends BaseRestController {
 
 	private final IMemberLevelService memberLevelService;
 

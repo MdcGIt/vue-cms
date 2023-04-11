@@ -1,7 +1,6 @@
 package com.ruoyi.system.domain;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -46,9 +45,9 @@ public class SysPermission extends BaseEntity {
 	 * 授权信息
 	 */
 	@TableField(typeHandler = JacksonTypeHandler.class)
-	private Map<String, List<String>> permissions;
+	private Map<String, String> permissions;
 	
-	public Map<String, List<String>> getPermissions() {
+	public Map<String, String> getPermissions() {
 		if (this.permissions == null) {
 			this.permissions = new HashMap<>();
 		}

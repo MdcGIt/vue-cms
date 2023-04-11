@@ -29,11 +29,11 @@ public class PageWidgetStatus extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public PageWidgetStatus() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + DRAFT, DRAFT, 1);
-		super.addDictData("DICT." + TYPE + "." + PUBLISHED, PUBLISHED, 2);
-		super.addDictData("DICT." + TYPE + "." + OFFLINE, OFFLINE, 3);
-		super.addDictData("DICT." + TYPE + "." + EDITING, EDITING, 4);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + DRAFT + "}", DRAFT, 1);
+		super.addDictData("{DICT." + TYPE + "." + PUBLISHED + "}", PUBLISHED, 2);
+		super.addDictData("{DICT." + TYPE + "." + OFFLINE + "}", OFFLINE, 3);
+		super.addDictData("{DICT." + TYPE + "." + EDITING + "}", EDITING, 4);
 	}
 
 	public static boolean isPublished(String v) {

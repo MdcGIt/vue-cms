@@ -29,7 +29,7 @@ public class CmsPublishPipe extends BaseEntity {
 	/**
 	 * 发布通道ID
 	 */
-    @TableId(value = "publishpipe_id", type = IdType.ASSIGN_ID)
+    @TableId(value = "publishpipe_id", type = IdType.INPUT)
     private Long publishpipeId;
 
     /**

@@ -1,4 +1,4 @@
-package com.ruoyi.member.controller;
+package com.ruoyi.member.controller.front;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,8 +25,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/member/signIn")
-public class MemberSignInController extends BaseRestController {
+@RequestMapping("/api/member/signIn")
+public class MemberSignInApiController extends BaseRestController {
 
 	private final IMemberSignInLogService memberSignInLogService;
 

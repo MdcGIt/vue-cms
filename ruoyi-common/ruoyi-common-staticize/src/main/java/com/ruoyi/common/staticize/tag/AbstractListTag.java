@@ -21,9 +21,9 @@ public abstract class AbstractListTag extends AbstractTag {
 	@Override
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = new ArrayList<>();
-		tagAttrs.add(new TagAttr(TagAttr.AttrName_Page, false, TagAttrDataType.BOOLEAN, "FREEMARKER.TAG_ATTR.PAGE", "false"));
-		tagAttrs.add(new TagAttr(TagAttr.AttrName_PageSize, false, TagAttrDataType.INTEGER, "FREEMARKER.TAG_ATTR.PAGE_SIZE", "20"));
-		tagAttrs.add(new TagAttr(TagAttr.AttrName_Condition, false, TagAttrDataType.STRING, "FREEMARKER.TAG_ATTR.CONDITION"));
+		tagAttrs.add(new TagAttr(TagAttr.AttrName_Page, false, TagAttrDataType.BOOLEAN, "{FREEMARKER.TAG_ATTR.PAGE}", "false"));
+		tagAttrs.add(new TagAttr(TagAttr.AttrName_PageSize, false, TagAttrDataType.INTEGER, "{FREEMARKER.TAG_ATTR.PAGE_SIZE}", "20"));
+		tagAttrs.add(new TagAttr(TagAttr.AttrName_Condition, false, TagAttrDataType.STRING, "{FREEMARKER.TAG_ATTR.CONDITION}"));
 		return tagAttrs;
 	}
 

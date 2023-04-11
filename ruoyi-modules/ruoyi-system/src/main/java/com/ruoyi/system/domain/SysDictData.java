@@ -38,7 +38,7 @@ public class SysDictData extends BaseEntity {
 
 	/** 字典标签 */
 	@ExcelProperty("字典标签")
-	@I18nField("DICT.{dictType}.{dictValue}")
+	@I18nField("{DICT.#{dictType}.#{dictValue}}")
 	private String dictLabel;
 
 	/** 字典键值 */

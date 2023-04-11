@@ -31,9 +31,9 @@ import lombok.RequiredArgsConstructor;
 public class CmsSiteTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_site";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 	
-	public final static String NAME = "站点标签";
-
 	public final static String TAG_ATTR_ID = "id";
 
 	public final static String TAG_ATTR_LEVEL = "level";
@@ -93,7 +93,7 @@ public class CmsSiteTag extends AbstractListTag {
 
 	@Override
 	public String getDescription() {
-		return "获取站点列表数据，内嵌<#list DataList as site>${site.name}</#list>遍历数据";
+		return DESC;
 	}
 	
 	private enum SiteTagLevel {

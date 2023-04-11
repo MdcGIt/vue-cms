@@ -1,7 +1,6 @@
-package com.ruoyi.cms.stat.baidu.domain;
+package com.ruoyi.cms.stat.baidu.vo;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,20 +13,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class BaiduOverviewReport {
+public class BaiduOverviewReportVO extends LineChartVO {
 	
 	/**
 	 * 查询指标
 	 */
 	private List<String> fields;
-	
-	/**
-	 * x轴
-	 */
-	private List<String> xAxisDatas;
-	
-	/**
-	 * y轴数据
-	 */
-	private Map<String, List<Object>> datas;
 }

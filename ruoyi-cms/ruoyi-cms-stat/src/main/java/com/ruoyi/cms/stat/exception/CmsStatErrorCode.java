@@ -11,6 +11,6 @@ public enum CmsStatErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.CMS.STAT." + this.name();
+		return "{ERRCODE.CMS.STAT." + this.name() + "}";
 	}
 }

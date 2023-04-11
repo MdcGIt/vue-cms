@@ -23,6 +23,8 @@ import com.ruoyi.cms.search.vo.ESContentVO;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -133,6 +135,7 @@ public class ContentIndexController extends BaseRestController {
 		return R.ok(source);
 	}
 
+	@Log(title = "删除索引", businessType = BusinessType.DELETE)
 	@DeleteMapping("/contents")
 	public R<?> deleteDocuments(@RequestBody @NotEmpty List<Long> contentIds) throws ElasticsearchException, IOException {
 		if (!elasticSearchEnable) {
@@ -142,6 +145,7 @@ public class ContentIndexController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "重建内容索引", businessType = BusinessType.UPDATE)
 	@PostMapping("/build/{contentId}")
 	public R<?> buildContentIndex(@PathVariable("contentId") @Min(1) Long contentId) {
 		if (!elasticSearchEnable) {
@@ -156,6 +160,7 @@ public class ContentIndexController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "重建全站索引", businessType = BusinessType.UPDATE)
 	@PostMapping("/rebuild")
 	public R<?> rebuildAllIndex() {	
 		if (!elasticSearchEnable) {

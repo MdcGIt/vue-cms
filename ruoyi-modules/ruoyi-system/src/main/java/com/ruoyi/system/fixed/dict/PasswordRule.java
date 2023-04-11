@@ -51,12 +51,12 @@ public class PasswordRule extends FixedDictType {
 			UPPER_LOW_LETTER_NUMBER_SPECIAL, Pattern.compile(REGEX_UPPER_LOW_LETTER_NUMBER_SPECIAL));
 	
 	public PasswordRule() {
-		super(TYPE, "DICT." + TYPE, true);
-		super.addDictData("DICT." + TYPE + "." + NONE, NONE, 1, "");
-		super.addDictData("DICT." + TYPE + "." + LETTER_NUMBER, LETTER_NUMBER, 2, REGEX_LETTER_NUMBER);
-		super.addDictData("DICT." + TYPE + "." + UPPER_LOW_LETTER_NUMBER, UPPER_LOW_LETTER_NUMBER, 3, REGEX_UPPER_LOW_LETTER_NUMBER);
-		super.addDictData("DICT." + TYPE + "." + LETTER_NUMBER_SPECIAL, LETTER_NUMBER_SPECIAL, 4, REGEX_LETTER_NUMBER_SPECIAL);
-		super.addDictData("DICT." + TYPE + "." + UPPER_LOW_LETTER_NUMBER_SPECIAL, UPPER_LOW_LETTER_NUMBER_SPECIAL, 5, REGEX_UPPER_LOW_LETTER_NUMBER_SPECIAL);
+		super(TYPE, "{DICT." + TYPE + "}", true);
+		super.addDictData("{DICT." + TYPE + "." + NONE + "}", NONE, 1, "");
+		super.addDictData("{DICT." + TYPE + "." + LETTER_NUMBER + "}", LETTER_NUMBER, 2, REGEX_LETTER_NUMBER);
+		super.addDictData("{DICT." + TYPE + "." + UPPER_LOW_LETTER_NUMBER + "}", UPPER_LOW_LETTER_NUMBER, 3, REGEX_UPPER_LOW_LETTER_NUMBER);
+		super.addDictData("{DICT." + TYPE + "." + LETTER_NUMBER_SPECIAL + "}", LETTER_NUMBER_SPECIAL, 4, REGEX_LETTER_NUMBER_SPECIAL);
+		super.addDictData("{DICT." + TYPE + "." + UPPER_LOW_LETTER_NUMBER_SPECIAL + "}", UPPER_LOW_LETTER_NUMBER_SPECIAL, 5, REGEX_UPPER_LOW_LETTER_NUMBER_SPECIAL);
 	}
 	
 	public static String getRuleRegex(String rule) {

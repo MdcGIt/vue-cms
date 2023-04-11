@@ -1,8 +1,8 @@
 package com.ruoyi.system.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,6 @@ import com.ruoyi.system.config.SystemConfig;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.dto.LoginBody;
-import com.ruoyi.system.enums.PermissionType;
 import com.ruoyi.system.fixed.dict.LoginLogType;
 import com.ruoyi.system.fixed.dict.SuccessOrFail;
 import com.ruoyi.system.security.SaAdminCheckLogin;
@@ -70,12 +69,16 @@ public class SysLoginController extends BaseRestController {
 
 	@PostMapping("logout")
 	public void logout() {
-		if (StpAdminUtil.isLogin()) {
-			LoginUser loginUser = StpAdminUtil.getLoginUser();
-			StpAdminUtil.logout();
-			asyncTaskManager
-					.execute(this.logininfoService.recordLogininfor(loginUser.getUserType(), loginUser.getUserId(),
-							loginUser.getUsername(), LoginLogType.LOGOUT, SuccessOrFail.SUCCESS, StringUtils.EMPTY));
+		try {
+			if (StpAdminUtil.isLogin()) {
+				LoginUser loginUser = StpAdminUtil.getLoginUser();
+				StpAdminUtil.logout();
+				asyncTaskManager.execute(this.logininfoService.recordLogininfor(loginUser.getUserType(),
+						loginUser.getUserId(), loginUser.getUsername(), LoginLogType.LOGOUT, SuccessOrFail.SUCCESS,
+						StringUtils.EMPTY));
+			}
+		} catch (Exception e) {
+
 		}
 	}
 
@@ -92,10 +95,8 @@ public class SysLoginController extends BaseRestController {
 		// 角色集合
 		List<String> roles = this.roleService.selectRoleKeysByUserId(user.getUserId());
 		// 菜单权限集合
-		Map<String, List<String>> permissions = permissionService.getPermissionMapByUser(user.getUserId());
-		List<String> all = new ArrayList<>();
-		permissions.values().forEach(all::addAll);
-		return R.ok(Map.of("user", user, "roles", roles, "permissions", all));
+		Set<String> permissions = this.permissionService.getMenuPermissionsByUser(user.getUserId());
+		return R.ok(Map.of("user", user, "roles", roles, "permissions", permissions));
 	}
 
 	/**
@@ -108,12 +109,10 @@ public class SysLoginController extends BaseRestController {
 	public R<?> getRouters() {
 		List<SysMenu> menus = this.menuService.lambdaQuery().orderByAsc(SysMenu::getOrderNum).list();
 
-		Map<String, List<String>> permissions = this.permissionService
-				.getPermissionMapByUser(StpAdminUtil.getLoginUser().getUserId());
-		List<String> menuPerms = permissions.get(PermissionType.Menu.name());
-		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
+		Set<String> permissions = this.permissionService.getMenuPermissionsByUser(StpAdminUtil.getLoginUser().getUserId());
+		if (!permissions.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
-				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());
+				return StringUtils.isEmpty(m.getPerms()) || permissions.contains(m.getPerms());
 			}).toList();
 		}
 		// 国际化翻译

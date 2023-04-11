@@ -36,14 +36,14 @@ public class MetaControlType extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public MetaControlType() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + INPUT, INPUT, 1);
-		super.addDictData("DICT." + TYPE + "." + TEXT_AREA, TEXT_AREA, 2);
-		super.addDictData("DICT." + TYPE + "." + RADIO, RADIO, 3);
-		super.addDictData("DICT." + TYPE + "." + CHECK_BOX, CHECK_BOX, 4);
-		super.addDictData("DICT." + TYPE + "." + SELECT, SELECT, 5);
-		super.addDictData("DICT." + TYPE + "." + DATE, DATE, 6);
-		super.addDictData("DICT." + TYPE + "." + DATETIME, DATETIME, 7);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + INPUT + "}", INPUT, 1);
+		super.addDictData("{DICT." + TYPE + "." + TEXT_AREA + "}", TEXT_AREA, 2);
+		super.addDictData("{DICT." + TYPE + "." + RADIO + "}", RADIO, 3);
+		super.addDictData("{DICT." + TYPE + "." + CHECK_BOX + "}", CHECK_BOX, 4);
+		super.addDictData("{DICT." + TYPE + "." + SELECT + "}", SELECT, 5);
+		super.addDictData("{DICT." + TYPE + "." + DATE + "}", DATE, 6);
+		super.addDictData("{DICT." + TYPE + "." + DATETIME + "}", DATETIME, 7);
 	}
 	
 	public static boolean isCheckbox(String v) {

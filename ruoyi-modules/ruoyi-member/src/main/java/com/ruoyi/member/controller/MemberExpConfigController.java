@@ -17,6 +17,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
@@ -77,6 +79,7 @@ public class MemberExpConfigController extends BaseRestController {
 		return R.ok(list);
 	}
 
+	@Log(title = "新增会员经验配置", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addMemberExpOperation(@RequestBody MemberExpConfig expOp) {
 		expOp.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -84,6 +87,7 @@ public class MemberExpConfigController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑会员经验配置", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> updateMemberExpOperation(@RequestBody MemberExpConfig expOp) {
 		expOp.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -91,6 +95,7 @@ public class MemberExpConfigController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除会员经验配置", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> deleteExpOperations(@RequestBody @NotEmpty List<Long> expOperationIds) {
 		this.memberExpOperationService.deleteExpOperations(expOperationIds);

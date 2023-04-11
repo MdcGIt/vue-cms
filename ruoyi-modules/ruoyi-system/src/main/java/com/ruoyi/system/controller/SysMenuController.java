@@ -1,7 +1,7 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +27,6 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.enums.MenuType;
-import com.ruoyi.system.enums.PermissionType;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -97,9 +96,8 @@ public class SysMenuController extends BaseRestController {
 		List<SysMenu> menus = this.menuService.lambdaQuery().ne(SysMenu::getMenuType, MenuType.Button.value())
 				.orderByAsc(SysMenu::getOrderNum).list();
 
-		Map<String, List<String>> permissions = this.permissionService
-				.getPermissionMapByUser(StpAdminUtil.getLoginUser().getUserId());
-		List<String> menuPerms = permissions.get(PermissionType.Menu.name());
+		Set<String> menuPerms = this.permissionService
+				.getMenuPermissionsByUser(StpAdminUtil.getLoginUser().getUserId());
 		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());

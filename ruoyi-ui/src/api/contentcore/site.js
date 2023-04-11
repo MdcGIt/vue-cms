@@ -9,6 +9,13 @@ export function listSite(query) {
   })
 }
 
+export function getSiteOptions() {
+  return request({
+    url: '/cms/site/options',
+    method: 'get'
+  })
+}
+
 // 获取当前站点
 export function getCurrentSite() {
   return request({

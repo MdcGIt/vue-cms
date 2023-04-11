@@ -37,12 +37,12 @@ public class ContentAttribute extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public ContentAttribute() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + IMAGE, IMAGE, 1, "1");
-		super.addDictData("DICT." + TYPE + "." + VIDEO, VIDEO, 2, "2");
-		super.addDictData("DICT." + TYPE + "." + ATTACH, ATTACH, 3, "4");
-		super.addDictData("DICT." + TYPE + "." + HOT, HOT, 4, "8");
-		super.addDictData("DICT." + TYPE + "." + RECOMMEND, RECOMMEND, 5, "16");
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + IMAGE + "}", IMAGE, 1, "1");
+		super.addDictData("{DICT." + TYPE + "." + VIDEO + "}", VIDEO, 2, "2");
+		super.addDictData("{DICT." + TYPE + "." + ATTACH + "}", ATTACH, 3, "4");
+		super.addDictData("{DICT." + TYPE + "." + HOT + "}", HOT, 4, "8");
+		super.addDictData("{DICT." + TYPE + "." + RECOMMEND + "}", RECOMMEND, 5, "16");
 	}
 
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

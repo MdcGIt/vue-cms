@@ -24,7 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsSitePropertyTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_site_property";
-	public final static String NAME = "站点自定义属性数据标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	public final static String TagAttr_SiteId = "siteid";
 
@@ -63,6 +64,6 @@ public class CmsSitePropertyTag extends AbstractListTag {
 	
 	@Override
 	public String getDescription() {
-		return "获取站点自定义属性数据，内嵌<#list DataList as p>${p.name}</#list>遍历数据";
+		return DESC;
 	}
 }

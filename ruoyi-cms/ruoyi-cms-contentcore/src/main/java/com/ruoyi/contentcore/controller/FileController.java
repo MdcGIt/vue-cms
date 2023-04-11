@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -76,6 +78,7 @@ public class FileController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "文件重命名", businessType = BusinessType.UPDATE)
 	@PostMapping("/rename")
 	public R<?> renameFile(@RequestBody FileOperateDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -90,6 +93,7 @@ public class FileController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "新建文件", businessType = BusinessType.UPDATE)
 	@PostMapping("/add")
 	public R<?> addFile(@RequestBody FileAddDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -103,6 +107,7 @@ public class FileController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "上传文件", businessType = BusinessType.UPDATE)
 	@PostMapping("/upload")
 	public R<?> uploadFile(@RequestParam("dir") @NotEmpty String dir, @RequestParam("file") MultipartFile multipartFile)
 			throws IOException {
@@ -120,6 +125,7 @@ public class FileController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "读取文", businessType = BusinessType.OTHER)
 	@PostMapping("/read")
 	public R<?> readFile(@RequestBody FileOperateDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -133,6 +139,7 @@ public class FileController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "修改文件", businessType = BusinessType.UPDATE)
 	@PostMapping("/edit")
 	public R<?> editFile(@RequestBody FileOperateDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -147,6 +154,7 @@ public class FileController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Log(title = "删除文件", businessType = BusinessType.DELETE)
 	@PostMapping("/delete")
 	public R<?> deleteFile(@RequestBody @NotEmpty List<FileOperateDTO> dtoList) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());

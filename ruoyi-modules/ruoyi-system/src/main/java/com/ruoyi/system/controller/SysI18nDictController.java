@@ -1,5 +1,6 @@
 package com.ruoyi.system.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.config.I18nMessageSource;
 import com.ruoyi.system.domain.SysDictData;
 import com.ruoyi.system.domain.SysI18nDict;
 import com.ruoyi.system.fixed.dict.I18nDictType;
@@ -52,6 +54,8 @@ public class SysI18nDictController extends BaseRestController {
 	private final ISysI18nDictService i18nDictService;
 	
 	private final ISysDictTypeService dictTypeService;
+	
+	private final I18nMessageSource messageSource;
 
 	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:list")
 	@GetMapping
@@ -142,8 +146,8 @@ public class SysI18nDictController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:remove")
 	@Log(title = "国际化管理", businessType = BusinessType.CLEAN)
 	@DeleteMapping("/refreshCache")
-	public R<?> refreshCache() {
-		i18nDictService.resetCache();
+	public R<?> refreshCache() throws IOException {
+		i18nDictService.loadMessages(this.messageSource);
 		return R.ok();
 	}
 }

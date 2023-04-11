@@ -25,9 +25,9 @@ public class YesOrNo extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 	
 	public YesOrNo() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + YES, YES, 1);
-		super.addDictData("DICT." + TYPE + "." + NO, NO, 2);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + YES + "}", YES, 1);
+		super.addDictData("{DICT." + TYPE + "." + NO + "}", NO, 2);
 	}
 	
 	public static boolean isYes(String v) {

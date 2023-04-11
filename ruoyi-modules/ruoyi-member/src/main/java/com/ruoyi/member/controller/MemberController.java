@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -74,6 +76,7 @@ public class MemberController extends BaseRestController {
 		return R.ok(vo);
 	}
 
+	@Log(title = "新增会员", businessType = BusinessType.INSERT, isSaveRequestData = false)
 	@PostMapping
 	public R<?> addMember(@RequestBody MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -81,6 +84,7 @@ public class MemberController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "编辑会员", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> updateMember(@RequestBody MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -88,6 +92,7 @@ public class MemberController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "删除会员", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> delete(@RequestBody @NotEmpty List<Long> memberIds) {
 		IdUtils.validate(memberIds);
@@ -95,6 +100,7 @@ public class MemberController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Log(title = "重置会员密码", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/resetPassword")
 	public R<?> resetPassword(@RequestBody MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());

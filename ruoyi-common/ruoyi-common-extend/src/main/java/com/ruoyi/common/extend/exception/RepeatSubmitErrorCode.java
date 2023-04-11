@@ -14,6 +14,6 @@ public enum RepeatSubmitErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.EXTEND." + this.name();
+		return "{ERRCODE.EXTEND." + this.name() + "}";
 	}
 }

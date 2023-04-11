@@ -16,6 +16,6 @@ public enum CommentErrorCode implements ErrorCode {
 	
 	@Override
 	public String value() {
-		return "ERRCODE.COMMENT." + this.name();
+		return "{ERRCODE.COMMENT." + this.name() + "}";
 	}
 }

@@ -40,6 +40,8 @@ public class ArticleContentType implements IContentType {
 
     public final static String ID = "article";
     
+    private final static String NAME = "{CMS.CONTENTCORE.CONTENT_TYPE." + ID + "}";
+    
     private final CmsContentMapper contentMapper;
 
     private final CmsArticleDetailMapper articleMapper;
@@ -57,7 +59,7 @@ public class ArticleContentType implements IContentType {
 
     @Override
     public String getName() {
-        return "CONTENTCORE.CONTENTTYPE." + ID;
+        return NAME;
     }
 
     @Override

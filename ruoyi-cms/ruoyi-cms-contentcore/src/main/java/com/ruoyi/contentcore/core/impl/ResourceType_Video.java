@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 public class ResourceType_Video implements IResourceType {
 
 	public final static String ID = "video";
+	
+	public static final  String NAME = "{CMS.CONTENTCORE.RESOURCE_TYPE." + ID + "}";
 
 	public final static String[] SuffixArray = { "mp4", "mpg", "mpeg", "rmvb", "rm", "avi", "wmv", "mov", "flv" };
 
@@ -25,7 +27,7 @@ public class ResourceType_Video implements IResourceType {
 	
 	@Override
 	public String getName() {
-		return "CMS.CONTENTCORE.RESOURCE_TYPE." + ID;
+		return NAME;
 	}
 
 	@Override

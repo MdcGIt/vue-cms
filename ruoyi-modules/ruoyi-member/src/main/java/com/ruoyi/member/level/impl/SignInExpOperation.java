@@ -14,6 +14,8 @@ import com.ruoyi.member.level.IExpOperation;
 public class SignInExpOperation implements IExpOperation {
 	
 	public static final String ID = "SignIn";
+	
+	private static final String NAME = "{MEMBER.EXP_OPERATION." + ID + "}";
 
 	@Override
 	public String getId() {
@@ -22,6 +24,6 @@ public class SignInExpOperation implements IExpOperation {
 
 	@Override
 	public String getName() {
-		return "签到";
+		return NAME;
 	}
 }

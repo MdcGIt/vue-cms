@@ -33,3 +33,12 @@ export function getSiteOtherOverviewDatas(params) {
     params: params
   })
 }
+
+// 站点趋势分析数据
+export function getSiteTimeTrendDatas(params) {
+  return request({
+    url: '/cms/stat/baidu/timeTrend',
+    method: 'get',
+    params: params
+  })
+}

@@ -147,10 +147,15 @@ public enum SysErrorCode implements ErrorCode {
 	/**
 	 * 指定任务不存在
 	 */
-	ASYNC_TASK_NOT_FOUND;
+	ASYNC_TASK_NOT_FOUND,
+	
+	/**
+	 * 不支持的权限类型：{0}
+	 */
+	UNSUPPORTED_PERMISSION_TYPE;
 	
 	@Override
 	public String value() {
-		return "ERRCODE.SYS." + this.name();
+		return "{ERRCODE.SYS." + this.name() + "}";
 	}
 }

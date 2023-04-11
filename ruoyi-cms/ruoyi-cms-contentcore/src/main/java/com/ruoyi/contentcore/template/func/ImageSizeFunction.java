@@ -32,6 +32,8 @@ import net.coobird.thumbnailator.Thumbnails;
 public class ImageSizeFunction extends AbstractFunc {
 
 	private static final String FUNC_NAME = "imageSize";
+	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
 
 	private final ISiteService siteService;
 
@@ -44,7 +46,7 @@ public class ImageSizeFunction extends AbstractFunc {
 
 	@Override
 	public String getDesc() {
-		return "图片缩放处理函数，例如：${imageSize(content.logo, 300, 300)}";
+		return DESC;
 	}
 
 	@Override

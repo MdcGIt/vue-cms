@@ -28,7 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class CmsVideoTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_video";
-	public final static String NAME = "视频集视频列表标签";
+	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
+	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
 	private final IContentService contentService;
 
@@ -77,6 +78,6 @@ public class CmsVideoTag extends AbstractListTag {
 
 	@Override
 	public String getDescription() {
-		return "获取视频集中的视频数据列表，内嵌<#list DataList as video>${video.path}</#list>遍历数据";
+		return DESC;
 	}
 }

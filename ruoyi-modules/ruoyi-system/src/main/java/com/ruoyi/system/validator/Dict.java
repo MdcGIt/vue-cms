@@ -15,14 +15,16 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = DictValidator.class)
 public @interface Dict {
 
-	String message() default "{SYSTEM.VALIDATOR.DICT.MESSAGE}";
+	String message() default "{VALIDATOR.SYSTEM.INVALID_DICT_VALUE}";
 
 	Class<?>[] groups() default { };
 
 	Class<? extends Payload>[] payload() default { };
 
 	/**
-	 * @return fixedDictType
+	 * 字典类型
+	 * 
+	 * @return dictType
 	 */
 	String value();
 }

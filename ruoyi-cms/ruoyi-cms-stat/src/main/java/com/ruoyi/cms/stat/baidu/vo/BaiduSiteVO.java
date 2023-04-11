@@ -1,4 +1,4 @@
-package com.ruoyi.cms.stat.baidu.domain;
+package com.ruoyi.cms.stat.baidu.vo;
 
 import java.time.LocalDateTime;
 
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BaiduSite {
+public class BaiduSiteVO {
 
 	/**
 	 * 站点ID

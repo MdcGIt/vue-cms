@@ -33,8 +33,12 @@ import com.ruoyi.contentcore.listener.event.AfterSiteDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterSiteSaveEvent;
 import com.ruoyi.contentcore.mapper.CmsSiteMapper;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
+import com.ruoyi.system.domain.SysPermission;
+import com.ruoyi.system.enums.PermissionOwnerType;
+import com.ruoyi.system.service.ISysPermissionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +53,8 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	private static final String CACHE_PREFIX = "cms:site:";
 
 	private final ApplicationContext applicationContext;
+
+	private final ISysPermissionService permissionService;
 
 	private final RedisCache redisCache;
 
@@ -87,11 +93,12 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 		Assert.isTrue(checkSiteUnique, () -> CommonErrorCode.DATA_CONFLICT.exception("name", "path"));
 
 		String siteRoot = SiteUtils.getSiteResourceRoot(dto.getPath());
-		Assert.isFalse(new File(siteRoot).exists(),ContentCoreErrorCode.EXISTS_SITE_PATH::exception);
+		Assert.isFalse(new File(siteRoot).exists(), ContentCoreErrorCode.EXISTS_SITE_PATH::exception);
 		// 创建站点目录
 		FileExUtils.mkdirs(siteRoot);
-		
+
 		CmsSite site = new CmsSite();
+		site.setSiteId(IdUtils.getSnowflakeId());
 		BeanUtils.copyProperties(dto, site, "siteId");
 		if (StringUtils.isNotEmpty(site.getResourceUrl()) && !site.getResourceUrl().endsWith("/")) {
 			site.setResourceUrl(site.getResourceUrl() + "/");
@@ -100,6 +107,18 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 		site.createBy(dto.getOperator().getUsername());
 		this.save(site);
 		this.clearCache(site.getSiteId());
+		// 授权给添加人
+		SysPermission permission = this.permissionService.getPermissions(PermissionOwnerType.User.name(),
+				dto.getOperator().getUserId().toString());
+		if (permission == null) {
+			permission = new SysPermission();
+			permission.setOwnerType(PermissionOwnerType.User.name());
+			permission.setOwner(dto.getOperator().getUserId().toString());
+			permission.setCreateBy(dto.getOperator().getUsername());
+		}
+		CmsPrivUtils.grantSitePermission(site.getSiteId(), permission);
+		this.permissionService.updateById(permission);
+		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return site;
 	}
 
@@ -146,15 +165,14 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	 * 
 	 * @param siteName 站点名称
 	 * @param sitePath 站点目录
-	 * @param siteId 站点ID
+	 * @param siteId   站点ID
 	 * @return 结果
 	 */
 	@Override
 	public boolean checkSiteUnique(String siteName, String sitePath, Long siteId) {
-		return this.lambdaQuery().and(wrapper ->
-						wrapper.eq(CmsSite::getName, siteName).or().eq(CmsSite::getPath, sitePath))
-				.ne(IdUtils.validate(siteId), CmsSite::getSiteId, siteId)
-				.count() == 0;
+		return this.lambdaQuery()
+				.and(wrapper -> wrapper.eq(CmsSite::getName, siteName).or().eq(CmsSite::getPath, sitePath))
+				.ne(IdUtils.validate(siteId), CmsSite::getSiteId, siteId).count() == 0;
 	}
 
 	@Override
@@ -172,8 +190,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	}
 
 	@Override
-	public void saveSiteExtend(Long siteId, Map<String, String> configs, String operator) {
-		CmsSite site = this.getSite(siteId);
+	public void saveSiteExtend(CmsSite site, Map<String, String> configs, String operator) {
 		ConfigPropertyUtils.filterConfigProps(configs, site.getConfigProps(), IProperty.UseType.Site);
 
 		site.setConfigProps(configs);

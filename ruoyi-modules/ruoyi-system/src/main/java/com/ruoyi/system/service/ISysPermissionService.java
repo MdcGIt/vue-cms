@@ -1,9 +1,10 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.domain.dto.SysPermissionDTO;
 
@@ -21,13 +22,6 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	public static final String ALL_PERMISSION = "*";
 
 	public static final String DELIMETER = ",";
-	
-	/**
-	 * 保存权限信息
-	 * 
-	 * @param dto
-	 */
-	public void savePermissions(SysPermissionDTO dto);
 
 	/**
 	 * 获取权限信息
@@ -39,18 +33,30 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	public SysPermission getPermissions(String ownerType, String owner);
 
 	/**
-	 * 获取用户权限分类集合
+	 * 获取用户菜单权限集合
 	 * 
 	 * @param userId
 	 * @return
 	 */
-	public Map<String, List<String>> getPermissionMapByUser(Long userId);
+	public Set<String> getMenuPermissionsByUser(Long userId);
+	
+	/**
+	 * 保存菜单权限信息
+	 * 
+	 * @param dto
+	 */
+	public void saveMenuPermissions(SysPermissionDTO dto);
 
 	/**
-	 * 获取用户权限集合
+	 * 获取用户权限列表
 	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<String> getPermissionListByUser(Long userId);
+	public Map<String, String> getUserPermissions(Long userId);
+
+	/**
+	 * 重置登录用户权限信息
+	 */
+	public void resetLoginUserPermissions(LoginUser loginUser);
 }

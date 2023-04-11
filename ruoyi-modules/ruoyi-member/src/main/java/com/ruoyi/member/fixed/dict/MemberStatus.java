@@ -27,10 +27,10 @@ public class MemberStatus extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 	
 	public MemberStatus() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + ENABLE, ENABLE, 1);
-		super.addDictData("DICT." + TYPE + "." + DISABLE, DISABLE, 2);
-		super.addDictData("DICT." + TYPE + "." + LOCK, LOCK, 3);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + ENABLE + "}", ENABLE, 1);
+		super.addDictData("{DICT." + TYPE + "." + DISABLE + "}", DISABLE, 2);
+		super.addDictData("{DICT." + TYPE + "." + LOCK + "}", LOCK, 3);
 	}
 	
 	public static boolean isEnable(String v) {

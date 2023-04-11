@@ -27,10 +27,10 @@ public class VoteStatus extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public VoteStatus() {
-		super(TYPE, "DICT." + TYPE);
-		super.addDictData("DICT." + TYPE + "." + NORMAL, NORMAL, 1);
-		super.addDictData("DICT." + TYPE + "." + STOP, STOP, 2);
-		super.addDictData("DICT." + TYPE + "." + CLOSE, CLOSE, 3);
+		super(TYPE, "{DICT." + TYPE + "}");
+		super.addDictData("{DICT." + TYPE + "." + NORMAL + "}", NORMAL, 1);
+		super.addDictData("{DICT." + TYPE + "." + STOP + "}", STOP, 2);
+		super.addDictData("{DICT." + TYPE + "." + CLOSE + "}", CLOSE, 3);
 	}
 	
 	public static boolean isClosed(String status) {

@@ -5,14 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.cms.stat.baidu.BaiduTongjiUtils;
-import com.ruoyi.cms.stat.baidu.domain.BaiduOverviewReport;
-import com.ruoyi.cms.stat.baidu.domain.BaiduSite;
+import com.ruoyi.cms.stat.baidu.dto.BaiduTimeTrendDTO;
+import com.ruoyi.cms.stat.baidu.vo.BaiduOverviewReportVO;
+import com.ruoyi.cms.stat.baidu.vo.BaiduSiteVO;
+import com.ruoyi.cms.stat.baidu.vo.BaiduTimeTrendVO;
 import com.ruoyi.cms.stat.properties.BaiduTjAccessTokenProperty;
 import com.ruoyi.cms.stat.service.ICmsStatService;
 import com.ruoyi.common.domain.R;
@@ -57,7 +60,7 @@ public class BaiduTongjiController extends BaseRestController {
 		if (StringUtils.isBlank(accessToken)) {
 			return R.ok();
 		}
-		List<BaiduSite> siteList = BaiduTongjiUtils.getSiteList(accessToken);
+		List<BaiduSiteVO> siteList = BaiduTongjiUtils.getSiteList(accessToken);
 		return R.ok(siteList);
 	}
 
@@ -77,7 +80,7 @@ public class BaiduTongjiController extends BaseRestController {
 		if (StringUtils.isBlank(accessToken)) {
 			return R.ok();
 		}
-		BaiduOverviewReport report = BaiduTongjiUtils.getSiteOverviewTimeTrend(accessToken, bdSiteId, startDate,
+		BaiduOverviewReportVO report = BaiduTongjiUtils.getSiteOverviewTimeTrend(accessToken, bdSiteId, startDate,
 				endDate);
 		return R.ok(report);
 	}
@@ -98,7 +101,7 @@ public class BaiduTongjiController extends BaseRestController {
 		if (StringUtils.isBlank(accessToken)) {
 			return R.ok();
 		}
-		BaiduOverviewReport report = BaiduTongjiUtils.getSiteOverviewDistrict(accessToken, bdSiteId, startDate,
+		BaiduOverviewReportVO report = BaiduTongjiUtils.getSiteOverviewDistrict(accessToken, bdSiteId, startDate,
 				endDate);
 		return R.ok(BaiduTongjiUtils.parseOverviewReportToTableData(report));
 	}
@@ -119,7 +122,7 @@ public class BaiduTongjiController extends BaseRestController {
 		if (StringUtils.isBlank(accessToken)) {
 			return R.ok();
 		}
-		Map<String, BaiduOverviewReport> siteOverviewOthers = BaiduTongjiUtils.getSiteOverviewOthers(accessToken,
+		Map<String, BaiduOverviewReportVO> siteOverviewOthers = BaiduTongjiUtils.getSiteOverviewOthers(accessToken,
 				bdSiteId, startDate, endDate);
 		Map<String, List<Map<String, Object>>> datas = siteOverviewOthers.entrySet().stream().map(e -> {
 			Map<String, List<Map<String, Object>>> map = Map.of(e.getKey(),
@@ -128,4 +131,20 @@ public class BaiduTongjiController extends BaseRestController {
 		}).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 		return R.ok(datas);
 	}
+	
+	@GetMapping("/timeTrend")
+	public R<?> getSiteTimeTrend(@Validated BaiduTimeTrendDTO dto) {
+		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
+		String accessToken = BaiduTjAccessTokenProperty.getValue(site.getConfigProps());
+		if (StringUtils.isBlank(accessToken)) {
+			return R.ok();
+		}
+		if (StringUtils.isEmpty(dto.getGran())) {
+			dto.setGran("day");
+		}
+		dto.setMetrics(List.of("pv_count", "visitor_count", "ip_count", "visit_count"));
+		BaiduTimeTrendVO siteTimeTrend = BaiduTongjiUtils.getSiteTimeTrend(accessToken, dto);
+		return R.ok(siteTimeTrend);
+	}
 }
+

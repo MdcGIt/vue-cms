@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 public class RandomIntFunction extends AbstractFunc {
 
 	static final String FUNC_NAME = "randomInt";
+	
+	private static final String DESC = "{FREEMARKER.FUNC.DESC." + FUNC_NAME + "}";
 
 	private static final Random random = new Random();
 
@@ -30,7 +32,7 @@ public class RandomIntFunction extends AbstractFunc {
 
 	@Override
 	public String getDesc() {
-		return "获取指定范围随机数，例如：${randomInt(10,100)}";
+		return DESC;
 	}
 
 	@Override

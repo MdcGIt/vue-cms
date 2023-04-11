@@ -1,6 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,7 +18,7 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.domain.dto.SysPermissionDTO;
-import com.ruoyi.system.enums.PermissionType;
+import com.ruoyi.system.permission.MenuPermissionType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysMenuService;
@@ -41,13 +40,15 @@ public class SysPermissionController extends BaseRestController {
 	private final ISysPermissionService permissionService;
 
 	private final ISysMenuService menuService;
+	
+	private final MenuPermissionType menuPermissionType;
 
 	@SaAdminCheckLogin
 	@Log(title = "权限设置", businessType = BusinessType.UPDATE)
 	@PostMapping
 	public R<?> savePermission(@RequestBody SysPermissionDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
-		this.permissionService.savePermissions(dto);
+		this.permissionService.saveMenuPermissions(dto);
 		return R.ok();
 	}
 
@@ -56,9 +57,10 @@ public class SysPermissionController extends BaseRestController {
 	public R<?> getMenuPerms(@RequestParam String ownerType, @RequestParam String owner) {
 		List<SysMenu> menus = this.menuService.lambdaQuery().orderByAsc(SysMenu::getOrderNum).list();
 		SysPermission permission = this.permissionService.getPermissions(ownerType, owner);
-		List<String> perms = Collections.emptyList();
+		List<String> perms = List.of();
 		if (Objects.nonNull(permission)) {
-			perms = permission.getPermissions().getOrDefault(PermissionType.Menu.name(), Collections.emptyList());
+			String json  = permission.getPermissions().get(menuPermissionType.getId());
+			perms = menuPermissionType.parse(json);
 		}
 		return R.ok(Map.of("menus", menus, "perms", perms));
 	}

@@ -41,6 +41,8 @@ import lombok.RequiredArgsConstructor;
 public class AudioContentType implements IContentType {
 
 	public final static String ID = "audio";
+    
+    private final static String NAME = "{CMS.CONTENTCORE.CONTENT_TYPE." + ID + "}";
 
 	private final CmsContentMapper contentMapper;
 
@@ -59,7 +61,7 @@ public class AudioContentType implements IContentType {
 
 	@Override
 	public String getName() {
-		return "CONTENTCORE.CONTENTTYPE." + ID;
+		return NAME;
 	}
 
 	@Override

@@ -23,8 +23,8 @@ public class NoticeType extends FixedDictType {
 	private static final ISysDictTypeService dictTypeService = SpringUtils.getBean(ISysDictTypeService.class);
 
 	public NoticeType() {
-		super(TYPE, "DICT." + TYPE, true);
-		super.addDictData("DICT." + TYPE + "." + NOTICE, NOTICE, 1);
+		super(TYPE, "{DICT." + TYPE + "}", true);
+		super.addDictData("{DICT." + TYPE + "." + NOTICE + "}", NOTICE, 1);
 	}
 
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {

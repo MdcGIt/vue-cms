@@ -17,7 +17,7 @@ public class SysRegistEnable extends FixedConfig {
 	private static final String DEFAULT_VALUE = "false";
 	
 	public SysRegistEnable() {
-		super(ID, "CONFIG." + ID, DEFAULT_VALUE, null);
+		super(ID, "{CONFIG." + ID + "}", DEFAULT_VALUE, null);
 	}
 	
 	public static boolean isEnable() {

@@ -34,7 +34,7 @@ public class SysDictType extends BaseEntity {
 
 	/** 字典名称 */
 	@ExcelProperty("字典名称")
-	@I18nField("DICT.{dictType}")
+	@I18nField("{DICT.#{dictType}}")
 	private String dictName;
 
 	/** 字典类型 */

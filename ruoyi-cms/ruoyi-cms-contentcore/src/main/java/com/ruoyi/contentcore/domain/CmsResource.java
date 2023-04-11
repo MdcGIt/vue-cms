@@ -28,7 +28,7 @@ public class CmsResource extends BaseEntity {
     /**
      * 资源ID
      */
-    @TableId(value = "resource_id", type = IdType.ASSIGN_ID)
+    @TableId(value = "resource_id", type = IdType.INPUT)
     private Long resourceId;
 
     /**
