@@ -35,7 +35,7 @@ public class PublishedContentEditProperty implements IProperty {
 		return YesOrNo.YES;
 	}
 	
-	public static String getValue(Map<String, String> props) {
-		return ConfigPropertyUtils.getStringValue(ID, props);
+	public static boolean getValue(Map<String, String> props) {
+		return YesOrNo.isYes(ConfigPropertyUtils.getStringValue(ID, props));
 	}
 }

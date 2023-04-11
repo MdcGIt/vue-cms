@@ -43,6 +43,7 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 				CmsVideo video = videoList.get(i);
 				video.setVideoId(IdUtils.getSnowflakeId());
 				video.setContentId(this.getContentEntity().getContentId());
+				video.setSiteId(this.getContentEntity().getSiteId());
 				video.setSiteId(this.getSiteId());
 				video.setSortFlag(i);
 				video.createBy(this.getOperator().getUsername());
@@ -100,6 +101,7 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 			} else {
 				video.setVideoId(IdUtils.getSnowflakeId());
 				video.setContentId(this.getContentEntity().getContentId());
+				video.setSiteId(this.getContentEntity().getSiteId());
 				video.setSiteId(this.getSiteId());
 				video.setSortFlag(i);
 				video.createBy(this.getOperator().getUsername());

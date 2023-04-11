@@ -37,6 +37,7 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 				CmsAudio audio = audioList.get(i);
 				audio.setAudioId(IdUtils.getSnowflakeId());
 				audio.setContentId(this.getContentEntity().getContentId());
+				audio.setSiteId(this.getContentEntity().getSiteId());
 				audio.setSiteId(this.getSiteId());
 				audio.setType(FileExUtils.getExtension(audio.getPath()).toUpperCase());
 				audio.setSortFlag(i);
@@ -91,6 +92,7 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 			} else {
 				audio.setAudioId(IdUtils.getSnowflakeId());
 				audio.setContentId(this.getContentEntity().getContentId());
+				audio.setSiteId(this.getContentEntity().getSiteId());
 				audio.setSiteId(this.getSiteId());
 				audio.setType(FileExUtils.getExtension(audio.getPath()).toUpperCase());
 				audio.setSortFlag(i);

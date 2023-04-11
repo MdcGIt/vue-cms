@@ -27,7 +27,12 @@ public class CmsArticleDetail {
      */
     @TableId(value = "content_id", type = IdType.INPUT)
     private Long contentId;
-
+    
+    /**
+     * 站点ID
+     */
+    private Long siteId;
+    
     /**
      * 正文详情（json）
      */

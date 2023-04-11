@@ -51,6 +51,7 @@ public class ArticleImageHeight implements IProperty {
 	}
 	
 	public static int getValue(Map<String, String> firstProps, Map<String, String> secondProps) {
-		return ConfigPropertyUtils.getIntValue(ID, firstProps, secondProps);
+		int value = ConfigPropertyUtils.getIntValue(ID, firstProps, secondProps);
+		return value <= 0 ? 600 : value;
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
@@ -31,6 +32,7 @@ import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.listener.event.AfterSiteDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterSiteSaveEvent;
+import com.ruoyi.contentcore.listener.event.BeforeSiteDeleteEvent;
 import com.ruoyi.contentcore.mapper.CmsSiteMapper;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CmsPrivUtils;
@@ -80,7 +82,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 			}
 		}
 		if (Objects.isNull(site)) {
-			site = this.lambdaQuery().one();
+			site = this.lambdaQuery().last("limit 1").one();
 		}
 		Assert.notNull(site, ContentCoreErrorCode.NO_SITE::exception);
 		return site;
@@ -114,7 +116,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 			permission = new SysPermission();
 			permission.setOwnerType(PermissionOwnerType.User.name());
 			permission.setOwner(dto.getOperator().getUserId().toString());
-			permission.setCreateBy(dto.getOperator().getUsername());
+			permission.createBy(dto.getOperator().getUsername());
 		}
 		CmsPrivUtils.grantSitePermission(site.getSiteId(), permission);
 		this.permissionService.updateById(permission);
@@ -155,8 +157,12 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 		CmsSite site = this.getById(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 
+		applicationContext.publishEvent(new BeforeSiteDeleteEvent(this, site));
+		
+		AsyncTaskManager.setTaskMessage("正在删除站点数据");
 		this.removeById(site.getSiteId());
 		this.clearCache(site.getSiteId());
+
 		applicationContext.publishEvent(new AfterSiteDeleteEvent(this, site));
 	}
 

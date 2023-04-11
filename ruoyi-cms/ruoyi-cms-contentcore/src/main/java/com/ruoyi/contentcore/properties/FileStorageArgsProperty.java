@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IProperty;
-import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -53,7 +52,7 @@ public class FileStorageArgsProperty implements IProperty {
 	}	
 	
 	public static FileStorageArgs getValue(Map<String, String> props) {
-		String v = ConfigPropertyUtils.getStringValue(ID, props);
+		String v = MapUtils.getString(props, ID);
 		if (StringUtils.isNotEmpty(v)) {
 			return JacksonUtils.from(v, FileStorageArgs.class);
 		}

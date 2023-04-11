@@ -85,37 +85,38 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 			for (File file : templateFiles) {
 				String path = StringUtils.substringAfterLast(FileExUtils.normalizePath(file.getAbsolutePath()),
 						ContentCoreConsts.TemplateDirectory);
-				this.lambdaQuery().eq(CmsTemplate::getPath, path).oneOpt().ifPresentOrElse(t -> {
-					if (t.getModifyTime() != file.lastModified()) {
-						try {
-							t.setFilesize(file.length());
-							t.setContent(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-							t.setModifyTime(file.lastModified());
-							t.updateBy(SysConstants.SYS_OPERATOR);
-							updateById(t);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}, () -> {
-					try {
-						CmsTemplate t = new CmsTemplate();
-						t.setSiteId(site.getSiteId());
-						t.setPublishPipeCode(pp.getCode());
-						t.setPath(path);
-						t.setFilesize(file.length());
-						t.setContent(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-						t.setModifyTime(file.lastModified());
-						t.createBy(SysConstants.SYS_OPERATOR);
-						save(t);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				});
+				this.lambdaQuery().eq(CmsTemplate::getSiteId, site.getSiteId()).eq(CmsTemplate::getPath, path).oneOpt()
+						.ifPresentOrElse(t -> {
+							if (t.getModifyTime() != file.lastModified()) {
+								try {
+									t.setFilesize(file.length());
+									t.setContent(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+									t.setModifyTime(file.lastModified());
+									t.updateBy(SysConstants.SYS_OPERATOR);
+									updateById(t);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+						}, () -> {
+							try {
+								CmsTemplate t = new CmsTemplate();
+								t.setSiteId(site.getSiteId());
+								t.setPublishPipeCode(pp.getCode());
+								t.setPath(path);
+								t.setFilesize(file.length());
+								t.setContent(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+								t.setModifyTime(file.lastModified());
+								t.createBy(SysConstants.SYS_OPERATOR);
+								save(t);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						});
 			}
 		});
 	}
-	
+
 	/**
 	 * 模板文件重命名
 	 * 
@@ -127,8 +128,9 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 	@Override
 	public void renameTemplate(TemplateRenameDTO dto) throws IOException {
 		CmsTemplate template = this.getById(dto.getTemplateId());
-		Assert.notNull(template, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
-		
+		Assert.notNull(template,
+				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
+
 		String newPath = FileExUtils.normalizePath(dto.getPath());
 		if (!dto.getPath().equals(newPath)) {
 			CmsSite site = this.siteService.getSite(template.getSiteId());
@@ -136,18 +138,18 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 			File file = new File(siteRoot + ContentCoreConsts.TemplateDirectory + template.getPath());
 			File dest = new File(siteRoot + ContentCoreConsts.TemplateDirectory + newPath);
 			FileUtils.moveFile(file, dest);
-			
+
 			template.setPath(newPath);
 		}
 		template.setRemark(dto.getRemark());
 		template.updateBy(dto.getOperator().getUsername());
 		this.updateById(template);
 	}
-	
+
 	/**
 	 * 保存模板内容
 	 * 
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Override
 	public void saveTemplate(TemplateUpdateDTO dto) throws IOException {
@@ -158,12 +160,12 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 		File file = this.getTemplateFile(dbTemplate);
 		file.getParentFile().mkdirs();
 		FileUtils.writeStringToFile(file, dto.getContent(), StandardCharsets.UTF_8);
-		
+
 		dbTemplate.setModifyTime(file.lastModified());
 		dbTemplate.updateBy(dto.getOperator().getUsername());
 		this.updateById(dbTemplate);
 	}
-	
+
 	/**
 	 * 新建模板文件
 	 * 
@@ -177,13 +179,13 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 		template.setPublishPipeCode(dto.getPublishPipeCode());
 		template.setPath(FileExUtils.normalizePath(dto.getPath()));
 		template.setRemark(dto.getRemark());
-		
+
 		File file = this.getTemplateFile(template);
 		if (file.exists()) {
 			throw ContentCoreErrorCode.TEMPLATE_PATH_EXISTS.exception();
 		}
 		FileUtils.writeStringToFile(file, StringUtils.EMPTY, StandardCharsets.UTF_8);
-		
+
 		template.setContent(StringUtils.EMPTY);
 		template.setModifyTime(file.lastModified());
 		template.setFilesize(file.length());
