@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -115,6 +116,15 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 
 			@Override
 			public void run0() throws InterruptedException {
+				publishPipeService.getPublishPipes(site.getSiteId()).forEach(pp -> {
+					try {
+						String siteRoot = SiteUtils.getSiteRoot(site, pp.getCode());
+						FileUtils.deleteDirectory(new File(siteRoot + "include/"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+				
 				List<CmsCatalog> catalogList = catalogService
 						.list(new LambdaQueryWrapper<CmsCatalog>().eq(CmsCatalog::getSiteId, site.getSiteId()));
 				for (CmsCatalog catalog : catalogList) {
