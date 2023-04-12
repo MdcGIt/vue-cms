@@ -108,7 +108,7 @@ public class CmsPageWidgetTag extends AbstractTag {
 			String staticContent = templateService.getTemplateStaticContentCache(templateName);
 			if (Objects.isNull(staticContent) || !new File(staticFilePath).exists()) {
 				staticContent = this.processTemplate(env, context, templateName);
-				FileUtils.writeStringToFile(new File(siteRoot + staticFilePath), staticContent, StandardCharsets.UTF_8);
+				FileUtils.writeStringToFile(new File(staticFilePath), staticContent, StandardCharsets.UTF_8);
 				this.templateService.setTemplateStaticContentCache(templateName, staticContent);
 			}
 			if (ssi) {
