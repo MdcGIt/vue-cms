@@ -101,13 +101,13 @@ public class CmsPageWidgetTag extends AbstractTag {
 		if (context.isPreview()) {
 			env.getOut().write(this.processTemplate(env, context, templateName));
 		} else {
+			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
 			String staticFileName = PageWidgetUtils.getStaticFileName(pw, site.getStaticSuffix(pw.getPublishPipeCode()));
-			String staticFilePath = pw.getPath() + staticFileName;
+			String staticFilePath = siteRoot + pw.getPath() + staticFileName;
 			// 读取页面部件静态化内容
 			String staticContent = templateService.getTemplateStaticContentCache(templateName);
-			if (Objects.isNull(staticContent)) {
+			if (Objects.isNull(staticContent) || !new File(staticFilePath).exists()) {
 				staticContent = this.processTemplate(env, context, templateName);
-				String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
 				FileUtils.writeStringToFile(new File(siteRoot + staticFilePath), staticContent, StandardCharsets.UTF_8);
 				this.templateService.setTemplateStaticContentCache(templateName, staticContent);
 			}

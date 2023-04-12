@@ -117,11 +117,11 @@ public class CmsIncludeTag extends AbstractTag {
 			String virtualPath = "/cms/ssi/virtual?sid=" + siteId + "&pp=" + context.getPublishPipeCode() + "&t=" + t + "&" + params;
 			env.getOut().write(StringUtils.messageFormat(SSI_INCLUDE_VIRTUAL_TAG, virtualPath));
 		} else {
-			String staticFilePath = getStaticPath(site, context.getPublishPipeCode(), includeTemplateName);
+			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
+			String staticFilePath = siteRoot + getStaticPath(site, context.getPublishPipeCode(), includeTemplateName);
 			String staticContent = templateService.getTemplateStaticContentCache(includeTemplateName);
-			if (Objects.isNull(staticContent)) {
-				String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
-				staticContent = this.writeTo(env, context, includeTemplateName, siteRoot + staticFilePath);
+			if (Objects.isNull(staticContent) || !new File(staticFilePath).exists()) {
+				staticContent = this.writeTo(env, context, includeTemplateName, staticFilePath);
 			}
 			if (ssi) {
 				env.getOut().write(StringUtils.messageFormat(SSI_INCLUDE_TAG, "/" + staticFilePath));
