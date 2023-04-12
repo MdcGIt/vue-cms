@@ -1,7 +1,6 @@
 package com.ruoyi.contentcore.perms;
 
 import java.util.BitSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,38 +34,26 @@ public class CatalogPermissionType implements IPermissionType<Map<String, BitSet
 	}
 
 	@Override
-	public String convert(Map<String, BitSet> permissionKeys) {
-		return CmsPrivUtils.convertCatalogPermissionKeys(permissionKeys);
+	public String serialize(Map<String, BitSet> permissionKeys) {
+		return CmsPrivUtils.serializeBitSetPermission(permissionKeys);
 	}
 
 	/**
-	 * {<siteId: [long]>,...}
+	 * {<catalogId: [long]>,...}
 	 */
 	@Override
-	public Map<String, BitSet> parse(String json) {
-		return CmsPrivUtils.parseCatalogPermissionJson(json);
+	public Map<String, BitSet> deserialize(String json) {
+		return CmsPrivUtils.deserializeBitSetPermission(json);
 	}
 	
 	@Override
 	public String merge(List<String> permissionJsonList) {
-		Map<String, BitSet> map = new HashMap<>();
-		permissionJsonList.forEach(json -> {
-			Map<String, BitSet> bitSet = parse(json);
-			bitSet.entrySet().forEach(e -> {
-				BitSet bs = map.get(e.getKey());
-				if (bs == null) {
-					map.put(e.getKey(), e.getValue());
-				} else {
-					bs.or(e.getValue());
-				}
-			});
-		});
-		return convert(map);
+		return CmsPrivUtils.mergeBitSetPermissions(permissionJsonList);
 	}
 	
 	@Override
 	public boolean hasPermission(List<String> permissionKeys, String json, SaMode mode) {
-		Map<String,BitSet> parse = parse(json);
+		Map<String,BitSet> parse = deserialize(json);
 		if (mode == SaMode.AND) {
 			for (String key : permissionKeys) {
 				String[] split = StringUtils.split(key, Spliter);
@@ -91,7 +78,7 @@ public class CatalogPermissionType implements IPermissionType<Map<String, BitSet
 	/**
 	 * 栏目权限项
 	 */
-	public enum CatalogPrivItem {
+	public enum CatalogPrivItem implements BitSetPrivItem {
 
 		View(0, "查看"),
 
@@ -105,7 +92,13 @@ public class CatalogPermissionType implements IPermissionType<Map<String, BitSet
 
 		Move(5, "移动"),
 
-		Sort(6, "排序");
+		Sort(6, "排序"),
+
+		AddContent(7, "新增内容"),
+
+		EditContent(8, "编辑内容"),
+
+		DeleteContent(9, "删除内容");
 
 		/**
 		 * 权限项在bitset中的位置序号，从0开始，不可随意变更，变更后会导致原权限信息错误
@@ -119,21 +112,13 @@ public class CatalogPermissionType implements IPermissionType<Map<String, BitSet
 			this.label = label;
 		}
 
+		@Override
 		public int bitIndex() {
 			return this.bitIndex;
 		}
 
 		public String label() {
 			return this.label;
-		}
-		
-		public static BitSet getBitSet() {
-			CatalogPrivItem[] items = CatalogPrivItem.values();
-			BitSet bitSet = new BitSet(items.length);
-			for (CatalogPrivItem item : items) {
-				bitSet.set(item.bitIndex());
-			}
-			return bitSet;
 		}
 
 		public String getPermissionKey(Long catalogId) {

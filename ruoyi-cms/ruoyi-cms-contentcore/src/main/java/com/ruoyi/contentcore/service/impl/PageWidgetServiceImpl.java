@@ -19,7 +19,9 @@ import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsPageWidget;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.mapper.CmsPageWidgetMapper;
+import com.ruoyi.contentcore.perms.PageWidgetPermissionType.PageWidgetPrivItem;
 import com.ruoyi.contentcore.service.IPageWidgetService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import freemarker.template.TemplateException;
@@ -70,6 +72,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
 		CmsPageWidget pageWidget = this.getById(pw.getPageWidgetEntity().getPageWidgetId());
 		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId",
 				pw.getPageWidgetEntity().getPageWidgetId()));
+		CmsPrivUtils.checkPageWidgetPermission(pageWidget.getPageWidgetId(), PageWidgetPrivItem.Edit, pw.getOperator());
 
 		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
 				pw.getPageWidgetEntity().getCode(), pw.getPageWidgetEntity().getPageWidgetId());

@@ -34,6 +34,7 @@ import com.ruoyi.contentcore.listener.event.AfterSiteDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterSiteSaveEvent;
 import com.ruoyi.contentcore.listener.event.BeforeSiteDeleteEvent;
 import com.ruoyi.contentcore.mapper.CmsSiteMapper;
+import com.ruoyi.contentcore.perms.SitePermissionType.SitePrivItem;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
@@ -118,7 +119,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 			permission.setOwner(dto.getOperator().getUserId().toString());
 			permission.createBy(dto.getOperator().getUsername());
 		}
-		CmsPrivUtils.grantSitePermission(site.getSiteId(), permission);
+		CmsPrivUtils.grantBitSetPermission(site.getSiteId().toString(), SitePrivItem.values(), permission);
 		this.permissionService.updateById(permission);
 		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return site;

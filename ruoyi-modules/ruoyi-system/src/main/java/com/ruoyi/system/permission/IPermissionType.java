@@ -32,12 +32,12 @@ public interface IPermissionType<T> {
 	public String getName();
 	
 	/**
-	 * 将存储在sys_permission中的权限字符串解析成权限项列表
+	 * 将存储在sys_permission中的权限字符串解析成权限项集合
 	 * 
 	 * @param json
 	 * @return
 	 */
-	public T parse(String json);
+	public T deserialize(String json);
 
 	/**
 	 * 转权限项列表转成持久化存储字符串
@@ -45,7 +45,7 @@ public interface IPermissionType<T> {
 	 * @param permissionKeys
 	 * @return
 	 */
-	public String convert(T permissionKeys);
+	public String serialize(T permissionKeys);
 	
 	/**
 	 * 合并权限项

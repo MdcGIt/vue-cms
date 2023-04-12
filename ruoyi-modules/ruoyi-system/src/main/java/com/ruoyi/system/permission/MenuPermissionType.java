@@ -27,7 +27,7 @@ public class MenuPermissionType implements IPermissionType<List<String>> {
 	}
 
 	@Override
-	public List<String> parse(String json) {
+	public List<String> deserialize(String json) {
 		if (StringUtils.isEmpty(json)) {
 			return List.of();
 		}
@@ -35,7 +35,7 @@ public class MenuPermissionType implements IPermissionType<List<String>> {
 	}
 
 	@Override
-	public String convert(List<String> permissionKeys) {
+	public String serialize(List<String> permissionKeys) {
 		return JacksonUtils.to(permissionKeys);
 	}
 
@@ -43,14 +43,14 @@ public class MenuPermissionType implements IPermissionType<List<String>> {
 	public String merge(List<String> permissionJsonList) {
 		Set<String> set = new HashSet<>();
 		permissionJsonList.forEach(json -> {
-			set.addAll(parse(json));
+			set.addAll(deserialize(json));
 		});
-		return convert(set.stream().toList());
+		return serialize(set.stream().toList());
 	}
 	
 	@Override
 	public boolean hasPermission(List<String> permissionKeys, String json, SaMode mode) {
-		List<String> perms = parse(json);
+		List<String> perms = deserialize(json);
 		if (mode == SaMode.AND) {
 			for (String key : permissionKeys) {
 				if(!perms.contains(key)) {

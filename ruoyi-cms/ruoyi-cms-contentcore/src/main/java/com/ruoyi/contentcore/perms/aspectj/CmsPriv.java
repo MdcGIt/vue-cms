@@ -1,4 +1,4 @@
-package com.ruoyi.contentcore.intercepter;
+package com.ruoyi.contentcore.perms.aspectj;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

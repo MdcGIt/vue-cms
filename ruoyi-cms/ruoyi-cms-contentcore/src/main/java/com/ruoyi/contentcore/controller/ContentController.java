@@ -47,12 +47,14 @@ import com.ruoyi.contentcore.domain.vo.ContentVO;
 import com.ruoyi.contentcore.domain.vo.ListContentVO;
 import com.ruoyi.contentcore.fixed.dict.ContentAttribute;
 import com.ruoyi.contentcore.listener.event.AfterContentEditorInitEvent;
+import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.user.preference.IncludeChildContentPreference;
 import com.ruoyi.contentcore.user.preference.ShowContentSubTitlePreference;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.system.security.SaAdminCheckLogin;
@@ -71,7 +73,7 @@ import lombok.RequiredArgsConstructor;
 public class ContentController extends BaseRestController {
 
 	private final ISiteService siteService;
-	
+
 	private final ICatalogService catalogService;
 
 	private final IContentService contentService;
@@ -87,21 +89,23 @@ public class ContentController extends BaseRestController {
 	public R<?> listData(@RequestParam(name = "catalogId", required = false) Long catalogId,
 			@RequestParam(name = "title", required = false, defaultValue = "") String title,
 			@RequestParam(name = "status", required = false) String status) {
+		if (!IdUtils.validate(catalogId)
+				|| CmsPrivUtils.hasCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser())) {
+			return this.bindDataTable(List.of());
+		}
 		PageRequest pr = getPageRequest();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		boolean includeChild = IncludeChildContentPreference.getValue(StpAdminUtil.getLoginUser());
-		
+
 		LambdaQueryChainWrapper<CmsContent> q = this.contentService.lambdaQuery()
 				.eq(CmsContent::getSiteId, site.getSiteId())
 				.like(StringUtils.isNotEmpty(title), CmsContent::getTitle, title)
 				.eq(StringUtils.isNotEmpty(status), CmsContent::getStatus, status);
-		if (IdUtils.validate(catalogId)) {
-			if (includeChild) {
-				CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
-				q.like(CmsContent::getCatalogAncestors, catalog.getAncestors());
-			} else {
-				q.eq(CmsContent::getCatalogId, catalogId);
-			}
+		if (includeChild) {
+			CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
+			q.like(CmsContent::getCatalogAncestors, catalog.getAncestors());
+		} else {
+			q.eq(CmsContent::getCatalogId, catalogId);
 		}
 		if (pr.getSort().isSorted()) {
 			pr.getSort().forEach(order -> {
@@ -130,9 +134,9 @@ public class ContentController extends BaseRestController {
 	 * 内容编辑数据初始化
 	 */
 	@GetMapping("/init/{catalogId}/{contentType}/{contentId}")
-	public R<ContentVO> initContentEditor(@PathVariable("catalogId") Long catalogId,
-			@PathVariable("contentType") String contentType,
-			@PathVariable("contentId") Long contentId) {
+	public R<ContentVO> initContentEditor(@PathVariable("catalogId") @Min(1) Long catalogId,
+			@PathVariable("contentType") String contentType, @PathVariable("contentId") Long contentId) {
+		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser());
 		IContentType ct = ContentCoreUtils.getContentType(contentType);
 		// 获取初始化数据
 		ContentVO vo = ct.initEditor(catalogId, contentId);
@@ -148,9 +152,11 @@ public class ContentController extends BaseRestController {
 	public R<?> addContent(@RequestParam("contentType") String contentType, HttpServletRequest request)
 			throws IOException {
 		IContentType ct = ContentCoreUtils.getContentType(contentType);
-		
+
 		IContent<?> content = ct.readRequest(request);
 		content.setOperator(StpAdminUtil.getLoginUser());
+		CmsPrivUtils.checkCatalogPermission(content.getCatalogId(), CatalogPrivItem.AddContent, content.getOperator());
+		
 		AsyncTask task = this.contentService.addContent(content);
 		return R.ok(Map.of("taskId", task.getTaskId()));
 	}
@@ -164,6 +170,8 @@ public class ContentController extends BaseRestController {
 
 		IContent<?> content = ct.readRequest(request);
 		content.setOperator(StpAdminUtil.getLoginUser());
+		CmsPrivUtils.checkCatalogPermission(content.getCatalogId(), CatalogPrivItem.EditContent, content.getOperator());
+		
 		AsyncTask task = this.contentService.saveContent(content);
 		return R.ok(Map.of("taskId", task.getTaskId()));
 	}

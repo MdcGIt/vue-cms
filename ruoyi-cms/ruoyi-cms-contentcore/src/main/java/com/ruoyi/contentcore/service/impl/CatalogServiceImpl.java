@@ -46,6 +46,7 @@ import com.ruoyi.contentcore.listener.event.AfterCatalogSaveEvent;
 import com.ruoyi.contentcore.listener.event.BeforeCatalogDeleteEvent;
 import com.ruoyi.contentcore.mapper.CmsCatalogMapper;
 import com.ruoyi.contentcore.mapper.CmsContentMapper;
+import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CatalogUtils;
@@ -186,7 +187,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 			permission.setOwner(dto.getOperator().getUserId().toString());
 			permission.createBy(dto.getOperator().getUsername());
 		}
-		CmsPrivUtils.grantCatalogPermission(catalog.getCatalogId(), permission);
+		CmsPrivUtils.grantBitSetPermission(catalog.getCatalogId().toString(), CatalogPrivItem.values(), permission);
 		this.permissionService.saveOrUpdate(permission);
 		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return catalog;
