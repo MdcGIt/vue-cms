@@ -90,7 +90,7 @@ public class ContentController extends BaseRestController {
 			@RequestParam(name = "title", required = false, defaultValue = "") String title,
 			@RequestParam(name = "status", required = false) String status) {
 		if (!IdUtils.validate(catalogId)
-				|| CmsPrivUtils.hasCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser())) {
+				|| !CmsPrivUtils.hasCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser())) {
 			return this.bindDataTable(List.of());
 		}
 		PageRequest pr = getPageRequest();
