@@ -24,6 +24,7 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -37,17 +38,18 @@ import com.ruoyi.contentcore.domain.dto.PageWidgetAddDTO;
 import com.ruoyi.contentcore.domain.dto.PageWidgetEditDTO;
 import com.ruoyi.contentcore.domain.vo.PageWidgetVO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
+import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPageWidgetService;
 import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import freemarker.template.TemplateException;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/pagewidget")

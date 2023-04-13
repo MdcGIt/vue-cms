@@ -20,12 +20,14 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSiteProperty;
+import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ISitePropertyService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
 @RestController
 @RequestMapping("/cms/site/prop")
 @RequiredArgsConstructor

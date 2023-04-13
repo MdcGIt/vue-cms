@@ -27,6 +27,7 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
@@ -40,6 +41,7 @@ import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
 import com.ruoyi.contentcore.domain.dto.PublishSiteDTO;
 import com.ruoyi.contentcore.domain.dto.SiteDTO;
 import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
+import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.perms.SitePermissionType.SitePrivItem;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
@@ -49,7 +51,7 @@ import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import freemarker.template.TemplateException;
@@ -63,7 +65,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
 @RestController
 @RequestMapping("/cms/site")
 @RequiredArgsConstructor

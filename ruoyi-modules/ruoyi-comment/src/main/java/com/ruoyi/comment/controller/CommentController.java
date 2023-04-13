@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.comment.domain.Comment;
 import com.ruoyi.comment.domain.CommentLike;
 import com.ruoyi.comment.domain.dto.AuditCommentDTO;
-import com.ruoyi.comment.priv.CommentPriv;
+import com.ruoyi.comment.permission.CommentPriv;
 import com.ruoyi.comment.service.ICommentLikeService;
 import com.ruoyi.comment.service.ICommentService;
 import com.ruoyi.common.domain.R;
@@ -41,7 +41,7 @@ public class CommentController extends BaseRestController {
 
 	private final ICommentLikeService commentLikeService;
 
-	@Priv(type = AdminUserType.TYPE, value = CommentPriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = CommentPriv.View)
 	@GetMapping
 	public R<?> getCommentList(@RequestParam(required = false) String sourceType,
 			@RequestParam(required = false) Long sourceId, @RequestParam(required = false) Long uid,
@@ -58,7 +58,7 @@ public class CommentController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = CommentPriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = CommentPriv.View)
 	@GetMapping("/reply/{commentId}")
 	public R<?> getCommentReplyList(@PathVariable @Min(1) Long commentId) {
 		PageRequest pr = this.getPageRequest();
@@ -68,7 +68,7 @@ public class CommentController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = CommentPriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = CommentPriv.View)
 	@GetMapping("/like/{commentId}")
 	public R<?> getCommentLikeList(@PathVariable @Min(1) Long commentId, @RequestParam(required = false) Long uid) {
 		PageRequest pr = this.getPageRequest();
@@ -79,7 +79,7 @@ public class CommentController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = CommentPriv.AUDIT)
+	@Priv(type = AdminUserType.TYPE, value = CommentPriv.Audit)
 	@PutMapping("/audit")
 	public R<?> auditComment(@RequestBody AuditCommentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -87,7 +87,7 @@ public class CommentController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = CommentPriv.DELETE)
+	@Priv(type = AdminUserType.TYPE, value = CommentPriv.Delete)
 	@DeleteMapping
 	public R<?> deleteComment(@RequestBody @NotEmpty List<Long> commentIds) {
 		this.commentService.deleteComments(commentIds);

@@ -18,10 +18,13 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.system.domain.SysSecurityConfig;
 import com.ruoyi.system.fixed.dict.PasswordRule;
+import com.ruoyi.system.permission.SysMenuPriv;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISecurityConfigService;
@@ -34,6 +37,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
+@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/system/security/config")
@@ -41,7 +45,6 @@ public class SysSecurityController extends BaseRestController {
 
 	private final ISecurityConfigService securityConfigService;
 	
-	@SaAdminCheckLogin
 	@GetMapping
 	public R<?> listConfigs() {
 		PageRequest pr = this.getPageRequest();
@@ -51,7 +54,6 @@ public class SysSecurityController extends BaseRestController {
 		return bindDataTable(page);
 	}
 
-	@SaAdminCheckLogin
 	@GetMapping("/{id}")
 	public R<?> getConfig(@PathVariable Long id) {
 		SysSecurityConfig securityConfig = securityConfigService.getById(id);
@@ -70,7 +72,6 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok(securityConfig);
 	}
 
-	@SaAdminCheckLogin
 	@Log(title = "安全配置", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addConfig(@RequestBody SysSecurityConfig config) {
@@ -79,7 +80,6 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok();
 	}
 
-	@SaAdminCheckLogin
 	@Log(title = "安全配置", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> saveConfig(@RequestBody SysSecurityConfig config) {
@@ -88,7 +88,6 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok();
 	}
 
-	@SaAdminCheckLogin
 	@Log(title = "安全配置", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> delConfig(@RequestBody List<Long> configIds) {
@@ -96,7 +95,6 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok();
 	}
 
-	@SaAdminCheckLogin
 	@Log(title = "安全配置", businessType = BusinessType.UPDATE)
 	@PutMapping("/changeStatus/{id}")
 	public R<?> changeConfigStatus(@PathVariable Long id) {

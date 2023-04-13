@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.system.domain.vo.server.Server;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 
 /**
@@ -18,7 +19,7 @@ import com.ruoyi.system.security.AdminUserType;
 @RequestMapping("/monitor/server")
 public class ServerController {
 	
-	@Priv(type = AdminUserType.TYPE, value = "monitor:server:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorServerList)
 	@GetMapping()
 	public R<?> getInfo() throws Exception {
 		Server server = new Server();

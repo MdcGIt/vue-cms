@@ -28,7 +28,7 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.link.domain.CmsLink;
 import com.ruoyi.link.domain.dto.LinkDTO;
-import com.ruoyi.link.priv.FriendLinkPriv;
+import com.ruoyi.link.permission.FriendLinkPriv;
 import com.ruoyi.link.service.ILinkService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -54,7 +54,7 @@ public class LinkController extends BaseRestController {
 
 	private final ILinkService linkService;
 
-	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.View)
 	@GetMapping
 	public R<?> getPageList(@RequestParam("groupId") @Min(1) Long groupId,
 			@RequestParam(value = "query", required = false) String query) {
@@ -73,7 +73,7 @@ public class LinkController extends BaseRestController {
 	}
 
 	@Log(title = "新增友链", businessType = BusinessType.INSERT)
-	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.ADD)
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Add)
 	@PostMapping
 	public R<?> add(@RequestBody LinkDTO dto) {
 		CmsLink link = new CmsLink();
@@ -89,7 +89,7 @@ public class LinkController extends BaseRestController {
 	}
 
 	@Log(title = "编辑友链", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.ADD, FriendLinkPriv.EDIT } )
+	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.Add, FriendLinkPriv.Edit } )
 	@PutMapping
 	public R<String> edit(@RequestBody LinkDTO dto) {
 		CmsLink link = new CmsLink();
@@ -100,7 +100,7 @@ public class LinkController extends BaseRestController {
 	}
 
 	@Log(title = "删除友链", businessType = BusinessType.DELETE)
-	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.DELETE)
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Delete)
 	@DeleteMapping
 	public R<String> remove(@RequestBody @NotEmpty List<LinkDTO> dtoList) {
 		List<Long> linkIds = dtoList.stream().map(LinkDTO::getLinkId).toList();

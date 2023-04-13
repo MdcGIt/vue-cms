@@ -24,7 +24,7 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.exmodel.priv.EXModelPriv;
+import com.ruoyi.exmodel.permission.EXModelPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -62,7 +62,7 @@ public class EXModelController extends BaseRestController {
 
 	private final ISiteService siteService;
 
-	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.View)
 	@GetMapping
 	public R<?> getModelList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -76,7 +76,7 @@ public class EXModelController extends BaseRestController {
 	}
 
 	@Log(title = "新增扩展模型", businessType = BusinessType.INSERT)
-	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.ADD)
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.Add)
 	@PostMapping
 	public R<?> add(@RequestBody XModelDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -88,7 +88,7 @@ public class EXModelController extends BaseRestController {
 	}
 
 	@Log(title = "编辑扩展模板", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.Add, EXModelPriv.Edit })
 	@PutMapping
 	public R<?> edit(@RequestBody XModelDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -97,7 +97,7 @@ public class EXModelController extends BaseRestController {
 	}
 
 	@Log(title = "删除扩展模型", businessType = BusinessType.DELETE)
-	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.DELETE)
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.Delete)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<XModelDTO> dtoList) {
 		if (dtoList == null || dtoList.size() == 0) {
@@ -108,7 +108,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.View)
 	@GetMapping("/fields")
 	public R<?> getModelFieldList(@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "modelId", required = false) Long modelId) {
@@ -120,7 +120,7 @@ public class EXModelController extends BaseRestController {
 	}
 
 	@Log(title = "新增扩展模型字段", businessType = BusinessType.INSERT)
-	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.Add, EXModelPriv.Edit })
 	@PostMapping("/field")
 	public R<?> addField(@RequestBody XModelFieldDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -129,7 +129,7 @@ public class EXModelController extends BaseRestController {
 	}
 
 	@Log(title = "编辑扩展模型字段", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.Add, EXModelPriv.Edit })
 	@PutMapping("/field")
 	public R<?> editField(@RequestBody XModelFieldDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -138,7 +138,7 @@ public class EXModelController extends BaseRestController {
 	}
 
 	@Log(title = "删除扩展模型字段", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.ADD, EXModelPriv.EDIT })
+	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.Add, EXModelPriv.Edit })
 	@DeleteMapping("/field")
 	public R<?> removeField(@RequestBody @NotEmpty List<Long> fieldIds) {
 		this.modelFieldService.deleteModelField(fieldIds);

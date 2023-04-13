@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.func.IFunction;
 import com.ruoyi.common.staticize.tag.ITag;
 import com.ruoyi.contentcore.domain.vo.TemplateFuncVO;
 import com.ruoyi.contentcore.domain.vo.TemplateTagVO;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.contentcore.perms.ContentCorePriv;
+import com.ruoyi.system.security.AdminUserType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +25,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.StaticizeView)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cms/staticize")

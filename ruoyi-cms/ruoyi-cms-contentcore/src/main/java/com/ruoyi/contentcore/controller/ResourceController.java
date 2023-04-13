@@ -25,6 +25,7 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -35,18 +36,19 @@ import com.ruoyi.contentcore.domain.CmsResource;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.ImageCropDTO;
 import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
+import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.IResourceService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ResourceView)
 @RestController
 @RequestMapping("/cms/resource")
 @RequiredArgsConstructor
@@ -150,7 +152,7 @@ public class ResourceController extends BaseRestController {
 	@Log(title = "图片裁剪", businessType = BusinessType.UPDATE)
 	@PostMapping("/image/cut")
 	public R<?> cutImage(@RequestBody ImageCropDTO imageCutDTO) {
-
-		return R.ok();
+		// TODO 
+		return R.fail("TODO");
 	}
 }

@@ -46,7 +46,7 @@ public class SysPermissionController extends BaseRestController {
 	@SaAdminCheckLogin
 	@Log(title = "权限设置", businessType = BusinessType.UPDATE)
 	@PostMapping
-	public R<?> savePermission(@RequestBody SysPermissionDTO dto) {
+	public R<?> saveMenuPermission(@RequestBody SysPermissionDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.permissionService.saveMenuPermissions(dto);
 		return R.ok();

@@ -28,6 +28,7 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.generator.domain.GenTable;
 import com.ruoyi.generator.domain.GenTableColumn;
+import com.ruoyi.generator.permission.GenMenuPriv;
 import com.ruoyi.generator.service.IGenTableColumnService;
 import com.ruoyi.generator.service.IGenTableService;
 import com.ruoyi.system.security.AdminUserType;
@@ -53,7 +54,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 查询代码生成列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:list")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.List)
 	@GetMapping("/list")
 	public R<?> genList(GenTable genTable) {
 		PageRequest pr = this.getPageRequest();
@@ -69,7 +70,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 修改代码生成业务
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:query")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.List)
 	@GetMapping(value = "/{tableId}")
 	public R<?> getInfo(@PathVariable Long tableId) {
 		GenTable table = genTableService.selectGenTableById(tableId);
@@ -85,7 +86,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 查询数据库列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:list")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.List)
 	@GetMapping("/db/list")
 	public R<?> dataList(GenTable genTable) {
 		List<GenTable> list = genTableService.selectDbTableList(genTable);
@@ -95,7 +96,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 查询数据表字段列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:list")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.List)
 	@GetMapping(value = "/column/{tableId}")
 	public R<?> columnList(Long tableId) {
 		List<GenTableColumn> list = genTableColumnService.selectGenTableColumnListByTableId(tableId);
@@ -105,7 +106,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 导入表结构（保存）
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:import")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.Import)
 	@Log(title = "代码生成", businessType = BusinessType.IMPORT)
 	@PostMapping("/importTable")
 	public R<?> importTableSave(String tables) {
@@ -119,7 +120,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 修改保存代码生成业务
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:edit")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.Edit)
 	@Log(title = "代码生成", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> editSave(@Validated @RequestBody GenTable genTable) {
@@ -131,7 +132,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 删除代码生成
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:remove")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.Remove)
 	@Log(title = "代码生成", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> tableIds) {
@@ -142,7 +143,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 预览代码
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:preview")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.Preview)
 	@GetMapping("/preview/{tableId}")
 	public R<?> preview(@PathVariable("tableId") Long tableId) throws IOException {
 		Map<String, String> dataMap = genTableService.previewCode(tableId);
@@ -152,7 +153,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 生成代码（下载方式）
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:code")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.GenCode)
 	@Log(title = "代码生成", businessType = BusinessType.GENCODE)
 	@GetMapping("/download/{tableName}")
 	public void download(HttpServletResponse response, @PathVariable("tableName") String tableName) throws IOException {
@@ -163,7 +164,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 生成代码（自定义路径）
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:code")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.GenCode)
 	@Log(title = "代码生成", businessType = BusinessType.GENCODE)
 	@GetMapping("/genCode/{tableName}")
 	public R<?> genCode(@PathVariable("tableName") String tableName) {
@@ -174,7 +175,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 同步数据库
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:edit")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.Edit)
 	@Log(title = "代码生成", businessType = BusinessType.UPDATE)
 	@GetMapping("/synchDb/{tableName}")
 	public R<?> synchDb(@PathVariable("tableName") String tableName) {
@@ -185,7 +186,7 @@ public class GenController extends BaseRestController {
 	/**
 	 * 批量生成代码
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "tool:gen:code")
+	@Priv(type = AdminUserType.TYPE, value = GenMenuPriv.GenCode)
 	@Log(title = "代码生成", businessType = BusinessType.GENCODE)
 	@GetMapping("/batchGenCode")
 	public void batchGenCode(HttpServletResponse response, String tables) throws IOException {

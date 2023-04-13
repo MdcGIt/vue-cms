@@ -28,7 +28,7 @@ import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.link.domain.CmsLinkGroup;
 import com.ruoyi.link.domain.dto.LinkGroupDTO;
-import com.ruoyi.link.priv.FriendLinkPriv;
+import com.ruoyi.link.permission.FriendLinkPriv;
 import com.ruoyi.link.service.ILinkGroupService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -53,7 +53,7 @@ public class LinkGroupController extends BaseRestController {
 
 	private final ILinkGroupService linkGroupService;
 
-	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.View)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(value = "query", required = false) String query) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -66,7 +66,7 @@ public class LinkGroupController extends BaseRestController {
 	}
 
 	@Log(title = "新增友链分组", businessType = BusinessType.INSERT)
-	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.ADD)
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Add)
 	@PostMapping
 	public R<?> add(@RequestBody LinkGroupDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -85,7 +85,7 @@ public class LinkGroupController extends BaseRestController {
 	}
 
 	@Log(title = "编辑友链分组", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.ADD, FriendLinkPriv.EDIT })
+	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.Add, FriendLinkPriv.Edit })
 	@PutMapping
 	public R<String> edit(@RequestBody LinkGroupDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -102,7 +102,7 @@ public class LinkGroupController extends BaseRestController {
 	}
 
 	@Log(title = "删除友链分组", businessType = BusinessType.DELETE)
-	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.DELETE)
+	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Delete)
 	@DeleteMapping
 	public R<String> remove(@RequestBody @NotEmpty List<LinkGroupDTO> dtoList) {
 		List<Long> linkGroupIds = dtoList.stream().map(LinkGroupDTO::getLinkGroupId).toList();

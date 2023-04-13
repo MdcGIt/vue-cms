@@ -31,6 +31,7 @@ import com.ruoyi.system.config.I18nMessageSource;
 import com.ruoyi.system.domain.SysDictData;
 import com.ruoyi.system.domain.SysI18nDict;
 import com.ruoyi.system.fixed.dict.I18nDictType;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.service.ISysDictTypeService;
@@ -57,7 +58,7 @@ public class SysI18nDictController extends BaseRestController {
 	
 	private final I18nMessageSource messageSource;
 
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictList)
 	@GetMapping
 	public R<?> list(SysI18nDict dict) {
 		PageRequest pr = this.getPageRequest();
@@ -71,7 +72,7 @@ public class SysI18nDictController extends BaseRestController {
 	}
 
 	@Log(title = "国际化管理", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:export")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictExport)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysI18nDict dict) {
 		LambdaQueryWrapper<SysI18nDict> q = new LambdaQueryWrapper<SysI18nDict>()
@@ -83,7 +84,7 @@ public class SysI18nDictController extends BaseRestController {
 		this.exportExcel(list, SysI18nDict.class, response);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:query")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictList)
 	@GetMapping(value = "/{i18nDictId}")
 	public R<?> getInfo(@PathVariable Long i18nDictId) {
 		return R.ok(this.i18nDictService.getById(i18nDictId));
@@ -110,7 +111,7 @@ public class SysI18nDictController extends BaseRestController {
 		return R.ok(list);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictAdd)
 	@Log(title = "国际化管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysI18nDict config) {
@@ -118,7 +119,7 @@ public class SysI18nDictController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictEdit)
 	@Log(title = "国际化管理", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysI18nDict dict) {
@@ -126,7 +127,7 @@ public class SysI18nDictController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictEdit)
 	@Log(title = "国际化管理", businessType = BusinessType.UPDATE)
 	@PutMapping("/batch")
 	public R<?> batchSave(@RequestBody List<SysI18nDict> i18nDicts) {
@@ -134,7 +135,7 @@ public class SysI18nDictController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictRemove)
 	@Log(title = "国际化管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> i18nDictIds) {
@@ -143,7 +144,7 @@ public class SysI18nDictController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "system:i18ndict:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictRemove)
 	@Log(title = "国际化管理", businessType = BusinessType.CLEAN)
 	@DeleteMapping("/refreshCache")
 	public R<?> refreshCache() throws IOException {

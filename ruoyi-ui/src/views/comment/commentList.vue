@@ -8,7 +8,7 @@
           icon="el-icon-cricle-check"
           size="small" 
           :disabled="commentMultiple" 
-          v-hasPermi="['comment:mgr:audit']"
+          v-hasPermi="['comment:audit']"
           @click="handleAuditPass">审核通过</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -18,7 +18,7 @@
           icon="el-icon-cricle-close" 
           size="small" 
           :disabled="commentMultiple"
-          v-hasPermi="['comment:mgr:audit']"
+          v-hasPermi="['comment:audit']"
           @click="handleAuditNotPass">审核不通过</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -28,7 +28,7 @@
           icon="el-icon-delete" 
           size="small" 
           :disabled="commentMultiple" 
-          v-hasPermi="['comment:mgr:delete']"
+          v-hasPermi="['comment:delete']"
           @click="handleDelete" >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadCommentList"></right-toolbar>

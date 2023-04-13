@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.vo.AsyncTaskVO;
 import com.ruoyi.system.exception.SysErrorCode;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.permission.SysMenuPriv;
+import com.ruoyi.system.security.AdminUserType;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +40,7 @@ public class AsyncController extends BaseRestController {
 	 * @param type 任务类型
 	 * @return
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.AsyncTaskList)
 	@GetMapping("/task")
 	public R<?> getAsyncTaskList(@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "id", required = false) String taskId) {
@@ -57,7 +59,7 @@ public class AsyncController extends BaseRestController {
 	 * @param taskId 任务ID
 	 * @return
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.AsyncTaskList)
 	@GetMapping("/task/{taskId}")
 	public R<?> getAsyncTaskInfo(@PathVariable("taskId") String taskId) {
 		AsyncTask task = this.asyncTaskManager.getTask(taskId);
@@ -72,7 +74,7 @@ public class AsyncController extends BaseRestController {
 	 * @param taskIds
 	 * @return
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.AsyncTaskList)
 	@PutMapping("/task/stop")
 	public R<?> stopAsyncTask(@RequestBody @NotEmpty List<String> taskIds) {
 		for (String taskId : taskIds) {
@@ -87,7 +89,7 @@ public class AsyncController extends BaseRestController {
 	 * @param taskIds
 	 * @return
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.AsyncTaskList)
 	@DeleteMapping("task/remove")
 	public R<?> deleteAsyncTask(@RequestBody @NotEmpty List<String> taskIds) {
 		for (String taskId : taskIds) {

@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.word.domain.TagWordGroup;
+import com.ruoyi.word.permission.WordPriv;
 import com.ruoyi.word.service.ITagWordGroupService;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -33,7 +35,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/word/tagword/group")

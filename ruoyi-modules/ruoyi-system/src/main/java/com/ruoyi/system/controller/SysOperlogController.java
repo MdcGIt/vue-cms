@@ -20,6 +20,7 @@ import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysOperLog;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.service.ISysOperLogService;
 
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
  * 
  * @author ruoyi
  */
+@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorLogsView)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/monitor/operlog")
@@ -38,7 +40,6 @@ public class SysOperlogController extends BaseRestController {
 
 	private final ISysOperLogService operLogService;
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:operlog:list")
 	@GetMapping("/list")
 	public R<?> list(SysOperLog operLog) {
 		PageRequest pr = this.getPageRequest();
@@ -55,7 +56,6 @@ public class SysOperlogController extends BaseRestController {
 	}
 
 	@Log(title = "操作日志", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "monitor:operlog:export")
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysOperLog operLog) {
 		LambdaQueryWrapper<SysOperLog> q = new LambdaQueryWrapper<SysOperLog>()
@@ -71,7 +71,6 @@ public class SysOperlogController extends BaseRestController {
 	}
 
 	@Log(title = "操作日志", businessType = BusinessType.DELETE)
-	@Priv(type = AdminUserType.TYPE, value = "monitor:operlog:remove")
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> operIds) {
 		operLogService.removeByIds(operIds);
@@ -79,7 +78,6 @@ public class SysOperlogController extends BaseRestController {
 	}
 
 	@Log(title = "操作日志", businessType = BusinessType.CLEAN)
-	@Priv(type = AdminUserType.TYPE, value = "monitor:operlog:remove")
 	@DeleteMapping("/clean")
 	public R<?> clean() {
 		operLogService.cleanOperLog();
