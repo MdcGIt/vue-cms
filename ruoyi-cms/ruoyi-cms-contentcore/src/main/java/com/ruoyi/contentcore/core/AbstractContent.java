@@ -141,7 +141,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 
 		// 栏目内容数+1
 		catalog.setContentCount(catalog.getContentCount() + 1);
-		catalogService.updateById(catalog);
+		this.getCatalogService().updateById(catalog);
 		return this.getContentEntity().getContentId();
 	}
 
@@ -185,7 +185,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		// 栏目内容数-1
 		CmsCatalog catalog = this.getCatalogService().getById(this.getCatalogId());
 		catalog.setContentCount(catalog.getContentCount() - 1);
-		catalogService.updateById(catalog);
+		this.getCatalogService().updateById(catalog);
 	}
 	
 	@Override
@@ -248,7 +248,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		this.getParams().put("NewContentId", newContent.getContentId());
 		// 栏目内容数+1
 		toCatalog.setContentCount(toCatalog.getContentCount() + 1);
-		catalogService.updateById(toCatalog);
+		this.getCatalogService().updateById(toCatalog);
 	}
 
 	@Override
