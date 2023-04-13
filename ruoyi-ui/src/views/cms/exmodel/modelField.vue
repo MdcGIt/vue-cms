@@ -35,14 +35,12 @@
         type="primary"
         icon="el-icon-plus"
         size="mini"
-        v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
         @click="handleAdd">新建</el-button>
       <el-button 
         type="danger"
         icon="el-icon-delete"
         size="mini"
         :disabled="multiple"
-        v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
         @click="handleBatchDelete">删除</el-button>
     </el-row>
     <el-row>
@@ -67,13 +65,11 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
-              v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
               @click="handleEdit(scope.row)">修改</el-button>
             <el-button 
               size="mini"
               type="text"
               icon="el-icon-delete"
-              v-hasPermi="[ 'cms:exmodel:add', 'cms:exmodel:edit' ]"
               @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>

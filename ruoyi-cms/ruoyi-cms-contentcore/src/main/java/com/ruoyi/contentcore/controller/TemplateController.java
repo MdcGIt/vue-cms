@@ -21,6 +21,7 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.extend.annotation.XssIgnore;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.utils.Assert;
@@ -32,9 +33,10 @@ import com.ruoyi.contentcore.domain.dto.TemplateAddDTO;
 import com.ruoyi.contentcore.domain.dto.TemplateRenameDTO;
 import com.ruoyi.contentcore.domain.dto.TemplateUpdateDTO;
 import com.ruoyi.contentcore.domain.vo.TemplateListVO;
+import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -45,7 +47,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.TemplateView)
 @RestController
 @RequestMapping("/cms/template")
 @RequiredArgsConstructor

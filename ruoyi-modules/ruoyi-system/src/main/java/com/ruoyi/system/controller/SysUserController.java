@@ -41,6 +41,7 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.dto.AuthRoleDTO;
 import com.ruoyi.system.domain.dto.UserImportData;
 import com.ruoyi.system.domain.vo.UserInfoVO;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -78,7 +79,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 获取用户列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserList)
 	@GetMapping("/list")
 	public R<?> list(SysUser user) {
 		PageRequest pr = this.getPageRequest();
@@ -95,7 +96,7 @@ public class SysUserController extends BaseRestController {
 	}
 
 	@Log(title = "用户管理", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "system:user:export")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserExport)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysUser user) {
 		LambdaQueryWrapper<SysUser> q = new LambdaQueryWrapper<SysUser>()
@@ -111,7 +112,7 @@ public class SysUserController extends BaseRestController {
 	}
 
 	@Log(title = "用户管理", businessType = BusinessType.IMPORT)
-	@Priv(type = AdminUserType.TYPE, value = "system:user:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserAdd)
 	@PostMapping("/importData")
 	public R<String> importData(MultipartFile file, boolean updateSupport) throws Exception {
 		if (Objects.isNull(file) || file.isEmpty()) {
@@ -129,7 +130,7 @@ public class SysUserController extends BaseRestController {
 		return R.ok(logWriter.toString());
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "system:user:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserAdd)
 	@PostMapping("/importTemplate")
 	public void importTemplate(HttpServletResponse response) {
 		exportExcel(Collections.emptyList(), UserImportData.class, response);
@@ -138,7 +139,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 根据用户ID获取详细信息
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:add,system:user:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserList)
 	@GetMapping(value = { "/", "/{userId}" })
 	public R<?> getInfo(@PathVariable(value = "userId", required = false) Long userId) {
 		List<SysPost> posts = postService.list();
@@ -157,7 +158,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 新增用户
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserAdd)
 	@Log(title = "用户管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysUser user) {
@@ -169,7 +170,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 修改用户
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserEdit)
 	@Log(title = "用户管理", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysUser user) {
@@ -181,7 +182,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 删除用户
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserRemove)
 	@Log(title = "用户管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> userIds) {
@@ -195,7 +196,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 重置密码
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:resetPwd")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserResetPwd)
 	@Log(title = "用户管理", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/resetPwd")
 	public R<?> resetPwd(@RequestBody SysUser user) {
@@ -206,7 +207,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 根据用户编号获取授权角色
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:query")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserList)
 	@GetMapping("/authRole/{userId}")
 	public R<?> authRole(@PathVariable("userId") Long userId) {
 		SysUser user = userService.getById(userId);
@@ -221,7 +222,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 用户授权角色
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserEdit)
 	@Log(title = "用户管理", businessType = BusinessType.GRANT)
 	@PutMapping("/authRole")
 	public R<?> insertAuthRole(@RequestBody AuthRoleDTO dto) {
@@ -232,7 +233,7 @@ public class SysUserController extends BaseRestController {
 	/**
 	 * 获取部门树列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:user:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserList)
 	@GetMapping("/deptTree")
 	public R<?> deptTree(SysDept dept) {
 		List<SysDept> depts = this.deptService.list(new LambdaQueryWrapper<SysDept>()

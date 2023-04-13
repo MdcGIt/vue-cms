@@ -28,6 +28,7 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.extend.annotation.XssIgnore;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -48,6 +49,7 @@ import com.ruoyi.contentcore.domain.vo.ListContentVO;
 import com.ruoyi.contentcore.fixed.dict.ContentAttribute;
 import com.ruoyi.contentcore.listener.event.AfterContentEditorInitEvent;
 import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
+import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.IPublishService;
@@ -57,7 +59,7 @@ import com.ruoyi.contentcore.user.preference.ShowContentSubTitlePreference;
 import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import freemarker.template.TemplateException;
@@ -66,7 +68,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/content")

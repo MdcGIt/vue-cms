@@ -14,6 +14,7 @@ import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.system.groovy.BaseGroovyScript;
 import com.ruoyi.system.groovy.GroovyScriptFactory;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -33,7 +34,7 @@ import lombok.Setter;
 public class GroovyController {
 
 	@Log(title = "执行Groovy脚本", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = "sys:groovy:exec")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.GroovyExec)
 	@PostMapping("/exec")
 	public R<?> execGroovyScript(@RequestBody ScriptBody scriptBody) throws Exception {
 		StringWriter writer = new StringWriter();

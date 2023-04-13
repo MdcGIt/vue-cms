@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.advertisement.IAdvertisementType;
 import com.ruoyi.advertisement.domain.CmsAdvertisement;
+import com.ruoyi.advertisement.permission.CmsAdvertisementPriv;
 import com.ruoyi.advertisement.pojo.dto.AdvertisementDTO;
 import com.ruoyi.advertisement.pojo.vo.AdvertisementVO;
 import com.ruoyi.advertisement.service.IAdvertisementService;
@@ -27,10 +28,11 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import jakarta.validation.constraints.Min;
@@ -44,7 +46,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = CmsAdvertisementPriv.View)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/advertisement")

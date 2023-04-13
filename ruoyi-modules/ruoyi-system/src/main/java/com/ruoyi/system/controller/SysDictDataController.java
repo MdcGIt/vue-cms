@@ -28,6 +28,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysDictData;
 import com.ruoyi.system.fixed.FixedDictUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -51,7 +52,7 @@ public class SysDictDataController extends BaseRestController {
 
 	private final ISysDictTypeService dictTypeService;
 
-	@Priv(type = AdminUserType.TYPE, value = "system:dict:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictList)
 	@GetMapping("/list")
 	public R<?> list(SysDictData dictData) {
 		PageRequest pr = this.getPageRequest();
@@ -69,7 +70,7 @@ public class SysDictDataController extends BaseRestController {
 	}
 
 	@Log(title = "字典数据", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "system:dict:export")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictExport)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysDictData dictData) {
 		List<SysDictData> list = dictDataService.lambdaQuery()
@@ -83,7 +84,7 @@ public class SysDictDataController extends BaseRestController {
 	/**
 	 * 查询字典数据详细
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dict:query")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictList)
 	@GetMapping(value = "/{dictCode}")
 	public R<?> getInfo(@PathVariable Long dictCode) {
 		SysDictData data = dictDataService.getById(dictCode);
@@ -104,7 +105,7 @@ public class SysDictDataController extends BaseRestController {
 	/**
 	 * 新增字典类型
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dict:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictAdd)
 	@Log(title = "字典数据", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysDictData dict) {
@@ -116,7 +117,7 @@ public class SysDictDataController extends BaseRestController {
 	/**
 	 * 修改保存字典类型
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dict:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictEdit)
 	@Log(title = "字典数据", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysDictData dict) {
@@ -128,7 +129,7 @@ public class SysDictDataController extends BaseRestController {
 	/**
 	 * 删除字典类型
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dict:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictRemove)
 	@Log(title = "字典类型", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> dictCodes) {

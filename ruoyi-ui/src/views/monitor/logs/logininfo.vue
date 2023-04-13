@@ -53,7 +53,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['monitor:logininfor:remove']"
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +62,6 @@
           icon="el-icon-delete"
           size="mini"
           @click="handleClean"
-          v-hasPermi="['monitor:logininfor:remove']"
         >{{ $t('Common.Clean') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -73,7 +71,6 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['monitor:logininfor:export']"
         >{{ $t('Common.Export') }}</el-button>
       </el-col>
       <el-col :span="1.5">

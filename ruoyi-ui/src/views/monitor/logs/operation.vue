@@ -9,7 +9,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['monitor:operlog:remove']"
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -19,7 +18,6 @@
           icon="el-icon-delete"
           size="mini"
           @click="handleClean"
-          v-hasPermi="['monitor:operlog:remove']"
         >{{ $t('Common.Clean') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -29,7 +27,6 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['monitor:operlog:export']"
         >{{ $t('Common.Export') }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -120,7 +117,6 @@
             type="text"
             icon="el-icon-view"
             @click="handleView(scope.row,scope.index)"
-            v-hasPermi="['monitor:operlog:query']"
           >{{ $t('System.OpLog.Details') }}</el-button>
         </template>
       </el-table-column>

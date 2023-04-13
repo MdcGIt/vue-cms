@@ -19,6 +19,7 @@ import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysUserOnline;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysUserOnlineService;
@@ -40,7 +41,7 @@ public class SysUserOnlineController extends BaseRestController {
 
 	private final RedisCache redisCache;
 	
-	@Priv(type = AdminUserType.TYPE, value = "monitor:online:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorOnlineList)
 	@GetMapping("/list")
 	public R<?> list(String ipaddr, String userName) {
 		String keyPrefix = StpAdminUtil.getStpLogic().getConfig().getTokenName() + ":" + AdminUserType.TYPE + ":token:";
@@ -67,7 +68,7 @@ public class SysUserOnlineController extends BaseRestController {
 	/**
 	 * 强退用户
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "monitor:online:forceLogout")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorOnlineForceLogout)
 	@Log(title = "在线用户", businessType = BusinessType.FORCE)
 	@DeleteMapping("/{tokenId}")
 	public R<?> forceLogout(@PathVariable String tokenId) {

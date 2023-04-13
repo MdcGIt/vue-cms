@@ -27,6 +27,7 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.enums.MenuType;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -52,7 +53,7 @@ public class SysMenuController extends BaseRestController {
 	/**
 	 * 获取菜单列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:menu:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysMenuList)
 	@GetMapping("/list")
 	public R<?> list(SysMenu menu) {
 		LambdaQueryWrapper<SysMenu> q = new LambdaQueryWrapper<SysMenu>()
@@ -66,7 +67,7 @@ public class SysMenuController extends BaseRestController {
 	/**
 	 * 根据菜单编号获取详细信息
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:menu:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysMenuList)
 	@GetMapping(value = "/{menuId}")
 	public R<?> getInfo(@PathVariable Long menuId) {
 		SysMenu menu = menuService.getById(menuId);
@@ -112,7 +113,7 @@ public class SysMenuController extends BaseRestController {
 	/**
 	 * 新增菜单
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:menu:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysMenuAdd)
 	@Log(title = "菜单管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysMenu menu) {
@@ -124,7 +125,7 @@ public class SysMenuController extends BaseRestController {
 	/**
 	 * 修改菜单
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:menu:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysMenuEdit)
 	@Log(title = "菜单管理", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysMenu menu) {
@@ -136,7 +137,7 @@ public class SysMenuController extends BaseRestController {
 	/**
 	 * 删除菜单
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:menu:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysMenuRemove)
 	@Log(title = "菜单管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{menuId}")
 	public R<?> remove(@PathVariable("menuId") Long menuId) {

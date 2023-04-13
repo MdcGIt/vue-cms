@@ -23,6 +23,7 @@ import com.ruoyi.common.redis.IMonitoredCache;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysCache;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,8 @@ public class CacheController {
 	
 	private final List<IMonitoredCache> monitoredCaches;
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:cache:list")
-	@GetMapping()
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorCacheList)
+	@GetMapping
 	public R<?> getInfo() throws Exception {
 		Properties info = (Properties) redisTemplate.execute((RedisCallback<Object>) connection -> connection.serverCommands().info());
 		Properties commandStats = (Properties) redisTemplate
@@ -65,7 +66,7 @@ public class CacheController {
 		return R.ok(result);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:cache:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorCacheList)
 	@GetMapping("/getNames")
 	public R<?> cache() {
 		List<SysCache> list = this.monitoredCaches.stream().map(mc -> {
@@ -74,14 +75,14 @@ public class CacheController {
 		return R.ok(list);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:cache:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorCacheList)
 	@GetMapping("/getKeys/{cacheName}")
 	public R<?> getCacheKeys(@PathVariable String cacheName) {
 		Set<String> cacheKeys = redisTemplate.keys(cacheName + "*");
 		return R.ok(cacheKeys);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:cache:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorCacheList)
 	@GetMapping("/getValue/{cacheName}/{cacheKey}")
 	public R<?> getCacheValue(@PathVariable String cacheName, @PathVariable String cacheKey) {
 		String cacheValue = redisTemplate.opsForValue().get(cacheKey);
@@ -90,7 +91,7 @@ public class CacheController {
 		return R.ok(sysCache);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:cache:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorCacheList)
 	@DeleteMapping("/clearCacheName/{cacheName}")
 	public R<?> clearCacheName(@PathVariable String cacheName) {
 		Collection<String> cacheKeys = redisTemplate.keys(cacheName + "*");
@@ -98,14 +99,14 @@ public class CacheController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:cache:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorCacheList)
 	@DeleteMapping("/clearCacheKey/{cacheKey}")
 	public R<?> clearCacheKey(@PathVariable String cacheKey) {
 		redisTemplate.delete(cacheKey);
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:cache:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorCacheList)
 	@DeleteMapping("/clearCacheAll")
 	public R<?> clearCacheAll() {
 		Collection<String> cacheKeys = redisTemplate.keys("*");

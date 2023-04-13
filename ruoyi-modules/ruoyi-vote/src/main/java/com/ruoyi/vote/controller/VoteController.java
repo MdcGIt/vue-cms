@@ -30,7 +30,7 @@ import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.vote.core.IVoteItemType;
 import com.ruoyi.vote.core.IVoteUserType;
 import com.ruoyi.vote.domain.Vote;
-import com.ruoyi.vote.priv.VotePriv;
+import com.ruoyi.vote.permission.VotePriv;
 import com.ruoyi.vote.service.IVoteService;
 
 import jakarta.validation.constraints.Min;
@@ -48,7 +48,7 @@ public class VoteController extends BaseRestController {
 
 	private final List<IVoteItemType> itemTypes;
 
-	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.View)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(required = false) String title, @RequestParam(required = false) String status) {
 		PageRequest pr = this.getPageRequest();
@@ -58,7 +58,7 @@ public class VoteController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.View)
 	@GetMapping("/{voteId}")
 	public R<?> getVoteDetail(@PathVariable @Min(1) Long voteId) {
 		Vote vote = this.voteService.getById(voteId);
@@ -67,7 +67,7 @@ public class VoteController extends BaseRestController {
 	}
 
 	@SaAdminCheckLogin
-	@Priv(type = AdminUserType.TYPE, value = VotePriv.VIEW)
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.View)
 	@GetMapping("/userTypes")
 	public R<?> getVoteUserTypes() {
 		List<Map<String, String>> list = this.userTypes.stream()
@@ -84,7 +84,7 @@ public class VoteController extends BaseRestController {
 	}
 
 	@Log(title = "新增问卷调查", businessType = BusinessType.INSERT)
-	@Priv(type = AdminUserType.TYPE, value = VotePriv.ADD)
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.Add)
 	@PostMapping
 	public R<?> add(@RequestBody Vote vote) {
 		vote.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -93,7 +93,7 @@ public class VoteController extends BaseRestController {
 	}
 
 	@Log(title = "编辑问卷调查", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { VotePriv.ADD, VotePriv.EDIT })
+	@Priv(type = AdminUserType.TYPE, value = { VotePriv.Add, VotePriv.Edit })
 	@PutMapping
 	public R<?> update(@RequestBody Vote vote) {
 		vote.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -102,7 +102,7 @@ public class VoteController extends BaseRestController {
 	}
 
 	@Log(title = "删除问卷调查", businessType = BusinessType.DELETE)
-	@Priv(type = AdminUserType.TYPE, value = VotePriv.DELETE)
+	@Priv(type = AdminUserType.TYPE, value = VotePriv.Delete)
 	@DeleteMapping
 	public R<String> delete(@RequestBody @NotEmpty List<Long> dictWordIds) {
 		this.voteService.deleteVotes(dictWordIds);

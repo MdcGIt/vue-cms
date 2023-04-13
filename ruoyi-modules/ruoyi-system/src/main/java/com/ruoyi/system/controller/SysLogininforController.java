@@ -21,6 +21,7 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.fixed.dict.LoginLogType;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.service.ISysLogininforService;
 
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
  * 
  * @author ruoyi
  */
+@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.MonitorLogsView)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/monitor/logininfor")
@@ -39,7 +41,6 @@ public class SysLogininforController extends BaseRestController {
 	
 	private final ISysLogininforService logininforService;
 	
-	@Priv(type = AdminUserType.TYPE, value = "monitor:logininfor:list")
 	@GetMapping("/list")
 	public R<?> list(SysLogininfor logininfor) {
 		PageRequest pr = this.getPageRequest();
@@ -56,7 +57,6 @@ public class SysLogininforController extends BaseRestController {
 	}
 
 	@Log(title = "登录日志", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "monitor:logininfor:export")
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysLogininfor logininfor) {
 		LambdaQueryWrapper<SysLogininfor> q = new LambdaQueryWrapper<SysLogininfor>()
@@ -71,7 +71,6 @@ public class SysLogininforController extends BaseRestController {
 		this.exportExcel(list, SysLogininfor.class, response);
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:logininfor:remove")
 	@Log(title = "登录日志", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> infoIds) {
@@ -79,7 +78,6 @@ public class SysLogininforController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = "monitor:logininfor:remove")
 	@Log(title = "登录日志", businessType = BusinessType.CLEAN)
 	@DeleteMapping("/clean")
 	public R<?> clean() {

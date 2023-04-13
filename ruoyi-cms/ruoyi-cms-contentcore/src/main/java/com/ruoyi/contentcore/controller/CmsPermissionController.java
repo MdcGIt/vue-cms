@@ -35,6 +35,7 @@ import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.system.domain.SysPermission;
+import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.service.ISysPermissionService;
 
 import lombok.Getter;
@@ -47,6 +48,7 @@ import lombok.Setter;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
+@SaAdminCheckLogin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/perms")

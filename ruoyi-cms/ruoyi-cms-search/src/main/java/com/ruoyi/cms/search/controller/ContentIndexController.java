@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.cms.search.es.doc.ESContent;
+import com.ruoyi.cms.search.permission.CmsSearchPriv;
 import com.ruoyi.cms.search.service.ContentIndexService;
 import com.ruoyi.cms.search.vo.ESContentVO;
 import com.ruoyi.common.async.AsyncTask;
@@ -25,6 +26,7 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.ServletUtils;
@@ -38,7 +40,7 @@ import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
@@ -48,7 +50,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = CmsSearchPriv.ContentIndexView)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/search")

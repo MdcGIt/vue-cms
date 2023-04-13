@@ -20,6 +20,7 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
@@ -27,15 +28,16 @@ import com.ruoyi.member.domain.MemberLevelConfig;
 import com.ruoyi.member.domain.dto.LevelConfigDTO;
 import com.ruoyi.member.domain.vo.LevelTypeVO;
 import com.ruoyi.member.level.ILevelType;
+import com.ruoyi.member.permission.MemberPriv;
 import com.ruoyi.member.service.IMemberLevelConfigService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE, value = MemberPriv.MemberLevel)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member/levelConfig")

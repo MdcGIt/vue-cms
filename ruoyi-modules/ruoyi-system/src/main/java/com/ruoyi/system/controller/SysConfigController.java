@@ -27,6 +27,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.fixed.FixedConfigUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -50,7 +51,7 @@ public class SysConfigController extends BaseRestController {
 	/**
 	 * 获取参数配置列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:config:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigList)
 	@GetMapping("/list")
 	public R<?> list(SysConfig config) {
 		PageRequest pr = this.getPageRequest();
@@ -67,7 +68,7 @@ public class SysConfigController extends BaseRestController {
 	}
 
 	@Log(title = "参数管理", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "system:config:export")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigExport)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysConfig config) {
 		LambdaQueryWrapper<SysConfig> q = new LambdaQueryWrapper<SysConfig>()
@@ -82,7 +83,7 @@ public class SysConfigController extends BaseRestController {
 	/**
 	 * 根据参数编号获取详细信息
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:config:query")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigList)
 	@GetMapping(value = "/{configId}")
 	public R<?> getInfo(@PathVariable Long configId) {
 		SysConfig config = this.configService.getById(configId);
@@ -102,7 +103,7 @@ public class SysConfigController extends BaseRestController {
 	/**
 	 * 新增参数配置
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:config:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigAdd)
 	@Log(title = "参数管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysConfig config) {
@@ -114,7 +115,7 @@ public class SysConfigController extends BaseRestController {
 	/**
 	 * 修改参数配置
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:config:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigEdit)
 	@Log(title = "参数管理", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysConfig config) {
@@ -126,7 +127,7 @@ public class SysConfigController extends BaseRestController {
 	/**
 	 * 删除参数配置
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:config:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigRemove)
 	@Log(title = "参数管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> configIds) {
@@ -138,7 +139,7 @@ public class SysConfigController extends BaseRestController {
 	/**
 	 * 刷新参数缓存
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:config:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigRemove)
 	@Log(title = "参数管理", businessType = BusinessType.CLEAN)
 	@DeleteMapping("/refreshCache")
 	public R<?> refreshCache() {

@@ -90,8 +90,7 @@
                       slot="reference"
                       icon="el-icon-plus"
                       size="mini"
-                      plain
-                      v-hasPermi="['contentcore:content:add']">{{ $t("Common.Add") }}
+                      plain>{{ $t("Common.Add") }}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
         </el-popover>
@@ -102,8 +101,7 @@
                     icon="el-icon-delete"
                     size="mini"
                     :disabled="multiple"
-                    @click="handleDelete"
-                    v-hasPermi="['contentcore:content:delete']">{{ $t("Common.Delete") }}
+                    @click="handleDelete">{{ $t("Common.Delete") }}
         </el-button>
       </el-col>
     </el-row>
@@ -162,23 +160,19 @@
           <el-button size="mini"
                       type="text"
                       icon="el-icon-s-promotion"
-                      @click="handlePublish(scope.row)"
-                      v-hasPermi="['contentcore:content:edit']">发布</el-button>
+                      @click="handlePublish(scope.row)">发布</el-button>
           <el-button size="mini"
                       type="text"
                       icon="el-icon-view"
-                      @click="handlePreview(scope.row)"
-                      v-hasPermi="['contentcore:content:edit']">预览</el-button>
+                      @click="handlePreview(scope.row)">预览</el-button>
           <el-button size="mini"
                       type="text"
                       icon="el-icon-sort"
-                      @click="handleSort(scope.row)"
-                      v-hasPermi="['contentcore:content:edit']">排序</el-button>
+                      @click="handleSort(scope.row)">排序</el-button>
           <el-button size="mini"
                       type="text"
                       icon="el-icon-download"
-                      @click="handleOffline(scope.row)"
-                      v-hasPermi="['contentcore:content:edit']">下线</el-button>
+                      @click="handleOffline(scope.row)">下线</el-button>
           <el-dropdown>
             <el-link :underline="false" class="row-more-btn" icon="el-icon-more"></el-link>
             <el-dropdown-menu slot="dropdown">
@@ -396,6 +390,12 @@ export default {
     },
     openEditor(catalogId, contentId, contentType) {
       this.$router.push({ path: "/cms/content/editor", query: { type: contentType, catalogId: catalogId, id: contentId } });
+      
+      // let routeData = this.$router.resolve({
+      //   path: "/cms/content/editor",
+      //   query: { type: contentType, catalogId: catalogId, id: contentId },
+      // });
+      // window.open(routeData.href, '_blank');
     },
     handleDelete (row) {
       const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(row => row.contentId);

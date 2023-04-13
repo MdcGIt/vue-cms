@@ -27,6 +27,7 @@ import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.domain.dto.SysNoticeDTO;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysNoticeService;
@@ -46,7 +47,7 @@ public class SysNoticeController extends BaseRestController {
 	/**
 	 * 获取通知公告列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:notice:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysNoticeList)
 	@GetMapping("/list")
 	public R<?> list(SysNotice notice) {
 		PageRequest pr = this.getPageRequest();
@@ -62,7 +63,7 @@ public class SysNoticeController extends BaseRestController {
 	/**
 	 * 根据通知公告编号获取详细信息
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:notice:query")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysNoticeList)
 	@GetMapping(value = "/{noticeId}")
 	public R<?> getInfo(@PathVariable Long noticeId) {
 		Assert.isTrue(IdUtils.validate(noticeId), () -> CommonErrorCode.INVALID_REQUEST_ARG.exception("noticeId: " + noticeId));
@@ -73,7 +74,7 @@ public class SysNoticeController extends BaseRestController {
 	 * 新增通知公告
 	 */
 	@XssIgnore
-	@Priv(type = AdminUserType.TYPE, value = "system:notice:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysNoticeAdd)
 	@Log(title = "通知公告", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysNoticeDTO dto) {
@@ -86,7 +87,7 @@ public class SysNoticeController extends BaseRestController {
 	 * 修改通知公告
 	 */
 	@XssIgnore
-	@Priv(type = AdminUserType.TYPE, value = "system:notice:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysNoticeEdit)
 	@Log(title = "通知公告", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysNoticeDTO dto) {
@@ -98,7 +99,7 @@ public class SysNoticeController extends BaseRestController {
 	/**
 	 * 删除通知公告
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:notice:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysNoticeRemove)
 	@Log(title = "通知公告", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> noticeIds) {

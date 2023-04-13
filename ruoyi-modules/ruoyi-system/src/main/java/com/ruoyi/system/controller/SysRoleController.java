@@ -28,6 +28,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysRoleService;
@@ -50,7 +51,7 @@ public class SysRoleController extends BaseRestController {
 
 	private final SysUserMapper userMapper;
 
-	@Priv(type = AdminUserType.TYPE, value = "system:role:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleList)
 	@GetMapping("/list")
 	public R<?> list(SysRole role) {
 		PageRequest pr = this.getPageRequest();
@@ -64,7 +65,7 @@ public class SysRoleController extends BaseRestController {
 	}
 
 	@Log(title = "角色管理", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "system:role:export")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleExport)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysRole role) {
 		LambdaQueryWrapper<SysRole> q = new LambdaQueryWrapper<SysRole>()
@@ -79,7 +80,7 @@ public class SysRoleController extends BaseRestController {
 	/**
 	 * 根据角色编号获取详细信息
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleList)
 	@GetMapping(value = "/{roleId}")
 	public R<?> getInfo(@PathVariable Long roleId) {
 		return R.ok(roleService.getById(roleId));
@@ -88,7 +89,7 @@ public class SysRoleController extends BaseRestController {
 	/**
 	 * 新增角色
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleAdd)
 	@Log(title = "角色管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysRole role) {
@@ -100,7 +101,7 @@ public class SysRoleController extends BaseRestController {
 	/**
 	 * 修改保存角色
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleEdit)
 	@Log(title = "角色管理", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysRole role) {
@@ -112,7 +113,7 @@ public class SysRoleController extends BaseRestController {
 	/**
 	 * 状态修改
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleEdit)
 	@Log(title = "角色管理", businessType = BusinessType.UPDATE)
 	@PutMapping("/changeStatus")
 	public R<?> changeStatus(@RequestBody SysRole role) {
@@ -124,7 +125,7 @@ public class SysRoleController extends BaseRestController {
 	/**
 	 * 删除角色
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleRemove)
 	@Log(title = "角色管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> roleIds) {
@@ -138,31 +139,33 @@ public class SysRoleController extends BaseRestController {
 	/**
 	 * 查询已分配指定角色用户列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleList)
 	@GetMapping("/authUser/allocatedList")
-	public R<?> allocatedList(@RequestParam("roleId") @Min(1) Long roleId, @RequestParam(required = false) String userName,
-			@RequestParam(required = false) String phonenumber) {
+	public R<?> allocatedList(@RequestParam("roleId") @Min(1) Long roleId,
+			@RequestParam(required = false) String userName, @RequestParam(required = false) String phonenumber) {
 		PageRequest pr = this.getPageRequest();
-		Page<SysUser> page = this.userMapper.selectAllocatedList(new Page<>(pr.getPageNumber(), pr.getPageSize()), roleId);
+		Page<SysUser> page = this.userMapper.selectAllocatedList(new Page<>(pr.getPageNumber(), pr.getPageSize()),
+				roleId);
 		return bindDataTable(page);
 	}
 
 	/**
 	 * 查询未分配角色用户列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleList)
 	@GetMapping("/authUser/unallocatedList")
-	public R<?> unallocatedList(@RequestParam("roleId") @Min(1) Long roleId, @RequestParam(required = false) String userName,
-			@RequestParam(required = false) String phonenumber) {
+	public R<?> unallocatedList(@RequestParam("roleId") @Min(1) Long roleId,
+			@RequestParam(required = false) String userName, @RequestParam(required = false) String phonenumber) {
 		PageRequest pr = this.getPageRequest();
-		Page<SysUser> page = this.userMapper.selectUnallocatedList(new Page<>(pr.getPageNumber(), pr.getPageSize()), roleId);
+		Page<SysUser> page = this.userMapper.selectUnallocatedList(new Page<>(pr.getPageNumber(), pr.getPageSize()),
+				roleId);
 		return bindDataTable(page);
 	}
 
 	/**
 	 * 批量取消授权用户
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleEdit)
 	@Log(title = "角色管理", businessType = BusinessType.GRANT)
 	@PutMapping("/authUser/cancel")
 	public R<?> cancelAuthUserAll(Long roleId, @RequestBody List<Long> userIds) {
@@ -173,7 +176,7 @@ public class SysRoleController extends BaseRestController {
 	/**
 	 * 批量选择用户授权
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:role:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleEdit)
 	@Log(title = "角色管理", businessType = BusinessType.GRANT)
 	@PutMapping("/authUser/grant")
 	public R<?> grantAuthUserAll(Long roleId, @RequestBody List<Long> userIds) {

@@ -27,6 +27,7 @@ import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.vo.SysPostSelectVO;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -48,7 +49,7 @@ public class SysPostController extends BaseRestController {
 	/**
 	 * 获取岗位列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:post:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostList)
 	@GetMapping("/list")
 	public R<?> list(SysPost post) {
 		PageRequest pr = this.getPageRequest();
@@ -62,7 +63,7 @@ public class SysPostController extends BaseRestController {
 	}
 
 	@Log(title = "岗位管理", businessType = BusinessType.EXPORT)
-	@Priv(type = AdminUserType.TYPE, value = "system:post:export")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostExport)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, SysPost post) {
 		LambdaQueryWrapper<SysPost> q = new LambdaQueryWrapper<SysPost>()
@@ -77,7 +78,7 @@ public class SysPostController extends BaseRestController {
 	/**
 	 * 根据岗位编号获取详细信息
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:post:query")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostList)
 	@GetMapping(value = "/{postId}")
 	public R<?> getInfo(@PathVariable Long postId) {
 		return R.ok(postService.getById(postId));
@@ -86,7 +87,7 @@ public class SysPostController extends BaseRestController {
 	/**
 	 * 新增岗位
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:post:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostAdd)
 	@Log(title = "岗位管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysPost post) {
@@ -98,7 +99,7 @@ public class SysPostController extends BaseRestController {
 	/**
 	 * 修改岗位
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:post:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostEdit)
 	@Log(title = "岗位管理", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysPost post) {
@@ -110,7 +111,7 @@ public class SysPostController extends BaseRestController {
 	/**
 	 * 删除岗位
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:post:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostRemove)
 	@Log(title = "岗位管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody List<Long> postIds) {

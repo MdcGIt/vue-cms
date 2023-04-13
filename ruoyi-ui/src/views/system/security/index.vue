@@ -65,14 +65,12 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:config:edit']"
           >{{ $t('Common.Edit') }}</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:config:remove']"
           >{{ $t('Common.Delete') }}</el-button>
         </template>
       </el-table-column>

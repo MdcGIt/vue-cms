@@ -22,6 +22,7 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysDept;
+import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysDeptService;
@@ -43,7 +44,7 @@ public class SysDeptController extends BaseRestController {
 	/**
 	 * 获取部门列表
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dept:list")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDeptList)
 	@GetMapping("/list")
 	public R<?> list(SysDept dept) {
 		LambdaQueryWrapper<SysDept> q = new LambdaQueryWrapper<SysDept>()
@@ -57,7 +58,7 @@ public class SysDeptController extends BaseRestController {
 	/**
 	 * 根据部门编号获取详细信息
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dept:query")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDeptList)
 	@GetMapping(value = "/{deptId}")
 	public R<?> getInfo(@PathVariable Long deptId) {
 		SysDept dept = deptService.getById(deptId);
@@ -69,7 +70,7 @@ public class SysDeptController extends BaseRestController {
 	/**
 	 * 新增部门
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dept:add")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDeptAdd)
 	@Log(title = "部门管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> add(@Validated @RequestBody SysDept dept) {
@@ -81,7 +82,7 @@ public class SysDeptController extends BaseRestController {
 	/**
 	 * 修改部门
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dept:edit")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDeptEdit)
 	@Log(title = "部门管理", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> edit(@Validated @RequestBody SysDept dept) {
@@ -93,7 +94,7 @@ public class SysDeptController extends BaseRestController {
 	/**
 	 * 删除部门
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "system:dept:remove")
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDeptRemove)
 	@Log(title = "部门管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{deptId}")
 	public R<?> remove(@PathVariable Long deptId) {
