@@ -51,7 +51,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 		db.setOwnerType(dto.getOwnerType());
 		db.setOwner(dto.getOwner());
 
-		String permissionStr = menuPermissionType.convert(dto.getPermissions().stream().toList());
+		String permissionStr = menuPermissionType.serialize(dto.getPermissions().stream().toList());
 		db.getPermissions().put(dto.getPermType(), permissionStr);
 		db.updateBy(dto.getOperator().getUsername());
 		if (StringUtils.isEmpty(db.getCreateBy())) {
@@ -70,7 +70,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 			SysPermission userPermission = this.getPermissions(PermissionOwnerType.User.name(), userId.toString());
 			String json = userPermission.getPermissions().get(menuPermissionType.getId());
 			if (StringUtils.isNotEmpty(json)) {
-				permissions.addAll(menuPermissionType.parse(json));
+				permissions.addAll(menuPermissionType.deserialize(json));
 			}
 			// 角色权限
 			List<SysRole> roles = this.roleMapper.selectRolesByUserId(userId);
@@ -80,7 +80,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 				if (permission != null) {
 					String jsonRole = permission.getPermissions().get(menuPermissionType.getId());
 					if (StringUtils.isNotEmpty(jsonRole)) {
-						permissions.addAll(menuPermissionType.parse(jsonRole));
+						permissions.addAll(menuPermissionType.deserialize(jsonRole));
 					}
 				}
 			});

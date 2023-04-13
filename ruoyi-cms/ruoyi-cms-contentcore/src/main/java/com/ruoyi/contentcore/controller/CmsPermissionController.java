@@ -70,7 +70,7 @@ public class CmsPermissionController extends BaseRestController {
 		Map<String, BitSet> perms;
 		if (Objects.nonNull(permission)) {
 			String json = permission.getPermissions().get(SitePermissionType.ID);
-			perms = this.sitePermissionType.parse(json);
+			perms = this.sitePermissionType.deserialize(json);
 		} else {
 			perms = Map.of();
 		}
@@ -81,7 +81,8 @@ public class CmsPermissionController extends BaseRestController {
 			vo.setName(site.getName());
 			SitePrivItem[] values = SitePrivItem.values();
 			for (SitePrivItem privItem : values) {
-				vo.getPerms().put(privItem.name(), CmsPrivUtils.hasSitePermission(site.getSiteId(), privItem, perms));
+				vo.getPerms().put(privItem.name(),
+						CmsPrivUtils.hasBitSetPermission(site.getSiteId().toString(), privItem, perms));
 			}
 			return vo;
 		}).toList();
@@ -121,7 +122,7 @@ public class CmsPermissionController extends BaseRestController {
 			}
 		});
 		SysPermission permissions = this.permissionService.getPermissions(dto.getOwnerType(), dto.getOwner());
-		permissions.getPermissions().put(SitePermissionType.ID, this.sitePermissionType.convert(map));
+		permissions.getPermissions().put(SitePermissionType.ID, this.sitePermissionType.serialize(map));
 		this.permissionService.updateById(permissions);
 		return R.ok();
 	}
@@ -140,7 +141,7 @@ public class CmsPermissionController extends BaseRestController {
 		Map<String, BitSet> perms;
 		if (Objects.nonNull(permission)) {
 			String json = permission.getPermissions().get(CatalogPermissionType.ID);
-			perms = this.catalogPermissionType.parse(json);
+			perms = this.catalogPermissionType.deserialize(json);
 		} else {
 			perms = Map.of();
 		}
@@ -153,7 +154,7 @@ public class CmsPermissionController extends BaseRestController {
 			CatalogPrivItem[] values = CatalogPrivItem.values();
 			for (CatalogPrivItem privItem : values) {
 				vo.getPerms().put(privItem.name(),
-						CmsPrivUtils.hasCatalogPermission(catalog.getCatalogId(), privItem, perms));
+						CmsPrivUtils.hasBitSetPermission(catalog.getCatalogId().toString(), privItem, perms));
 			}
 			return vo;
 		}).toList();
@@ -195,16 +196,16 @@ public class CmsPermissionController extends BaseRestController {
 		SysPermission permissions = this.permissionService.getPermissions(dto.getOwnerType(), dto.getOwner());
 		String json = permissions.getPermissions().get(CatalogPermissionType.ID);
 		if (StringUtils.isNotEmpty(json)) {
-			map = this.catalogPermissionType.parse(json);
+			map = this.catalogPermissionType.deserialize(json);
 		} else {
 			map = new HashMap<>();
 		}
 		this.invokeCatalogPerms(dto.getPerms(), map);
-		permissions.getPermissions().put(CatalogPermissionType.ID, this.catalogPermissionType.convert(map));
+		permissions.getPermissions().put(CatalogPermissionType.ID, this.catalogPermissionType.serialize(map));
 		this.permissionService.updateById(permissions);
 		return R.ok();
 	}
-	
+
 	private void invokeCatalogPerms(List<CatalogPrivVO> list, Map<String, BitSet> map) {
 		for (CatalogPrivVO vo : list) {
 			Long catalogId = vo.getCatalogId();

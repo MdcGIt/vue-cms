@@ -42,11 +42,13 @@ import com.ruoyi.contentcore.listener.event.AfterContentOfflineEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentSaveEvent;
 import com.ruoyi.contentcore.listener.event.BeforeContentSaveEvent;
 import com.ruoyi.contentcore.mapper.CmsContentMapper;
+import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.properties.RepeatTitleCheckProperty;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
@@ -79,6 +81,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 		for (Long contentId : contentIds) {
 			CmsContent xContent = this.getById(contentId);
 			Assert.notNull(xContent, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
+			CmsPrivUtils.checkCatalogPermission(xContent.getCatalogId(), CatalogPrivItem.DeleteContent, operator);
 
 			IContentType contentType = ContentCoreUtils.getContentType(xContent.getContentType());
 			IContent<?> content = contentType.loadContent(xContent);

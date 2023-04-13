@@ -76,7 +76,7 @@ public class PageWidgetController extends BaseRestController {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		LambdaQueryWrapper<CmsPageWidget> q = new LambdaQueryWrapper<CmsPageWidget>()
 				.eq(CmsPageWidget::getSiteId, site.getSiteId())
-				.eq(catalogId != null && catalogId > 0, CmsPageWidget::getCatalogId, catalogId)
+//				.eq(catalogId != null && catalogId > 0, CmsPageWidget::getCatalogId, catalogId)
 				.like(StringUtils.isNotEmpty(name), CmsPageWidget::getName, name)
 				.eq(StringUtils.isNotEmpty(type), CmsPageWidget::getType, type)
 				.eq(state != null && state > -1, CmsPageWidget::getState, state)
@@ -100,9 +100,7 @@ public class PageWidgetController extends BaseRestController {
 	public R<PageWidgetVO> getInfo(@PathVariable("pageWidgetId") Long pageWidgetId) {
 		CmsPageWidget pageWidget = this.pageWidgetService.getById(pageWidgetId);
 		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pageWidgetId", pageWidgetId));
-		if (pageWidget == null) {
-			return R.fail("数据未找到：" + pageWidgetId);
-		}
+
 		IPageWidgetType pwt = this.pageWidgetService.getPageWidgetType(pageWidget.getType());
 		PageWidgetVO vo = pwt.getPageWidgetVO(pageWidget);
 

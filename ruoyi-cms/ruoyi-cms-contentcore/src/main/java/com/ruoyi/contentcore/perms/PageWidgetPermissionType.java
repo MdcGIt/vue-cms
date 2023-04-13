@@ -13,15 +13,15 @@ import com.ruoyi.system.permission.IPermissionType;
 import cn.dev33.satoken.annotation.SaMode;
 
 /**
- * 站点权限类型
+ * 页面部件权限类型
  * 
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@Component(IPermissionType.BEAN_PREFIX + SitePermissionType.ID)
-public class SitePermissionType implements IPermissionType<Map<String, BitSet>> {
+@Component(IPermissionType.BEAN_PREFIX + PageWidgetPermissionType.ID)
+public class PageWidgetPermissionType implements IPermissionType<Map<String, BitSet>> {
 
-	public static final String ID = "Site";
+	public static final String ID = "PageWidget";
 
 	@Override
 	public String getId() {
@@ -30,7 +30,7 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 
 	@Override
 	public String getName() {
-		return "站点权限";
+		return "页面部件权限";
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 	}
 
 	/**
-	 * {<siteId: [long]>,...}
+	 * {<pageWidgetId: [long]>,...}
 	 */
 	@Override
 	public Map<String, BitSet> deserialize(String json) {
@@ -53,12 +53,12 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 	
 	@Override
 	public boolean hasPermission(List<String> permissionKeys, String json, SaMode mode) {
-		Map<String,BitSet> parse = deserialize(json);
+		Map<String,BitSet> bitSetMap = deserialize(json);
 		if (mode == SaMode.AND) {
 			for (String key : permissionKeys) {
 				String[] split = StringUtils.split(key, Spliter);
-				BitSet bitSet = parse.get(split[2]);
-				if (bitSet == null || !bitSet.get(SitePrivItem.valueOf(split[1]).bitIndex())) {
+				BitSet bitSet = bitSetMap.get(split[2]);
+				if (bitSet == null || !bitSet.get(PageWidgetPrivItem.valueOf(split[1]).bitIndex())) {
 					return false;
 				}
 			}
@@ -66,8 +66,8 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 		} else {
 			for (String key : permissionKeys) {
 				String[] split = StringUtils.split(key, Spliter);
-				BitSet bitSet = parse.get(split[2]);
-				if (bitSet != null && bitSet.get(SitePrivItem.valueOf(split[1]).bitIndex())) {
+				BitSet bitSet = bitSetMap.get(split[2]);
+				if (bitSet != null && bitSet.get(PageWidgetPrivItem.valueOf(split[1]).bitIndex())) {
 					return true;
 				}
 			}
@@ -76,9 +76,9 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 	}
 
 	/**
-	 * 站点权限项
+	 * 页面部件权限项
 	 */
-	public enum SitePrivItem implements BitSetPrivItem {
+	public enum PageWidgetPrivItem implements BitSetPrivItem {
 
 		View(0, "查看"),
 
@@ -95,7 +95,7 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 
 		private String label;
 
-		SitePrivItem(int bitIndex, String label) {
+		PageWidgetPrivItem(int bitIndex, String label) {
 			this.bitIndex = bitIndex;
 			this.label = label;
 		}
@@ -109,8 +109,8 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 			return this.label;
 		}
 
-		public String getPermissionKey(Long siteId) {
-			return ID + Spliter + this.name() + Spliter + siteId;
+		public String getPermissionKey(Long catalogId) {
+			return ID + ":" + this.name() + ":" + catalogId;
 		}
 	}
 }

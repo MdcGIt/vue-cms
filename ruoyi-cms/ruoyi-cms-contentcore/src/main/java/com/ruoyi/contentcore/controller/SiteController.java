@@ -76,7 +76,7 @@ public class SiteController extends BaseRestController {
 	private final IPublishPipeService publishPipeService;
 
 	private final IPublishService publishService;
-	
+
 	private final AsyncTaskManager asyncTaskManager;
 
 	/**
@@ -130,8 +130,11 @@ public class SiteController extends BaseRestController {
 
 	@GetMapping("/options")
 	public R<?> getSiteOptions() {
+		LoginUser loginUser = StpAdminUtil.getLoginUser();
 		List<Map<String, Object>> list = this.siteService.lambdaQuery().select(CmsSite::getSiteId, CmsSite::getName)
-				.list().stream().map(site -> {
+				.list().stream()
+				.filter(site -> CmsPrivUtils.hasSitePermission(site.getSiteId(), SitePrivItem.View, loginUser))
+				.map(site -> {
 					Map<String, Object> map = new HashMap<>();
 					map.put("id", site.getSiteId());
 					map.put("name", site.getName());
@@ -151,7 +154,7 @@ public class SiteController extends BaseRestController {
 		CmsSite site = siteService.getById(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.View, StpAdminUtil.getLoginUser());
-		
+
 		if (StringUtils.isNotEmpty(site.getLogo())) {
 			site.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(site.getLogo()));
 		}
@@ -207,7 +210,7 @@ public class SiteController extends BaseRestController {
 		CmsSite site = siteService.getById(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.Delete, StpAdminUtil.getLoginUser());
-		
+
 		AsyncTask task = new AsyncTask() {
 
 			@Override

@@ -188,7 +188,7 @@
               <el-dropdown-item v-show="scope.row.topFlag>0" icon="el-icon-bottom" @click.native="handleCancelTop(scope.row)">取消置顶</el-dropdown-item>
               <el-dropdown-item icon="el-icon-document-copy" @click.native="handleCopy(scope.row)">复制</el-dropdown-item>
               <el-dropdown-item icon="el-icon-right" @click.native="handleMove(scope.row)">转移</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-document" @click.native="handleArchive(scope.row)">归档</el-dropdown-item>
+              <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleArchive(scope.row)">归档</el-dropdown-item> -->
               <el-dropdown-item icon="el-icon-search" @click.native="handleCreateIndex(scope.row)">生成索引</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

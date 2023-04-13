@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.domain.LoginUser;
+import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.JacksonUtils;
+import com.ruoyi.contentcore.perms.BitSetPrivItem;
 import com.ruoyi.contentcore.perms.CatalogPermissionType;
 import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
+import com.ruoyi.contentcore.perms.PageWidgetPermissionType;
+import com.ruoyi.contentcore.perms.PageWidgetPermissionType.PageWidgetPrivItem;
 import com.ruoyi.contentcore.perms.SitePermissionType;
 import com.ruoyi.contentcore.perms.SitePermissionType.SitePrivItem;
 import com.ruoyi.system.domain.SysPermission;
@@ -25,60 +28,116 @@ import cn.dev33.satoken.exception.NotPermissionException;
  * @email liweiyimwz@126.com
  */
 public class CmsPrivUtils {
-	
+
 	/**
-	 * 合并多个位权限配置
+	 * BitSet权限序列化
 	 * 
-	 * @param permissions
-	 */
-	public static void mergePermission(String permissionType, List<SysPermission> permissions) {
-		Map<String, BitSet> map = new HashMap<>();
-		permissions.forEach(permission -> {
-			String json = permission.getPermissions().get(permissionType);
-			Map<String,long[]> perms = JacksonUtils.fromMap(json, long[].class);
-			if(perms != null) {
-				perms.entrySet().forEach(e -> {
-					BitSet bitSet = map.get(e.getKey());
-					if (bitSet != null) {
-						bitSet.or(BitSet.valueOf(e.getValue()));
-					} else {
-						map.put(e.getKey(), BitSet.valueOf(e.getValue()));
-					}
-				});
-			}
-		});
-	}
-	
-	/**
-	 * 站点权限项列表转成持久化存储序列化字符串
-	 * 
-	 * @param permissionKeys
+	 * @param permissionMap
 	 * @return
 	 */
-	public static String convertSitePermissionKeys(Map<String, BitSet> sitePermissions) {
+	public static String serializeBitSetPermission(Map<String, BitSet> permissionMap) {
 		Map<String, long[]> permsMap = new HashMap<>();
-		sitePermissions.entrySet().forEach(e -> {
+		permissionMap.entrySet().forEach(e -> {
 			permsMap.put(e.getKey(), e.getValue().toLongArray());
 		});
 		return JacksonUtils.to(permsMap);
 	}
-	
+
 	/**
-	 * 解析权限配置字符串传，转成站点权限项列表
+	 * BitSet权限反序列化
 	 * 
 	 * @param json
 	 * @return
 	 */
-	public static Map<String, BitSet> parseSitePermissionJson(String json) {
-		Map<String, BitSet> sitePermissions = new HashMap<>();
-		Map<String, long[]> catalogPrivs = JacksonUtils.fromMap(json, long[].class);
-		if (catalogPrivs != null) {
-			catalogPrivs.entrySet().forEach(e -> {
+	public static Map<String, BitSet> deserializeBitSetPermission(String json) {
+		Map<String, BitSet> permissionMap = new HashMap<>();
+		Map<String, long[]> privs = JacksonUtils.fromMap(json, long[].class);
+		if (privs != null) {
+			privs.entrySet().forEach(e -> {
 				BitSet bitSet = BitSet.valueOf(e.getValue());
-				sitePermissions.put(e.getKey(), bitSet);
+				permissionMap.put(e.getKey(), bitSet);
 			});
 		}
-		return sitePermissions;
+		return permissionMap;
+	}
+
+	/**
+	 * 合并多个权限配置
+	 * 
+	 * @param permissionJsonList
+	 */
+	public static String mergeBitSetPermissions(List<String> permissionJsonList) {
+		Map<String, BitSet> map = new HashMap<>();
+		permissionJsonList.forEach(json -> {
+			Map<String, BitSet> bitSet = deserializeBitSetPermission(json);
+			bitSet.entrySet().forEach(e -> {
+				BitSet bs = map.get(e.getKey());
+				if (bs == null) {
+					map.put(e.getKey(), e.getValue());
+				} else {
+					bs.or(e.getValue());
+				}
+			});
+		});
+		return serializeBitSetPermission(map);
+	}
+
+	/**
+	 * 授权
+	 * 
+	 * @param <T>
+	 * @param key
+	 * @param privItems
+	 * @param permission
+	 */
+	public static <T> void grantBitSetPermission(String key, BitSetPrivItem[] privItems, SysPermission permission) {
+		BitSet bitSet = new BitSet(privItems.length);
+		for (BitSetPrivItem item : privItems) {
+			bitSet.set(item.bitIndex());
+		}
+		String json = permission.getPermissions().get(SitePermissionType.ID);
+		Map<String, BitSet> sitePrivs = deserializeBitSetPermission(json);
+		sitePrivs.put(key, bitSet);
+		json = serializeBitSetPermission(sitePrivs);
+		permission.getPermissions().put(SitePermissionType.ID, json);
+	}
+
+	/**
+	 * 校验perms是否包含指定权限
+	 * 
+	 * @param key
+	 * @param privItem
+	 * @param perms
+	 * @return
+	 */
+	public static boolean hasBitSetPermission(String key, BitSetPrivItem privItem, Map<String, BitSet> perms) {
+		BitSet bitSet = perms.get(key);
+		return Objects.nonNull(bitSet) && bitSet.get(privItem.bitIndex());
+	}
+
+	/**
+	 * 校验用户是否拥有指定权限
+	 * 
+	 * @param permissionType
+	 * @param key
+	 * @param privItem
+	 * @param loginUser
+	 * @return
+	 */
+	public static boolean hasBitSetPermission(String permissionType, String key, BitSetPrivItem privItem,
+			LoginUser loginUser) {
+		if (loginUser.isSuperAdministrator()) {
+			return true;
+		}
+		String json = loginUser.getPermissions().get(permissionType);
+		List<Long> list = JacksonUtils.getAsList(json, key, Long.class);
+		if (list != null) {
+			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
+			if (bitSet.get(privItem.bitIndex())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -90,20 +149,12 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static void checkSitePermission(Long siteId, SitePrivItem privItem, LoginUser loginUser) {
-		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
-			return;
-		}
-		String json = loginUser.getPermissions().get(SitePermissionType.ID);
-		List<Long> list = JacksonUtils.getAsList(json, siteId.toString(), Long.class);
-		if (list != null) {
-			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
-			if (bitSet.get(privItem.bitIndex())) {
-				return;
-			}
-		}
-		throw new NotPermissionException(privItem.getPermissionKey(siteId), loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
+		boolean result = hasBitSetPermission(SitePermissionType.ID, siteId.toString(), privItem, loginUser);
+		Assert.isTrue(result,
+				() -> new NotPermissionException(privItem.getPermissionKey(siteId), loginUser.getUserType())
+						.setCode(SaErrorCode.CODE_11051));
 	}
-	
+
 	/**
 	 * 是否拥有指定站点的指定权限
 	 * 
@@ -113,71 +164,7 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static boolean hasSitePermission(Long siteId, SitePrivItem privItem, LoginUser loginUser) {
-		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
-			return true;
-		}
-		String json = loginUser.getPermissions().get(SitePermissionType.ID);
-		List<Long> list = JacksonUtils.getAsList(json, siteId.toString(), Long.class);
-		if (list != null) {
-			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
-			if (bitSet.get(privItem.bitIndex())) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static boolean hasSitePermission(Long catalogId, SitePrivItem privItem, Map<String, BitSet> perms) {
-		BitSet bitSet = perms.get(catalogId.toString());
-		return Objects.nonNull(bitSet) && bitSet.get(privItem.bitIndex());
-	}
-
-	/**
-	 * 添加指定站点的所有权限给指定权限配置
-	 * 
-	 * @param siteId
-	 * @param userId
-	 */
-	public static void grantSitePermission(Long siteId, SysPermission permission) {
-		BitSet bitSet = SitePrivItem.getBitSet();
-
-		String json = permission.getPermissions().get(SitePermissionType.ID);
-		Map<String, BitSet> sitePrivs = parseSitePermissionJson(json);
-		sitePrivs.put(siteId.toString(), bitSet);
-		json = convertSitePermissionKeys(sitePrivs);
-		permission.getPermissions().put(SitePermissionType.ID, json);
-	}
-	
-	/**
-	 * 栏目权限项列表转成持久化存储序列化字符串
-	 * 
-	 * @param permissionKeys
-	 * @return
-	 */
-	public static String convertCatalogPermissionKeys(Map<String, BitSet> catalogPermissions) {
-		Map<String, long[]> permsMap = new HashMap<>();
-		catalogPermissions.entrySet().forEach(e -> {
-			permsMap.put(e.getKey(), e.getValue().toLongArray());
-		});
-		return JacksonUtils.to(permsMap);
-	}
-	
-	/**
-	 * 解析权限配置字符串传，转成栏目权限项列表
-	 * 
-	 * @param json
-	 * @return
-	 */
-	public static Map<String, BitSet> parseCatalogPermissionJson(String json) {
-		Map<String, BitSet> catalogPermissions = new HashMap<>();
-		Map<String, long[]> catalogPrivs = JacksonUtils.fromMap(json, long[].class);
-		if (catalogPrivs != null) {
-			catalogPrivs.entrySet().forEach(e -> {
-				BitSet bitSet = BitSet.valueOf(e.getValue());
-				catalogPermissions.put(e.getKey(), bitSet);
-			});
-		}
-		return catalogPermissions;
+		return hasBitSetPermission(SitePermissionType.ID, siteId.toString(), privItem, loginUser);
 	}
 
 	/**
@@ -189,20 +176,12 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static void checkCatalogPermission(Long catalogId, CatalogPrivItem privItem, LoginUser loginUser) {
-		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
-			return;
-		}
-		String json = loginUser.getPermissions().get(CatalogPermissionType.ID);
-		List<Long> list = JacksonUtils.getAsList(json, catalogId.toString(), Long.class);
-		if (list != null) {
-			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
-			if (bitSet.get(privItem.bitIndex())) {
-				return;
-			}
-		}
-		throw new NotPermissionException(privItem.getPermissionKey(catalogId), loginUser.getUserType()).setCode(SaErrorCode.CODE_11051);
+		boolean result = hasBitSetPermission(CatalogPermissionType.ID, catalogId.toString(), privItem, loginUser);
+		Assert.isTrue(result,
+				() -> new NotPermissionException(privItem.getPermissionKey(catalogId), loginUser.getUserType())
+						.setCode(SaErrorCode.CODE_11051));
 	}
-	
+
 	/**
 	 * 是否拥有指定栏目的指定权限
 	 * 
@@ -212,38 +191,33 @@ public class CmsPrivUtils {
 	 * @return
 	 */
 	public static boolean hasCatalogPermission(Long catalogId, CatalogPrivItem privItem, LoginUser loginUser) {
-		if (SecurityUtils.isSuperAdmin(loginUser.getUserId())) {
-			return true;
-		}
-		String json = loginUser.getPermissions().get(CatalogPermissionType.ID);
-		List<Long> list = JacksonUtils.getAsList(json, catalogId.toString(), Long.class);
-		if (list != null) {
-			BitSet bitSet = BitSet.valueOf(list.stream().mapToLong(Long::longValue).toArray());
-			if (bitSet.get(privItem.bitIndex())) {
-				return true;
-			}
-		}
-		return false;
+		return hasBitSetPermission(CatalogPermissionType.ID, catalogId.toString(), privItem, loginUser);
 	}
 	
-	public static boolean hasCatalogPermission(Long catalogId, CatalogPrivItem privItem, Map<String, BitSet> perms) {
-		BitSet bitSet = perms.get(catalogId.toString());
-		return Objects.nonNull(bitSet) && bitSet.get(privItem.bitIndex());
+	/**
+	 * 校验页面部件权限
+	 * 
+	 * @param pageWidgetId
+	 * @param privItem
+	 * @param loginUser
+	 * @return
+	 */
+	public static void checkPageWidgetPermission(Long pageWidgetId, PageWidgetPrivItem privItem, LoginUser loginUser) {
+		boolean result = hasBitSetPermission(PageWidgetPermissionType.ID, pageWidgetId.toString(), privItem, loginUser);
+		Assert.isTrue(result,
+				() -> new NotPermissionException(privItem.getPermissionKey(pageWidgetId), loginUser.getUserType())
+						.setCode(SaErrorCode.CODE_11051));
 	}
 
 	/**
-	 * 添加指定站点的所有权限给指定权限配置
+	 * 是否拥有指定页面部件的指定权限
 	 * 
-	 * @param catlaogId
-	 * @param userId
+	 * @param pageWidgetId
+	 * @param privItem
+	 * @param loginUser
+	 * @return
 	 */
-	public static void grantCatalogPermission(Long catalogId, SysPermission permission) {
-		BitSet bitSet = CatalogPrivItem.getBitSet();
-
-		String json = permission.getPermissions().get(CatalogPermissionType.ID);
-		Map<String, BitSet> catalogPrivs = parseCatalogPermissionJson(json);
-		catalogPrivs.put(catalogId.toString(), bitSet);
-		json = convertCatalogPermissionKeys(catalogPrivs);
-		permission.getPermissions().put(CatalogPermissionType.ID, json);
+	public static boolean hasPageWidgetPermission(Long pageWidgetId, PageWidgetPrivItem privItem, LoginUser loginUser) {
+		return hasBitSetPermission(PageWidgetPermissionType.ID, pageWidgetId.toString(), privItem, loginUser);
 	}
 }

@@ -23,6 +23,8 @@
         <el-table 
           v-loading="loading"
           :data="catalogPrivs"
+          :height="tableHeight"
+          :max-height="tableMaxHeight"
           row-key="catalogId"
           default-expand-all
           style="width:100%;line-height: normal;">
@@ -32,7 +34,7 @@
             </template>
           </el-table-column>
           <template v-for="(item, index) in catalogPrivItems">
-            <el-table-column :key="index" :label="item.name" v-if="item.id!='View'">
+            <el-table-column :key="index" :label="item.name" v-if="item.id!='View'" width="100">
               <template slot="header">
                 <el-checkbox @change="handleColumnSelectAll(item.id)">{{ item.name }}</el-checkbox>
               </template>
@@ -82,13 +84,11 @@ export default {
       }
     },
   },
-  mounted() {
-    this.loadData();
-    this.loadSiteOptions();
-  },
   data() {
     return {
       loading: true,
+      tableHeight: 600,
+      tableMaxHeight: 900,
       selectAll: false,
       selectColumnAll: {},
       catalogPrivs: [],
@@ -97,7 +97,17 @@ export default {
       siteOptions: []
     };
   }, 
+  created () {
+    this.changeTableHeight();
+    this.loadData();
+    this.loadSiteOptions();
+  },
   methods: {
+    changeTableHeight () {
+      let height = document.body.offsetHeight // 网页可视区域高度
+      this.tableHeight = height - 140;
+      this.tableMaxHeight = this.tableHeight;
+    },
     loadSiteOptions() {
       getSiteOptions().then(response => {
         this.siteOptions = response.data.rows;
