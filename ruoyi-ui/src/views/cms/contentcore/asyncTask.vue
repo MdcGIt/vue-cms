@@ -15,10 +15,10 @@
         <el-button type="primary"
                    icon="el-icon-search"
                    size="small"
-                   @click="handleQuery">搜索</el-button>
+                   @click="handleQuery">{{ $t("Common.Search") }}</el-button>
         <el-button icon="el-icon-refresh"
                    size="small"
-                   @click="resetQuery">重置</el-button>
+                   @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
       </el-form-item>
     </el-form>
     <el-table v-loading="loading"
@@ -69,7 +69,7 @@
           <span>{{ parseTime(scope.row.endTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作"
+      <el-table-column :label="$t('Common.Operation')"
                         align="center"
                         width="300" 
                         class-name="small-padding fixed-width">
@@ -83,7 +83,7 @@
           <el-button size="mini"
                       type="text"
                       icon="el-icon-delete"
-                      @click="handleDelete(scope.row)">删除</el-button>
+                      @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>

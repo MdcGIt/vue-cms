@@ -12,10 +12,10 @@
         </el-select>
       </el-col>
       <el-col :span="1.5">
-        <el-button plain type="success" icon="el-icon-edit" size="mini" @click="handleSave">保存</el-button>
+        <el-button plain type="success" icon="el-icon-edit" size="mini" @click="handleSave">{{ $t("Common.Save") }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button plain type="primary" icon="el-icon-check" size="mini" @click="handleSelectAll">{{ this.selectAll ? '全不选' : '全选' }}</el-button>
+        <el-button plain type="primary" icon="el-icon-check" size="mini" @click="handleSelectAll">{{ this.selectAll ? $t('Common.CheckInverse') : $t('Common.CheckAll') }}</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -28,7 +28,7 @@
           row-key="catalogId"
           default-expand-all
           style="width:100%;line-height: normal;">
-          <el-table-column label="栏目名称" width="200">
+          <el-table-column :label="$t('CMS.Catalog.Name')" width="200">
             <template slot-scope="scope">
                 <el-checkbox @change="handleRowSelectAll($event, scope.row.catalogId)" v-model="scope.row.perms['View']">{{ scope.row.name }}</el-checkbox>
             </template>
@@ -187,7 +187,7 @@ export default {
         perms: this.catalogPrivs
       };
       saveCatalogPermissions(data).then(response => {
-        this.$modal.msgSuccess("保存成功");
+        this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
       });
     },
     getPermissionKeys(arr, permissions) {

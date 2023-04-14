@@ -10,6 +10,7 @@ export default {
     OK: 'OK',
     Confirm: '确定',
     Cancel: '取消',
+    Open: '开启',
     Close: '关闭',
     Submit: '提交',
     GoBack: '返回',
@@ -19,10 +20,13 @@ export default {
     OpSuccess: '操作成功',
     OpFail: '操作失败',
     AddSuccess: '添加成功',
+    SaveSuccess: "保存成功",
     EditSuccess: '修改成功',
     DeleteSuccess: '删除成功',
     Yes: '是',
     No: '否',
+    Enable: "启用",
+    Disable: "禁用",
     BeginDate: '开始日期',
     EndDate: '结束日期',
     BeginTime: '开始时间',
@@ -38,6 +42,11 @@ export default {
     RefreshCache: '刷新缓存',
     Clean: "清空",
     View: "查看",
+    Show: "显示",
+    Hide: "隐藏",
+    Move: "移动",
+    Copy: "复制",
+    Sort: "排序",
     Remark: '备注',
     CreateTime: '创建时间',
     CreateBy: '创建人',
@@ -195,6 +204,11 @@ export default {
         CloseAll: "全部关闭"
       }
     }
+  },
+  Home: {
+    Welcome: "欢迎回来",
+    LastLoginTime: "上次登录时间",
+    LastLoginIP: "上次登录IP"
   },
   System: {
     User: {
@@ -676,7 +690,169 @@ export default {
     }
   },
   CMS: {
-    CONTENTCORE: {
+    ContentCore: {
+      InternalUrl: "内部链接",
+      SelectCatalog: "选择栏目",
+      SelectContent: "选择内容",
+      Publish: "发布",
+      Preview: "预览",
+      PublishSuccess: "发布成功",
+      PublishProgressTitle: "发布任务",
+      ApplyToCatalog: "应用到栏目",
+      SEOConfig: "SEO配置",
+      SEOTitle: "SEO标题",
+      SEOKeyword: "SEO关键字",
+      SEODescription: "SEO描述",
+    },
+    Site: {
+      SiteId: "站点ID",
+      Name: "站点名称",
+      Path: "站点目录",
+      Logo: "LOGO",
+      PublishHome: "发布首页",
+      PublishAll: "发布全站",
+      PublishPublished: "发布已发布的内容",
+      PublishToPublish: "发布待发布的内容",
+      PublishDraft: "发布初稿的内容",
+      PublishReEdit: "发布重新编辑的内容",
+      PublishOffline: "发布已下线的内容",
+      BasicCardTitle: "基础属性",
+      ResourceUrl: "资源域名",
+      Desc: "描述",
+      DeleteProgressTitle: "删除站点",
+      PublishPipeCardTitle: "发布通道属性",
+      StaticFileType: "静态文件类型",
+      IndexTemplate: "首页模板",
+      NoPublishPipeTip: "预览/发布需要先添加发布通道",
+      GoAddPublishPipe: "去添加",
+      ExModelCardTitle: "扩展模型属性",
+      Tab: {
+        Basic: "基础信息",
+        Extend: "扩展配置",
+        Property: "扩展属性",
+        DefaultTemplate: "默认模板"
+      },
+      Dialog: {
+        AddTitle: "新建站点"
+      },
+      RuleTips: {
+        Name: "站点名称不能为空",
+        Path: "不能为空且只能使用大小写字母和数字"
+      },
+      Extend: {
+        BasicCardTitle: "基础配置",
+        EnableIndex: "是否开启索引",
+        TitleRepeatCheck: "标题查重",
+        TitlteRepeatCheckNone: "不校验",
+        TitlteRepeatCheckSite: "全站校验",
+        TitlteRepeatCheckCatalog: "栏目校验",
+        ExModel: "站点扩展模型",
+        PublishMaxPageNum: "内容发布更新列表页数",
+        EnableEditPublished: "允许编辑已发布内容",
+        ContentConfCardTitle: "内容配置",
+        AutoArticleLogo: "正文首图作为logo",
+        RecycleKeepDays: "回收站内容保留天数",
+        RecycleKeepDaysTip: "永久保留填0",
+        ResourceConfCardTitle: "素材库",
+        StorageType: "存储策略",
+        Local: "本地",
+        AliyunOSS: "阿里云OSS",
+        TencentCOS: "腾讯云COS",
+        MinIO: "MinIO",
+        ImageWatermarkCardTitle: "图片水印配置",
+        ImageWatermark: "开启图片水印",
+        WatermarkImage: "水印图片",
+        WatermarkPosition: "水印位置",
+        WatermarkOpacity: "不透明度",
+        WatermarkOpacityTip: "数值越低透明度越高，默认1不透明",
+        WatermarkRatio: "占比",
+        WatermarkRatioTip: "水印占目标图片的比例，水印宽高至少20",
+        WordConfCardTitle: "词汇配置",
+        SensitiveWordEnable: "开启敏感词替换",
+        ErrorProneWordEnable: "开启易错词替换",
+        HotWordGroup: "热词分组",
+        StatConfCardTitle: "统计配置",
+        BaiduApiKey: "百度统计ApiKey",
+        BaiduSecretKey: "百度统计SecretKey",
+        BaiduRefreshToken: "百度统计RefreshToken",
+        BaiduAccessToken: "百度统计AccessToken",
+      },
+      Property: {
+        QueryPlaceholder: "输入名称/编码查询",
+        PropName: "属性名称",
+        PropCode: "属性编码",
+        PropValue: "属性值",
+        RuleTips: {
+          PropName: "不能为空",
+          PropCode: "不能为空且只能使用字母、数字和下划线"
+        }
+      },
+      DefaultTemplate: {
+        Title: "默认模板配置",
+        CatalogList: "栏目列表页模板",
+        ContentDetail: "详情页模板",
+        SelectCatalogFirst: "请先选择栏目"
+      }
+    },
+    Catalog: {
+      Tab: {
+        Basic: "基本信息",
+        Extend: "扩展配置",
+      },
+      AddCatalog: "添加栏目",
+      CatalogNamePlaceholder: "输入栏目名称",
+      ParentCatalog: "上级栏目",
+      Basic: "基础属性",
+      Content: "内容",
+      SortTip: "正数下移，负数上移",
+      DeleteTip: "删除栏目会删除包括子栏目下所有数据确定删除吗？",
+      CatalogId: "栏目ID",
+      Name: "栏目名称",
+      Alias: "栏目别名",
+      Path: "栏目路径",
+      CatalogType: "栏目类型",
+      RedirectUrl: "链接地址",
+      Desc: "栏目描述",
+      Logo: "Logo",
+      PublishPipeConf: "发布通道属性",
+      IndexTemplate: "栏目首页模板",
+      ListTemplate: "栏目列表页模板",
+      DetailTemplate: "详情页模板",
+      ApplyToChildren: "应用到子栏目",
+      ExModelProps: "扩展模型属性",
+      PublishDialogTitle: "发布栏目",
+      PublishTips: "本次生成的静态页面将覆盖原有页面，确认生成所有静态页面吗？",
+      ContainsChildren: "包含子栏目",
+      SelectCatalog: "选择栏目",
+      CopyContent: "拷贝副本",
+      CopyContentTip: "拷贝副本：完整复制内容，独立于来源自由修改。",
+      MappingContent: "映射内容",
+      MappingContentTip: "映射内容：仅生成基础信息，独立页面，扩展内容共享自源内容。",
+      RuleTips: {
+        Name: "栏目名称不能为空",
+        Alias: "不能为空且只能使用字母、数字和下划线",
+        Path: "不能为空且只能使用字母、数字和下划线",
+        CatalogType: "栏目类型不能为空"
+      },
+      SelectCatalogFirst: "请先选择一个栏目",
+      PublishProgressTitle: "发布栏目",
+      DeleteProgressTitle: "删除栏目",
+      MoveProgressTitle: "转移栏目",
+      Extend: {
+        Basic: "基础配置",
+        EnableIndex: "是否启用索引",
+        CatalogExModel: "栏目扩展模型",
+        ContentExModel: "内容扩展模型",
+        ContentConfig: "内容配置",
+        WordConfig: "词汇配置",
+        HotWordGroup: "热词分组"
+      }
+    },
+    Stat: {
+      VisitTrend: "访问趋势",
+      VisitLocation: "地域分布",
+      Location: "地域",
+      Ratio: "占比"
     }
   }
 };

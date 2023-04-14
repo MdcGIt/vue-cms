@@ -119,7 +119,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="操作"
+        :label="$t('Common.Operation')"
         width="300"
         align="right">
         <template slot-scope="scope">
@@ -141,7 +141,7 @@
             icon="el-icon-delete"
             type="danger"
             v-hasPermi="['vote:add', 'vote:edit']"
-            @click="handleDeleteVoteSubject(scope.row)">删除</el-button>
+            @click="handleDeleteVoteSubject(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -180,7 +180,7 @@
             size="mini"
             @click="handleSaveItems"
             v-hasPermi="['vote:add', 'vote:edit']"
-          >保存</el-button>
+          >{{ $t("Common.Save") }}</el-button>
         </el-col>
       </el-row>
       <el-table v-loading="loadingItems" :data="itemList">
@@ -243,7 +243,7 @@
               type="danger"
               icon="el-icon-delete"
               size="mini"
-              @click="handleDeleteItem(scope.$index)">删除</el-button>
+              @click="handleDeleteItem(scope.$index)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -35,6 +35,11 @@ public class DashboardUserVO {
 	private String lastLoginIp;
 	
 	/**
+	 * 上次登录地区
+	 */
+	private String lastLoginAddr;
+	
+	/**
 	 * 所属部门
 	 */
 	private String deptName;

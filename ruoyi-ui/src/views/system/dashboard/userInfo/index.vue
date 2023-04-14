@@ -9,10 +9,10 @@
               </div>
             </el-col>
             <el-col :span="22">
-              <div class="user-info-header">欢迎回来：<router-link to="/user/profile">{{ userInfo.nickName }}</router-link></div>
+              <div class="user-info-header">{{ $t("Home.Welcome") }}<router-link to="/user/profile">{{ userInfo.nickName }}</router-link></div>
               <div class="user-info-detail">
-                <i class="el-icon-time">上次登录时间：{{ userInfo.lastLoginTime }}</i>
-                <i class="el-icon-map-location">上次登录IP：{{ userInfo.lastLoginIp }}</i>
+                <i class="el-icon-time"> {{ $t("Home.LastLoginTime") }}<span>{{ userInfo.lastLoginTime }}</span></i>
+                <i class="el-icon-map-location"> {{ $t("Home.LastLoginIP") }}<span>{{ userInfo.lastLoginIp }} [ {{ userInfo.lastLoginAddr }} ]</span></i>
               </div>
             </el-col>
           </el-row>
@@ -69,13 +69,18 @@ export default {
 }
 .home-user-info-container .user-info-header a {
   color: #409eff;
+  padding-left: 10px;
 }
 .home-user-info-container .user-info-detail {
   display: block;
   font-size: 12px;
-  color: #909399;
+  color: #6a6b6e;
 }
 .home-user-info-container .user-info-detail i {
-  margin-right: 10px;
+  margin-right: 15px;
+}
+.home-user-info-container .user-info-detail i span {
+  color: #909399;
+  padding-left: 5px;
 }
 </style>

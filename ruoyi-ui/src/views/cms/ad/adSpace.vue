@@ -7,13 +7,13 @@
                    type="primary"
                    icon="el-icon-plus"
                    size="mini"
-                   @click="handleAdd">新建</el-button>
+                   @click="handleAdd">{{ $t("Common.Add") }}</el-button>
         <el-button plain
                    type="danger"
                    icon="el-icon-delete"
                    size="mini"
                    :disabled="selectedRows.length===0"
-                   @click="handleDelete">删除</el-button>
+                   @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right">
         <el-input placeholder="广告位名称" v-model="queryParams.name" size="mini" class="mr10" style="width: 200px;"></el-input>
@@ -22,11 +22,11 @@
             type="primary"
             icon="el-icon-search"
             size="mini"
-            @click="loadAdSpaceList">搜索</el-button>
+            @click="loadAdSpaceList">{{ $t("Common.Search") }}</el-button>
           <el-button 
             icon="el-icon-refresh"
             size="mini"
-            @click="resetQuery">重置</el-button>
+            @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
         </el-button-group>
       </el-col>
     </el-row>
@@ -52,7 +52,7 @@
         <el-table-column label="发布通道"
                           width="100"
                           prop="publishPipeCode" />
-        <el-table-column label="操作"
+        <el-table-column :label="$t('Common.Operation')"
                           align="center"
                           width="300" 
                           class-name="small-padding fixed-width">
@@ -67,11 +67,11 @@
             <el-button size="mini"
                         type="text"
                         icon="el-icon-edit"
-                        @click="handleEdit(scope.row)">修改</el-button>
+                        @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
             <el-button size="mini"
                         type="text"
                         icon="el-icon-delete"
-                        @click="handleDelete(scope.row)">删除</el-button>
+                        @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -120,10 +120,10 @@
             <el-button 
               slot="append"
               type="primary"
-              @click="handleSelectTemplate()">选择</el-button>
+              @click="handleSelectTemplate()">{{ $t("Common.Select") }}</el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="备注"
+        <el-form-item :label="$t('Common.Remark')"
                       prop="remark">
           <el-input v-model="form.remark"
                     type="textarea"
@@ -133,8 +133,8 @@
       <div slot="footer"
            class="dialog-footer">
         <el-button type="primary"
-                   @click="handleDialogOk">确 定</el-button>
-        <el-button @click="handleDialogClose">取 消</el-button>
+                   @click="handleDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleDialogClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 模板选择组件 -->

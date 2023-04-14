@@ -6,7 +6,7 @@
         type="success"
         icon="el-icon-edit"
         size="mini"
-        @click="handleSave">保存</el-button>
+        @click="handleSave">{{ $t("Common.Save") }}</el-button>
       <el-button 
         plain
         type="primary"
@@ -59,10 +59,10 @@
             <el-button slot="append"
                       type="primary"
                       :disabled="templateDisabled"
-                      @click="handleSelectTemplate()">选择</el-button>
+                      @click="handleSelectTemplate()">{{ $t("Common.Select") }}</el-button>
           </el-input>
           </el-form-item>
-          <el-form-item label="备注"
+          <el-form-item :label="$t('Common.Remark')"
                         prop="remark">
             <el-input v-model="form.remark" />
           </el-form-item>
@@ -145,7 +145,7 @@
               size="mini"
               icon="el-icon-delete"
               type="danger"
-              @click="handleDeleteRow(scope.$index)">删除</el-button>
+              @click="handleDeleteRow(scope.$index)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -204,8 +204,8 @@
       <div slot="footer"
            class="dialog-footer">
         <el-button type="primary"
-                   @click="handleDialogOk">确 定</el-button>
-        <el-button @click="handleDialogClose">取 消</el-button>
+                   @click="handleDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleDialogClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 模板选择组件 -->

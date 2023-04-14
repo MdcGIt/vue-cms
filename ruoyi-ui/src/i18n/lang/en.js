@@ -10,6 +10,7 @@ export default {
     OK: 'OK',
     Confirm: 'Confirm',
     Cancel: 'Cancel',
+    Open: 'Open',
     Close: 'Close',
     Submit: 'Submit',
     GoBack: 'Go Back',
@@ -17,12 +18,15 @@ export default {
     Fail: 'Fail',
     Normal: 'Normal',
     OpSuccess: 'Success',
+    OpFail: 'Failed',
     AddSuccess: 'Add Success',
+    SaveSuccess: "Save Success",
     EditSuccess: 'Edit Success',
     DeleteSuccess: 'Delete Success',
-    OpFail: 'Fail',
     Yes: 'Yes',
     No: 'No',
+    Enable: "Enable",
+    Disable: "Disable",
     BeginDate: 'Begin Date',
     EndDate: 'End Date',
     BeginTime: 'Begin Time',
@@ -37,6 +41,12 @@ export default {
     Refresh: 'Refresh',
     RefreshCache: 'Refresh Cache',
     Clean: "Clean",
+    View: "View",
+    Show: "Show",
+    Hide: "Hide",
+    Move: "Move",
+    Copy: "Copy",
+    Sort: "Sort",
     Remark: 'Remark',
     CreateTime: 'Create Time',
     CreateBy: 'Create User',
@@ -68,7 +78,8 @@ export default {
     Downloading: 'Downloading...',
     Loading: 'Loading...',
     DownloadFailed: 'Download failed, please contact the administrator.',
-    InvalidFileSuffix: 'Unsupport file format, only "{0}" is supported.'
+    InvalidFileSuffix: 'Unsupport file format, only "{0}" is supported.',
+    SelectFirst: 'Please select first.'
   },
   Router: {
     Home: 'Home',
@@ -193,6 +204,11 @@ export default {
         CloseAll: "Close All"
       }
     }
+  },
+  Home: {
+    Welcome: "Welcome back",
+    LastLoginTime: "Last login time",
+    LastLoginIP: "Last login ip"
   },
   System: {
     User: {
@@ -570,7 +586,8 @@ export default {
       ConfirmClean: 'Are you sure to clean all logs?',
       Dialog: {
         Add: "Add Job",
-        Edit: "Edit Job"
+        Edit: "Edit Job",
+        Log: "Log Details",
       },
       Placeholder: {
         InvokeTarget: "Input invoke target string"
@@ -673,7 +690,173 @@ export default {
     }
   },
   CMS: {
-    CONTENTCORE: {
+    ContentCore: {
+      InternalUrl: "Internal Url",
+      SelectCatalog: "Select Catalog",
+      SelectContent: "Select Content",
+      Publish: "Publish",
+      Preview: "Preview",
+      PublishSuccess: "Publish success.",
+      PublishProgressTitle: "Publish task",
+      ApplyToCatalog: "Apply to catalog",
+      SEOConfig: "SEO Config",
+      SEOTitle: "SEO Title",
+      SEOKeyword: "SEO Keyword",
+      SEODescription: "SEO Description",
+    },
+    Site: {
+      SiteId: "Site ID",
+      Name: "Site Name",
+      Path: "Site Path",
+      Logo: "LOGO",
+      PublishHome: "Publish Home",
+      PublishAll: "Publish All",
+      PublishPublished: "Published Content",
+      PublishToPublish: "ToPublish Content",
+      PublishDraft: "Draft Content",
+      PublishReEdit: "Re-Edit Content",
+      PublishOffline: "Offline Content",
+      BasicCardTitle: "Basic",
+      ResourceUrl: "Resource Domain",
+      Desc: "Description",
+      DeleteProgressTitle: "Delete site task",
+      PublishPipeCardTitle: "Publish Pipe Configuration",
+      StaticFileType: "Static Type",
+      IndexTemplate: "Home Template",
+      NoPublishPipeTip: "Preivew or publish need add publish pipe first.",
+      GoAddPublishPipe: "Add",
+      SEOCardTitle: "SEO Configuration",
+      SEOTitle: "SEO Title",
+      SEOKeyword: "SEO Keyword",
+      SEODescription: "SEO Description",
+      ExModelCardTitle: "Ex-Model Configuration",
+      Tab: {
+        Basic: "Basic Information",
+        Extend: "Extend Config",
+        Property: "Extend Propperty",
+        DefaultTemplate: "Default Template"
+      },
+      Dialog: {
+        AddTitle: "Add Site"
+      },
+      RuleTips: {
+        Name: "Cannot be empty.",
+        Path: "Cannot be empty and only [A-Za-z0-9]+"
+      },
+      Extend: {
+        BasicCardTitle: "Basic",
+        EnableIndex: "Enable Content Index",
+        TitleRepeatCheck: "Title Repeat Check",
+        TitlteRepeatCheckNone: "None",
+        TitlteRepeatCheckSite: "Check in site",
+        TitlteRepeatCheckCatalog: "Check in Catalog",
+        ExModel: "Site Ex-Model",
+        PublishMaxPageNum: "Publish Catalog Max Page",
+        EnableEditPublished: "Edit Published Content",
+        ContentConfCardTitle: "Content",
+        AutoArticleLogo: "Auto Article Logo",
+        RecycleKeepDays: "Recycle expire days",
+        RecycleKeepDaysTip: "Keep forever with 0",
+        ResourceConfCardTitle: "Resource Storage",
+        StorageType: "Storage Type",
+        Local: "Local",
+        AliyunOSS: "AliyunOSS",
+        TencentCOS: "TencentCOS",
+        MinIO: "MinIO",
+        ImageWatermarkCardTitle: "Image Watermark",
+        ImageWatermark: "Enable Watermark",
+        WatermarkImage: "Watermark Image",
+        WatermarkPosition: "Position",
+        WatermarkOpacity: "Opacity",
+        WatermarkOpacityTip: "Range is 0 - 1, the default is 1 for opaque.",
+        WatermarkRatio: "Ratio",
+        WatermarkRatioTip: "The ratio of the watermark and watermark should be at least 20 width/height.",
+        WordConfCardTitle: "Words",
+        SensitiveWordEnable: "Sensitive Word",
+        ErrorProneWordEnable: "Error Prone Word",
+        HotWordGroup: "Hot Word Group",
+        StatConfCardTitle: "Statistics",
+        BaiduApiKey: "Baidu ApiKey",
+        BaiduSecretKey: "Baidu SecretKey",
+        BaiduRefreshToken: "Baidu RefreshToken",
+        BaiduAccessToken: "Baidu AccessToken",
+      },
+      Property: {
+        QueryPlaceholder: "Input name/code",
+        PropName: "Name",
+        PropCode: "Code",
+        PropValue: "Value",
+        RuleTips: {
+          PropName: "Cannot be empty.",
+          PropCode: "Cannot be empty and only [A-Za-z0-9_]+"
+        }
+      },
+      DefaultTemplate: {
+        Title: "Default Template",
+        CatalogList: "Catalog List Template",
+        ContentDetail: " Detail Template",
+        SelectCatalogFirst: "Please select catalog first."
+      }
+    },
+    Catalog: {
+      Tab: {
+        Basic: "Basic Information",
+        Extend: "Extend Configuration",
+      },
+      AddCatalog: "Add Catalog",
+      CatalogNamePlaceholder: "Input catalog name",
+      ParentCatalog: "Parent Catalog",
+      Basic: "Basic",
+      Content: " Content",
+      SortTip: "Positive numbers move down, negative numbers move up",
+      DeleteTip: "Are you sure to delete the catalog with contents and chilren?",
+      CatalogId: "Catalog ID",
+      Name: "Name",
+      Alias: "Alias",
+      Path: "Path",
+      CatalogType: "Catalog Type",
+      RedirectUrl: "Redirect Url",
+      Desc: "Description",
+      Logo: "Logo",
+      PublishPipeConf: "Publish pipe configuration",
+      IndexTemplate: "Index Template",
+      ListTemplate: "List Template",
+      DetailTemplate: " Detail Template",
+      ApplyToChildren: "Apply To Children",
+      ExModelProps: "Ex-Model Properties",
+      PublishDialogTitle: "Publish catalog",
+      PublishTips: "Are you sure to publish the catalog?",
+      ContainsChildren: "Include children",
+      SelectCatalog: "Select Catalog",
+      CopyContent: "Copy Content",
+      CopyContentTip: "Copy Content: independently of the source.",
+      MappingContent: "Mapping Content",
+      MappingContentTip: "Mapping Content: only basic content, the extend content is from source.",
+      RuleTips: {
+        Name: "Cannot be empty",
+        Alias: "Cannot be empty and only [A-Za-z0-9_]+",
+        Path: "Cannot be empty and only [A-Za-z0-9_]+",
+        CatalogType: "Cannot be empty"
+      },
+      SelectCatalogFirst: "Please select catalog first",
+      PublishProgressTitle: "Publish catalog task",
+      DeleteProgressTitle: "Delete catalog task",
+      MoveProgressTitle: "Move catalog task",
+      Extend: {
+        Basic: "Basic",
+        EnableIndex: "Enable Content Index",
+        CatalogExModel: "Catalog Ex-Model",
+        ContentExModel: "Content Ex-Model",
+        ContentConfig: "Content Configuration",
+        WordConfig: "Word Configuration",
+        HotWordGroup: "Hot Word Group"
+      }
+    },
+    Stat: {
+      VisitTrend: "Visit Trend",
+      VisitLocation: "Visit Location",
+      Location: "Location",
+      Ratio: "Ratio"
     }
   }
 };

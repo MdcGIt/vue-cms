@@ -71,10 +71,10 @@
               <el-button 
                 type="primary"
                 icon="el-icon-search"
-                @click="handleQuery">搜索</el-button>
+                @click="handleQuery">{{ $t("Common.Search") }}</el-button>
               <el-button 
                 icon="el-icon-refresh"
-                @click="resetQuery">重置</el-button>
+                @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
             </el-button-group>
           </el-form-item>
         </el-form>
@@ -119,7 +119,7 @@
       </el-table-column>
       <el-table-column label="操作人" align="center" :show-overflow-tooltip="true" prop="backupOperator" width="140" />
       <el-table-column 
-        label="操作"
+        :label="$t('Common.Operation')"
         align="center"
         width="100"
         class-name="small-padding fixed-width">
@@ -128,7 +128,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)">删除</el-button>
+            @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>

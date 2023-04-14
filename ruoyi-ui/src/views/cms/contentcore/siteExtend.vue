@@ -1,36 +1,35 @@
 <template>
   <div class="site-extend-container">
-    <el-row class="mb8">
-      <el-button plain
-                  type="success"
-                  icon="el-icon-edit"
-                  size="mini"
-                  :disabled="!this.siteId"
-                  @click="handleSaveExtend">保存</el-button>
+    <el-row class="mb12">
+      <el-button  
+        plain
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="!this.siteId"
+        @click="handleSaveExtend">{{ $t("Common.Save") }}</el-button>
     </el-row>
-    <el-form ref="form_extend"
-              :model="form_extend"
-              v-loading="loading"
-              :disabled="!this.siteId"
-              label-width="200px"
-              label-suffix="：">
+    <el-form 
+      ref="form_extend"
+      :model="form_extend"
+      v-loading="loading"
+      :disabled="!this.siteId"
+      label-width="200px">
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>基础配置</span>
+          <span>{{ $t("CMS.Site.Extend.BasicCardTitle") }}</span>
         </div>
-        <el-form-item label="是否开启索引"
-                      prop="EnableIndex">
+        <el-form-item :label="$t('CMS.Site.Extend.EnableIndex')" prop="EnableIndex">
           <el-switch
             v-model="form_extend.EnableIndex"
-            active-text="开启"
-            inactive-text="关闭"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
             active-value="Y"
             inactive-value="N">
           </el-switch>
         </el-form-item>
-        <el-form-item label="标题查重"
-                      prop="RepeatTitleCheck">
-          <el-select v-model="form_extend.RepeatTitleCheck" filterable placeholder="请选择">
+        <el-form-item :label="$t('CMS.Site.Extend.TitleRepeatCheck')" prop="RepeatTitleCheck">
+          <el-select v-model="form_extend.RepeatTitleCheck" filterable>
             <el-option
               v-for="item in repeatCheckOptions"
               :key="item.value"
@@ -39,13 +38,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="站点扩展模型"
-                      prop="SiteExtendModel">
+        <el-form-item :label="$t('CMS.Site.Extend.ExModel')" prop="SiteExtendModel">
           <el-select 
             v-model="form_extend.SiteExtendModel" 
             filterable 
-            clearable 
-            placeholder="请选择">
+            clearable >
             <el-option
               v-for="item in exmodelOptions"
               :key="item.value"
@@ -54,16 +51,14 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="内容发布更新列表页数"
-                      prop="MaxPageOnContentPublish">
+        <el-form-item :label="$t('CMS.Site.Extend.PublishMaxPageNum')" prop="MaxPageOnContentPublish">
           <el-input-number v-model="form_extend.MaxPageOnContentPublish" controls-position="right" :min="-1"></el-input-number>
         </el-form-item>
-        <el-form-item label="允许编辑已发布内容"
-                      prop="PublishedContentEdit">
+        <el-form-item :label="$t('CMS.Site.Extend.EnableEditPublished')" prop="PublishedContentEdit">
           <el-switch
             v-model="form_extend.PublishedContentEdit"
-            active-text="是"
-            inactive-text="否"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
             active-value="Y"
             inactive-value="N">
           </el-switch>
@@ -71,43 +66,39 @@
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>内容配置</span>
+          <span>{{ $t("CMS.Site.Extend.ContentConfCardTitle") }}</span>
         </div>
         <!-- <el-form-item 
           label="文章正文图片尺寸">
           宽：<el-input v-model="form_extend.ArticleImageWidth" style="width:100px"></el-input>
           高：<el-input v-model="form_extend.ArticleImageHeight" style="width:100px"></el-input>
         </el-form-item> -->
-        <el-form-item 
-          label="正文首图作为logo"
-          prop="AutoArticleLogo">
+        <el-form-item :label="$t('CMS.Site.Extend.AutoArticleLogo')" prop="AutoArticleLogo">
           <el-switch
             v-model="form_extend.AutoArticleLogo"
-            active-text="是"
-            inactive-text="否"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
             active-value="Y"
             inactive-value="N">
           </el-switch>
         </el-form-item>
-        <el-form-item label="回收站内容保留天数"
-                      prop="RecycleKeepDays">
+        <el-form-item :label="$t('CMS.Site.Extend.RecycleKeepDays')" prop="RecycleKeepDays">
           <el-input-number v-model="form_extend.RecycleKeepDays" controls-position="right" :min="0"></el-input-number>
           <div style="color: #909399;font-size:12px;line-height: 30px;">
-            <i class="el-icon-info mr5"></i>永久保留填0
+            <i class="el-icon-info mr5"></i>{{ $t('CMS.Site.Extend.RecycleKeepDaysTip') }}
           </div>
         </el-form-item>
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>素材库</span>
+          <span>{{ $t("CMS.Site.Extend.ResourceConfCardTitle") }}</span>
         </div>
-        <el-form-item label="存储策略"
-                      prop="FileStorageType">
+        <el-form-item :label="$t('CMS.Site.Extend.StorageType')" prop="FileStorageType">
           <el-radio-group v-model="form_extend.FileStorageType" size="mini" @change="handleFileStorageTypeChange">
-            <el-radio-button label="Local">本地</el-radio-button>
-            <el-radio-button label="MinIO">Minio</el-radio-button>
-            <el-radio-button label="AliyunOSS">阿里云OSS</el-radio-button>
-            <el-radio-button label="TencentCOS">腾讯云COS</el-radio-button>
+            <el-radio-button
+              v-for="rt in storageTypes"
+              :key="rt.id"
+              :label="rt.id">{{ rt.name }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="form_extend.FileStorageType != 'Local'" label="access key">
@@ -131,62 +122,65 @@
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>图片水印配置</span>
+          <span>{{ $t("CMS.Site.Extend.ImageWatermarkCardTitle") }}</span>
         </div>
-        <el-form-item label="开启图片水印"
-                      prop="ImageWatermark">
+        <el-form-item :label="$t('CMS.Site.Extend.ImageWatermark')" prop="ImageWatermark">
           <el-switch
             v-model="form_extend.ImageWatermark"
-            active-text="是"
-            inactive-text="否"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
             active-value="Y"
             inactive-value="N">
           </el-switch>
         </el-form-item>
-        <el-form-item v-show="form_extend.ImageWatermark=='Y'" label="水印图片">
-          <cms-image-viewer v-model="form_extend.ImageWatermarkArgs.image"
-                            :src="watermarkImageSrc"
-                            :site="siteId"
-                            action="/cms/site/upload_watermarkimage"></cms-image-viewer>
+        <el-form-item v-show="form_extend.ImageWatermark=='Y'" :label="$t('CMS.Site.Extend.WatermarkImage')">
+          <cms-image-viewer 
+            v-model="form_extend.ImageWatermarkArgs.image"
+            :src="watermarkImageSrc"
+            :site="siteId"
+            action="/cms/site/upload_watermarkimage"
+          ></cms-image-viewer>
         </el-form-item>
-        <el-form-item v-show="form_extend.ImageWatermark=='Y'" label="水印位置">
+        <el-form-item v-show="form_extend.ImageWatermark=='Y'" :label="$t('CMS.Site.Extend.WatermarkPosition')">
           <div class="watermarker_position">
             <el-radio-group v-model="form_extend.ImageWatermarkArgs.position" text-color="" size="mini">
-              <el-radio-button label="TOP_LEFT">左上</el-radio-button>
-              <el-radio-button label="TOP_CENTER">上</el-radio-button>
-              <el-radio-button label="TOP_RIGHT">右上</el-radio-button>
-              <el-radio-button label="CENTER_LEFT">左</el-radio-button>
-              <el-radio-button label="CENTER">中</el-radio-button>
-              <el-radio-button label="CENTER_RIGHT">右</el-radio-button>
-              <el-radio-button label="BOTTOM_LEFT">左下</el-radio-button>
-              <el-radio-button label="BOTTOM_CENTER">下</el-radio-button>
-              <el-radio-button label="BOTTOM_RIGHT">右下</el-radio-button>
+              <el-radio-button label="TOP_LEFT">↖</el-radio-button>
+              <el-radio-button label="TOP_CENTER">↑</el-radio-button>
+              <el-radio-button label="TOP_RIGHT">↗</el-radio-button>
+              <el-radio-button label="CENTER_LEFT">←</el-radio-button>
+              <el-radio-button label="CENTER">┼</el-radio-button>
+              <el-radio-button label="CENTER_RIGHT">→</el-radio-button>
+              <el-radio-button label="BOTTOM_LEFT">↙</el-radio-button>
+              <el-radio-button label="BOTTOM_CENTER">↓</el-radio-button>
+              <el-radio-button label="BOTTOM_RIGHT">↘</el-radio-button>
             </el-radio-group>
           </div>
         </el-form-item>
-        <el-form-item v-show="form_extend.ImageWatermark=='Y'" label="不透明度">
-          <el-input-number v-model="form_extend.ImageWatermarkArgs.opacity"
-                           controls-position="right"  
-                           :precision="1" 
-                           :step="0.1" 
-                           :min="0.1" 
-                           :max="1"></el-input-number>
+        <el-form-item v-show="form_extend.ImageWatermark=='Y'" :label="$t('CMS.Site.Extend.WatermarkOpacity')">
+          <el-input-number 
+            v-model="form_extend.ImageWatermarkArgs.opacity"
+            controls-position="right"  
+            :precision="1" 
+            :step="0.1" 
+            :min="0.1" 
+            :max="1"></el-input-number>
           <el-tooltip placement="right" style="margin-left:5px;">
             <div slot="content">
-              数值越低透明度越高，默认1不透明
+              {{ $t('CMS.Site.Extend.WatermarkOpacityTip') }}
             </div>
             <i class="el-icon-info"></i>
           </el-tooltip>
         </el-form-item>
-        <el-form-item v-show="form_extend.ImageWatermark=='Y'" label="占比">
-          <el-input-number v-model="form_extend.ImageWatermarkArgs.ratio"
-                           controls-position="right"  
-                           :step="1" 
-                           :min="1" 
-                           :max="100"></el-input-number>
+        <el-form-item v-show="form_extend.ImageWatermark=='Y'" :label="$t('CMS.Site.Extend.WatermarkRatio')">
+          <el-input-number 
+            v-model="form_extend.ImageWatermarkArgs.ratio"
+            controls-position="right"  
+            :step="1" 
+            :min="1" 
+            :max="100"></el-input-number>
           <el-tooltip placement="right" style="margin-left:5px;">
             <div slot="content">
-              水印占目标图片的比例，水印宽高至少20
+              {{ $t('CMS.Site.Extend.WatermarkRatioTip') }}
             </div>
             <i class="el-icon-info"></i>
           </el-tooltip>
@@ -194,32 +188,32 @@
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>词汇配置</span>
+          <span>{{ $t("CMS.Site.Extend.WordConfCardTitle") }}</span>
         </div>
         <el-form-item 
-          label="开启敏感词替换"
+          :label="$t('CMS.Site.Extend.SensitiveWordEnable')"
           prop="SensitiveWordEnable">
           <el-switch
             v-model="form_extend.SensitiveWordEnable"
-            active-text="是"
-            inactive-text="否"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
             active-value="Y"
             inactive-value="N">
           </el-switch>
         </el-form-item>
         <el-form-item 
-          label="开启易错词替换"
+          :label="$t('CMS.Site.Extend.ErrorProneWordEnable')"
           prop="ErrorProneWordEnable">
           <el-switch
             v-model="form_extend.ErrorProneWordEnable"
-            active-text="是"
-            inactive-text="否"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
             active-value="Y"
             inactive-value="N">
           </el-switch>
         </el-form-item>
         <el-form-item 
-          label="热词分组"
+          :label="$t('CMS.Site.Extend.HotWordGroup')"
           prop="HotWordGroups">
           <el-checkbox-group v-model="form_extend.HotWordGroups">
             <el-checkbox v-for="group in hotWordGroups" :label="group.code" :key="group.code">{{ group.name }}</el-checkbox>
@@ -228,25 +222,25 @@
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>统计配置</span>
+          <span>{{ $t('CMS.Site.Extend.StatConfCardTitle') }}</span>
         </div>
         <el-form-item 
-          label="百度统计ApiKey"
+          :label="$t('CMS.Site.Extend.BaiduApiKey')"
           prop="BaiduTjApiKey">
           <el-input v-model="form_extend.BaiduTjApiKey"></el-input>
         </el-form-item>
         <el-form-item 
-          label="百度统计SecretKey"
+          :label="$t('CMS.Site.Extend.BaiduSecretKey')"
           prop="BaiduTjSecretKey">
           <el-input v-model="form_extend.BaiduTjSecretKey"></el-input>
         </el-form-item>
         <el-form-item 
-          label="百度统计RefreshToken"
+          :label="$t('CMS.Site.Extend.BaiduRefreshToken')"
           prop="BaiduTjRefreshToken">
           <el-input v-model="form_extend.BaiduTjRefreshToken"></el-input>
         </el-form-item>
         <el-form-item 
-          label="百度统计AccessToken"
+          :label="$t('CMS.Site.Extend.BaiduAccessToken')"
           prop="BaiduTjAccessToken">
           <el-input v-model="form_extend.BaiduTjAccessToken"></el-input>
         </el-form-item>
@@ -277,9 +271,9 @@ export default {
       loading: false,
       siteId: this.site,
       repeatCheckOptions: [
-        { label: "不校验", value: "0" },
-        { label: "全站校验", value: "1" },
-        { label: "栏目校验", value: "2" }
+        { label: this.$t("CMS.Site.Extend.TitlteRepeatCheckNone"), value: "0" },
+        { label: this.$t("CMS.Site.Extend.TitlteRepeatCheckSite"), value: "1" },
+        { label: this.$t("CMS.Site.Extend.TitlteRepeatCheckCatalog"), value: "2" }
         ],
       exmodelOptions: [],
       form_extend: {
@@ -287,7 +281,13 @@ export default {
         ImageWatermarkArgs: {},
         HotWordGroups:[]
       },
-      hotWordGroups: []
+      hotWordGroups: [],
+      storageTypes: [
+        { id: "Local", name: this.$t("CMS.Site.Extend.Local") },
+        { id: "AliyunOSS", name: this.$t("CMS.Site.Extend.AliyunOSS") },
+        { id: "TencentCOS", name: this.$t("CMS.Site.Extend.TencentCOS") },
+        { id: "MinIO", name: this.$t("CMS.Site.Extend.MinIO") }
+      ]
     };
   },
   computed: {
@@ -350,11 +350,7 @@ export default {
             }
           })
           saveSiteExtends(this.siteId, data).then(response => {
-            if (response.code === 200) {
-              this.$modal.msgSuccess("保存成功");
-            } else {
-              this.$modal.msgError(response.msg);
-            }
+            this.$modal.msgSuccess(this.$t("Common.SaveSuccess"),);
           });
         }
       });

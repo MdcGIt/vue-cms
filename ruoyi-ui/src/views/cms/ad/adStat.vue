@@ -38,7 +38,7 @@
           <span v-else> - </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleCharts(scope.row)">趋势</el-button>
         </template>

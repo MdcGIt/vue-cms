@@ -13,7 +13,7 @@
           type="success"
           icon="el-icon-edit"
           size="mini"
-          @click="handleSave">保存</el-button>
+          @click="handleSave">{{ $t("Common.Save") }}</el-button>
       </el-header>
       <el-form 
         ref="form"
@@ -53,7 +53,7 @@
                             prop="offlineDate">
                 <el-date-picker v-model="form.offlineDate" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" />
               </el-form-item>
-              <el-form-item label="备注"
+              <el-form-item :label="$t('Common.Remark')"
                             prop="remark">
                 <el-input v-model="form.remark"
                           type="textarea"

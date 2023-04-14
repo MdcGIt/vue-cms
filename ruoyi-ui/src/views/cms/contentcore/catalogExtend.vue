@@ -1,46 +1,45 @@
 <template>
   <div class="catalog-extend-container">
-    <el-row class="mb8">
-      <el-button plain
-                 type="success"
-                 icon="el-icon-edit"
-                 size="mini"
-                 :disabled="!this.catalogId"
-                 @click="handleSaveExtends">保存</el-button>
-      <el-button plain 
-                 type="primary" 
-                 icon="el-icon-bottom-right" 
-                 size="mini"
-                 :disabled="!this.catalogId"
-                 @click="handleApplyAllToCatalog()">应用到子栏目</el-button>
+    <el-row class="mb12">
+      <el-button 
+        plain
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="!this.catalogId"
+        @click="handleSaveExtends">{{ $t("Common.Save") }}</el-button>
+      <el-button 
+        plain 
+        type="primary" 
+        icon="el-icon-bottom-right" 
+        size="mini"
+        :disabled="!this.catalogId"
+        @click="handleApplyAllToCatalog()">{{ $t('CMS.Catalog.ApplyToChildren') }}</el-button>
     </el-row>
-    <el-form ref="form_extend"
-              :model="form_extend"
-              v-loading="loading"
-              :disabled="!this.catalogId"
-              label-width="140px"
-              label-suffix="：">
+    <el-form 
+      ref="form_extend"
+      :model="form_extend"
+      v-loading="loading"
+      :disabled="!this.catalogId"
+      label-width="160px">
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>基础配置</span>
+          <span>{{ $t('CMS.Catalog.Extend.Basic') }}</span>
         </div>
-        <el-form-item label="是否开启索引"
-                      prop="EnableIndex">
+        <el-form-item :label="$t('CMS.Catalog.Extend.EnableIndex')" prop="EnableIndex">
           <el-switch
             v-model="form_extend.EnableIndex"
-            active-text="开启"
-            inactive-text="关闭"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
             active-value="Y"
             inactive-value="N">
           </el-switch>
         </el-form-item>
-        <el-form-item label="栏目扩展模型"
-                      prop="CatalogExtendModel">
+        <el-form-item :label="$t('CMS.Catalog.Extend.CatalogExModel')" prop="CatalogExtendModel">
           <el-select 
             v-model="form_extend.CatalogExtendModel" 
             filterable 
-            clearable 
-            placeholder="请选择">
+            clearable >
             <el-option
               v-for="item in exmodelOptions"
               :key="item.value"
@@ -48,19 +47,18 @@
               :value="item.value">
             </el-option>
           </el-select>
-          <el-button class="ml5 btn-apply-child"
-                      icon="el-icon-finished" 
-                      type="primary" 
-                      plain 
-                      @click="handleApplyToCatalog('CatalogExtendModel')">应用到栏目</el-button>
+          <el-button 
+            class="ml5 btn-apply-child"
+            icon="el-icon-finished" 
+            type="primary" 
+            plain 
+            @click="handleApplyToCatalog('CatalogExtendModel')">{{ $t('CMS.ContentCore.ApplyToCatalog') }}</el-button>
         </el-form-item>
-        <el-form-item label="内容扩展模型"
-                      prop="ContentExtendModel">
+        <el-form-item :label="$t('CMS.Catalog.Extend.ContentExModel')" prop="ContentExtendModel">
           <el-select 
             v-model="form_extend.ContentExtendModel" 
             filterable 
-            clearable 
-            placeholder="请选择">
+            clearable>
             <el-option
               v-for="item in exmodelOptions"
               :key="item.value"
@@ -68,30 +66,29 @@
               :value="item.value">
             </el-option>
           </el-select>
-          <el-button class="ml5 btn-apply-child"
-                      icon="el-icon-finished" 
-                      type="primary" 
-                      plain 
-                      @click="handleApplyToCatalog('ContentExtendModel')">应用到栏目</el-button>
+          <el-button 
+            class="ml5 btn-apply-child"
+            icon="el-icon-finished" 
+            type="primary" 
+            plain 
+            @click="handleApplyToCatalog('ContentExtendModel')">{{ $t('CMS.ContentCore.ApplyToCatalog') }}</el-button>
         </el-form-item>
       </el-card>
-      <el-card shadow="hover">
+      <!-- <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>内容配置</span>
+          <span>{{ $t('CMS.Catalog.Extend.ContentConfig') }}</span>
         </div>
-        <!-- <el-form-item 
+        <el-form-item 
           label="文章正文图片尺寸">
           宽：<el-input v-model="form_extend.ArticleImageWidth" style="width:100px"></el-input>
           高：<el-input v-model="form_extend.ArticleImageHeight" style="width:100px"></el-input>
-        </el-form-item> -->
-      </el-card>
+        </el-form-item>
+      </el-card> -->
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>词汇配置</span>
+          <span>{{ $t('CMS.Catalog.Extend.WordConfig') }}</span>
         </div>
-        <el-form-item 
-          label="热词分组"
-          prop="HotWordGroups">
+        <el-form-item :label="$t('CMS.Catalog.Extend.HotWordGroup')" prop="HotWordGroups">
           <el-checkbox-group v-model="form_extend.HotWordGroups">
             <el-checkbox v-for="group in hotWordGroups" :label="group.code" :key="group.code">{{ group.name }}</el-checkbox>
           </el-checkbox-group>
@@ -132,12 +129,8 @@ export default {
       openCatalogSelector: false,
       applyConfigPropKey: "",
       exmodelOptions: [],
-      repeatCheckOptions: [
-        { label: "不校验", value: "0" },
-        { label: "全站校验", value: "1" },
-        { label: "栏目校验", value: "2" }
-        ],
       form_extend: {
+        HotWordGroups: []
       },
       hotWordGroups: []
     };
@@ -176,9 +169,7 @@ export default {
     },
     loadHotWordGroups() {
       getHotWordGroupOptions().then(response => {
-        if (response.code == 200) {
-          this.hotWordGroups = response.data.rows;
-        }
+        this.hotWordGroups = response.data.rows;
       });
     },
     handleSaveExtends () {
@@ -193,11 +184,7 @@ export default {
             }
           })
           saveCatalogExtends(this.catalogId, data).then(response => {
-            if (response.code === 200) {
-              this.$modal.msgSuccess("保存成功");
-            } else {
-              this.$modal.msgError(response.msg);
-            }
+            this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
           });
         }
       });
@@ -207,7 +194,7 @@ export default {
         catalogId: this.catalogId,
         allExtends: true
       }
-      this.$modal.loading("请稍后...");
+      this.$modal.loading("Loading...");
       applyToChildren(data).then(res => {
         this.$modal.closeLoading();
         this.$modal.msgSuccess(res.msg);
@@ -238,7 +225,7 @@ export default {
 <style>
 .catalog-extend-container .el-form-item {
   margin-bottom: 12px;
-  width: 600px;
+  width: 700px;
 }
 .catalog-extend-container .el-card {
   margin-bottom: 10px;

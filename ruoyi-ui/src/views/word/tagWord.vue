@@ -17,14 +17,14 @@
               size="mini"
               plain
               :disabled="selectedGroupId==''"
-              @click="handleAdd">新增</el-button>
+              @click="handleAdd">{{ $t("Common.Add") }}</el-button>
             <el-button 
               type="danger"
               icon="el-icon-delete"
               size="mini"
               plain
               :disabled="selectedGroupId==''||selectedIds.length==0"
-              @click="handleDelete">删除</el-button>
+              @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
           </el-col>
           <el-col :span="12">
             <el-form 
@@ -39,8 +39,8 @@
               </el-form-item>
               <el-form-item>
                 <el-button-group>
-                  <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
-                  <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+                  <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+                  <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
                 </el-button-group>
               </el-form-item>
             </el-form>
@@ -81,7 +81,7 @@
                             align="center"
                             width="120"
                             prop="createBy" />
-            <el-table-column label="操作"
+            <el-table-column :label="$t('Common.Operation')"
                             align="center"
                             width="180" 
                             class-name="small-padding fixed-width">
@@ -95,7 +95,7 @@
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
-                  @click="handleDelete(scope.row)">删除</el-button>
+                  @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -123,7 +123,7 @@
                       prop="word">
           <el-input v-model="form.word" />
         </el-form-item>
-        <el-form-item label="备注"
+        <el-form-item :label="$t('Common.Remark')"
                       prop="remark">
           <el-input v-model="form.remark" />
         </el-form-item>
@@ -135,8 +135,8 @@
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="closeDialog(false)">取 消</el-button>
+        <el-button type="primary" @click="submitForm">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="closeDialog(false)">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

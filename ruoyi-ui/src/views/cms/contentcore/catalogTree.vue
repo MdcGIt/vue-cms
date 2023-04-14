@@ -1,39 +1,43 @@
 <template>
   <div class="catalog-tree">
     <div class="head-container">
-      <el-button v-if="showNewBtn"
-                 type="text"
-                 icon="el-icon-plus"
-                 @click="handleAdd"
-                 style="margin-top:2px;">新增栏目</el-button>
-      <el-input placeholder="输入栏目名称"
-                v-model="filterCatalogName"
-                clearable
-                size="small"
-                suffix-icon="el-icon-search">
+      <el-button 
+        v-if="showNewBtn"
+        type="text"
+        icon="el-icon-plus"
+        @click="handleAdd"
+        style="margin-top:2px;">{{ $t('CMS.Catalog.AddCatalog') }}</el-button>
+      <el-input 
+        :placeholder="$t('CMS.Catalog.CatalogNamePlaceholder')"
+        v-model="filterCatalogName"
+        clearable
+        size="small"
+        suffix-icon="el-icon-search">
       </el-input>
     </div>
     <div class="tree-container">
-      <el-button type="text" 
-                  class="tree-header"
-                  icon="el-icon-s-home"
-                  @click="handleTreeRootClick">{{ siteName }}</el-button>
-      <el-tree :data="catalogOptions" 
-               :props="defaultProps" 
-               :expand-on-click-node="false"
-               :default-expanded-keys="treeExpandedKeys"
-               :filter-node-method="filterNode"
-               node-key="id"
-               ref="tree"
-               highlight-current
-               @node-click="handleNodeClick">
+      <el-button 
+        type="text" 
+        class="tree-header"
+        icon="el-icon-s-home"
+        @click="handleTreeRootClick">{{ siteName }}</el-button>
+      <el-tree 
+        :data="catalogOptions" 
+        :props="defaultProps" 
+        :expand-on-click-node="false"
+        :default-expanded-keys="treeExpandedKeys"
+        :filter-node-method="filterNode"
+        node-key="id"
+        ref="tree"
+        highlight-current
+        @node-click="handleNodeClick">
         <span class="tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
           <span class="node-tool">
             <el-button
               type="text"
               size="mini"
-              title="预览"
+              :title="$t('CMS.ContentCore.Preview')"
               @click="handlePreview(data)">
               <svg-icon icon-class="eye-open"></svg-icon>
             </el-button>
@@ -42,7 +46,7 @@
       </el-tree>
     </div>
     <!-- 添加栏目对话框 -->
-    <el-dialog title="添加栏目"
+    <el-dialog :title="$t('CMS.Catalog.AddCatalog')"
                :visible.sync="diagOpen"
                :close-on-click-modal="false"
                width="600px"
@@ -51,40 +55,32 @@
                :model="form"
                :rules="rules"
                label-width="80px">
-        <el-form-item label="上级栏目"
-                      prop="parentId">
+        <el-form-item :label="$t('CMS.Catalog.ParentCatalog')" prop="parentId">
           <treeselect v-model="form.parentId"
-                      :options="catalogOptions"
-                      placeholder="选择上级栏目" />
+                      :options="catalogOptions" />
         </el-form-item>
-        <el-form-item label="栏目名称"
-                      prop="name">
+        <el-form-item :label="$t('CMS.Catalog.Name')"  prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="栏目别名"
-                      prop="alias">
+        <el-form-item :label="$t('CMS.Catalog.Alias')" prop="alias">
           <el-input v-model="form.alias" />
         </el-form-item>
-        <el-form-item label="栏目目录"
-                      prop="path">
+        <el-form-item :label="$t('CMS.Catalog.Path')" prop="path">
           <el-input v-model="form.path" />
         </el-form-item>
-        <el-form-item label="栏目类型"
-                      prop="catalogType">
-          <el-select v-model="form.catalogType"
-                     placeholder="栏目类型">
-            <el-option v-for="ct in catalogTypeOptions"
-                       :key="ct.id"
-                       :label="ct.name"
-                       :value="ct.id" />
+        <el-form-item :label="$t('CMS.Catalog.CatalogType')"  prop="catalogType">
+          <el-select v-model="form.catalogType">
+            <el-option 
+              v-for="ct in catalogTypeOptions"
+              :key="ct.id"
+              :label="ct.name"
+              :value="ct.id" />
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary"
-                   @click="handleAddSave">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAddSave">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -139,16 +135,16 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "栏目名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.Catalog.RuleTips.Name'), trigger: "blur" }
         ],
         alias: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.Catalog.RuleTips.Alias'), trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9_/]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_/]*$", message: this.$t('CMS.Catalog.RuleTips.Path'), trigger: "blur" }
         ],
         catalogType: [
-          { required: true, message: "栏目类型不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.Catalog.RuleTips.CatalogType'), trigger: "blur" }
         ]
       }
     };
@@ -229,14 +225,10 @@ export default {
             this.form.parentId = 0;
           }
           addCatalog(this.form).then(response => {
-            if (response.code === 200) {
               this.$cache.local.set("LastSelectedCatalogId", response.data.catalogId);
               this.diagOpen = false;
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess(this.$t('Common.AddSuccess'));
               this.loadCatalogTreeData();
-            } else {
-              this.$modal.msgError(response.msg);
-            }
           });
         }
       });

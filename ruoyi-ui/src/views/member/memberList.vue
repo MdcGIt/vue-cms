@@ -151,7 +151,7 @@
           <span>{{ parseTime(scope.row.lastLoginTime) }} - {{ scope.row.lastLoginIp }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作"
+      <el-table-column :label="$t('Common.Operation')"
                        align="center"
                        width="180" 
                        class-name="small-padding fixed-width">
@@ -163,11 +163,11 @@
           <el-button size="mini"
                      type="text"
                      icon="el-icon-edit"
-                     @click="handleUpdate(scope.row)">修改</el-button>
+                     @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
           <el-button size="mini"
                      type="text"
                      icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">删除</el-button>
+                     @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>

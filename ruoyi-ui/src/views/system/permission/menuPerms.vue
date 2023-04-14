@@ -2,7 +2,7 @@
   <div class="menu-perms-container" v-loading="loading">
     <el-row class="mb10">
       <el-col>
-        <el-button plain type="success" icon="el-icon-edit" size="mini" @click="handleSave">保存</el-button>
+        <el-button plain type="success" icon="el-icon-edit" size="mini" @click="handleSave">{{ $t("Common.Save") }}</el-button>
         <el-button plain type="primary" icon="el-icon-check" size="mini" @click="handleSelectAll">{{ this.selectAll ? '全不选' : '全选' }}</el-button>
         <el-button plain type="primary" icon="el-icon-bottom-right" size="mini" @click="handleExpandAll">{{ this.expandAll ? '收起' : '展开' }}</el-button>
       </el-col>

@@ -6,7 +6,7 @@
         type="success"
         icon="el-icon-edit"
         size="mini"
-        @click="handleSave">保存</el-button>
+        @click="handleSave">{{ $t("Common.Save") }}</el-button>
       <el-button 
         plain
         type="primary"
@@ -60,10 +60,10 @@
                 slot="append"
                 type="primary"
                 :disabled="templateDisabled"
-                @click="handleSelectTemplate()">选择</el-button>
+                @click="handleSelectTemplate()">{{ $t("Common.Select") }}</el-button>
             </el-input>
           </el-form-item>
-          <el-form-item label="备注"
+          <el-form-item :label="$t('Common.Remark')"
                         prop="remark">
             <el-input v-model="form.remark" />
           </el-form-item>
@@ -81,7 +81,7 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            @click="handleAddAdvertisement">新建</el-button>
+            @click="handleAddAdvertisement">{{ $t("Common.Add") }}</el-button>
           <el-button 
             plain
             type="success"
@@ -95,7 +95,7 @@
             icon="el-icon-plus"
             size="mini"
             :disabled="selectedRows.length===0"
-            @click="handleDeleteAdvertisements">删除</el-button>
+            @click="handleDeleteAdvertisements">{{ $t("Common.Delete") }}</el-button>
         </el-col>
         <el-col :span="12" style="text-align: right">
           <el-input placeholder="广告名称" v-model="queryParams.name" size="mini" style="width: 200px;" class="mr10"></el-input>
@@ -103,11 +103,11 @@
             type="primary"
             icon="el-icon-search"
             size="mini"
-            @click="handleQuery">搜索</el-button>
+            @click="handleQuery">{{ $t("Common.Search") }}</el-button>
           <el-button 
             icon="el-icon-refresh"
             size="mini"
-            @click="resetQuery">重置</el-button>
+            @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -155,7 +155,7 @@
               <span>{{ scope.row.offlineDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作"
+          <el-table-column :label="$t('Common.Operation')"
                             align="center"
                             width="300" 
                             class-name="small-padding fixed-width">
@@ -176,12 +176,12 @@
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
-                @click="handleEditAdvertisement(scope.row)">修改</el-button>
+                @click="handleEditAdvertisement(scope.row)">{{ $t("Common.Edit") }}</el-button>
               <el-button 
                 size="mini"
                 type="text"
                 icon="el-icon-delete"
-                @click="handleDeleteAdvertisements(scope.row)">删除</el-button>
+                @click="handleDeleteAdvertisements(scope.row)">{{ $t("Common.Delete") }}</el-button>
             </template>
           </el-table-column>
         </el-table>

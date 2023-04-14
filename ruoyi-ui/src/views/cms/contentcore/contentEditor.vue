@@ -4,7 +4,7 @@
       <el-col :span="24">
         <div class="grid-btn-bar bg-purple-white">
           <el-button plain type="info" size="mini" icon="el-icon-back" @click="handleGoBack">返回列表</el-button>
-          <el-button plain type="success" size="mini" icon="el-icon-edit" @click="handleSave">保存</el-button>
+          <el-button plain type="success" size="mini" icon="el-icon-edit" @click="handleSave">{{ $t("Common.Save") }}</el-button>
           <el-button plain type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePublish">发布</el-button>
           <el-button plain type="primary" size="mini" @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>预览</el-button>
           <el-button plain type="warning" v-if="isLock" size="mini" icon="el-icon-unlock" @click="handleChangeLockState">解锁</el-button>

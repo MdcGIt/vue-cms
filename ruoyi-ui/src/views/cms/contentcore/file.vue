@@ -24,7 +24,7 @@
               plain
               icon="el-icon-plus"
               :disabled="disableAdd"
-              @click="handleAdd">新建</el-button>
+              @click="handleAdd">{{ $t("Common.Add") }}</el-button>
             <el-button 
               type="primary"
               size="mini"
@@ -38,7 +38,7 @@
               plain
               icon="el-icon-delete"
               :disabled="disableAdd||multiple"
-              @click="handleDelete()">删除</el-button>
+              @click="handleDelete()">{{ $t("Common.Delete") }}</el-button>
           </div>
           <el-card shadow='hover' class="directory-toolbar" style="padding: 0, 10px">
             <span class="span-path">
@@ -75,7 +75,7 @@
                             align="center"
                             width="200" 
                             prop="modifyTime"/>
-            <el-table-column label="操作"
+            <el-table-column :label="$t('Common.Operation')"
                             align="center"
                             width="180" 
                             class-name="small-padding fixed-width">
@@ -87,8 +87,8 @@
                   v-model="scope.row.showRename">
                   <el-input v-model="scope.row.rename" size="mini" placeholder="请输入文件名" />
                   <div style="text-align: right; margin-top: 5px;">
-                    <el-button size="mini" type="text" @click="scope.row.showRename = false">取消</el-button>
-                    <el-button type="primary" size="mini" @click="handleRename(scope.row)">确定</el-button>
+                    <el-button size="mini" type="text" @click="scope.row.showRename = false">{{ $t('Common.Cancel') }}</el-button>
+                    <el-button type="primary" size="mini" @click="handleRename(scope.row)">{{ $t('Common.Confirm') }}</el-button>
                   </div>
                   <el-button 
                     slot="reference" 
@@ -111,7 +111,7 @@
                           v-if="!disableAdd"
                           type="text"
                           icon="el-icon-delete"
-                          @click="handleDelete(scope.row)">删除</el-button>
+                          @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -141,8 +141,8 @@
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button type="primary" @click="handleAddSubmit">确 定</el-button>
-        <el-button @click="handleAddClose">取 消</el-button>
+        <el-button type="primary" @click="handleAddSubmit">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleAddClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 上传文件对话框 -->
@@ -172,8 +172,8 @@
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button type="primary" :loading="upload.isUploading" @click="handleUploadSubmit">确 定</el-button>
-        <el-button @click="handleUploadClose">取 消</el-button>
+        <el-button type="primary" :loading="upload.isUploading" @click="handleUploadSubmit">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleUploadClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

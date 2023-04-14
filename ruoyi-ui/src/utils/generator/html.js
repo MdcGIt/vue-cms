@@ -8,8 +8,8 @@ export function dialogWrapper(str) {
   return `<el-dialog v-bind="$attrs" v-on="$listeners" @open="onOpen" @close="onClose" title="Dialog Title">
     ${str}
     <div slot="footer">
-      <el-button @click="close">取消</el-button>
-      <el-button type="primary" @click="handleConfirm">确定</el-button>
+      <el-button @click="close">{{ $t('Common.Cancel') }}</el-button>
+      <el-button type="primary" @click="handleConfirm">{{ $t('Common.Confirm') }}</el-button>
     </div>
   </el-dialog>`
 }
@@ -57,7 +57,7 @@ function buildFromBtns(conf, type) {
   if (conf.formBtns && type === 'file') {
     str = `<el-form-item size="large">
           <el-button type="primary" @click="submitForm">提交</el-button>
-          <el-button @click="resetForm">重置</el-button>
+          <el-button @click="resetForm">{{ $t("Common.Reset") }}</el-button>
         </el-form-item>`
     if (someSpanIsNot24) {
       str = `<el-col :span="24">

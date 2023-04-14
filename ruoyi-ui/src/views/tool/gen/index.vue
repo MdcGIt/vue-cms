@@ -30,7 +30,7 @@
           :disabled="single"
           @click="handleEditTable"
           v-hasPermi="['tool:gen:edit']"
-        >修改</el-button>
+        >{{ $t("Common.Edit") }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -41,7 +41,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['tool:gen:remove']"
-        >删除</el-button>
+        >{{ $t("Common.Delete") }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -76,8 +76,8 @@
         </el-form-item>
         <el-form-item>
           <el-button-group>
-            <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
           </el-button-group>
         </el-form-item>
       </el-form>
@@ -113,7 +113,7 @@
       />
       <el-table-column label="创建时间" align="center" prop="createTime" width="160" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="160" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -135,7 +135,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tool:gen:remove']"
-          >删除</el-button>
+          >{{ $t("Common.Delete") }}</el-button>
           <el-button
             type="text"
             size="small"

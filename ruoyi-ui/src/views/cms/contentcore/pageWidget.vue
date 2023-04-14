@@ -7,7 +7,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="handleAdd">新建</el-button>
+          @click="handleAdd">{{ $t("Common.Add") }}</el-button>
       </el-col>
       <el-col :span="16" style="text-align: right;">
         <el-select 
@@ -63,7 +63,7 @@
                 <el-button size="mini"
                           type="text"
                           icon="el-icon-delete"
-                          @click="handleDelete(pageWidget)">删除</el-button>
+                          @click="handleDelete(pageWidget)">{{ $t("Common.Delete") }}</el-button>
               </el-col>
             </el-row>
           </div>
@@ -121,7 +121,7 @@
                       prop="path">
           <el-input v-model="form.path" />
         </el-form-item>
-        <el-form-item label="备注"
+        <el-form-item :label="$t('Common.Remark')"
                       prop="remark">
           <el-input v-model="form.remark"
                     type="textarea"
@@ -131,8 +131,8 @@
       <div slot="footer"
            class="dialog-footer">
         <el-button type="primary"
-                   @click="handleAddDialogOk">确 定</el-button>
-        <el-button @click="handleAddDialogClose">取 消</el-button>
+                   @click="handleAddDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleAddDialogClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

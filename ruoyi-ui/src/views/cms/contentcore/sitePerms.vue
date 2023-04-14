@@ -1,9 +1,9 @@
 <template>
   <div class="menu-perms-container" v-loading="loading">
-    <el-row class="mb10">
+    <el-row class="mb12">
       <el-col>
-        <el-button plain type="success" icon="el-icon-edit" size="mini" @click="handleSave">保存</el-button>
-        <el-button plain type="primary" icon="el-icon-check" size="mini" @click="handleSelectAll">{{ this.selectAll ? '全不选' : '全选' }}</el-button>
+        <el-button plain type="success" icon="el-icon-edit" size="mini" @click="handleSave">{{ $t("Common.Save") }}</el-button>
+        <el-button plain type="primary" icon="el-icon-check" size="mini" @click="handleSelectAll">{{ this.selectAll ? $t('Common.CheckInverse') : $t('Common.CheckAll')  }}</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -12,12 +12,9 @@
           v-loading="loading"
           :data="sitePrivs"
           style="width:100%;line-height: normal;">
-          <el-table-column
-            type="index"
-            label="序号"
-            width="50">
+          <el-table-column type="index" :label="$t('Common.RowNo')" width="50">
           </el-table-column>
-          <el-table-column label="站点名称" width="200">
+          <el-table-column :label="$t('CMS.Site.Name')" width="200">
             <template slot-scope="scope">
                 <el-checkbox @change="handleRowSelectAll($event, scope.row.siteId)" v-model="scope.row.perms['View']">{{ scope.row.name }}</el-checkbox>
             </template>
@@ -136,7 +133,7 @@ export default {
         perms: this.sitePrivs
       };
       saveSitePermissions(data).then(response => {
-        this.$modal.msgSuccess("保存成功");
+        this.$modal.msgSuccess(this.$t("Common.SaveSuccess"));
       });
     }
   }

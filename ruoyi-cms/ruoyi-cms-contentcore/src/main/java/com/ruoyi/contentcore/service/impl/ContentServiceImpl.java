@@ -343,9 +343,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	public boolean checkSameTitle(Long siteId, Long catalogId, Long contentId, String title) {
 		CmsSite site = this.siteService.getSite(siteId);
 
-		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
-		String repeatTitleCheckType = RepeatTitleCheckProperty.getValue(catalog.getConfigProps(),
-				site.getConfigProps());
+		String repeatTitleCheckType = RepeatTitleCheckProperty.getValue(site.getConfigProps());
 
 		if (StringUtils.isNotEmpty(repeatTitleCheckType)) {
 			if (RepeatTitleCheckProperty.CheckType_Site.equals(repeatTitleCheckType)) {

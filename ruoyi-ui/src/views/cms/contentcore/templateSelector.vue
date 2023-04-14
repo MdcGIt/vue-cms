@@ -18,10 +18,10 @@
           <el-button type="primary"
                     icon="el-icon-search"
                     size="small"
-                    @click="handleQuery">搜索</el-button>
+                    @click="handleQuery">{{ $t("Common.Search") }}</el-button>
           <el-button icon="el-icon-refresh"
                     size="small"
-                    @click="resetQuery">重置</el-button>
+                    @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
         </el-form-item>
       </el-form>
       <el-table 
@@ -49,8 +49,8 @@
             class="dialog-footer">
         <el-button type="primary" 
                     :disabled="okBtnDisabled"
-                    @click="handleOk">确 定</el-button>
-        <el-button @click="handleCancel">取 消</el-button>
+                    @click="handleOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleCancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

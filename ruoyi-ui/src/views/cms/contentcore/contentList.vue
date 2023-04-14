@@ -96,9 +96,9 @@
           <el-button-group>
             <el-button type="primary"
                         icon="el-icon-search"
-                        @click="handleQuery">搜索</el-button>
+                        @click="handleQuery">{{ $t("Common.Search") }}</el-button>
             <el-button icon="el-icon-refresh"
-                        @click="resetQuery">重置</el-button>
+                        @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
           </el-button-group>
         </el-form-item>
       </el-form>
@@ -141,7 +141,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作"
+      <el-table-column :label="$t('Common.Operation')"
                         align="center"
                         width="300"
                         class-name="small-padding fixed-width">
@@ -202,8 +202,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" 
-                    @click="handleTopDialogOk">确 定</el-button>
-        <el-button @click="this.topDialogVisible=false">取 消</el-button>
+                    @click="handleTopDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="this.topDialogVisible=false">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 进度条 -->
