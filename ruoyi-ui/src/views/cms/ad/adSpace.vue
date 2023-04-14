@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="24"
-            class="mb8">
+            class="mb12">
       <el-col :span="12">
         <el-button plain
                    type="primary"
@@ -10,22 +10,24 @@
                    @click="handleAdd">新建</el-button>
         <el-button plain
                    type="danger"
-                   icon="el-icon-plus"
+                   icon="el-icon-delete"
                    size="mini"
                    :disabled="selectedRows.length===0"
                    @click="handleDelete">删除</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right">
         <el-input placeholder="广告位名称" v-model="queryParams.name" size="mini" class="mr10" style="width: 200px;"></el-input>
-        <el-button 
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="loadAdSpaceList">搜索</el-button>
-        <el-button 
-          icon="el-icon-refresh"
-          size="mini"
-          @click="resetQuery">重置</el-button>
+        <el-button-group>
+          <el-button 
+            type="primary"
+            icon="el-icon-search"
+            size="mini"
+            @click="loadAdSpaceList">搜索</el-button>
+          <el-button 
+            icon="el-icon-refresh"
+            size="mini"
+            @click="resetQuery">重置</el-button>
+        </el-button-group>
       </el-col>
     </el-row>
     <el-row>

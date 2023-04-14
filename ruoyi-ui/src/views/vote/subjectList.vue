@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           v-if="subjectTableExpand"

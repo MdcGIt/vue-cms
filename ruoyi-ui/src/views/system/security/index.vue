@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           type="primary"
           plain
           icon="el-icon-plus"
-          size="mini"
+          size="small"
           @click="handleAdd"
         >{{ $t('Common.Add') }}</el-button>
       </el-col>
@@ -15,7 +15,7 @@
           type="success"
           plain
           icon="el-icon-edit"
-          size="mini"
+          size="small"
           :disabled="single"
           @click="handleUpdate"
         >{{ $t('Common.Edit') }}</el-button>
@@ -25,12 +25,12 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           :disabled="multiple"
           @click="handleDelete"
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :search="false" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">

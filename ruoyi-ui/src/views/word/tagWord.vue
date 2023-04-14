@@ -1,50 +1,47 @@
 <template>
   <div class="tag-word-container">
     <el-row :gutter="24">
-      <el-col :span="4"
-              :xs="24">
+      <el-col :span="4" :xs="24">
         <cms-tagword-group-tree 
           ref="groupTree"
           :new-btn="true"    
           @node-click="handleTreeNodeClick">
         </cms-tagword-group-tree>
       </el-col>
-      <el-col :span="20"
-              :xs="24">
-        <el-row :gutter="24" class="mb8">
+      <el-col :span="20" :xs="24">
+        <el-row :gutter="24" class="mb12">
           <el-col :span="12">
-            <div style="line-height: 36px;">
-              <el-button type="primary"
-                          icon="el-icon-plus"
-                          size="mini"
-                          plain
-                          :disabled="selectedGroupId==''"
-                          @click="handleAdd">新增</el-button>
-              <el-button type="danger"
-                          icon="el-icon-delete"
-                          size="mini"
-                          plain
-                          :disabled="selectedGroupId==''||selectedIds.length==0"
-                          @click="handleDelete">删除</el-button>
-            </div>
+            <el-button 
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              plain
+              :disabled="selectedGroupId==''"
+              @click="handleAdd">新增</el-button>
+            <el-button 
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              plain
+              :disabled="selectedGroupId==''||selectedIds.length==0"
+              @click="handleDelete">删除</el-button>
           </el-col>
-          <el-col :span="12" style="text-align: right;">
-            <el-form :model="queryParams"
-                    ref="queryForm"
-                    :inline="true"
-                    class="el-form-search">
+          <el-col :span="12">
+            <el-form 
+              :model="queryParams"
+              ref="queryForm"
+              :inline="true"
+              size="mini"
+              class="el-form-search">
               <el-form-item prop="query">
-                <el-input v-model="queryParams.query" size="mini" placeholder="输入TAG词查询">
+                <el-input v-model="queryParams.query" placeholder="输入TAG词查询">
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary"
-                          icon="el-icon-search"
-                          size="mini"
-                          @click="handleQuery">搜索</el-button>
-                <el-button icon="el-icon-refresh"
-                          size="mini"
-                          @click="resetQuery">重置</el-button>
+                <el-button-group>
+                  <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+                  <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+                </el-button-group>
               </el-form-item>
             </el-form>
           </el-col>

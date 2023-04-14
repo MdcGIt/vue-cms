@@ -1,83 +1,96 @@
 <template>
   <!-- 会员管理页 -->
   <div class="app-container">
+    <el-row :gutter="10" class="mb12">
+      <el-col :span="1.5">
+        <el-button
+          plain
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button 
+          plain
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate">{{ $t("Common.Edit") }}</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button 
+          plain
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
     <el-row>
-      <el-col>
-        <el-form :model="queryParams" ref="queryForm" size="mini" :inline="true" label-width="55px">
-          <el-form-item label="用户名" prop="userName">
-            <el-input
-              v-model="queryParams.userName"
-              clearable
-              style="width: 160px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="昵称" prop="nickName">
-            <el-input
-              v-model="queryParams.nickName"
-              clearable
-              style="width: 160px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="Email" prop="email">
-            <el-input
-              v-model="queryParams.email"
-              clearable
-              style="width: 160px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="手机号" prop="phoneNumber">
-            <el-input
-              v-model="queryParams.phoneNumber"
-              clearable
-              style="width: 160px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-select 
-              v-model="queryParams.status"
-              clearable
-              style="width: 110px">
-              <el-option 
-                v-for="dict in dict.type.MemberStatus"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value" />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item prop="userName">
+          <el-input
+            v-model="queryParams.userName"
+            clearable
+            placeholder="用户名"
+            style="width: 160px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="nickName">
+          <el-input
+            v-model="queryParams.nickName"
+            clearable
+            placeholder="昵称"
+            style="width: 160px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="email">
+          <el-input
+            v-model="queryParams.email"
+            clearable
+            placeholder="Email"
+            style="width: 160px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="phoneNumber">
+          <el-input
+            v-model="queryParams.phoneNumber"
+            clearable
+            placeholder="手机号"
+            style="width: 160px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="status">
+          <el-select 
+            v-model="queryParams.status"
+            clearable
+            placeholder="状态"
+            style="width: 110px">
+            <el-option 
+              v-for="dict in dict.type.MemberStatus"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
+
     </el-row>
-    <el-row :gutter="10"
-            class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary"
-                   icon="el-icon-plus"
-                   size="mini"
-                   @click="handleAdd">{{ $t("Common.Add") }}</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success"
-                   icon="el-icon-edit"
-                   size="mini"
-                   :disabled="single"
-                   @click="handleUpdate">{{ $t("Common.Edit") }}</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   size="mini"
-                   :disabled="multiple"
-                   @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
-      </el-col>
-    </el-row>
+
     <el-table v-loading="loading"
               :data="dataList"
               @selection-change="handleSelectionChange">
@@ -228,6 +241,7 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      showSearch: true,
       // 选中数组
       ids: [],
       // 非单个禁用

@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           type="success" 
           plain 
           icon="el-icon-cricle-check"
-          size="small" 
+          size="mini" 
           :disabled="commentMultiple" 
           v-hasPermi="['comment:audit']"
           @click="handleAuditPass">审核通过</el-button>
@@ -16,7 +16,7 @@
           type="warning" 
           plain 
           icon="el-icon-cricle-close" 
-          size="small" 
+          size="mini" 
           :disabled="commentMultiple"
           v-hasPermi="['comment:audit']"
           @click="handleAuditNotPass">审核不通过</el-button>
@@ -26,14 +26,14 @@
           type="danger" 
           plain 
           icon="el-icon-delete" 
-          size="small" 
+          size="mini" 
           :disabled="commentMultiple" 
           v-hasPermi="['comment:delete']"
           @click="handleDelete" >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadCommentList"></right-toolbar>
     </el-row>
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" style="float:right;" v-show="showSearch">
       <el-form-item label="来源类型" prop="sourceType">
         <el-input
           v-model="queryParams.sourceType"
@@ -73,8 +73,10 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="small" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+          <el-button icon="el-icon-refresh" size="small" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+        </el-button-group>
       </el-form-item>
     </el-form>
     <el-table v-loading="loading" :data="commentList" @selection-change="handleSelectionChange">

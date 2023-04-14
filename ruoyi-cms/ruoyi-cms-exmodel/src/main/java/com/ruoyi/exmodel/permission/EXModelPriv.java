@@ -4,7 +4,7 @@ public interface EXModelPriv {
 
 	String Prefix = "cms:exmodel:";
 
-	public String View = Prefix + "list";
+	public String View = Prefix + "view";
 
 	public String Add = Prefix + "add";
 

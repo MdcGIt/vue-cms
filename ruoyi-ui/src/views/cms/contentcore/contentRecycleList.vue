@@ -1,70 +1,83 @@
 <template>
   <div class="cms-content-list">
-    <el-form :model="queryParams"
-              ref="queryForm"
-              size="small"
-              :inline="true">
-      <el-form-item prop="title">
-        <el-input v-model="queryParams.title"
-                  placeholder="请输入内容标题"
-                  clearable
-                  style="width: 200px"
-                  @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item prop="contentType">
-        <el-select v-model="queryParams.contentType"
-                    placeholder="内容类型"
-                    clearable
-                    style="width: 110px">
-          <el-option v-for="ct in contentTypeOptions"
-                      :key="ct.id"
-                      :label="ct.name"
-                      :value="ct.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="status">
-        <el-select v-model="queryParams.status"
-                    placeholder="状态"
-                    clearable
-                    style="width: 110px">
-          <el-option v-for="dict in dict.type.CMSContentStatus"
-                      :key="dict.value"
-                      :label="dict.label"
-                      :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button-group>
-          <el-button type="primary"
-                      icon="el-icon-search"
-                      @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                      @click="resetQuery">重置</el-button>
-        </el-button-group>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10"
-            class="mb8">
-      <el-col :span="1.5">
-        <el-button 
-          plain
-          type="primary"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleRecover">恢复
-        </el-button>
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-row :gutter="10">
+          <el-col :span="1.5">
+            <el-button 
+              plain
+              type="primary"
+              icon="el-icon-refresh-left"
+              size="mini"
+              :disabled="multiple"
+              @click="handleRecover">恢复
+            </el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              plain
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete">{{ $t("Common.Delete") }}
+            </el-button>
+          </el-col>
+        </el-row>
       </el-col>
-      <el-col :span="1.5">
-        <el-button 
-          plain
-          type="danger"
-          icon="el-icon-delete"
+      <el-col :span="12" style="text-align:right">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
           size="mini"
-          :disabled="multiple"
-          @click="handleDelete">{{ $t("Common.Delete") }}
-        </el-button>
+          :inline="true"
+          class="el-form-search">
+          <el-form-item prop="title">
+            <el-input 
+              v-model="queryParams.title"
+              placeholder="请输入内容标题"
+              clearable
+              style="width: 200px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item prop="contentType">
+            <el-select 
+              v-model="queryParams.contentType"
+              placeholder="内容类型"
+              clearable
+              style="width: 110px">
+              <el-option 
+                v-for="ct in contentTypeOptions"
+                :key="ct.id"
+                :label="ct.name"
+                :value="ct.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="status">
+            <el-select  
+              v-model="queryParams.status"
+              placeholder="状态"
+              clearable
+              style="width: 110px">
+              <el-option 
+                v-for="dict in dict.type.CMSContentStatus"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">搜索</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">重置</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
 

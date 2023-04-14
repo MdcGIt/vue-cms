@@ -1,32 +1,38 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              class="el-form-search">
-        <el-form-item prop="query">
-          <el-input v-model="queryParams.query" size="small">
-          </el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="small"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="small"
-                    @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
-    <el-row class="mb8">
-      <el-button type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                  plain
-                  :disabled="selectedIds.length==0"
-                  @click="handleDelete">删除</el-button>
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-button type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                    plain
+                    :disabled="selectedIds.length==0"
+                    @click="handleDelete">删除</el-button>
+      </el-col>
+      <el-col :span="12" style="text-align:right">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          class="el-form-search">
+          <el-form-item prop="query">
+            <el-input v-model="queryParams.query" placeholder="请输入搜索词">
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">搜索</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">重置</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
     <el-row>
       <el-table v-loading="loading"

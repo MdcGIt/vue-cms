@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           :disabled="multiple"
           @click="handleDelete"
         >{{ $t('Common.Delete') }}</el-button>
@@ -16,7 +16,7 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           @click="handleClean"
         >{{ $t('Common.Clean') }}</el-button>
       </el-col>
@@ -25,71 +25,79 @@
           type="warning"
           plain
           icon="el-icon-download"
-          size="mini"
+          size="small"
           @click="handleExport"
         >{{ $t('Common.Export') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
+          type="info"
           plain
           icon="el-icon-close"
-          size="mini"
+          size="small"
           @click="handleClose"
         >{{ $t('Common.Close') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-    
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="80px" style="text-align:right">
-      <el-form-item :label="$t('System.OpLog.Title')" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          clearable
-          style="width: 140px;"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.OpLog.Operator')" prop="operName">
-        <el-input
-          v-model="queryParams.operName"
-          clearable
-          style="width: 140px;"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.OpLog.OpType')" prop="businessType">
-        <el-input
-          v-model="queryParams.businessType"
-          clearable
-          style="width: 140px;"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.OpLog.ResponseCode')" prop="responseCode">
-        <el-input
-          v-model="queryParams.responseCode"
-          clearable
-          style="width: 140px;"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.OpLog.OpTime')">
-        <el-date-picker
-          v-model="dateRange"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          :start-placeholder="$t('Common.BeginDate')"
-          :end-placeholder="$t('Common.EndDate')"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item prop="title">
+          <el-input
+            v-model="queryParams.title"
+            clearable
+            :placeholder="$t('System.OpLog.Title')"
+            style="width: 140px;"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="operName">
+          <el-input
+            v-model="queryParams.operName"
+            clearable
+            :placeholder="$t('System.OpLog.Operator')"
+            style="width: 140px;"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="businessType">
+          <el-input
+            v-model="queryParams.businessType"
+            clearable
+            style="width: 140px;"
+            :placeholder="$t('System.OpLog.OpType')"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="responseCode">
+          <el-input
+            v-model="queryParams.responseCode"
+            clearable
+            style="width: 140px;"
+            :placeholder="$t('System.OpLog.ResponseCode')"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item :label="$t('System.OpLog.OpTime')">
+          <el-date-picker
+            v-model="dateRange"
+            style="width: 240px"
+            value-format="yyyy-MM-dd"
+            type="daterange"
+            range-separator="-"
+            :start-placeholder="$t('Common.BeginDate')"
+            :end-placeholder="$t('Common.EndDate')"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
+    </el-row>
+
     <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column :label="$t('System.OpLog.LogId')" align="center" prop="operId" />

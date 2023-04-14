@@ -1,35 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-      <el-form-item label="标题" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          clearable
-          style="width: 100px"
-        >
-          <el-option
-            v-for="dict in dict.type.VoteStatus"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="small" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -63,6 +34,40 @@
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadVoteList"></right-toolbar>
+    </el-row>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item prop="title">
+          <el-input
+            v-model="queryParams.title"
+            clearable
+            placeholder="请输入标题"
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="status">
+          <el-select
+            v-model="queryParams.status"
+            clearable
+            placeholder="状态"
+            style="width: 100px"
+          >
+            <el-option
+              v-for="dict in dict.type.VoteStatus"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" size="small" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
     </el-row>
 
     <el-table v-loading="loading" :data="voteList" @selection-change="handleSelectionChange">

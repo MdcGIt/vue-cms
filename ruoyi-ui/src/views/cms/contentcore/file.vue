@@ -18,24 +18,27 @@
       <el-container>
         <el-header style="height: 70px;">
           <div class="btn-toolbar">
-            <el-button type="primary"
-                        size="mini"
-                        plain
-                        icon="el-icon-plus"
-                        :disabled="disableAdd"
-                        @click="handleAdd">新建</el-button>
-            <el-button type="primary"
-                        size="mini"
-                        plain
-                        icon="el-icon-upload2"
-                        :disabled="disableAdd"
-                        @click="handleUpload">上传</el-button>
-            <el-button type="danger"
-                        size="mini"
-                        plain
-                        icon="el-icon-delete"
-                        :disabled="disableAdd||multiple"
-                        @click="handleDelete()">删除</el-button>
+            <el-button 
+              type="primary"
+              size="mini"
+              plain
+              icon="el-icon-plus"
+              :disabled="disableAdd"
+              @click="handleAdd">新建</el-button>
+            <el-button 
+              type="primary"
+              size="mini"
+              plain
+              icon="el-icon-upload2"
+              :disabled="disableAdd"
+              @click="handleUpload">上传</el-button>
+            <el-button 
+              type="danger"
+              size="mini"
+              plain
+              icon="el-icon-delete"
+              :disabled="disableAdd||multiple"
+              @click="handleDelete()">删除</el-button>
           </div>
           <el-card shadow='hover' class="directory-toolbar" style="padding: 0, 10px">
             <span class="span-path">

@@ -73,11 +73,11 @@
         <div slot="header" class="clearfix">
           <span>内容配置</span>
         </div>
-        <el-form-item 
+        <!-- <el-form-item 
           label="文章正文图片尺寸">
           宽：<el-input v-model="form_extend.ArticleImageWidth" style="width:100px"></el-input>
           高：<el-input v-model="form_extend.ArticleImageHeight" style="width:100px"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item 
           label="正文首图作为logo"
           prop="AutoArticleLogo">

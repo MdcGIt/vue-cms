@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="88px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true">
       <el-form-item :label="$t('Monitor.Online.LoginIP')" prop="ipaddr">
         <el-input
           v-model="queryParams.ipaddr"
@@ -16,10 +16,11 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+          <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+        </el-button-group>
       </el-form-item>
-
     </el-form>
     <el-table
       v-loading="loading"

@@ -1,55 +1,61 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              class="el-form-search">
-        <el-form-item prop="contentType">
-          <el-select v-model="queryParams.contentType"
-                      placeholder="内容类型"
-                      size="small"
-                      clearable
-                      style="width: 110px">
-            <el-option v-for="ct in contentTypeOptions"
-                        :key="ct.id"
-                        :label="ct.name"
-                        :value="ct.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="query">
-          <el-input v-model="queryParams.query" placeholder="请输入搜索词" size="small">
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="onlyTitle">
-          <el-checkbox v-model="queryParams.onlyTitle" label="仅匹配标题" size="small" border></el-checkbox>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="small"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="small"
-                    @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
-    <el-row :gutter="10"
-            class="mb8">
-      <el-col :span="1.5">
-        <el-button 
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete">删除</el-button>
+    <el-row :gutter="24">
+      <el-col :span="12" class="mb12">
+        <el-row :gutter="10">
+          <el-col :span="1.5">
+            <el-button 
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete">删除</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              icon="el-icon-refresh"
+              size="mini"
+              @click="handleRebuildIndex">重建全站索引</el-button>
+          </el-col>
+        </el-row>
       </el-col>
-      <el-col :span="1.5">
-        <el-button 
-          icon="el-icon-refresh"
+      <el-col :span="12">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
           size="mini"
-          @click="handleRebuildIndex">重建全站索引</el-button>
+          class="el-form-search">
+          <el-form-item prop="contentType">
+            <el-select v-model="queryParams.contentType"
+                        placeholder="内容类型"
+                        clearable
+                        style="width: 110px">
+              <el-option v-for="ct in contentTypeOptions"
+                          :key="ct.id"
+                          :label="ct.name"
+                          :value="ct.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="query">
+            <el-input v-model="queryParams.query" placeholder="请输入搜索词">
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="onlyTitle">
+            <el-checkbox v-model="queryParams.onlyTitle" label="仅匹配标题" border></el-checkbox>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">搜索</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">重置</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
 

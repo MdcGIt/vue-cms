@@ -1,74 +1,6 @@
 <template>
   <div class="cms-content-list">
-    <el-form :model="queryParams"
-              ref="queryForm"
-              size="small"
-              :inline="true">
-      <el-form-item prop="title">
-        <el-input v-model="queryParams.title"
-                  placeholder="请输入内容标题"
-                  clearable
-                  style="width: 200px"
-                  @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item prop="contentType">
-        <el-select v-model="queryParams.contentType"
-                    placeholder="内容类型"
-                    clearable
-                    style="width: 110px">
-          <el-option v-for="ct in contentTypeOptions"
-                      :key="ct.id"
-                      :label="ct.name"
-                      :value="ct.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="status">
-        <el-select v-model="queryParams.status"
-                    placeholder="状态"
-                    clearable
-                    style="width: 110px">
-          <el-option v-for="dict in dict.type.CMSContentStatus"
-                      :key="dict.value"
-                      :label="dict.label"
-                      :value="dict.value" />
-        </el-select>
-        
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker v-model="dateRange"
-                        size="small"
-                        style="width: 240px"
-                        value-format="yyyy-MM-dd"
-                        type="daterange"
-                        range-separator="-"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-select @change="loadContentList"
-                   v-model="queryParams.sorts"
-                   size="small"
-                   style="width: 140px">
-          <el-option value="" label="默认排序"></el-option>
-          <el-option value="[{'column':'create_time','direction':'ASC'}]" label="添加时间升序"></el-option>
-          <el-option value="[{'column':'create_time','direction':'DESC'}]" label="添加时间降序"></el-option>
-          <el-option value="[{'column':'publish_date','direction':'ASC'}]" label="发布时间升序"></el-option>
-          <el-option value="[{'column':'publish_date','direction':'DESC'}]" label="发布时间降序"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button-group>
-          <el-button type="primary"
-                      icon="el-icon-search"
-                      @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                      @click="resetQuery">重置</el-button>
-        </el-button-group>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10"
-            class="mb8">
+    <el-row :gutter="10" class="mb5">
       <el-col :span="1.5">
         <el-popover placement="bottom-start"
                     :width="304"
@@ -104,18 +36,84 @@
                     @click="handleDelete">{{ $t("Common.Delete") }}
         </el-button>
       </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="loadContentList"></right-toolbar>
+    </el-row>
+    <el-row style="text-align:right" class="mb12">
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search" :inline="true" v-show="showSearch">
+        <el-form-item prop="title">
+          <el-input v-model="queryParams.title"
+                    placeholder="请输入内容标题"
+                    clearable
+                    style="width: 200px"
+                    @keyup.enter.native="handleQuery" />
+        </el-form-item>
+        <el-form-item prop="contentType">
+          <el-select v-model="queryParams.contentType"
+                      placeholder="内容类型"
+                      clearable
+                      style="width: 110px">
+            <el-option v-for="ct in contentTypeOptions"
+                        :key="ct.id"
+                        :label="ct.name"
+                        :value="ct.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="status">
+          <el-select v-model="queryParams.status"
+                      placeholder="状态"
+                      clearable
+                      style="width: 110px">
+            <el-option v-for="dict in dict.type.CMSContentStatus"
+                        :key="dict.value"
+                        :label="dict.label"
+                        :value="dict.value" />
+          </el-select>
+          
+        </el-form-item>
+        <el-form-item label="创建时间">
+          <el-date-picker v-model="dateRange"
+                          size="small"
+                          style="width: 240px"
+                          value-format="yyyy-MM-dd"
+                          type="daterange"
+                          range-separator="-"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-select @change="loadContentList"
+                    v-model="queryParams.sorts"
+                    size="small"
+                    style="width: 140px">
+            <el-option value="" label="默认排序"></el-option>
+            <el-option value="[{'column':'create_time','direction':'ASC'}]" label="添加时间升序"></el-option>
+            <el-option value="[{'column':'create_time','direction':'DESC'}]" label="添加时间降序"></el-option>
+            <el-option value="[{'column':'publish_date','direction':'ASC'}]" label="发布时间升序"></el-option>
+            <el-option value="[{'column':'publish_date','direction':'DESC'}]" label="发布时间降序"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary"
+                        icon="el-icon-search"
+                        @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh"
+                        @click="resetQuery">重置</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
     </el-row>
 
-    <el-table v-loading="loading"
-              ref="tableContentList"
-              :data="contentList"
-              :height="tableHeight"
-              :max-height="tableMaxHeight"
-              @row-click="handleRowClick"
-              @selection-change="handleSelectionChange">
-      <el-table-column type="selection"
-                        width="50"
-                        align="center" />
+    <el-table 
+      v-loading="loading"
+      ref="tableContentList"
+      size="small"
+      :data="contentList"
+      :height="tableHeight"
+      :max-height="tableMaxHeight"
+      @row-click="handleRowClick"
+      @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center" />
       <el-table-column label="标题" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-link type="primary"
@@ -132,22 +130,13 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="类型"
-                        width="110"
-                        align="center"
-                        prop="contentType"
-                        :formatter="contentTypeFormat" />
-      <el-table-column label="状态"
-                        width="110"
-                        align="center">
+      <el-table-column label="类型" width="110" align="center" prop="contentType" :formatter="contentTypeFormat" />
+      <el-table-column label="状态" width="110" align="center">
         <template slot-scope="scope">
           <el-tag :type="statusTagType(scope.row.status)">{{ statusFormat(scope.row, 'status') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
-                        align="center"
-                        prop="createTime"
-                        width="160">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -264,6 +253,7 @@ export default {
     return {
       // 遮罩层
       loading: false,
+      showSearch: true,
       contentTypeOptions: [],
       catalogId: this.cid,
       contentList: null,

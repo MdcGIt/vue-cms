@@ -1,14 +1,42 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-col>
-        <el-form :model="queryParams"
-                ref="queryForm"
-                :inline="true"
-                label-width="68px"
-                class="el-form-search">
-          <el-form-item label="发布通道" prop="publishPipeCode">
-            <el-select v-model="queryParams.publishPipeCode" size="small" style="width:120px;">
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-row :gutter="10">
+          <el-col :span="1.5">
+            <el-button type="primary"
+                      icon="el-icon-plus"
+                      size="mini"
+                      plain
+                      @click="handleAdd">新增</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="success"
+                      icon="el-icon-edit"
+                      size="mini"
+                      plain
+                      :disabled="single"
+                      @click="handleEdit">编辑</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="danger"
+                      icon="el-icon-delete"
+                      size="mini"
+                      plain
+                      :disabled="multiple"
+                      @click="handleDelete">删除</el-button>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="12" style="text-align:right">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          class="el-form-search">
+          <el-form-item prop="publishPipeCode">
+            <el-select v-model="queryParams.publishPipeCode" placeholder="发布通道" style="width:120px;">
               <el-option
                 v-for="pp in publishPipes"
                 :key="pp.pipeCode"
@@ -17,47 +45,21 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="模板名称" prop="filename">
-            <el-input v-model="queryParams.filename" size="small">
-            </el-input>
+          <el-form-item prop="filename">
+            <el-input v-model="queryParams.filename" placeholder="模板名称"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"
-                      icon="el-icon-search"
-                      size="small"
-                      @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh"
-                      size="small"
-                      @click="resetQuery">重置</el-button>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">搜索</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">重置</el-button>
+            </el-button-group>
           </el-form-item>
         </el-form>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="10"
-            class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary"
-                   icon="el-icon-plus"
-                   size="mini"
-                   plain
-                   @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success"
-                   icon="el-icon-edit"
-                   size="mini"
-                   plain
-                   :disabled="single"
-                   @click="handleEdit">编辑</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   size="mini"
-                   plain
-                   :disabled="multiple"
-                   @click="handleDelete">删除</el-button>
       </el-col>
     </el-row>
 

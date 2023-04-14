@@ -1,35 +1,46 @@
 <template>
   <div class="">
-    <el-row>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              label-width="68px"
-              class="el-form-search">
-        <el-form-item prop="query">
-          <el-input placeholder="名称/代码查询" v-model="queryParams.query" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="mini"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="mini"
-                    @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
-    <el-row class="mb10">
-      <el-button type="primary"
-                  icon="el-icon-plus"
-                  size="mini"
-                  @click="handleAdd">新增</el-button>
-      <el-button type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                  :disabled="multiple"
-                  @click="handleDelete">删除</el-button>
+    <el-row :gutter="24">
+      <el-col :span="12">
+        <el-row>
+          <el-button 
+            plain
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd">新增</el-button>
+          <el-button 
+            plain
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete">删除</el-button>
+        </el-row>
+      </el-col>
+      <el-col :span="12" style="text-align:right">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          class="el-form-search">
+          <el-form-item prop="query">
+            <el-input placeholder="名称/代码查询" v-model="queryParams.query"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">搜索</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">重置</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
 
     <el-table v-loading="loading"
@@ -59,14 +70,16 @@
                        width="180" 
                        class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleEdit(scope.row)">修改</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">删除</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleEdit(scope.row)">修改</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

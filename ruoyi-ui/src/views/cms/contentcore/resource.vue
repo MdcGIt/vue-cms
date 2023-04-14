@@ -1,100 +1,93 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams"
-             ref="queryForm"
-             :inline="true"
-             label-width="68px"
-             class="el-form-search">
-      <el-form-item prop="name" style="padding:2px;">
-        <el-input placeholder="资源名称" v-model="queryParams.name" size="small">
-          <el-select v-model="queryParams.resourceType" slot="prepend" placeholder="类型" size="small" style="width:80px;">
-            <el-option
-              v-for="rt in resourceTypes"
-              :key="rt.id"
-              :label="rt.name"
-              :value="rt.id"
-            />
-          </el-select>
-        </el-input>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker v-model="dateRange"
-                        size="small"
-                        style="width: 240px"
-                        value-format="yyyy-MM-dd"
-                        type="daterange"
-                        range-separator="-"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary"
-                   icon="el-icon-search"
-                   size="small"
-                   @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh"
-                   size="small"
-                   @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10"
-            class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary"
-                   icon="el-icon-plus"
-                   size="mini"
-                   @click="handleAdd">新增</el-button>
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="8">
+        <el-row :gutter="10">
+          <el-col :span="1.5">
+            <el-button 
+              plain
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd">新增</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              plain
+              type="success"
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="single"
+              @click="handleUpdate">修改</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              plain
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete">删除</el-button>
+          </el-col>
+        </el-row>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="success"
-                   icon="el-icon-edit"
-                   size="mini"
-                   :disabled="single"
-                   @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   size="mini"
-                   :disabled="multiple"
-                   @click="handleDelete">删除</el-button>
+      <el-col :span="16">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          style="text-align:right"
+          class="el-form-search">
+          <el-form-item prop="name">
+            <el-input placeholder="资源名称" v-model="queryParams.name">
+              <el-select v-model="queryParams.resourceType" slot="prepend" placeholder="类型" style="width:80px;">
+                <el-option
+                  v-for="rt in resourceTypes"
+                  :key="rt.id"
+                  :label="rt.name"
+                  :value="rt.id"
+                />
+              </el-select>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="创建时间">
+            <el-date-picker 
+              v-model="dateRange"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"></el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">搜索</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">重置</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading"
-              :data="resourceList"
-              @selection-change="handleSelectionChange">
-      <el-table-column type="selection"
-                       width="55"
-                       align="center" />
-      <el-table-column label="ID"
-                       align="center"
-                       prop="resourceId"
-                       width="180" />
+    <el-table v-loading="loading" size="small" :data="resourceList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="resourceId" width="180" />
       <el-table-column prop="resourceTypeName" label="类型" width="80" />
-      <el-table-column label="名称"
-                       align="left"
-                       prop="name">
+      <el-table-column label="名称" align="left" prop="name">
         <template slot-scope="scope">
-          <el-link 
-            type="primary"
-            target="_blank"
-            :href="scope.row.src">{{ scope.row.name }}</el-link>
+          <el-link type="primary" target="_blank" :href="scope.row.src">{{ scope.row.name }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="存储方式"
-                       align="center"
-                       width="80"
-                       prop="storageType" />
-      <el-table-column label="大小"
-                       align="center"
-                       width="80"
-                       prop="fileSizeName" />
-      <el-table-column label="创建时间"
-                       align="center"
-                       prop="createTime"
-                       width="180">
+      <el-table-column label="存储方式" align="center" width="80" prop="storageType" />
+      <el-table-column label="大小" align="center" width="80" prop="fileSizeName" />
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -118,21 +111,24 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="getList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改资源对话框 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               width="500px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      width="500px"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px">
         <el-form-item label="上传资源">
           <el-upload 
             ref="upload"
@@ -172,22 +168,6 @@
     </el-dialog>
   </div>
 </template>
-<style scoped>
-.time {
-  font-size: 13px;
-  color: #999;
-}
-.el-card {
-  margin-bottom: 10px;
-  padding: 10px;
-}
-.r-image {
-  width: 130px;
-}
-.el-form-search {
-  width: 100%;
-}
-</style>
 <script>
 import { getToken } from "@/utils/auth";
 import { getResourceTypes, getResrouceList, getResourceDetail, delResource } from "@/api/contentcore/resource";
@@ -216,7 +196,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
         resourceType: undefined,
         name: undefined,
         beginTime: undefined,

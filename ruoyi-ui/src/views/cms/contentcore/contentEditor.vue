@@ -189,8 +189,8 @@
                     </el-input>
                   </el-form-item>
                 </el-tab-pane>
-                <el-tab-pane label="扩展配置" name="extend">
-                </el-tab-pane>
+                <!-- <el-tab-pane label="扩展配置" name="extend">
+                </el-tab-pane> -->
               </el-tabs>
             </el-card>
           </div>

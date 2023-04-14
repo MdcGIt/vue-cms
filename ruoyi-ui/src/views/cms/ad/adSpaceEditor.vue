@@ -1,6 +1,6 @@
 <template>
   <div class="app-container adspace-editor-container">
-    <div class="mb10">
+    <div class="mb12">
       <el-button 
         plain
         type="success"
@@ -74,7 +74,7 @@
       <div slot="header" class="clearfix">
         <span>广告列表</span>
       </div>
-      <el-row :gutter="24" class="mb8">
+      <el-row :gutter="24" class="mb12">
         <el-col :span="12">
           <el-button 
             plain

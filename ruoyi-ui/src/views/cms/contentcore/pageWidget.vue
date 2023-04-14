@@ -1,6 +1,6 @@
 <template>
   <div class="pagewidget-container">
-    <el-row class="mb8">
+    <el-row class="mb12">
       <el-col :span="8">
         <el-button 
           plain
@@ -10,14 +10,16 @@
           @click="handleAdd">新建</el-button>
       </el-col>
       <el-col :span="16" style="text-align: right;">
-        <el-select v-model="queryParams.type"
-                    placeholder="选择类型"
-                    clearable
-                    @change="loadPageWidgetList">
-          <el-option v-for="item in pageWidgetTypes"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id" />
+        <el-select 
+          v-model="queryParams.type" size="mini"
+          placeholder="选择类型"
+          clearable
+          @change="loadPageWidgetList">
+          <el-option 
+            v-for="item in pageWidgetTypes"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id" />
         </el-select>
       </el-col>
     </el-row>

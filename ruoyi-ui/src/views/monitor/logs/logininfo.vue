@@ -1,56 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item :label="$t('System.LoginInfo.IP')" prop="ipaddr">
-        <el-input
-          v-model="queryParams.ipaddr"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.LoginInfo.UserName')" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.LoginInfo.Status')" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          clearable
-        >
-          <el-option
-            v-for="dict in dict.type.SuccessOrFail"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item :label="$t('System.LoginInfo.LoginTime')">
-        <el-date-picker
-          v-model="dateRange"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          :start-placeholder="$t('Common.BeginDate')"
-          :end-placeholder="$t('Common.EndDate')"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           :disabled="multiple"
           @click="handleDelete"
         >{{ $t('Common.Delete') }}</el-button>
@@ -60,7 +16,7 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           @click="handleClean"
         >{{ $t('Common.Clean') }}</el-button>
       </el-col>
@@ -69,20 +25,72 @@
           type="warning"
           plain
           icon="el-icon-download"
-          size="mini"
+          size="small"
           @click="handleExport"
         >{{ $t('Common.Export') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
+          type="info"
           plain
           icon="el-icon-close"
-          size="mini"
+          size="small"
           @click="handleClose"
         >{{ $t('Common.Close') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item prop="ipaddr">
+          <el-input
+            v-model="queryParams.ipaddr"
+            clearable
+            :placeholder="$t('System.LoginInfo.IP')"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="userName">
+          <el-input
+            v-model="queryParams.userName"
+            clearable
+            :placeholder="$t('System.LoginInfo.UserName')"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="status">
+          <el-select
+            v-model="queryParams.status"
+            clearable
+            :placeholder="$t('System.LoginInfo.Status')"
+            style="width:100px"
+          >
+            <el-option
+              v-for="dict in dict.type.SuccessOrFail"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('System.LoginInfo.LoginTime')">
+          <el-date-picker
+            v-model="dateRange"
+            value-format="yyyy-MM-dd"
+            type="daterange"
+            range-separator="-"
+            :start-placeholder="$t('Common.BeginDate')"
+            :end-placeholder="$t('Common.EndDate')"
+            style="width:240px"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
     </el-row>
 
     <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">

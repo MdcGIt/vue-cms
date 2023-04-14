@@ -17,52 +17,44 @@
           <el-form :model="queryParams"
               ref="queryForm"
               :inline="true"
-              label-width="68px"
-              class="el-form-search">
+              size="small"
+              class="el-form-search mb12">
             <el-form-item label="" prop="query">
-              <el-input v-model="queryParams.query" size="small" placeholder="输入标题查询">
+              <el-input v-model="queryParams.query" placeholder="输入标题查询">
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary"
-                        icon="el-icon-search"
-                        size="small"
-                        @click="handleQuery">搜索</el-button>
-              <el-button icon="el-icon-refresh"
-                        size="small"
-                        @click="resetQuery">重置</el-button>
+              <el-button-group>
+                <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+                <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+              </el-button-group>
             </el-form-item>
           </el-form>
-          <el-table v-loading="loading"
-                    ref="tableContentList"
-                    :data="contentList"
-                    highlight-current-row
-                    @row-click="handleRowClick"
-                    @selection-change="handleSelectionChange">
-            <el-table-column type="selection"
-                              width="50"
-                              align="center" />
-            <el-table-column label="标题"
-                            align="left"
-                            prop="title">
+          <el-table 
+            v-loading="loading"
+            ref="tableContentList"
+            :data="contentList"
+            highlight-current-row
+            @row-click="handleRowClick"
+            @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column label="标题" align="left" prop="title">
               <template slot-scope="scope">
                 <span><i v-if="scope.row.topFlag>0" class="el-icon-top top-icon" title="置顶"></i> {{ scope.row.title }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="发布时间"
-                              align="center"
-                              prop="publishDate"
-                              width="160">
+            <el-table-column label="发布时间" align="center" prop="publishDate" width="160">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.publishDate) }}</span>
               </template>
             </el-table-column>
           </el-table>
-          <pagination v-show="total>0"
-                      :total="total"
-                      :page.sync="queryParams.pageNum"
-                      :limit.sync="queryParams.pageSize"
-                      @pagination="loadContentList" />
+          <pagination 
+            v-show="total>0"
+            :total="total"
+            :page.sync="queryParams.pageNum"
+            :limit.sync="queryParams.pageSize"
+            @pagination="loadContentList" />
         </el-main>
       </el-container>
       
@@ -79,9 +71,6 @@
 .content-selector-dialog .el-dialog__body {
   padding-top: 10px;
   padding-bottom: 10px;
-}
-.content-selector-dialog .el-form-item {
-  margin-bottom: 10px;
 }
 .content-selector-dialog .el-aside {
   padding: 10px;

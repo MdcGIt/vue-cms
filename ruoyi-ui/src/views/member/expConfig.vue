@@ -1,60 +1,68 @@
 <template>
   <!-- 会员等级经验值操作项配置页 -->
   <div class="app-container">
-    <el-row>
-      <el-col>
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="70px">
-          <el-form-item label="积分类型" prop="levelType">
-            <el-select
-              v-model="queryParams.levelType"
-              style="width: 160px"
-              clearable
-              @keyup.enter.native="handleQuery">
-              <el-option
-                v-for="lt in levelTypes"
-                :key="lt.id"
-                :label="lt.name"
-                :value="lt.id"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="操作项ID" prop="opType">
-            <el-input
-              v-model="queryParams.opType"
-              clearable
-              style="width: 160px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-          </el-form-item>
-        </el-form>
+    <el-row :gutter="10" class="mb12">
+      <el-col :span="1.5">
+        <el-button
+          plain 
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd">新增</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          plain
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate">修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button 
+          plain
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete">删除</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-    <el-row :gutter="10"
-            class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary"
-                   icon="el-icon-plus"
-                   size="mini"
-                   @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success"
-                   icon="el-icon-edit"
-                   size="mini"
-                   :disabled="single"
-                   @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   size="mini"
-                   :disabled="multiple"
-                   @click="handleDelete">删除</el-button>
-      </el-col>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item prop="levelType">
+          <el-select
+            v-model="queryParams.levelType"
+            style="width: 160px"
+            placeholder="积分类型"
+            clearable
+            @keyup.enter.native="handleQuery">
+            <el-option
+              v-for="lt in levelTypes"
+              :key="lt.id"
+              :label="lt.name"
+              :value="lt.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="opType">
+          <el-input
+            v-model="queryParams.opType"
+            clearable
+            placeholder="操作项ID"
+            style="width: 160px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh"  @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
     </el-row>
     <el-table v-loading="loading"
               :data="dataList"
@@ -231,6 +239,7 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      showSearch: true,
       // 选中数组
       ids: [],
       // 非单个禁用

@@ -1,43 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
-      <el-form-item :label="$t('System.Notice.NoticeTitle')" prop="noticeTitle">
-        <el-input
-          v-model="queryParams.noticeTitle"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('Common.CreateBy')" prop="createBy">
-        <el-input
-          v-model="queryParams.createBy"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.Notice.NoticeType')" prop="noticeType">
-        <el-select v-model="queryParams.noticeType" clearable>
-          <el-option
-            v-for="dict in dict.type.NoticeType"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           type="primary"
           plain
           icon="el-icon-plus"
-          size="mini"
+          size="small"
           @click="handleAdd"
           v-hasPermi="['system:notice:add']"
         >{{ $t('Common.Add') }}</el-button>
@@ -47,7 +16,7 @@
           type="success"
           plain
           icon="el-icon-edit"
-          size="mini"
+          size="small"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:notice:edit']"
@@ -58,13 +27,49 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:notice:remove']"
         >{{ $t('Common.Delete') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item prop="noticeTitle">
+          <el-input
+            v-model="queryParams.noticeTitle"
+            clearable
+            :placeholder="$t('System.Notice.NoticeTitle')"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="createBy">
+          <el-input
+            v-model="queryParams.createBy"
+            clearable
+            :placeholder="$t('Common.CreateBy')"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="noticeType">
+          <el-select v-model="queryParams.noticeType" :placeholder="$t('System.Notice.NoticeType')" style="width:100px" clearable>
+            <el-option
+              v-for="dict in dict.type.NoticeType"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
     </el-row>
 
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">

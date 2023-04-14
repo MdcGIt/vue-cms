@@ -28,7 +28,7 @@
         </el-switch>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="mini" @click="handleSave">{{ $t('Common.Save') }}</el-button>
+        <el-button type="primary" size="smjall" @click="handleSave">{{ $t('Common.Save') }}</el-button>
       </el-form-item>
     </el-form>
   </div>

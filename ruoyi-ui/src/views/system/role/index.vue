@@ -1,52 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-      <el-form-item :label="$t('System.Role.RoleName')" prop="roleName">
-        <el-input
-          v-model="queryParams.roleName"
-          :placeholder="$t('System.Role.Placeholder.RoleName')"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.Role.RoleKey')" prop="roleKey">
-        <el-input
-          v-model="queryParams.roleKey"
-          :placeholder="$t('System.Role.Placeholder.RoleKey')"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.Role.Status')" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          :placeholder="$t('System.Role.Placeholder.Status')"
-          clearable
-          style="width: 240px"
-        >
-          <el-option
-            v-for="dict in dict.type.EnableOrDisable"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button
           type="primary"
           plain
           icon="el-icon-plus"
-          size="mini"
+          size="small"
           @click="handleAdd"
           v-hasPermi="['system:role:add']"
         >{{ $t('Common.Add') }}</el-button>
@@ -56,7 +16,7 @@
           type="success"
           plain
           icon="el-icon-edit"
-          size="mini"
+          size="small"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:role:edit']"
@@ -67,7 +27,7 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:role:remove']"
@@ -78,12 +38,55 @@
           type="warning"
           plain
           icon="el-icon-download"
-          size="mini"
+          size="small"
           @click="handleExport"
           v-hasPermi="['system:role:export']"
         >{{ $t('Common.Export') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item :label="$t('System.Role.RoleName')" prop="roleName">
+          <el-input
+            v-model="queryParams.roleName"
+            :placeholder="$t('System.Role.Placeholder.RoleName')"
+            clearable
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item :label="$t('System.Role.RoleKey')" prop="roleKey">
+          <el-input
+            v-model="queryParams.roleKey"
+            :placeholder="$t('System.Role.Placeholder.RoleKey')"
+            clearable
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item :label="$t('System.Role.Status')" prop="status">
+          <el-select
+            v-model="queryParams.status"
+            :placeholder="$t('System.Role.Placeholder.Status')"
+            clearable
+            style="width: 240px"
+          >
+            <el-option
+              v-for="dict in dict.type.EnableOrDisable"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
     </el-row>
 
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
