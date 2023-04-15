@@ -40,8 +40,8 @@
           style="text-align:right"
           class="el-form-search">
           <el-form-item prop="name">
-            <el-input placeholder="资源名称" v-model="queryParams.name">
-              <el-select v-model="queryParams.resourceType" slot="prepend" placeholder="类型" style="width:80px;">
+            <el-input :placeholder="$t('CMS.Resource.Name')" v-model="queryParams.name">
+              <el-select v-model="queryParams.resourceType" slot="prepend" :placeholder="$t('CMS.Resource.Type')" style="width:80px;">
                 <el-option
                   v-for="rt in resourceTypes"
                   :key="rt.id"
@@ -51,15 +51,16 @@
               </el-select>
             </el-input>
           </el-form-item>
-          <el-form-item label="创建时间">
+          <el-form-item :label="$t('Common.CreateTime')">
             <el-date-picker 
               v-model="dateRange"
               style="width: 240px"
               value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"></el-date-picker>
+              :start-placeholder="$t('Common.BeginDate')"
+              :end-placeholder="$t('Common.EndDate')"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item>
             <el-button-group>
@@ -78,16 +79,16 @@
 
     <el-table v-loading="loading" size="small" :data="resourceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="resourceId" width="180" />
-      <el-table-column prop="resourceTypeName" label="类型" width="80" />
-      <el-table-column label="名称" align="left" prop="name">
+      <el-table-column label="ID" prop="resourceId" align="center" width="180" />
+      <el-table-column :label="$t('CMS.Resource.Type')" prop="resourceTypeName" width="80" />
+      <el-table-column :label="$t('CMS.Resource.Name')" prop="name" align="left">
         <template slot-scope="scope">
           <el-link type="primary" target="_blank" :href="scope.row.src">{{ scope.row.name }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="存储方式" align="center" width="80" prop="storageType" />
-      <el-table-column label="大小" align="center" width="80" prop="fileSizeName" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column :label="$t('CMS.Resource.StorageType')" prop="storageType" align="center" width="80" />
+      <el-table-column :label="$t('CMS.Resource.FileSize')" prop="fileSizeName" align="center" width="80" />
+      <el-table-column :label="$t('Common.CreateTime')" prop="createTime" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -129,7 +130,7 @@
         :model="form"
         :rules="rules"
         label-width="80px">
-        <el-form-item label="上传资源">
+        <el-form-item :label="$t('CMS.Resource.UploadResource')">
           <el-upload 
             ref="upload"
             drag
@@ -144,20 +145,15 @@
             :on-change="handleUploadChange"
             :limit="1">
               <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+              <div class="el-upload__text">{{ $t('CMS.Resource.UploadTip1') }}</div>
+              <div class="el-upload__tip" slot="tip">{{ $t('CMS.Resource.UploadTip2', [ '[.jpg, .png]',  '500kb']) }}</div>
             </el-upload>
         </el-form-item>
-        <el-form-item label="资源名称"
-                      prop="name">
-          <el-input v-model="form.name"
-                    placeholder="请输入资源名称" />
+        <el-form-item :label="$t('CMS.Resource.Name')" prop="name">
+          <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item :label="$t('Common.Remark')"
-                      prop="remark">
-          <el-input v-model="form.remark"
-                    type="textarea"
-                    placeholder="请输入内容" />
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer"
@@ -208,7 +204,7 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "资源名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.Resource.RuleTips.Name'), trigger: "blur" }
         ]
       },
       // 上传参数
@@ -282,7 +278,7 @@ export default {
     handleAdd () {
       this.reset();
       this.open = true;
-      this.title = "添加资源";
+      this.title = this.$t('CMS.Resource.AddDialogTitle');
     },
     /** 修改按钮操作 */
     handleUpdate (row) {
@@ -290,8 +286,8 @@ export default {
       const resourceId = row.resourceId || this.ids
       getResourceDetail(resourceId).then(response => {
         this.form = response.data;
+        this.title = this.$t('CMS.Resource.EditDialogTitle');
         this.open = true;
-        this.title = "修改资源";
       });
     },
     handleFileUploadProgress(event, file, fileList) {
@@ -299,12 +295,10 @@ export default {
     },
     handleFileSuccess(response, file, fileList) {
       this.upload.isUploading = false;
-      if (response.code === 200) {
-        this.$modal.msgSuccess(this.form.resourceId != undefined ? "修改成功" : "添加成功");
+        this.$modal.msgSuccess(response.msg);
+      if (response.code == 200) {
         this.open = false;
         this.getList();
-      } else {
-        this.$modal.msgError(response.msg);
       }
       this.$refs.upload.clearFiles();
       this.resetForm("form");
@@ -312,7 +306,7 @@ export default {
     handleUploadChange(file) {
       file.name = file.name.toLowerCase();
       if (!file.name.endsWith(".png") && !file.name.endsWith(".jpg")) {
-        this.$modal.msgError("文件格式错误，请上传图片类型,如：.jpg，.png后缀的文件。");
+        this.$modal.msgError(this.$t('CMS.Resource.FileTypeErrMsg'));
         this.upload.fileList = [];
         return;
       }
@@ -332,11 +326,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete (row) {
       const resourceIds = row.resourceId || this.ids;
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return delResource(resourceIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     }
   }

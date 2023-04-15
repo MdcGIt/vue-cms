@@ -84,7 +84,7 @@
       :close-on-click-modal="false"
       width="600px"
       append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" abel-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item :label="$t('CMS.PageWidget.Type')" prop="type">
           <el-select v-model="form.type" clearable>
             <el-option  

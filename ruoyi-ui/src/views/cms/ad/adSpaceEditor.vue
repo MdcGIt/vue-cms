@@ -110,9 +110,7 @@
           :data="dataList"
           @selection-change="handleSelectionChange"
           @row-dblclick="handleEditAdvertisement">
-          <el-table-column type="selection"
-                          width="50"
-                          align="center" />
+          <el-table-column type="selection" width="50" align="center" />
           <el-table-column :label="$t('CMS.Adv.AdName')" prop="name">
           </el-table-column>
           <el-table-column :label="$t('CMS.Adv.Type')" width="100" align="center" prop="typeName">
@@ -179,7 +177,7 @@
 <script>
 import { getPublishPipeSelectData } from "@/api/contentcore/publishpipe";
 import { getPageWidget, addPageWidget, editPageWidget, publishPageWidgets } from "@/api/contentcore/pagewidget";
-import { listAdvertisements, listAdvertisementTypes, deleteAdvertisement, enableAdvertisement, disableAdvertisement } from "@/api/advertisement/advertisement";
+import { listAdvertisements, deleteAdvertisement, enableAdvertisement, disableAdvertisement } from "@/api/advertisement/advertisement";
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
 
 export default {
@@ -200,16 +198,16 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: this.$t('CMS.Adv.RuleTips.Name'), trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, message: this.$t('CMS.Adv.RuleTips.Code'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Code'), trigger: "blur" }
         ],
         publishPipeCode: [
-          { required: true, message: this.$t('CMS.Adv.RuleTips.PublishPipe'), trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.PublishPipe'), trigger: "blur" }
         ],
         path: [
-          { required: true, message: this.$t('CMS.Adv.RuleTips.Path'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Path'), trigger: "blur" }
         ]
       },
       openTemplateSelector: false,
@@ -236,7 +234,7 @@ export default {
       this.loadPageWidgetInfo();
       this.loadAdvertisementList();
     } else {
-      this.$modal.msgError(this.$t('CMS.Adv.InvalidPageWidgetId', [ this.pageWidgetId ]));
+      this.$modal.msgError(this.$t('CMS.PageWidget.InvalidPageWidgetId', [ this.pageWidgetId ]));
     }
   },
   methods: {

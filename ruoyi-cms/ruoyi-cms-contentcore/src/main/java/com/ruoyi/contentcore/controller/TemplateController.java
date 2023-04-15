@@ -25,6 +25,7 @@ import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
@@ -77,9 +78,15 @@ public class TemplateController extends BaseRestController {
 				.like(StringUtils.isNotEmpty(filename), CmsTemplate::getPath, filename)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 		List<TemplateListVO> list = page.getRecords().stream().map(t -> {
-			return TemplateListVO.builder().templateId(t.getTemplateId()).path(t.getPath())
-					.publishPipeCode(t.getPublishPipeCode()).siteId(t.getSiteId()).filesize(t.getFilesize())
-					.filesizeName(FileUtils.byteCountToDisplaySize(t.getFilesize())).build();
+			return TemplateListVO.builder()
+					.templateId(t.getTemplateId())
+					.path(t.getPath())
+					.publishPipeCode(t.getPublishPipeCode())
+					.siteId(t.getSiteId())
+					.filesize(t.getFilesize())
+					.filesizeName(FileUtils.byteCountToDisplaySize(t.getFilesize()))
+					.modifyTime(DateUtils.epochMilliToLocalDateTime(t.getModifyTime()))
+					.build();
 		}).toList();
 		return this.bindDataTable(list, (int) page.getTotal());
 	}

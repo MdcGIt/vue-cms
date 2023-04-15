@@ -26,15 +26,15 @@
                         :url-list="imageViewerList">
         </el-image-viewer>
         <div class="toolbar">
-          <el-tooltip class="item" effect="dark" content="查看" placement="top">
+          <el-tooltip class="item" effect="dark" :content="$t('Common.View')" placement="top">
             <i class="el-icon-search" @click="handleView" />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="移除" placement="top">
+          <el-tooltip class="item" effect="dark" :content="$t('Common.Remove')" placement="top">
             <i class="el-icon-delete" @click="handleRemove" />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="裁剪" placement="top">
+          <!-- <el-tooltip class="item" effect="dark" :content="$t('CMS.Resource.Cut')" placement="top">
             <i class="el-icon-crop" @click="handleCut" />
-          </el-tooltip>
+          </el-tooltip> -->
         </div>
       </div>
       <div v-show="showText"

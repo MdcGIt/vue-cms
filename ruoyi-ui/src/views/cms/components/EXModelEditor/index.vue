@@ -23,8 +23,7 @@
       </el-checkbox-group>
       <el-select v-if="field.controlType==='select'" 
                  v-model="field.value" 
-                 clearable 
-                 placeholder="请选择">
+                 clearable>
         <el-option
           v-for="item in field.options"
           :key="item.value"
@@ -35,14 +34,12 @@
       <el-date-picker v-if="field.controlType==='date'" 
         v-model="field.value"
         type="date"
-        value-format="yyyy-MM-ddTHH:mm:ss"
-        placeholder="选择日期">
+        value-format="yyyy-MM-ddTHH:mm:ss">
       </el-date-picker>
       <el-date-picker v-if="field.controlType==='datetime'" 
         v-model="field.value"
         type="datetime"
-        value-format="yyyy-MM-ddTHH:mm:ss"
-        placeholder="选择日期时间">
+        value-format="yyyy-MM-ddTHH:mm:ss">
       </el-date-picker>
     </el-form-item>
   </div>

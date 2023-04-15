@@ -31,7 +31,7 @@
               plain
               icon="el-icon-upload2"
               :disabled="disableAdd"
-              @click="handleUpload">上传</el-button>
+              @click="handleUpload">{{ $t('CMS.File.Upload') }}</el-button>
             <el-button 
               type="danger"
               size="mini"
@@ -52,66 +52,50 @@
           </el-card>
         </el-header>
         <el-main>
-          <el-table v-loading="loading"
-                  :data="fileList"
-                  @selection-change="handleSelectionChange">
-            <el-table-column type="selection"
-                            width="50"
-                            align="center" />
-            <el-table-column label="文件名"
-                            align="left"
-                            prop="fileName">
+          <el-table v-loading="loading" :data="fileList" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column :label="$t('CMS.File.FileName')" align="left" prop="fileName">
               <template slot-scope="scope">
                 <i v-if="scope.row.isDirectory" class="el-icon-folder"></i>
                 <el-button v-if="scope.row.isDirectory" type="text" @click="handleDirectoryClick(scope.row)">{{ scope.row.fileName }}</el-button>
                 <span v-else>{{ scope.row.fileName }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="大小"
-                            align="center"
-                            width="160" 
-                            prop="fileSize"/>
-            <el-table-column label="最后修改时间"
-                            align="center"
-                            width="200" 
-                            prop="modifyTime"/>
-            <el-table-column :label="$t('Common.Operation')"
-                            align="center"
-                            width="180" 
-                            class-name="small-padding fixed-width">
+            <el-table-column :label="$t('CMS.File.FileSize')" align="center" width="160" prop="fileSize"/>
+            <el-table-column :label="$t('CMS.File.ModifyTime')" align="center" width="200" prop="modifyTime"/>
+            <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-popover style="margin-right:10px;"
                   v-if="!disableAdd"
                   placement="top"
                   width="200"
                   v-model="scope.row.showRename">
-                  <el-input v-model="scope.row.rename" size="mini" placeholder="请输入文件名" />
+                  <el-input v-model="scope.row.rename" size="mini" :placeholder="$t('CMS.File.InputFileName')" />
                   <div style="text-align: right; margin-top: 5px;">
                     <el-button size="mini" type="text" @click="scope.row.showRename = false">{{ $t('Common.Cancel') }}</el-button>
                     <el-button type="primary" size="mini" @click="handleRename(scope.row)">{{ $t('Common.Confirm') }}</el-button>
                   </div>
                   <el-button 
                     slot="reference" 
-                    size="mini"
                     type="text"
                     icon="el-icon-edit"
-                  >重命名</el-button>
+                  >{{ $t('CMS.File.Rename') }}</el-button>
                 </el-popover>
-                <el-button size="mini"
-                          v-if="scope.row.canEdit"
-                          type="text"
-                          icon="el-icon-edit"
-                          @click="handleEdit(scope.row)">编辑</el-button>
-                <el-button size="mini"
+                <el-button
+                  v-if="scope.row.canEdit"
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-button>
+                <!-- <el-button
                           v-if="scope.row.isImage"
                           type="text"
                           icon="el-icon-crop"
-                          @click="handleCrop(scope.row)">裁剪</el-button>
-                <el-button size="mini"
-                          v-if="!disableAdd"
-                          type="text"
-                          icon="el-icon-delete"
-                          @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+                          @click="handleCrop(scope.row)">{{ $t('CMS.Resource.Cut') }}</el-button> -->
+                <el-button
+                  v-if="!disableAdd"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -119,40 +103,38 @@
       </el-container>
     </el-container>
     <!-- 添加文件或目录 -->
-    <el-dialog title="新建文件/目录"
-               :visible.sync="openAddDialog"
-               width="500px"
-               append-to-body>
-      <el-form ref="addForm"
-               :model="addForm"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item label="类型"
-                      prop="isDirectory">
+    <el-dialog 
+      :title="$t('CMS.File.AddTitle')"
+      :visible.sync="openAddDialog"
+      width="500px"
+      append-to-body>
+      <el-form  
+        ref="addForm"
+        :model="addForm"
+        :rules="rules"
+        label-width="80px">
+        <el-form-item :label="$t('CMS.File.Type')" prop="isDirectory">
           <el-radio-group v-model="addForm.isDirectory" size="medium">
-            <el-radio-button :label="false">文件</el-radio-button>
-            <el-radio-button :label="true">目录</el-radio-button>
+            <el-radio-button :label="false">{{ $t('CMS.File.File') }}</el-radio-button>
+            <el-radio-button :label="true">{{ $t('CMS.File.Directory') }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="名称"
-                      prop="name">
+        <el-form-item :label="$t('CMS.File.Name')" prop="name">
           <el-input v-model="addForm.fileName" size="medium" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleAddSubmit">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="handleAddClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 上传文件对话框 -->
-    <el-dialog title="上传文件"
-               :visible.sync="openUploadDialog"
-               width="400px"
-               append-to-body>
-      <el-form ref="uploadForm"
-               :model="uploadForm"
-               label-width="0">
+    <el-dialog 
+      :title="$t('CMS.File.UploadTitle')"
+      :visible.sync="openUploadDialog"
+      width="400px"
+      append-to-body>
+      <el-form ref="uploadForm" :model="uploadForm">
         <el-form-item>
           <el-upload 
             ref="upload"
@@ -165,13 +147,12 @@
             :on-success="handleFileSuccess"
             :auto-upload="false"
             :limit="1">
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">{{ $t('CMS.File.UploadTip') }}</div>
             </el-upload>
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="upload.isUploading" @click="handleUploadSubmit">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="handleUploadClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
@@ -181,7 +162,7 @@
 <script>
 import { getToken } from "@/utils/auth";
 import { isImage } from "@/utils/ruoyi";
-import { getDirectoryTreeData, getFileList, renameFile, addFile, editFile, deleteFile } from "@/api/contentcore/file";
+import { getDirectoryTreeData, getFileList, renameFile, addFile, deleteFile } from "@/api/contentcore/file";
 
 export default {
   name: "CMSFile",
@@ -215,7 +196,7 @@ export default {
       // 表单校验
       rules: {
         filePath: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.File.RuleTips.FilePath'), trigger: "blur" }
         ]
       },
       openUploadDialog: false,
@@ -288,17 +269,15 @@ export default {
     },
     loadFileList() {
       if (this.selectedDirectory === '') {
-        this.$modal.msgError("请先选择一个目录");
+        this.$modal.msgError(this.$t('Common.SelectFirst'));
         return;
       }
       this.loading = true;
       getFileList(this.selectedDirectory, this.fileName).then(response => {
-        if (response.code == 200) {
-          this.fileList = response.data;
-          this.fileList.forEach(f => {
-              f.isImage = isImage(f.fileName);
-          });
-        }
+        this.fileList = response.data;
+        this.fileList.forEach(f => {
+            f.isImage = isImage(f.fileName);
+        });
         this.loading = false;
       });
     },
@@ -322,7 +301,7 @@ export default {
         isDirectory: this.addForm.isDirectory
       };
       addFile(params).then(response => {
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         this.openAddDialog = false;
         this.loadFileList();
       });
@@ -337,7 +316,7 @@ export default {
         isDirectory: row.isDirectory
       };
       renameFile(params).then(response => {
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
         row.showRename = false;
         this.loadFileList();
       });
@@ -356,10 +335,10 @@ export default {
     },
     handleDelete (row) {
       const rows = row ? [ row ] : this.selectedRows
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteFile(rows);
       }).then(() => {
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
         this.loadFileList();
       }).catch(function () { });
     },
@@ -374,13 +353,9 @@ export default {
     },
     handleFileSuccess(response, file, fileList) {
       this.upload.isUploading = false;
-      if (response.code === 200) {
-        this.$modal.msgSuccess("上传成功");
-        this.open = false;
-        this.loadFileList();
-      } else {
-        this.$modal.msgError(response.msg);
-      }
+      this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
+      this.open = false;
+      this.loadFileList();
       this.$refs.upload.clearFiles();
       this.resetForm("uploadForm");
     },

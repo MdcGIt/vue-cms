@@ -74,7 +74,7 @@ export default {
     },
     handleInputConfirm() {
       if (this.tagList.indexOf(this.inputValue) > -1) {
-        this.$modal.msgWarning("存在重复值");
+        this.$modal.msgWarning("Repeated!");
         return;
       }
       let inputValue = this.inputValue;

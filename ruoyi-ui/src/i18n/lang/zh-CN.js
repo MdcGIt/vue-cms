@@ -703,6 +703,7 @@ export default {
       SEOTitle: "SEO标题",
       SEOKeyword: "SEO关键字",
       SEODescription: "SEO描述",
+      PublishPipe: "发布通道"
     },
     Site: {
       SiteId: "站点ID",
@@ -918,6 +919,7 @@ export default {
       PublishPipe: "发布通道",
       Path: "发布目录",
       Template: "模板",
+      InvalidPageWidgetId: "页面部件ID错误：{0}",
       Placeholder: {
         Type: "选择类型"
       },
@@ -939,25 +941,147 @@ export default {
       Weight: "权重",
       OnlineDate: "上线时间",
       OfflineDate: "下线时间",
-      InvalidPageWidgetId: "页面部件ID错误：{0}",
       Placeholder: {
         Name: "广告名称"
       },
+      AddSpaceTitle: "添加广告位",
+      GoBack: "返回上一页",
+      AdMaterials: "广告素材",
+      RedirectUrl: "跳转链接",
       RuleTips: {
+        Type: "类型不能为空",
         Name: "名称不能为空",
-        Code: "编码不能为空",
-        PublishPipe: "发布通道不能为空",
-        Path: "发布目录不能为空"
+        Weight: "权重不能为空",
+        OnlineDate: "上线时间不能为空",
+        OfflineDate: "下线时间不能为空"
       }
     },
     Block: {
-
+      Basic: "基础属性",
+      ManualList: "自定义列表",
+      Title: "标题",
+      AddRow: "添加行",
+      Clean: "清空",
+      InsertRow: "插入行",
+      Link: "链接",
+      Summary: "摘要",
+      Date: "日期",
+      AddItem: "添加列表项",
+      EditItem: "编辑列表项"
     },
-    Stat: {
-      VisitTrend: "访问趋势",
-      VisitLocation: "地域分布",
+    Resource: {
+      Name: "资源名称",
+      Type: "类型",
+      StorageType: "存储类型",
+      FileSize: "大小",
+      UploadResource: "上传资源",
+      UploadTip1: "将文件拖到此处，或点击上传",
+      UploadTip2: "只能上传{0}文件，且不超过{1}",
+      AddDialogTitle: "添加资源",
+      EditDialogTitle: "编辑资源",
+      FileTypeErrMsg: "文件格式错误，请上传图片类型,如：.jpg，.png后缀的文件。",
+      RuleTips: {
+        Name: "资源名称不能为空"
+      },
+      SelectorTitle: "素材库",
+      LocalUpload: "本地上传",
+      RemoteLink: "网络链接",
+      Source: "来源",
+      Upload: "上传",
+      UPloadTip: "只能上传{0}文件，且不超过{1}",
+      Tag: "标签",
+      MaterialLibrary: "素材库",
+      MyMaterial: "我的素材",
+      Cut: "裁剪",
+      UploadLimit: "上传文件数量不能超过：{0}",
+      RemoteLinkErr: "资源外链不能为空且必须是http://或https://开头的网络地址"
+    },
+    PublishPipe: {
+      Name: "名称",
+      Code: "编码",
+      Status: "状态",
+      AddDialogTitle: "添加发布通道",
+      EditDialogTitle: "编辑发布通道",
+      RuleTips: {
+        Name: "名称不能为空",
+        Code: "不能为空且只能使用字母、数字和下划线",
+        Status: "状态不能为空",
+        Sort: "排序值不能为空"
+      }
+    },
+    File: {
+      Upload: "上传",
+      FileName: "文件名",
+      FileSize: "大小",
+      ModifyTime: "最后修改时间",
+      InputFileName: "请输入文件名",
+      Rename: "重命名",
+      AddTtitle: "新建文件/目录",
+      Type: "类型",
+      Name: "名称",
+      File: "文件",
+      Directory: "目录",
+      UploadTitle: "上传文件",
+      UploadTip: "将文件拖到此处，或点击上传",
+      RuleTips: {
+        FilePath: "不能为空且只能使用字母、数字和下划线"
+      }
+    },
+    Template: {
+      Name: "模板名称",
+      FileSize: "大小",
+      ModifyTime: "更新时间",
+      Rename: "重命名",
+      RuleTips: {
+        Name: "模板文件名称不能为空且后缀必须为：{0}"
+      },
+      AddTitle: "添加模板文件",
+      EditTitle: "编辑模板文件名",
+      SelectorTitle: "选择模板"
+    },
+    Staticize: {
+      Tag: "模板标签",
+      TagName: "标签名",
+      TagDirective: "标签",
+      TagDesc: "描述",
+      InputTagName: "输入模板标签名称",
+      TagAttr: "标签属性：",
+      TagAttrName: "属性名",
+      TagAttrDataType: "数据类型",
+      TagAttrMandatory: "是否必填",
+      TagAttrOptions: "可用值",
+      TagAttrDesc: "描述",
+      Func: "模板函数",
+      InputFuncName: "输入模板函数名称",
+      UsageDesc: "用法描述：",
+      FuncArgs: "函数参数：",
+      FuncName: "函数方法名",
+      FuncDesc: "描述",
+      FuncAttr: "参数",
+      FuncAttrName: "名称",
+      FuncAttrType: "类型",
+      FuncAttrRequired: "是否必填",
+      FuncAttrDesc: "描述"
+    }
+  },
+  Stat: {
+    VisitTrend: "访问趋势",
+    VisitLocation: "地域分布",
+    Location: "地域",
+    Ratio: "占比",
+
+    Adv: {
+      AdName: "广告名称",
       Location: "地域",
-      Ratio: "占比"
+      Source: "来源",
+      DeviceType: "设备类型",
+      Browser: "浏览器",
+      Time: "时间",
+      Click: "点击",
+      View: "展现",
+      ClickRatio: "点击率",
+      Trend: "趋势",
+      TrendDialogTitle: "趋势图"
     }
   }
 };

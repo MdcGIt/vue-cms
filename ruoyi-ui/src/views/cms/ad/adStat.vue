@@ -1,7 +1,6 @@
 <template>
   <div class="">
-    <el-row :gutter="10"
-            class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-date-picker
           v-model="dateRange"
@@ -29,10 +28,10 @@
       </el-col>
     </el-row>
     <el-table v-loading="loading" :data="dataList">
-      <el-table-column label="广告名称" align="center" prop="adName" />
-      <el-table-column label="点击" align="center" prop="click" />
-      <el-table-column label="展现" align="center" prop="view" />
-      <el-table-column label="点击率" align="center">
+      <el-table-column :label="$t('Stat.Adv.AdName')" align="center" prop="adName" />
+      <el-table-column :label="$t('Stat.Adv.Click')" align="center" prop="click" />
+      <el-table-column :label="$t('Stat.Adv.View')" align="center" prop="view" />
+      <el-table-column :label="$t('Stat.Adv.ClickRatio')" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.view > 0">{{ Math.round(scope.row.click * 10000 / scope.row.view) / 100 }} %</span>
           <span v-else> - </span>
@@ -40,7 +39,7 @@
       </el-table-column>
       <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleCharts(scope.row)">趋势</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleCharts(scope.row)">{{ $t('Stat.Adv.Trend') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,13 +51,12 @@
       @pagination="loadAdStatList" />
 
     <el-dialog 
-      title="趋势图"
+      :title="$t('Stat.Adv.TrendDialogTitle')"
       :visible.sync="open"
       :close-on-click-modal="false"
       width="1000px"
       append-to-body>
-      <el-row :gutter="10"
-              class="mb8">
+      <el-row :gutter="10" class="mb12">
         <el-col :span="1.5">
           <el-date-picker
             v-model="chartDateRange"
@@ -91,7 +89,7 @@
 </style>
 <script>
 import { getAdStatList, getLineChartStatDatas  } from "@/api/advertisement/statistics";
-import LineChart from '../../dashboard/LineChart'
+import LineChart from '@/views/dashboard/LineChart'
 
 export default {
   name: "CMSAdvertisementStat",

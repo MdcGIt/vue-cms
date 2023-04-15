@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
         <el-button 
           icon="el-icon-refresh"
@@ -8,36 +8,14 @@
           @click="handleQuery">{{ $t("Common.Refresh") }}</el-button>
       </el-col>
     </el-row>
-    <el-table v-loading="loading"
-              :data="dataList">
-      <el-table-column 
-        label="广告名称"
-        align="center"
-        prop="adName" />
-      <el-table-column 
-        label="IP"
-        align="center"
-        prop="ip" />
-      <el-table-column 
-        label="区域"
-        align="center"
-        prop="address" />
-      <el-table-column 
-        label="来源"
-        align="center"
-        prop="referer" />
-      <el-table-column 
-        label="终端类型"
-        align="center"
-        prop="deviceType" />
-      <el-table-column 
-        label="浏览器类型"
-        align="center"
-        prop="browser" />
-      <el-table-column 
-        label="时间"
-        align="center"
-        prop="evtTime" />
+    <el-table v-loading="loading" :data="dataList">
+      <el-table-column :label="$t('Stat.Adv.AdName')" align="center" prop="adName" />
+      <el-table-column label="IP" align="center" prop="ip" />
+      <el-table-column :label="$t('Stat.Adv.Location')" align="center" prop="address" />
+      <el-table-column :label="$t('Stat.Adv.Source')" align="center" prop="referer" />
+      <el-table-column :label="$t('Stat.Adv.DeviceType')" align="center" prop="deviceType" />
+      <el-table-column :label="$t('Stat.Adv.Browser')" align="center" prop="browser" />
+      <el-table-column :label="$t('Stat.Adv.Time')" align="center" prop="evtTime" />
     </el-table>
     <pagination 
       v-show="total>0"

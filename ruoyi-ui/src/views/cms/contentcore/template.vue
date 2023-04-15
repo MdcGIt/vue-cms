@@ -4,27 +4,30 @@
       <el-col :span="12">
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="primary"
-                      icon="el-icon-plus"
-                      size="mini"
-                      plain
-                      @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+            <el-button 
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              plain
+              @click="handleAdd">{{ $t("Common.Add") }}</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="success"
-                      icon="el-icon-edit"
-                      size="mini"
-                      plain
-                      :disabled="single"
-                      @click="handleEdit">编辑</el-button>
+            <el-button 
+              type="success"
+              icon="el-icon-edit"
+              size="mini"
+              plain
+              :disabled="single"
+              @click="handleEdit">{{ $t('Common.Edit') }}</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger"
-                      icon="el-icon-delete"
-                      size="mini"
-                      plain
-                      :disabled="multiple"
-                      @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+            <el-button 
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              plain
+              :disabled="multiple"
+              @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
           </el-col>
         </el-row>
       </el-col>
@@ -36,7 +39,7 @@
           size="mini"
           class="el-form-search">
           <el-form-item prop="publishPipeCode">
-            <el-select v-model="queryParams.publishPipeCode" placeholder="发布通道" style="width:120px;">
+            <el-select v-model="queryParams.publishPipeCode" :placeholder="$t('CMS.ContentCore.PublishPipe')" style="width:120px;">
               <el-option
                 v-for="pp in publishPipes"
                 :key="pp.pipeCode"
@@ -46,7 +49,7 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="filename">
-            <el-input v-model="queryParams.filename" placeholder="模板名称"></el-input>
+            <el-input v-model="queryParams.filename" :placeholder="$t('CMS.Template.Name')"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button-group>
@@ -65,56 +68,58 @@
 
     <el-row>
       <el-col>
-        <el-table v-loading="loading"
-                  :data="templateList"
-                  @selection-change="handleSelectionChange"
-                  @row-dblclick="handleEdit">
-          <el-table-column type="selection"
-                          width="50"
-                          align="center" />
-          <el-table-column type="index"
-                          label="序号"
-                          align="center"
-                          width="50" />
-          <el-table-column label="发布通道"
-                            align="center"
-                            width="120"
-                            prop="publishPipeCode" />
-          <el-table-column label="模板名称"
-                            align="left"
-                            :show-overflow-tooltip="true"
-                            prop="path">
+        <el-table 
+          v-loading="loading"
+          :data="templateList"
+          @selection-change="handleSelectionChange"
+          @row-dblclick="handleEdit">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column type="index" :label="$t('Common.RowNo')" align="center" width="80" />
+          <el-table-column 
+            :label="$t('CMS.ContentCore.PublishPipe')"
+            align="center"
+            width="160"
+            prop="publishPipeCode" />
+          <el-table-column 
+            :label="$t('CMS.Template.Name')"
+            align="left"
+            :show-overflow-tooltip="true"
+            prop="path">
           </el-table-column>
-          <el-table-column :label="$t('Common.Remark')"
-                            align="left"
-                            :show-overflow-tooltip="true"
-                            prop="remark">
+          <el-table-column 
+            :label="$t('Common.Remark')"
+            align="left"
+            :show-overflow-tooltip="true"
+            prop="remark">
           </el-table-column>
-          <el-table-column label="大小"
-                            align="right"
-                            width="160"
-                            prop="filesizeName" />
-          <el-table-column label="更新时间"
-                            align="center"
-                            width="160"
-                            prop="modifyTime" />
-          <el-table-column :label="$t('Common.Operation')"
-                          align="center"
-                          width="180" 
-                          class-name="small-padding fixed-width">
+          <el-table-column 
+            :label="$t('CMS.Template.FileSize')"
+            align="right"
+            width="160"
+            prop="filesizeName" />
+          <el-table-column 
+            :label="$t('CMS.Template.ModifyTime')"
+            align="center"
+            width="160"
+            prop="modifyTime" />
+          <el-table-column 
+            :label="$t('Common.Operation')"
+            align="center"
+            width="200" 
+            class-name="small-padding fixed-width">
             <template slot-scope="scope">
-              <el-button size="mini"
-                        type="text"
-                        icon="el-icon-edit"
-                        @click="handleRename(scope.row)">重命名</el-button>
-              <el-button size="mini"
-                        type="text"
-                        icon="el-icon-edit"
-                        @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="mini"
-                        type="text"
-                        icon="el-icon-delete"
-                        @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+              <el-button 
+                type="text"
+                icon="el-icon-edit"
+                @click="handleRename(scope.row)">{{ $t('CMS.Template.Rename') }}</el-button>
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+                @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
+              <el-button
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -128,15 +133,17 @@
       </el-col> 
     </el-row>
     <!-- 添加或修改模板文件对话框 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               width="500px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item v-if="!form.templateId||form.templateId==0" label="发布通道" prop="publishPipeCode">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      width="500px"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="100px">
+        <el-form-item v-if="!form.templateId||form.templateId==0" :label="$t('CMS.ContentCore.PublishPipe')" prop="publishPipeCode">
           <el-select v-model="form.publishPipeCode" >
             <el-option
               v-for="pp in publishPipes"
@@ -146,17 +153,14 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="名称"
-                      prop="path">
+        <el-form-item :label="$t('CMS.Template.Name')" prop="path">
           <el-input v-model="form.path" />
         </el-form-item>
-        <el-form-item :label="$t('Common.Remark')"
-                      prop="remark">
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
           <el-input v-model="form.remark" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
@@ -173,7 +177,7 @@ export default {
   data () {
     const validatePath = (rule, value, callback) => {
         if (value === '' || !value.endsWith(this.templateSuffix)) {
-          callback(new Error("模板文件名称不能为空且后缀必须为：" + this.templateSuffix));
+          callback(new Error(this.$t('CMS.Template.RuleTips.Name', [ this.templateSuffix ])));
         } else {
           callback();
         }
@@ -259,7 +263,7 @@ export default {
     handleAdd () {
       this.form = {};
       this.open = true;
-      this.title = "添加模板文件";
+      this.title = this.$t('CMS.Template.AddTitle');
     },
     /** 修改按钮操作 */
     handleRename (row) {
@@ -267,7 +271,7 @@ export default {
       getTemplateDetail(row.templateId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改模板文件名";
+        this.title = this.$t('CMS.Template.EditTitle');
       });
     },
     handleEdit (row) {
@@ -284,13 +288,13 @@ export default {
         if (valid) {
           if (this.form.templateId) {
             renameTemplate(this.form).then(response => {
-              this.$modal.msgSuccess("操作成功");
+              this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
               this.open = false;
               this.getList();
             }); 
           } else {
             addTemplate(this.form).then(response => {
-              this.$modal.msgSuccess("操作成功");
+              this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
               this.open = false;
               this.getList();
             }); 
@@ -302,10 +306,10 @@ export default {
     /** 删除按钮操作 */
     handleDelete (row) {
       const templateIds = row ? [ row.templateId ] : this.selectedIds
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return delTemplate(templateIds);
       }).then(() => {
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
         this.getList();
       }).catch(function () { });
     }

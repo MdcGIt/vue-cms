@@ -703,6 +703,7 @@ export default {
       SEOTitle: "SEO Title",
       SEOKeyword: "SEO Keyword",
       SEODescription: "SEO Description",
+      PublishPipe: "Publish Pipe"
     },
     Site: {
       SiteId: "Site ID",
@@ -918,6 +919,7 @@ export default {
       PublishPipe: "Publish Pipe",
       Path: "Path",
       Template: "Template",
+      InvalidPageWidgetId: "Invalid page widget id: {0}",
       Placeholder: {
         Type: "Select Type"
       },
@@ -939,22 +941,133 @@ export default {
       Weight: "Weight",
       OnlineDate: "Online Date",
       OfflineDate: "Offlien Date",
-      InvalidPageWidgetId: "Invalid page widget id: {0}",
       Placeholder: {
         Name: "Input name"
       },
+      AddSpaceTitle: "Add Advertise Space",
+      GoBack: "Go Back",
+      AdMaterials: "Advertising Materials",
+      RedirectUrl: "Redirect Url",
       RuleTips: {
+        Type: "Type cannot be empty.",
         Name: "Name cannot be empty.",
-        Code: "Code cannot be empty.",
-        PublishPipe: "Publish pipe cannot be empty.",
-        Path: "Path cannot be empty."
+        Weight: "Weight cannot be empty.",
+        OnlineDate: "OnlineDate cannot be empty.",
+        OfflineDate: "OfflineDate cannot be empty."
       }
     },
-    Stat: {
-      VisitTrend: "Visit Trend",
-      VisitLocation: "Visit Location",
-      Location: "Location",
-      Ratio: "Ratio"
+    Block: {
+      Basic: "Basic",
+      ManualList: "Custom List",
+      Title: "Title",
+      AddRow: "Add Row",
+      Clean: "Clean",
+      InsertRow: "Insert Row",
+      Link: "Link",
+      Summary: "Summary",
+      Date: "Date",
+      AddItem: "Add Item",
+      EditItem: "Edit Item"
+    },
+    Resource: {
+      Name: "Name",
+      Type: "Type",
+      StorageType: "Storage Type",
+      FileSize: "File Size",
+      UploadResource: "Upload",
+      UploadTip1: "Drag the file here or click to upload.",
+      UploadTip2: "The file format can only be {0}, and cannot exceed {1}.",
+      AddDialogTitle: "Add Resource",
+      EditDialogTitle: "Eidt Resource",
+      FileTypeErrMsg: "The file format is incorrect.",
+      RuleTips: {
+        Name: "Name cannot be empty."
+      },
+      SelectorTitle: "Resources",
+      LocalUpload: "Local Upload",
+      RemoteLink: "Remote Link",
+      Source: "Source",
+      Upload: "Upload",
+      UPloadTip: "The file format can only be {0}, and cannot exceed {1}.",
+      Tag: "Tag",
+      MaterialLibrary: "Library",
+      MyMaterial: "My Materials",
+      Cut: "Cut",
+      UploadLimit: "The files cannot exceed: {0}",
+      RemoteLinkErr: "The link cannot be empty and must start with http(s)://"
+    },
+    PublishPipe: {
+      Name: "Name",
+      Code: "Code",
+      Status: "Status",
+      AddDialogTitle: "Add Publish Pipe",
+      EditDialogTitle: "Edit Publish Pipe",
+      RuleTips: {
+        Name: "Name cannot be empty.",
+        Code: "Code cannot be empty and only [A-Za-z0-9_]+",
+        Status: "Status cannot be empty.",
+        Sort: "Sort cannot be empty."
+      }
+    },
+    File: {
+      Upload: "Upload",
+      FileName: "File Name",
+      FileSize: "File Size",
+      ModifyTime: "Modify Time",
+      InputFileName: "Input file name",
+      Rename: "Rename",
+      AddTtitle: "Create file/directory",
+      Type: "Type",
+      Name: "Name",
+      File: "File",
+      Directory: "Directory",
+      UploadTitle: "Upload file",
+      UploadTip: "Drag the file here or click to upload.",
+      RuleTips: {
+        FilePath: "Cannot be empty and only [A-Za-z0-9_]+"
+      }
+    },
+    Template: {
+      Name: "Template Name",
+      FileSize: "File Size",
+      ModifyTime: "Modify Time",
+      Rename: "Rename",
+      RuleTips: {
+        Name: "The template file name cannot be empty and the suffix must be '{0}'"
+      },
+      AddTitle: "Add template file",
+      EditTitle: "Rename template file",
+      SelectorTitle: "Select template"
+    },
+    Staticize: {
+      Tag: "Template Tag",
+      TagName: "Name",
+      TagDirective: "Tag Name",
+      TagDesc: "Description",
+      InputTagName: "Input tag name",
+      TagAttr: "Attributes: ",
+      TagAttrName: "Name",
+      TagAttrDataType: "Data Type",
+      TagAttrMandatory: "Required",
+      TagAttrOptions: "Options",
+      TagAttrDesc: "Description",
+      Func: "Template Function",
+      InputFuncName: "Input function name",
+      UsageDesc: "Usage: ",
+      FuncArgs: "Arguments: ",
+      FuncName: "Function Name",
+      FuncDesc: "Description",
+      FuncAttr: "Argument",
+      FuncAttrName: "Name",
+      FuncAttrType: "Type",
+      FuncAttrRequired: "Required",
+      FuncAttrDesc: "Description"
     }
+  },
+  Stat: {
+    VisitTrend: "Visit Trend",
+    VisitLocation: "Visit Location",
+    Location: "Location",
+    Ratio: "Ratio"
   }
 };

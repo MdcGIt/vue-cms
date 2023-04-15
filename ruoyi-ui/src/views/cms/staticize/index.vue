@@ -1,12 +1,10 @@
 <template>
   <div class="app-container">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="模板标签"
-                    name="tag">
+      <el-tab-pane :label="$t('CMS.Staticize.Tag')" name="tag">
         <cms-template-tag></cms-template-tag>
       </el-tab-pane>
-      <el-tab-pane label="模板函数"
-                    name="function">
+      <el-tab-pane :label="$t('CMS.Staticize.Func')" name="function">
         <cms-template-function></cms-template-function>
       </el-tab-pane>
     </el-tabs>

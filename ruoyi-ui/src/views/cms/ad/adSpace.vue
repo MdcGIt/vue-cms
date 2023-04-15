@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container adspace-container">
     <el-row :gutter="24"
             class="mb12">
       <el-col :span="12">
@@ -16,7 +16,7 @@
                    @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right">
-        <el-input placeholder="广告位名称" v-model="queryParams.name" size="mini" class="mr10" style="width: 200px;"></el-input>
+        <el-input :placeholder="$t('CMS.Adv.Placeholder.Name')" v-model="queryParams.name" size="mini" class="mr10" style="width: 200px;"></el-input>
         <el-button-group>
           <el-button 
             type="primary"
@@ -38,7 +38,7 @@
         <el-table-column type="selection"
                         width="50"
                         align="center" />
-        <el-table-column label="名称">
+        <el-table-column :label="$t('CMS.PageWidget.Name')">
           <template slot-scope="scope">
             <el-link type="primary"
                       @click="handleEdit(scope.row)"
@@ -47,60 +47,56 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="编码"
-                          prop="code" />
-        <el-table-column label="发布通道"
-                          width="100"
-                          prop="publishPipeCode" />
-        <el-table-column :label="$t('Common.Operation')"
-                          align="center"
-                          width="300" 
-                          class-name="small-padding fixed-width">
+        <el-table-column :label="$t('CMS.PageWidget.Code')" prop="code" />
+        <el-table-column :label="$t('CMS.PageWidget.PublishPipe')" width="100" prop="publishPipeCode" />
+        <el-table-column :label="$t('Common.Operation')" align="center" width="300" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-button size="mini"
-                        type="text"
-                        icon="el-icon-s-promotion"
-                        @click="handlePublish(scope.row)">发布</el-button>
-            <el-button size="mini"
-                        type="text"
-                        @click="handlePreview(scope.row)"><svg-icon icon-class="eye-open" class="mr1"></svg-icon>预览</el-button>
-            <el-button size="mini"
-                        type="text"
-                        icon="el-icon-edit"
-                        @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
-            <el-button size="mini"
-                        type="text"
-                        icon="el-icon-delete"
-                        @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+            <el-button  
+              type="text"
+              icon="el-icon-s-promotion"
+              @click="handlePublish(scope.row)">{{ $t('CMS.ContentCore.Publish') }}</el-button>
+            <el-button
+              type="text"
+              @click="handlePreview(scope.row)">
+              <svg-icon icon-class="eye-open" class="mr1"></svg-icon>{{ $t('CMS.ContentCore.Preview') }}
+            </el-button>
+            <el-button 
+              type="text"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="loadAdSpaceList" />
+      <pagination 
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="loadAdSpaceList" />
     </el-row>
     <!-- 表单对话框 -->
-    <el-dialog :title="dialogTitle"
-               :visible.sync="dialogVisible"
-               :close-on-click-modal="false"
-               width="600px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item label="名称"
-                      prop="name">
+    <el-dialog 
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      width="600px"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px">
+        <el-form-item :label="$t('CMS.PageWidget.Name')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="编码"
-                      prop="code">
+        <el-form-item :label="$t('CMS.PageWidget.Code')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="发布通道"
-                      prop="publishPipeCode">
+        <el-form-item :label="$t('CMS.PageWidget.PublishPipe')" prop="publishPipeCode">
           <el-select v-model="form.publishPipeCode">
             <el-option
               v-for="pp in publishPipes"
@@ -110,12 +106,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="发布目录"
-                      prop="path">
+        <el-form-item :label="$t('CMS.PageWidget.Path')" prop="path">
           <el-input v-model="form.path" />
         </el-form-item>
-        <el-form-item label="模板"
-                      prop="template">
+        <el-form-item :label="$t('CMS.PageWidget.Template')" prop="template">
           <el-input v-model="form.template">
             <el-button 
               slot="append"
@@ -123,17 +117,13 @@
               @click="handleSelectTemplate()">{{ $t("Common.Select") }}</el-button>
           </el-input>
         </el-form-item>
-        <el-form-item :label="$t('Common.Remark')"
-                      prop="remark">
-          <el-input v-model="form.remark"
-                    type="textarea"
-                    maxlength="100" />
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" :maxlength="100" />
         </el-form-item>
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button type="primary"
-                   @click="handleDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button type="primary" @click="handleDialogOk">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="handleDialogClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
@@ -145,13 +135,7 @@
       @cancel="handleTemplateSelectorCancel" />
   </div>
 </template>
-<style scoped>
-.el-input, .el-select, .el-textarea {
-  width: 300px;
-}
-</style>
 <script>
-import { validCode } from '@/utils/validate'
 import { getPublishPipeSelectData } from "@/api/contentcore/publishpipe";
 import { listAdSpaces, addAdSpace, editAdSpace, deleteAdSpace, publishAdSpace } from "@/api/advertisement/advertisement";
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
@@ -179,33 +163,17 @@ export default {
         publishPipeCode: ''
       },
       rules: {
-        type: [
-          { required: true, message: "类型不能为空", trigger: "blur" }
-        ],
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, message: "编码不能为空", trigger: "blur" },
-          { 
-            trigger: "blur", 
-            validator: (rule, value, callback) => {
-              if (!validCode(value)) {
-                callback(new Error("只能使用大小写字母、数字、下划线"));
-              } else {
-                callback();
-              }
-            } 
-          }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Code'), trigger: "blur" }
         ],
         publishPipeCode: [
-          { required: true, message: "发布通道不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.PublishPipe'), trigger: "blur" }
         ],
         path: [
-          { required: true, message: "目录不能为空", trigger: "blur" }
-        ],
-        template: [
-          { required: true, message: "模板不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Path'), trigger: "blur" }
         ]
       },
       publishPipes: [],
@@ -219,19 +187,15 @@ export default {
   methods: {
     loadPublishPipes() {
       getPublishPipeSelectData().then(response => {
-        if (response.code == 200) {
-          this.publishPipes = response.data.rows;
-        }
+        this.publishPipes = response.data.rows;
       });
     },
     loadAdSpaceList () {
       this.loading = true;
       listAdSpaces(this.queryParams).then(response => {
-        if (response.code == 200) {
-          this.dataList = response.data.rows;
-          this.total = parseInt(response.data.total);
-          this.loading = false;
-        }
+        this.dataList = response.data.rows;
+        this.total = parseInt(response.data.total);
+        this.loading = false;
       });
     },
     resetQuery () {
@@ -243,7 +207,7 @@ export default {
       this.selectedRows = selection.map(item => item);
     },
     handleAdd() {
-      this.dialogTitle = "添加广告位";
+      this.dialogTitle = this.$t('CMS.Adv.AddSpaceTitle');
       this.form = { path: 'include/ad/' };
       this.dialogVisible = true;
     },
@@ -260,10 +224,8 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           addAdSpace(this.form).then(response => {
-            if (response.code === 200) {
-              this.$modal.msgSuccess(response.msg);
-              this.handleDialogClose(true);
-            }
+            this.$modal.msgSuccess(response.msg);
+            this.handleDialogClose(true);
           });
         }
       });
@@ -273,22 +235,18 @@ export default {
       if (pageWidgetIds.length == 0) {
         return;
       }
-      this.$modal.confirm("确认删除？").then(function() {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function() {
         return deleteAdSpace(pageWidgetIds);
       }).then(response => {
-        if (response.code === 200) {
-          this.$modal.msgSuccess(response.msg);
-          this.loadAdSpaceList();
-        }
+        this.$modal.msgSuccess(response.msg);
+        this.loadAdSpaceList();
       }).catch(() => {});
     },
     handlePublish(row) {
       const pageWidgetIds = [ row.pageWidgetId ];
       publishAdSpace(pageWidgetIds).then(response => {
-        if (response.code === 200) {
-          this.$modal.msgSuccess(response.msg);
-          this.loadAdSpaceList();
-        }
+        this.$modal.msgSuccess(response.msg);
+        this.loadAdSpaceList();
       });
     },
     handlePreview(row) {
@@ -311,3 +269,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.adspace-container .el-input, .el-select, .el-textarea {
+  width: 300px;
+}
+</style>

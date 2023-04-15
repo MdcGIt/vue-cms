@@ -5,7 +5,7 @@
         <el-row :gutter="10" class="mb8">
             <el-card v-loading="loading" shadow="hover">
               <div slot="header" class="clearfix">
-                <span>{{ $t("CMS.Stat.VisitTrend") }}</span>
+                <span>{{ $t("Stat.VisitTrend") }}</span>
                 <el-row :gutter="10" class="mb8" style="float:right;">
                   <el-col :span="1.5">
                     <el-select v-model="queryParams.bdSiteId" size="small">
@@ -46,11 +46,11 @@
       <el-col :span="12">
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
-            <span>{{ $t("CMS.Stat.VisitLocation") }}</span>
+            <span>{{ $t("Stat.VisitLocation") }}</span>
           </div>
           <el-table v-loading="loadingDistrict" :data="districtList" height="370" size="mini">
             <el-table-column 
-              :label="$t('CMS.Stat.Location')"
+              :label="$t('Stat.Location')"
               align="center"
               prop="name" />
             <el-table-column 
@@ -58,7 +58,7 @@
               align="center"
               prop="pv_count" />
             <el-table-column 
-              :label="$t('CMS.Stat.Ratio')"
+              :label="$t('Stat.Ratio')"
               align="center"
               prop="ratio">
               <template slot-scope="scope">
