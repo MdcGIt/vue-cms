@@ -1,104 +1,86 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10"
-            class="mb8">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
-        <el-button type="primary"
-                   icon="el-icon-plus"
-                   size="mini"
-                   @click="handleAdd">新增</el-button>
+        <el-button 
+          plain
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd">{{ $t("Common.Add") }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success"
-                   icon="el-icon-edit"
-                   size="mini"
-                   :disabled="single"
-                   @click="handleUpdate">修改</el-button>
+        <el-button 
+          plain
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate">{{ $t("Common.Edit") }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   size="mini"
-                   :disabled="multiple"
-                   @click="handleDelete">删除</el-button>
-      </el-col>
+        <el-button 
+          plain
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+        </el-col>
     </el-row>
 
-    <el-table v-loading="loading"
-              :data="publishPipeList"
-              @selection-change="handleSelectionChange">
-      <el-table-column type="selection"
-                       width="55"
-                       align="center" />
-      <el-table-column label="ID"
-                       align="center"
-                       prop="publishpipeId"
-                       width="180" />
-      <el-table-column label="名称"
-                       align="center"
-                       prop="name" />
-      <el-table-column label="编码"
-                       align="center"
-                       width="80"
-                       prop="code" />
-      <el-table-column label="排序"
-                       align="center"
-                       width="80"
-                       prop="sort" />
-      <el-table-column label="状态" align="center" prop="state">
+    <el-table v-loading="loading" :data="publishPipeList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="publishpipeId" width="180" />
+      <el-table-column :label="$t('CMS.PublishPipe.Name')" align="center" prop="name" />
+      <el-table-column :label="$t('CMS.PublishPipe.Code')" align="center" width="80" prop="code" />
+      <el-table-column :label="$t('Common.Sort')" align="center" width="80" prop="sort" />
+      <el-table-column :label="$t('CMS.PublishPipe.Status')" align="center" prop="state">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.EnableOrDisable" :value="scope.row.state"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
-                       align="center"
-                       prop="createTime"
-                       width="180">
+      <el-table-column :label="$t('Common.CreateTime')" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作"
-                       align="center"
-                       width="180" 
-                       class-name="small-padding fixed-width">
+      <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">删除</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="getList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改发布通道对话框 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               width="500px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item label="名称"
-                      prop="name">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      width="500px"
+      append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item :label="$t('CMS.PublishPipe.Name')" prop="name">
           <el-input v-model="form.name"/>
         </el-form-item>
-        <el-form-item label="编码"
-                      prop="code">
+        <el-form-item :label="$t('CMS.PublishPipe.Code')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="状态"
-                      prop="state">
+        <el-form-item :label="$t('CMS.PublishPipe.Status')" prop="state">
           <el-radio-group v-model="form.state">
             <el-radio
               v-for="dict in dict.type.EnableOrDisable"
@@ -107,20 +89,16 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="排序"
-                      prop="sort">
+        <el-form-item :label="$t('Common.Sort')" prop="sort">
           <el-input-number v-model="form.sort" :min="1"></el-input-number>
         </el-form-item>
-        <el-form-item label="备注"
-                      prop="remark">
-          <el-input v-model="form.remark"
-                    type="textarea" />
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -159,16 +137,16 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" },
+          { required: true, message: this.$t('CMS.PublishPipe.RuleTips.Name'), trigger: "blur" },
         ],
         code :[
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PublishPipe.RuleTips.Code'), trigger: "blur" }
         ],
         state :[
-          { required: true, message: "状态不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PublishPipe.RuleTips.Status'), trigger: "blur" }
         ],
         sort :[
-          { required: true, message: "排序值不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PublishPipe.RuleTips.Sort'), trigger: "blur" }
         ]
       }
     };
@@ -205,7 +183,7 @@ export default {
     handleAdd () {
       this.reset();
       this.open = true;
-      this.title = "添加发布通道";
+      this.title = this.$t('CMS.PublishPipe.AddDialogTitle');
     },
     /** 修改按钮操作 */
     handleUpdate (row) {
@@ -214,7 +192,7 @@ export default {
       getPublishPipeData(publishpipeId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改发布通道";
+        this.title = this.$t('CMS.PublishPipe.EditDialogTitle');
       });
     },
     /** 提交按钮 */
@@ -223,13 +201,13 @@ export default {
         if (valid) {
           if (this.form.publishpipeId != undefined) {
             updatePublishPipe(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
+              this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
               this.open = false;
               this.getList();
             });
           } else {
             addPublishPipe(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess(this.$t('Common.AddSuccess'));
               this.open = false;
               this.getList();
             });
@@ -240,11 +218,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete (row) {
       const publishpipeIds = row.publishpipeId ? [ row.publishpipeId ] : this.ids;
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return delPublishPipe(publishpipeIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     }
   }

@@ -24,6 +24,7 @@ import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IP2RegionUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.config.SystemConfig;
 import com.ruoyi.system.domain.SysMenu;
@@ -152,6 +153,7 @@ public class SysProfileController extends BaseRestController {
 		vo.setNickName(user.getNickName());
 		vo.setLastLoginTime(user.getLoginDate());
 		vo.setLastLoginIp(user.getLoginIp());
+		vo.setLastLoginAddr(IP2RegionUtils.ip2Region(user.getLoginIp()));
 		if (StringUtils.isNotEmpty(user.getAvatar())) {
 			vo.setAvatar(SystemConfig.getResourcePrefix() + user.getAvatar());
 		}

@@ -10,6 +10,7 @@ export default {
     OK: 'OK',
     Confirm: 'Confirm',
     Cancel: 'Cancel',
+    Open: 'Open',
     Close: 'Close',
     Submit: 'Submit',
     GoBack: 'Go Back',
@@ -17,12 +18,15 @@ export default {
     Fail: 'Fail',
     Normal: 'Normal',
     OpSuccess: 'Success',
+    OpFail: 'Failed',
     AddSuccess: 'Add Success',
+    SaveSuccess: "Save Success",
     EditSuccess: 'Edit Success',
     DeleteSuccess: 'Delete Success',
-    OpFail: 'Fail',
     Yes: 'Yes',
     No: 'No',
+    Enable: "Enable",
+    Disable: "Disable",
     BeginDate: 'Begin Date',
     EndDate: 'End Date',
     BeginTime: 'Begin Time',
@@ -37,6 +41,12 @@ export default {
     Refresh: 'Refresh',
     RefreshCache: 'Refresh Cache',
     Clean: "Clean",
+    View: "View",
+    Show: "Show",
+    Hide: "Hide",
+    Move: "Move",
+    Copy: "Copy",
+    Sort: "Sort",
     Remark: 'Remark',
     CreateTime: 'Create Time',
     CreateBy: 'Create User',
@@ -68,7 +78,8 @@ export default {
     Downloading: 'Downloading...',
     Loading: 'Loading...',
     DownloadFailed: 'Download failed, please contact the administrator.',
-    InvalidFileSuffix: 'Unsupport file format, only "{0}" is supported.'
+    InvalidFileSuffix: 'Unsupport file format, only "{0}" is supported.',
+    SelectFirst: 'Please select first.'
   },
   Router: {
     Home: 'Home',
@@ -193,6 +204,11 @@ export default {
         CloseAll: "Close All"
       }
     }
+  },
+  Home: {
+    Welcome: "Welcome back",
+    LastLoginTime: "Last login time",
+    LastLoginIP: "Last login ip"
   },
   System: {
     User: {
@@ -570,7 +586,8 @@ export default {
       ConfirmClean: 'Are you sure to clean all logs?',
       Dialog: {
         Add: "Add Job",
-        Edit: "Edit Job"
+        Edit: "Edit Job",
+        Log: "Log Details",
       },
       Placeholder: {
         InvokeTarget: "Input invoke target string"
@@ -673,7 +690,397 @@ export default {
     }
   },
   CMS: {
-    CONTENTCORE: {
+    ContentCore: {
+      InternalUrl: "Internal Url",
+      SelectCatalog: "Select Catalog",
+      SelectContent: "Select Content",
+      Publish: "Publish",
+      Preview: "Preview",
+      PublishSuccess: "Publish success.",
+      PublishProgressTitle: "Publish task",
+      ApplyToCatalog: "Apply to catalog",
+      SEOConfig: "SEO Config",
+      SEOTitle: "SEO Title",
+      SEOKeyword: "SEO Keyword",
+      SEODescription: "SEO Description",
+      PublishPipe: "Publish Pipe"
+    },
+    Site: {
+      SiteId: "Site ID",
+      Name: "Site Name",
+      Path: "Site Path",
+      Logo: "LOGO",
+      PublishHome: "Publish Home",
+      PublishAll: "Publish All",
+      PublishPublished: "Published Content",
+      PublishToPublish: "ToPublish Content",
+      PublishDraft: "Draft Content",
+      PublishReEdit: "Re-Edit Content",
+      PublishOffline: "Offline Content",
+      BasicCardTitle: "Basic",
+      ResourceUrl: "Resource Domain",
+      Desc: "Description",
+      DeleteProgressTitle: "Delete site task",
+      PublishPipeCardTitle: "Publish Pipe Configuration",
+      StaticFileType: "Static Type",
+      IndexTemplate: "Home Template",
+      NoPublishPipeTip: "Preivew or publish need add publish pipe first.",
+      GoAddPublishPipe: "Add",
+      ExModelCardTitle: "Ex-Model Configuration",
+      Tab: {
+        Basic: "Basic Information",
+        Extend: "Extend Config",
+        Property: "Extend Propperty",
+        DefaultTemplate: "Default Template"
+      },
+      Dialog: {
+        AddTitle: "Add Site"
+      },
+      RuleTips: {
+        Name: "Cannot be empty.",
+        Path: "Cannot be empty and only [A-Za-z0-9]+"
+      },
+      Extend: {
+        BasicCardTitle: "Basic",
+        EnableIndex: "Enable Content Index",
+        TitleRepeatCheck: "Title Repeat Check",
+        TitlteRepeatCheckNone: "None",
+        TitlteRepeatCheckSite: "Check in site",
+        TitlteRepeatCheckCatalog: "Check in Catalog",
+        ExModel: "Site Ex-Model",
+        PublishMaxPageNum: "Publish Catalog Max Page",
+        EnableEditPublished: "Edit Published Content",
+        ContentConfCardTitle: "Content",
+        AutoArticleLogo: "Auto Article Logo",
+        RecycleKeepDays: "Recycle expire days",
+        RecycleKeepDaysTip: "Keep forever with 0",
+        ResourceConfCardTitle: "Resource Storage",
+        StorageType: "Storage Type",
+        Local: "Local",
+        AliyunOSS: "AliyunOSS",
+        TencentCOS: "TencentCOS",
+        MinIO: "MinIO",
+        ImageWatermarkCardTitle: "Image Watermark",
+        ImageWatermark: "Enable Watermark",
+        WatermarkImage: "Watermark Image",
+        WatermarkPosition: "Position",
+        WatermarkOpacity: "Opacity",
+        WatermarkOpacityTip: "Range is 0 - 1, the default is 1 for opaque.",
+        WatermarkRatio: "Ratio",
+        WatermarkRatioTip: "The ratio of the watermark and watermark should be at least 20 width/height.",
+        WordConfCardTitle: "Words",
+        SensitiveWordEnable: "Sensitive Word",
+        ErrorProneWordEnable: "Error Prone Word",
+        HotWordGroup: "Hot Word Group",
+        StatConfCardTitle: "Statistics",
+        BaiduApiKey: "Baidu ApiKey",
+        BaiduSecretKey: "Baidu SecretKey",
+        BaiduRefreshToken: "Baidu RefreshToken",
+        BaiduAccessToken: "Baidu AccessToken",
+      },
+      Property: {
+        QueryPlaceholder: "Input name/code",
+        PropName: "Name",
+        PropCode: "Code",
+        PropValue: "Value",
+        RuleTips: {
+          PropName: "Cannot be empty.",
+          PropCode: "Cannot be empty and only [A-Za-z0-9_]+"
+        }
+      },
+      DefaultTemplate: {
+        Title: "Default Template",
+        CatalogList: "Catalog List Template",
+        ContentDetail: " Detail Template",
+        SelectCatalogFirst: "Please select catalog first."
+      }
+    },
+    Catalog: {
+      Tab: {
+        Basic: "Basic Information",
+        Extend: "Extend Configuration",
+      },
+      AddCatalog: "Add Catalog",
+      CatalogNamePlaceholder: "Input catalog name",
+      ParentCatalog: "Parent Catalog",
+      Basic: "Basic",
+      Content: " Content",
+      SortTip: "Positive numbers move down, negative numbers move up",
+      DeleteTip: "Are you sure to delete the catalog with contents and chilren?",
+      CatalogId: "Catalog ID",
+      Name: "Name",
+      Alias: "Alias",
+      Path: "Path",
+      CatalogType: "Catalog Type",
+      RedirectUrl: "Redirect Url",
+      Desc: "Description",
+      Logo: "Logo",
+      PublishPipeConf: "Publish pipe configuration",
+      IndexTemplate: "Index Template",
+      ListTemplate: "List Template",
+      DetailTemplate: " Detail Template",
+      ApplyToChildren: "Apply To Children",
+      ExModelProps: "Ex-Model Properties",
+      PublishDialogTitle: "Publish catalog",
+      PublishTips: "Are you sure to publish the catalog?",
+      ContainsChildren: "Include children",
+      SelectCatalog: "Select Catalog",
+      CopyContent: "Deep Copy",
+      CopyContentTip: "Depe Copy: independently of the source.",
+      MappingContent: "Mapping",
+      MappingContentTip: "Mapping: only basic content, the extend content is from source.",
+      RuleTips: {
+        Name: "Cannot be empty",
+        Alias: "Cannot be empty and only [A-Za-z0-9_]+",
+        Path: "Cannot be empty and only [A-Za-z0-9_]+",
+        CatalogType: "Cannot be empty"
+      },
+      SelectCatalogFirst: "Please select catalog first",
+      PublishProgressTitle: "Publish catalog task",
+      DeleteProgressTitle: "Delete catalog task",
+      MoveProgressTitle: "Move catalog task",
+      Extend: {
+        Basic: "Basic",
+        EnableIndex: "Enable Content Index",
+        CatalogExModel: "Catalog Ex-Model",
+        ContentExModel: "Content Ex-Model",
+        ContentConfig: "Content Configuration",
+        WordConfig: "Word Configuration",
+        HotWordGroup: "Hot Word Group"
+      }
+    },
+    Content: {
+      Tab: {
+        ContentList: "Content",
+        PageWidget: "Page Widget",
+        RecycleBin: "Recycle Bin"
+      },
+      Placeholder: {
+        Title: "Input content title",
+      },
+      Title: "Title",
+      SubTitle: "Subtitle",
+      ShortTitle: "Short Title",
+      ContentType: "Content Type",
+      Status: "Status",
+      SetTop: "Topping",
+      CancelTop: "Cancel Topping",
+      TopEndTime: "Topping End",
+      Offline: "Offline",
+      Archive: "Archive",
+      GenIndex: "Create Index",
+      SortOption: {
+        Default: "Default Sorting",
+        CreateTimeAsc: 'Create Time ASC',
+        CreateTimeDesc: 'Create Time DESC',
+        PublishDateAsc: 'Publish Date ASC',
+        PublishDateDesc: 'Publish Date DESC'
+      },
+      Restore: "Restore",
+      SelectCatalogFirst: "Select catalog first",
+      StatusBefore: " Status",
+      DeleteTime: "Delete Time",
+      DeleteUser: "Delete User",
+      BackToList: "Go Back",
+      Lock: "Lock",
+      Unlock: "Unlock",
+      LinkFlag: "Link Content",
+      RedirectUrl: "Redirect Url",
+      DownloadImage: "Download",
+      DownloadImageTip: "Download the remote image in article body.",
+      Basic: "Basic",
+      Catalog: "Catalog",
+      Logo: "LOGO",
+      Author: "Author",
+      Editor: "Editor",
+      Original: "Original",
+      Attribute: "Attributes",
+      Summary: "Summary",
+      Tags: "Tag",
+      Keywords: "Keyword",
+      Source: "Source",
+      SourceUrl: "Source Url",
+      PublishDate: "Publish Date",
+      OfflineDate: "Offline Date",
+      PublishPipe: "Publish Pipe",
+      StaticPath: "Static Path",
+      Template: "Template",
+      RuleTips:  {
+        Title: "Title cannot be empty."
+      },
+      SaveProgressTitle: "Content Saving",
+      SortDialogTitle: "Content Sort",
+      SortDialogTip: "The content will be sort before the selected content in this list. If the selected content is at the top, the sorting content will also be added to the top status, and if not, the top status will be cancelled."
+    },
+    PageWidget: {
+      Type: "Type",
+      Name: "Name",
+      Code: "Code",
+      PublishPipe: "Publish Pipe",
+      Path: "Path",
+      Template: "Template",
+      InvalidPageWidgetId: "Invalid page widget id: {0}",
+      Placeholder: {
+        Type: "Select Type"
+      },
+      RuleTips: {
+        Type: "Type cannot be empty.",
+        Name: "Name cannot be empty.",
+        Code: "Code cannot be empty and only [A-Za-z0-9_]+",
+        PublishPipe: "Publish pipe cannot be empty.",
+        Path: "Path cannot be empty and only [A-Za-z0-9_]+"
+      },
+      AddTitle: "Add Page Widget",
+    },
+    Adv: {
+      Basic: "Basic",
+      AdList: "Advertisement List",
+      AdName: "Ad Name",
+      Type: "Type",
+      Status: "Status",
+      Weight: "Weight",
+      OnlineDate: "Online Date",
+      OfflineDate: "Offlien Date",
+      Placeholder: {
+        Name: "Input name"
+      },
+      AddSpaceTitle: "Add Advertise Space",
+      GoBack: "Go Back",
+      AdMaterials: "Advertising Materials",
+      RedirectUrl: "Redirect Url",
+      RuleTips: {
+        Type: "Type cannot be empty.",
+        Name: "Name cannot be empty.",
+        Weight: "Weight cannot be empty.",
+        OnlineDate: "OnlineDate cannot be empty.",
+        OfflineDate: "OfflineDate cannot be empty."
+      }
+    },
+    Block: {
+      Basic: "Basic",
+      ManualList: "Custom List",
+      Title: "Title",
+      AddRow: "Add Row",
+      Clean: "Clean",
+      InsertRow: "Insert Row",
+      Link: "Link",
+      Summary: "Summary",
+      Date: "Date",
+      AddItem: "Add Item",
+      EditItem: "Edit Item"
+    },
+    Resource: {
+      Name: "Name",
+      Type: "Type",
+      StorageType: "Storage Type",
+      FileSize: "File Size",
+      UploadResource: "Upload",
+      UploadTip1: "Drag the file here or click to upload.",
+      UploadTip2: "The file format can only be {0}, and cannot exceed {1}.",
+      AddDialogTitle: "Add Resource",
+      EditDialogTitle: "Eidt Resource",
+      FileTypeErrMsg: "The file format is incorrect.",
+      RuleTips: {
+        Name: "Name cannot be empty."
+      },
+      SelectorTitle: "Resources",
+      LocalUpload: "Local Upload",
+      RemoteLink: "Remote Link",
+      Source: "Source",
+      Upload: "Upload",
+      UPloadTip: "The file format can only be {0}, and cannot exceed {1}.",
+      Tag: "Tag",
+      MaterialLibrary: "Library",
+      MyMaterial: "My Materials",
+      Cut: "Cut",
+      UploadLimit: "The files cannot exceed: {0}",
+      RemoteLinkErr: "The link cannot be empty and must start with http(s)://"
+    },
+    PublishPipe: {
+      Name: "Name",
+      Code: "Code",
+      Status: "Status",
+      AddDialogTitle: "Add Publish Pipe",
+      EditDialogTitle: "Edit Publish Pipe",
+      RuleTips: {
+        Name: "Name cannot be empty.",
+        Code: "Code cannot be empty and only [A-Za-z0-9_]+",
+        Status: "Status cannot be empty.",
+        Sort: "Sort cannot be empty."
+      }
+    },
+    File: {
+      Upload: "Upload",
+      FileName: "File Name",
+      FileSize: "File Size",
+      ModifyTime: "Modify Time",
+      InputFileName: "Input file name",
+      Rename: "Rename",
+      AddTtitle: "Create file/directory",
+      Type: "Type",
+      Name: "Name",
+      File: "File",
+      Directory: "Directory",
+      UploadTitle: "Upload file",
+      UploadTip: "Drag the file here or click to upload.",
+      RuleTips: {
+        FilePath: "Cannot be empty and only [A-Za-z0-9_]+"
+      }
+    },
+    Template: {
+      Name: "Template Name",
+      FileSize: "File Size",
+      ModifyTime: "Modify Time",
+      Rename: "Rename",
+      RuleTips: {
+        Name: "The template file name cannot be empty and the suffix must be '{0}'"
+      },
+      AddTitle: "Add template file",
+      EditTitle: "Rename template file",
+      SelectorTitle: "Select template"
+    },
+    Staticize: {
+      Tag: "Template Tag",
+      TagName: "Name",
+      TagDirective: "Tag Name",
+      TagDesc: "Description",
+      InputTagName: "Input tag name",
+      TagAttr: "Attributes: ",
+      TagAttrName: "Name",
+      TagAttrDataType: "Data Type",
+      TagAttrMandatory: "Required",
+      TagAttrOptions: "Options",
+      TagAttrDesc: "Description",
+      Func: "Template Function",
+      InputFuncName: "Input function name",
+      UsageDesc: "Usage: ",
+      FuncArgs: "Arguments: ",
+      FuncName: "Function Name",
+      FuncDesc: "Description",
+      FuncAttr: "Argument",
+      FuncAttrName: "Name",
+      FuncAttrType: "Type",
+      FuncAttrRequired: "Required",
+      FuncAttrDesc: "Description"
+    }
+  },
+  Stat: {
+    VisitTrend: "Visit Trend",
+    VisitLocation: "Visit Location",
+    Location: "Location",
+    Ratio: "Ratio",
+    Adv: {
+      AdName: "Ad Name",
+      Location: "Location",
+      Source: "Source",
+      DeviceType: "Device Type",
+      Browser: "Browser",
+      Time: "Time",
+      Click: "Cick",
+      View: "View",
+      ClickRatio: "Click Ratio",
+      Trend: "Trend",
+      TrendDialogTitle: "Trend charts"
     }
   }
 };

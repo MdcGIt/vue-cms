@@ -1,39 +1,46 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              label-width="68px"
-              class="el-form-search">
-        <el-form-item prop="query">
-          <el-input placeholder="输入模型名称/编码查询" v-model="queryParams.query" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="mini"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="mini"
-                    @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
-    <el-row :gutter="10"
-            class="mb8">
-      <el-button 
-        plain
-        type="primary"
-        icon="el-icon-plus"
-        size="mini"
-        @click="handleAdd">新建</el-button>
-      <el-button 
-        type="danger"
-        icon="el-icon-delete"
-        size="mini"
-        :disabled="multiple"
-        @click="handleBatchDelete">删除</el-button>
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-row>
+          <el-button 
+            plain
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+          <el-button 
+            plain
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleBatchDelete">{{ $t("Common.Delete") }}</el-button>
+        </el-row>
+      </el-col>
+      <el-col :span="12" style="text-align:right">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          class="el-form-search">
+          <el-form-item prop="query">
+            <el-input placeholder="输入模型名称/编码查询" v-model="queryParams.query"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
     <el-row>
       <el-table v-loading="loading" :data="xmodelList" @selection-change="handleSelectionChange">
@@ -52,18 +59,18 @@
         <el-table-column label="编码" prop="code" />
         <el-table-column label="分类" prop="ownerType" />
         <el-table-column label="数据表" prop="tableName" />
-        <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
+        <el-table-column :label="$t('Common.Operation')" align="center" width="300" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button 
               size="mini"
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.row)">修改</el-button>
+              @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
             <el-button 
               size="mini"
               type="text"
               icon="el-icon-delete"
-              @click="handleDelete(scope.row)">删除</el-button>
+              @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -103,13 +110,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
           <el-input type="textarea" v-model="form.remark" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddSave">确 定</el-button>
-        <el-button @click="closeDialog(false)">取 消</el-button>
+        <el-button type="primary" @click="handleAddSave">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="closeDialog(false)">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

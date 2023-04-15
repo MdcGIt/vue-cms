@@ -1,28 +1,26 @@
 <template>
   <div class="app-container" style="padding: 0;">
-    <el-dialog class="resource-dialog"
-               :title="this.title"
-               :visible.sync="visible"
-               width="1010px"
-               :close-on-click-modal="false"
-               append-to-body>
+    <el-dialog 
+      class="resource-dialog"
+      :title="$t('CMS.Resourlce.SelectorTitle')"
+      :visible.sync="visible"
+      width="1010px"
+      :close-on-click-modal="false"
+      append-to-body>
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
-        <el-tab-pane label="本地上传" name="local">
-          <el-form ref="formUpload"
-                    :model="form_upload"
-                    v-loading="upload.isUploading"
-                    label-width="130px"
-                    label-suffix="：">
-            <el-form-item label="来源"
-                          prop="source">
+        <el-tab-pane :label="$t('CMS.Resource.LocalUpload')" name="local">
+          <el-form 
+            ref="formUpload"
+            :model="form_upload"
+            v-loading="upload.isUploading"
+            label-width="130px">
+            <el-form-item :label="$t('CMS.Resource.Source')" prop="source">
                <el-radio-group v-model="form_upload.source" size="small">
-                 <el-radio-button label="local">本地上传</el-radio-button>
-                 <el-radio-button label="net">网络链接</el-radio-button>
+                 <el-radio-button label="local">{{ $t('CMS.Resource.LocalUpload') }}</el-radio-button>
+                 <el-radio-button label="net">{{ $t('CMS.Resource.RemoteLink') }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item v-show="showLocal"
-                          label="上传"
-                          prop="path">
+            <el-form-item v-show="showLocal" :label="$t('CMS.Resource.Upload')" prop="path">
               <el-upload
                 ref="upload"
                 list-type="picture-card"
@@ -39,16 +37,13 @@
                 :on-exceed="handleFileUloadExceed"
                 :auto-upload="false">
                 <i class="el-icon-plus"></i>
-                <div slot="tip" class="el-upload__tip">只能上传{{upload.accept}}文件，且不超过{{upload.acceptSize}}</div>
+                <div slot="tip" class="el-upload__tip">{{ $t('CMS.Resource.UPloadTip', [ upload.accept, upload.acceptSize ]) }}</div>
               </el-upload>
             </el-form-item>
-            <el-form-item v-show="showNet"
-                          label="图片链接"
-                          prop="path">
-              <el-input v-model="form_upload.path" size="small" placeholder="请输出http://或https://开头的图片地址"></el-input>
+            <el-form-item v-show="showNet" :label="$t('CMS.Resource.RemoteLink')" prop="path">
+              <el-input v-model="form_upload.path" size="small" placeholder="http(s)://"></el-input>
             </el-form-item>
-            <el-form-item label="标签"
-                          prop="tags">
+            <el-form-item :label="$t('CMS.Resource.Tag')" prop="tags">
               <el-tag
                 :key="tag"
                 v-for="tag in form_upload.tags"
@@ -64,18 +59,17 @@
                 ref="tagInput"
                 size="small"
                 @keyup.enter.native="handleTagInputConfirm"
-                @blur="handleTagInputConfirm"
-              >
+                @blur="handleTagInputConfirm">
               </el-input>
               <el-button v-else class="button-new-tag" size="small" @click="showTagInput">+ New Tag</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="素材库" name="resources">
+        <el-tab-pane :label="$t('CMS.Resource.MaterialLibrary')" name="resources">
           <el-container style="height: 500px; border: 1px solid #eee">
             <el-aside width="200px">
               <div>
-                <el-link icon="el-icon-user" @click="loadMyResources">我的素材</el-link>
+                <el-link icon="el-icon-user" @click="loadMyResources">{{ $t('CMS.Resource.MyMaterial') }}</el-link>
               </div>
             </el-aside>
             <el-container>
@@ -83,63 +77,60 @@
                 <el-form :model="filterQuery"
                 ref="queryForm"
                 :inline="true"
+                size="small"
                 label-width="68px"
                 class="el-form-search">
-                  <el-form-item prop="name">
-                    <el-input placeholder="资源名称" v-model="filterQuery.name" size="mini" style="width: 170px;"></el-input>
+                  <el-form-item :label="$t('CMS.Resource.Name')" prop="name">
+                    <el-input v-model="filterQuery.name" style="width: 170px;"></el-input>
                   </el-form-item>
-                  <el-form-item label="创建时间" style="margin-top:1px;">
-                    <el-date-picker v-model="dateRange"
-                                    size="mini"
-                                    style="width: 240px"
-                                    value-format="yyyy-MM-dd"
-                                    type="daterange"
-                                    range-separator="-"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"></el-date-picker>
+                  <el-form-item :label="$t('Common.CreateTime')" style="margin-top:1px;">
+                    <el-date-picker 
+                      v-model="dateRange"
+                      style="width: 240px"
+                      value-format="yyyy-MM-dd"
+                      type="daterange"
+                      range-separator="-"
+                      :start-placeholder="$t('Common.BeginDate')"
+                      :end-placeholder="$t('Common.EndDate')"></el-date-picker>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary"
-                              icon="el-icon-search"
-                              size="mini"
-                              plain
-                              @click="handleQuery">搜索</el-button>
-                    <el-button icon="el-icon-refresh"
-                              size="mini"
-                              plain
-                              @click="resetQuery">重置</el-button>
-                    <el-button icon="el-icon-scissors"
-                              size="mini"
-                              plain
-                              @click="alert('没空做')">裁剪</el-button>
+                    <el-button 
+                      type="primary"
+                      icon="el-icon-search"
+                      plain
+                      @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+                    <el-button 
+                      plain
+                      icon="el-icon-refresh"
+                      @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+                    <!-- <el-button 
+                      plain
+                      icon="el-icon-scissors"
+                      @click="alert('没空做')">{{ $t('CMS.Resource.Cut') }}{{</el-button> -->
                   </el-form-item>
                 </el-form>
               </el-header>
               <el-main v-loading="loadingList">
-                <el-card shadow="never"
-                          v-for="(r, index) in resourceList" 
-                          :key="r.resourceId">
-                  <el-image fit="scale-down" 
-                            :src="r.src"
-                            @click="handleResourceChecked(index)"></el-image>
+                <el-card shadow="never" v-for="(r, index) in resourceList" :key="r.resourceId">
+                  <el-image fit="scale-down" :src="r.src" @click="handleResourceChecked(index)"></el-image>
                   <div class="r-name" :title="r.name"><el-checkbox v-model="r.selected">{{ r.name }}</el-checkbox></div>
                 </el-card>
               </el-main>
               <el-footer>
-                <pagination v-show="resourceTotal>0"
-                            :total="resourceTotal"
-                            :page.sync="filterQuery.pageNum"
-                            :limit.sync="filterQuery.pageSize"
-                            @pagination="loadResources" />
+                <pagination 
+                  v-show="resourceTotal>0"
+                  :total="resourceTotal"
+                  :page.sync="filterQuery.pageNum"
+                  :limit.sync="filterQuery.pageSize"
+                  @pagination="loadResources" />
               </el-footer>
             </el-container>
           </el-container>
         </el-tab-pane>
       </el-tabs>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary" :loading="upload.isUploading" @click="handleOk">确 定</el-button>
-        <el-button @click="handleCancel">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="upload.isUploading" @click="handleOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleCancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -154,11 +145,6 @@ export default {
       type: Boolean,
       default: false,
       required: true
-    },
-    title: {
-      type: String,
-      default: "素材库",
-      required: false
     },
     rtype: {
       type: String,
@@ -283,7 +269,7 @@ export default {
       this.handleQuery();
     },
     handleFileUloadExceed (files, fileList) {
-      this.$modal.msgWarning('上传文件数量不能超过' + this.upload.limit);
+      this.$modal.msgWarning(this.$t('CMS.Resource.UploadLimit', [ this.upload.limit ]));
     },
     handleFileUploadProgress (event, file, fileList) {
       this.upload.isUploading = true;
@@ -297,7 +283,6 @@ export default {
     onFileUploaded(isSuccess, fileList, result) {
       this.uploadedCount++;
       if (isSuccess) {
-        console.log(result)
         this.results.push({ 
           path: result.internalUrl, 
           name: result.name, 
@@ -324,7 +309,7 @@ export default {
         } else {
           const url = this.form_upload.path;
           if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
-            this.$modal.msgError("图片URL不能为空且必须是http://或https://开头的网络地址");
+            this.$modal.msgError(this.$t('CMS.Resource.RemoteLinkErr'));
             return;
           }
           const name = url.substring(url.lastIndexOf("/") + 1);
@@ -357,7 +342,7 @@ export default {
           }
         });
         if (this.results.length == 0) {
-          this.$modal.msgError("请先选择一个素材");
+          this.$modal.msgError(this.$t('Common.SelectFirst'));
           return;
         }
         this.noticeOk();

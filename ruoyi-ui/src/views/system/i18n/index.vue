@@ -1,49 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
-      <el-form-item :label="$t('System.I18n.LangTag')" prop="langTag">
-        <el-select
-          v-model="queryParams.langTag"
-          clearable
-          style="width: 100px"
-        >
-          <el-option
-            v-for="dict in dict.type.I18nDictType"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item :label="$t('System.I18n.LangKey')" prop="langKey">
-        <el-input
-          v-model="queryParams.langKey"
-          clearable
-          style="width: 160px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('System.I18n.LangValue')" prop="langValue">
-        <el-input
-          v-model="queryParams.langValue"
-          clearable
-          style="width: 160px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
-      </el-form-item>
-    </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
           plain
           icon="el-icon-plus"
-          size="mini"
+          size="small"
           @click="handleAdd"
           v-hasPermi="['system:i18ndict:add']"
         >{{ $t('Common.Add') }}</el-button>
@@ -53,7 +16,7 @@
           type="success"
           plain
           icon="el-icon-edit"
-          size="mini"
+          size="small"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:i18ndict:edit']"
@@ -64,7 +27,7 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+          size="small"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:i18ndict:remove']"
@@ -75,7 +38,7 @@
           type="warning"
           plain
           icon="el-icon-download"
-          size="mini"
+          size="small"
           @click="handleExport"
           v-hasPermi="['system:i18ndict:export']"
         >{{ $t('Common.Export') }}</el-button>
@@ -85,12 +48,55 @@
           type="danger"
           plain
           icon="el-icon-refresh"
-          size="mini"
+          size="small"
           @click="handleRefreshCache"
           v-hasPermi="['system:i18ndict:remove']"
         >{{ $t('Common.RefreshCache') }}</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+        <el-form-item prop="langTag">
+          <el-select
+            v-model="queryParams.langTag"
+            clearable
+            :placeholder="$t('System.I18n.LangTag')"
+            style="width: 100px"
+          >
+            <el-option
+              v-for="dict in dict.type.I18nDictType"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="langKey">
+          <el-input
+            v-model="queryParams.langKey"
+            clearable
+            style="width: 160px"
+            :placeholder="$t('System.I18n.LangKey')"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item prop="langValue">
+          <el-input
+            v-model="queryParams.langValue"
+            clearable
+            :placeholder="$t('System.I18n.LangValue')"
+            style="width: 160px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+          </el-button-group>
+        </el-form-item>
+      </el-form>
     </el-row>
 
     <el-table v-loading="loading" :data="dictList" @selection-change="handleSelectionChange">

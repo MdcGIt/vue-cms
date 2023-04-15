@@ -1,89 +1,69 @@
 <template>
   <div class="app-container">
-    <el-dialog :title="title"
-               :visible.sync="visible"
-               width="800px"
-               :close-on-click-modal="false"
-               custom-class="content-selector-dialog"
-               append-to-body>
+    <el-dialog 
+      :title="$t('CMS.Content.SortDialogTitle')"
+      :visible.sync="visible"
+      width="800px"
+      :close-on-click-modal="false"
+      custom-class="content-selector-dialog"
+      append-to-body>
       <div style="background-color: #f4f4f5;color: #909399;font-size:12px;line-height: 30px;padding-left:10px;">
-        <i class="el-icon-info mr5"></i>内容将会排在下方列表选中的内容之前，选中内容置顶则排序内容也会添加置顶状态，反之则会取消置顶状态。
+        <i class="el-icon-info mr5"></i>{{ $t("CMS.Content.SortDialogTip") }}
       </div>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              label-width="68px"
-              class="el-form-search">
+      <el-form 
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        size="small"
+        class="el-form-search mt10 mb10"
+        style="text-align:left">
         <el-form-item label="" prop="query">
-          <el-input v-model="queryParams.query" size="small" placeholder="输入标题查询">
+          <el-input v-model="queryParams.query" :placeholder="$t('CMS.Content.Placeholder.Title')">
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="small"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="small"
-                    @click="resetQuery">重置</el-button>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+          </el-button-group>
         </el-form-item>
       </el-form>
-      <el-table v-loading="loading"
-                :data="contentList"
-                highlight-current-row
-                @current-change="handleSelectionChange">
-        <el-table-column type="index"
-                        label="序号"
-                        align="center"
-                        width="50" />
-        <el-table-column label="标题"
-                        align="left"
-                        prop="title">
+      <el-table 
+        v-loading="loading"
+        :data="contentList"
+        size="mini"
+        highlight-current-row
+        @current-change="handleSelectionChange">
+        <el-table-column type="index" :label="$t('Common.RowNo')" align="center" width="50" />
+        <el-table-column :label="$t('CMS.Content.Title')" align="left" prop="title">
           <template slot-scope="scope">
-            <span><i v-if="scope.row.topFlag>0" class="el-icon-top top-icon" title="置顶"></i> {{ scope.row.title }}</span>
+            <span><i v-if="scope.row.topFlag>0" class="el-icon-top top-icon" :title="$t('CMS.Content.SetTop')"></i> {{ scope.row.title }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="status">
+        <el-table-column :label="$t('CMS.Content.Status')" align="center" prop="status">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.CMSContentStatus" :value="scope.row.status"/>
           </template>
         </el-table-column>
-        <el-table-column label="发布时间"
-                          align="center"
-                          prop="publishDate"
-                          width="160">
+        <el-table-column :label="$t('CMS.Content.PublishDate')" align="center" prop="publishDate" width="160">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.publishDate) }}</span>
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="total>0"
-                  :total="total"
-                  :page.sync="queryParams.pageNum"
-                  :limit.sync="queryParams.pageSize"
-                  @pagination="loadContentList" />
-      <div slot="footer"
-            class="dialog-footer">
-        <el-button type="primary" 
-                    @click="handleOk">确 定</el-button>
-        <el-button @click="handleClose">取 消</el-button>
+      <pagination 
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="loadContentList" />
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary"  @click="handleOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
-<style>
-.content-selector-dialog .el-dialog__body {
-  padding-top: 10px;
-}
-.content-selector-dialog .el-form-item {
-  margin-bottom: 10px;
-}
-.content-selector-dialog .top-icon {
-  font-weight: bold;
-  font-size: 12px;
-  color:green;
-}
-</style>
 <script>
 import { getContentList } from "@/api/contentcore/content";
 
@@ -91,11 +71,6 @@ export default {
   name: "CMSContentSortDialog",
   dicts: ['CMSContentStatus'],
   props: {
-    title: {
-      type: String,
-      default: "选择内容",
-      required: false
-    },
     open: {
       type: Boolean,
       default: false,
@@ -182,3 +157,10 @@ export default {
   }
 };
 </script>
+<style>
+.content-selector-dialog .top-icon {
+  font-weight: bold;
+  font-size: 12px;
+  color:green;
+}
+</style>

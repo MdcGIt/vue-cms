@@ -6,44 +6,40 @@
         type="success"
         icon="el-icon-edit"
         size="mini"
-        @click="handleSave">保存</el-button>
+        @click="handleSave">{{ $t("Common.Save") }}</el-button>
       <el-button 
         plain
         type="primary"
         icon="el-icon-s-promotion"
         size="mini"
-        @click="handlePublish">发布</el-button>
+        @click="handlePublish">{{ $t('CMS.ContentCore.Publish') }}</el-button>
       <el-button 
         plain
         type="primary"
         icon="el-icon-view"
         size="mini"
-        @click="handlePreview">预览</el-button>
+        @click="handlePreview">{{ $t('CMS.ContentCore.Preview') }}</el-button>
     </div>
     <el-form 
       ref="form"
       :model="form"
       :rules="rules"
-      label-width="80px">
+      label-width="110px">
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>基础属性</span>
+          <span>{{ $t('CMS.Block.Basic') }}</span>
         </div>
         <div class="form-col">
-          <el-form-item label="名称"
-                        prop="name">
+          <el-form-item :label="$t('CMS.PageWidget.Name')" prop="name">
             <el-input v-model="form.name" />
           </el-form-item>
-          <el-form-item label="编码"
-                        prop="code">
+          <el-form-item :label="$t('CMS.PageWidget.Code')" prop="code">
             <el-input v-model="form.code" />
           </el-form-item>
-          <el-form-item label="发布目录"
-                        prop="path">
+          <el-form-item :label="$t('CMS.PageWidget.Path')" prop="path">
             <el-input v-model="form.path" />
           </el-form-item>
-          <el-form-item label="发布通道"
-                        prop="publishPipeCode">
+          <el-form-item :label="$t('CMS.PageWidget.PublishPipe')" prop="publishPipeCode">
             <el-select v-model="form.publishPipeCode">
               <el-option
                 v-for="pp in publishPipes"
@@ -53,16 +49,16 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="模板"
-                        prop="template">
+          <el-form-item :label="$t('CMS.PageWidget.Template')" prop="template">
             <el-input v-model="form.template" :disabled="templateDisabled" >
-            <el-button slot="append"
-                      type="primary"
-                      :disabled="templateDisabled"
-                      @click="handleSelectTemplate()">选择</el-button>
+            <el-button 
+              slot="append"
+              type="primary"
+              :disabled="templateDisabled"
+              @click="handleSelectTemplate()">{{ $t("Common.Select") }}</el-button>
           </el-input>
           </el-form-item>
-          <el-form-item label="备注"
+          <el-form-item :label="$t('Common.Remark')"
                         prop="remark">
             <el-input v-model="form.remark" />
           </el-form-item>
@@ -71,17 +67,12 @@
     </el-form>
     <el-card class="mt10">
       <div slot="header" class="clearfix">
-        <span>自定义列表</span>
+        <span>{{ $t('CMS.Block.ManualList') }}</span>
       </div>
       <el-table :data="this.form.content" style="width: 100%">
-        <el-table-column
-          type="index"
-          label="序号"
-          width="50">
+        <el-table-column type="index" :label="$t('Common.RowNo')" width="50">
         </el-table-column>
-        <el-table-column
-          label="标题"
-          prop="title">
+        <el-table-column :label="$t('CMS.Block.Title')" prop="title">
           <template slot-scope="scope">
             <span class="row-insert">
               <el-button 
@@ -117,35 +108,33 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column
-          width="200"
-          align="right">
+        <el-table-column width="220" align="right">
           <template slot="header">
             <el-button
               plain
               type="primary"
               icon="el-icon-plus"
               size="mini"
-              @click="handleAddRow(form.content.length)">添加行</el-button>
+              @click="handleAddRow(form.content.length)">{{ $t('CMS.Block.AddRow') }}</el-button>
             <el-button
               plain
               type="danger"
               icon="el-icon-delete"
               size="mini"
-              @click="handleClear">清空</el-button>
+              @click="handleClear">{{ $t('CMS.Block.Clean') }}</el-button>
           </template>
           <template slot-scope="scope">
             <el-button
               plain
               size="mini"
               icon="el-icon-plus"
-              @click="handleAddRow(scope.$index)">插入行</el-button>
+              @click="handleAddRow(scope.$index)">{{ $t('CMS.Block.InsertRow') }}</el-button>
             <el-button
               plain
               size="mini"
               icon="el-icon-delete"
               type="danger"
-              @click="handleDeleteRow(scope.$index)">删除</el-button>
+              @click="handleDeleteRow(scope.$index)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -163,56 +152,49 @@
         label-width="80px"
         class="form_item">
         <div class="form-row">
-          <el-form-item 
-            label="标题"
-            prop="title">
+          <el-form-item :label="$t('CMS.Block.Title')" prop="title">
             <el-input v-model="form_item.title">
               <el-dropdown slot="append" @command="handleLinkTo">
                 <el-button size="mini" type="primary">
-                  选择<i class="el-icon-arrow-down el-icon--right"></i>
+                  {{ $t('Common.Select') }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="content">选择内容</el-dropdown-item>
-                  <el-dropdown-item command="catalog">选择栏目</el-dropdown-item>
+                  <el-dropdown-item command="content">{{ $t('CMS.ContentCore.SelectContent') }}</el-dropdown-item>
+                  <el-dropdown-item command="catalog">{{ $t('CMS.ContentCore.SelectCatalog') }}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-input>
           </el-form-item>
-          <el-form-item label="链接"
-                        prop="url">
+          <el-form-item :label="$t('CMS.Block.Link')" prop="url">
             <el-input v-model="form_item.url" />
           </el-form-item>
-          <el-form-item label="摘要"
-                        prop="summary">
+          <el-form-item :label="$t('CMS.Block.Summary')" prop="summary">
             <el-input type="textarea" v-model="form_item.summary" />
           </el-form-item>
-          <el-form-item label="日期"
-                        prop="date">
+          <el-form-item :label="$t('CMS.Block.Date')" prop="date">
             <el-date-picker
               v-model="form_item.date"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              placeholder="选择日期时间">
+              value-format="yyyy-MM-dd HH:mm:ss">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="LOGO" prop="logo">
-            <cms-logo-view v-model="form_item.logo" :src="form_item.logoSrc"
-                            :width="218" :height="150"></cms-logo-view>
+            <cms-logo-view v-model="form_item.logo" :src="form_item.logoSrc" :width="218" :height="150"></cms-logo-view>
           </el-form-item>
         </div>
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button type="primary"
-                   @click="handleDialogOk">确 定</el-button>
-        <el-button @click="handleDialogClose">取 消</el-button>
+        <el-button type="primary" @click="handleDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleDialogClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 模板选择组件 -->
-    <cms-template-selector :open="openTemplateSelector" 
-                       :publishPipeCode="form.publishPipeCode"
-                       @ok="handleTemplateSelected"
-                       @cancel="handleTemplateSelectorCancel" />
+    <cms-template-selector 
+      :open="openTemplateSelector" 
+      :publishPipeCode="form.publishPipeCode"
+      @ok="handleTemplateSelected"
+      @cancel="handleTemplateSelectorCancel" />
     <!-- 栏目选择组件 -->
     <cms-catalog-selector
       :open="openCatalogSelector"
@@ -252,16 +234,16 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, message: "编码不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Code'), trigger: "blur" }
         ],
         publishPipeCode: [
-          { required: true, message: "发布通道不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.PublishPipe'), trigger: "blur" }
         ],
         path: [
-          { required: true, message: "目录不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Path'), trigger: "blur" }
         ]
       },
       openTemplateSelector: false,
@@ -284,7 +266,7 @@ export default {
       this.loadPublishPipes();
       this.loadPageWidgetInfo();
     } else {
-      this.$modal.msgError("参数异常");
+      this.$modal.msgError(this.$t('CMS.PageWidget.InvalidPageWidgetId', [ this.pageWidgetId ]));
     }
   },
   methods: {
@@ -295,9 +277,7 @@ export default {
     },
     loadPageWidgetInfo() {
       getPageWidget(this.pageWidgetId).then(response => {
-        if (response.code == 200) {
-          this.form = response.data;
-        }
+        this.form = response.data;
       });
     },
     handleSave () {
@@ -307,16 +287,12 @@ export default {
           this.form.contentStr = JSON.stringify(this.form.content);
           if (this.pageWidgetId) {
             editPageWidget(this.form).then(response => {
-              if (response.code === 200) {
-                this.$modal.msgSuccess(response.msg);
-              }
+              this.$modal.msgSuccess(response.msg);
             });
           } else {
             addPageWidget(this.form).then(response => {
-              if (response.code === 200) {
-                this.$modal.msgSuccess(response.msg);
-                this.$router.push({ path: form.route, query: { id: response.data } });
-              }
+              this.$modal.msgSuccess(response.msg);
+              this.$router.push({ path: form.route, query: { id: response.data } });
             });
           }
         }
@@ -354,7 +330,7 @@ export default {
       this.form.content.splice(index, 1);
     },
     handleAddItem(rowIndex, itemIndex) {
-      this.title = "添加列表项";
+      this.title = this.$t('CMS.Block.AddItem');
       this.form_item = {};
       this.current = { row: rowIndex, col: itemIndex || 0 };
       this.addItem = true;
@@ -373,7 +349,7 @@ export default {
     },
     handleEditItem(rowIndex, itemIndex) {
       this.current = { row: rowIndex, col: itemIndex };
-      this.title = "编辑列表项";
+      this.title = this.$t('CMS.Block.EditItem');
       this.addItem = false;
       this.form_item = this.form.content[rowIndex].items[itemIndex];
       this.dialogVisible = true;
@@ -401,7 +377,7 @@ export default {
         this.form_item.summary = contents[0].summary;
         this.openContentSelector = false;
       } else {
-        this.$modal.msgWarning("请先选择一条记录");
+        this.$modal.msgWarning(this.$t('Common.SelectFirst'));
       }
     },
     handleContentSelectorClose() {
@@ -417,7 +393,7 @@ export default {
       }
       this.openCatalogSelector = false;
     },
-    handleCatalogSelectorClose(catalogs) {
+    handleCatalogSelectorClose() {
       this.openCatalogSelector = false;
     },
   }

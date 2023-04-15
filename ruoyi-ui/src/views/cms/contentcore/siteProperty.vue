@@ -1,80 +1,80 @@
 <template>
   <div class="">
-    <el-row>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              label-width="68px"
-              class="el-form-search">
-        <el-form-item prop="query">
-          <el-input placeholder="名称/代码查询" v-model="queryParams.query" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="mini"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="mini"
-                    @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
-    <el-row class="mb10">
-      <el-button type="primary"
-                  icon="el-icon-plus"
-                  size="mini"
-                  @click="handleAdd">新增</el-button>
-      <el-button type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                  :disabled="multiple"
-                  @click="handleDelete">删除</el-button>
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-row>
+          <el-button 
+            plain
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+          <el-button 
+            plain
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+        </el-row>
+      </el-col>
+      <el-col :span="12" style="text-align:right">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          class="el-form-search">
+          <el-form-item prop="query">
+            <el-input :placeholder="$t('CMS.Site.Property.QueryPlaceholder')" v-model="queryParams.query"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
 
     <el-table v-loading="loading"
               :data="propertyList"
               @selection-change="handleSelectionChange">
-      <el-table-column type="selection"
-                       width="55"
-                       align="center" />
-      <el-table-column label="ID"
-                       align="center"
-                       prop="propertyId"
-                       width="180" />
-      <el-table-column label="属性名称"
-                       align="center"
-                       prop="propName" />
-      <el-table-column label="属性代码"
-                       align="center"
-                       prop="propCode" />
-      <el-table-column label="属性值"
-                       align="center"
-                       prop="propValue" />
-      <el-table-column label="备注"
-                       align="center"
-                       prop="remark" />
-      <el-table-column label="操作"
-                       align="center"
-                       width="180" 
-                       class-name="small-padding fixed-width">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="propertyId" width="180" />
+      <el-table-column :label="$t('CMS.Site.Property.PropName')" align="center" prop="propName" />
+      <el-table-column :label="$t('CMS.Site.Property.PropCode')" align="center" prop="propCode" />
+      <el-table-column :label="$t('CMS.Site.Property.PropValue')" align="center" prop="propValue" />
+      <el-table-column :label="$t('Common.Remark')" align="center" prop="remark" />
+      <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleEdit(scope.row)">修改</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">删除</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleEdit(scope.row)"
+          >{{ $t("Common.Edit") }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+          >{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="loadSitePropertyList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="loadSitePropertyList" />
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title"
@@ -86,28 +86,22 @@
                :model="form"
                :rules="rules"
                label-width="80px">
-        <el-form-item label="名称"
-                      prop="propName">
+        <el-form-item :label="$t('CMS.Site.Property.PropName')" prop="propName">
           <el-input v-model="form.propName"/>
         </el-form-item>
-        <el-form-item label="代码"
-                      prop="propCode">
+        <el-form-item :label="$t('CMS.Site.Property.PropCode')" prop="propCode">
           <el-input v-model="form.propCode" />
         </el-form-item>
-        <el-form-item label="属性值"
-                      prop="propValue">
+        <el-form-item :label="$t('CMS.Site.Property.PropValue')" prop="propValue">
           <el-input v-model="form.propValue" />
         </el-form-item>
-        <el-form-item label="备注"
-                      prop="remark">
-          <el-input v-model="form.remark"
-                    type="textarea" />
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -145,10 +139,10 @@ export default {
       form: {},
       rules: {
         propName: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.Site.Property.RuleTips.PropName'), trigger: "blur" }
         ],
         propCode: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.Site.Property.RuleTips.PropCode'), trigger: "blur" }
         ]
       }
     };
@@ -223,11 +217,11 @@ export default {
     },
     handleDelete (row) {
       const propertyIds = row.propertyId ? [ row.propertyId ] : this.ids;
-      this.$modal.confirm("确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteSiteProperty(propertyIds);
       }).then(() => {
         this.loadSitePropertyList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     }
   }

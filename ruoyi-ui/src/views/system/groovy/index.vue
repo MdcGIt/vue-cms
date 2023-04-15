@@ -10,7 +10,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button v-loading="loading" type="primary" icon="el-icon-s-promotion" size="mini" @click="handleExecute">执行</el-button>
+        <el-button v-loading="loading" type="primary" icon="el-icon-s-promotion" @click="handleExecute">执行</el-button>
       </el-form-item>
     </el-form>
 

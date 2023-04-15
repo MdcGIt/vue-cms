@@ -5,7 +5,7 @@
         <el-row :gutter="10" class="mb8">
             <el-card v-loading="loading" shadow="hover">
               <div slot="header" class="clearfix">
-                <span>访问趋势</span>
+                <span>{{ $t("Stat.VisitTrend") }}</span>
                 <el-row :gutter="10" class="mb8" style="float:right;">
                   <el-col :span="1.5">
                     <el-select v-model="queryParams.bdSiteId" size="small">
@@ -46,11 +46,11 @@
       <el-col :span="12">
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
-            <span>地域分布</span>
+            <span>{{ $t("Stat.VisitLocation") }}</span>
           </div>
           <el-table v-loading="loadingDistrict" :data="districtList" height="370" size="mini">
             <el-table-column 
-              label="区域"
+              :label="$t('Stat.Location')"
               align="center"
               prop="name" />
             <el-table-column 
@@ -58,7 +58,7 @@
               align="center"
               prop="pv_count" />
             <el-table-column 
-              label="占比"
+              :label="$t('Stat.Ratio')"
               align="center"
               prop="ratio">
               <template slot-scope="scope">
@@ -75,7 +75,7 @@
 </style>
 <script>
 import * as baiduTongjiApi from "@/api/stat/baidu";
-import LineChart from '../../dashboard/LineChart'
+import LineChart from '@/views/dashboard/LineChart'
 
 export default {
   name: "CMSSiteBdTrendOverview",
@@ -92,7 +92,7 @@ export default {
       },
       pickerOptions: {
         shortcuts: [{
-          text: '最近一周',
+          text: this.$t("Common.LastWeek"),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -100,7 +100,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: '最近一个月',
+          text: this.$t("Common.LastMonth"),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -108,7 +108,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: '最近三个月',
+          text: this.$t("Common.LastThreeMonth"),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -151,7 +151,6 @@ export default {
     },
     loadSiteTrendOverviewDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
         return;
       }
       this.loading = true;
@@ -171,7 +170,6 @@ export default {
     },
     loadSiteDistrictOverviewDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
         return;
       }
       this.loadingDistrict = true;
@@ -184,7 +182,6 @@ export default {
     },
     loadSiteDistrictOverviewDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
         return;
       }
       this.loadingDistrict = true;
@@ -197,7 +194,6 @@ export default {
     },
     loadSiteOtherOverviewDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
         return;
       }
       this.loadingOther = true;

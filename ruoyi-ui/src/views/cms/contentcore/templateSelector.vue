@@ -1,27 +1,31 @@
 <template>
   <div class="app-container">
-    <el-dialog :title="title"
-               :visible.sync="visible"
-               width="700px"
-               :close-on-click-modal="false"
-               append-to-body>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              label-width="68px"
-              class="el-form-search">
-        <el-form-item label="模板名称" prop="filename">
+    <el-dialog 
+      :title="$t('CMS.Template.SelectorTitle')"
+      :visible.sync="visible"
+      width="700px"
+      :close-on-click-modal="false"
+      append-to-body>
+      <el-form 
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        label-width="68px"
+        class="el-form-search">
+        <el-form-item :label="$t('CMS.Template.Name')" prop="filename">
           <el-input v-model="queryParams.filename" size="small">
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="small"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="small"
-                    @click="resetQuery">重置</el-button>
+          <el-button 
+            type="primary"
+            icon="el-icon-search"
+            size="small"
+            @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+          <el-button 
+            icon="el-icon-refresh"
+            size="small"
+            @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
         </el-form-item>
       </el-form>
       <el-table 
@@ -30,13 +34,15 @@
         :data="templateList"
         highlight-current-row
         @current-change="handleSelectionChange">
-        <el-table-column type="index"
-                        label="序号"
-                        align="center"
-                        width="50" />
-        <el-table-column label="模板名称"
-                        align="left"
-                        prop="path"/>
+        <el-table-column 
+          type="index"
+          :label="$t('Common.RowNo')"
+          align="center"
+          width="50" />
+        <el-table-column 
+          :label="$t('CMS.Template.Name')"
+          align="left"
+          prop="path"/>
       </el-table>
       <pagination
         v-show="total>0"
@@ -45,12 +51,9 @@
         :limit.sync="queryParams.pageSize"
         @pagination="getList"
       />
-      <div slot="footer"
-            class="dialog-footer">
-        <el-button type="primary" 
-                    :disabled="okBtnDisabled"
-                    @click="handleOk">确 定</el-button>
-        <el-button @click="handleCancel">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :disabled="okBtnDisabled" @click="handleOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleCancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -63,11 +66,6 @@ import { getTemplateList } from "@/api/contentcore/template";
 export default {
   name: "CMSTemplateSelector",
   props: {
-    title: {
-      type: String,
-      default: "选择模板",
-      required: false
-    },
     publishPipeCode: {
       type: String,
       required: true

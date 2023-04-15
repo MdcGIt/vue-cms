@@ -1,28 +1,22 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20" v-loading="loading">
-      <el-col :span="4"
-              :xs="24">
+      <el-col :span="4" :xs="24">
         <cms-catalog-tree 
           ref="catalogTree"
           :new-btn="true"    
           @node-click="handleTreeNodeClick">
         </cms-catalog-tree>
       </el-col>
-      <el-col :span="20"
-              :xs="24">
-        <el-tabs v-model="activeName"
-                 @tab-click="handleTabClick">
-          <el-tab-pane label="内容列表"
-                       name="contentList">
+      <el-col :span="20" :xs="24">
+        <el-tabs v-model="activeName" @tab-click="handleTabClick">
+          <el-tab-pane :label="$t('CMS.Content.Tab.ContentList')" name="contentList">
               <cms-content-list v-if="activeName==='contentList'" :cid="selectedCatalogId"></cms-content-list>
           </el-tab-pane>
-          <el-tab-pane label="页面部件"
-                       name="pageWdiget">
+          <el-tab-pane :label="$t('CMS.Content.Tab.PageWidget')" name="pageWdiget">
               <cms-pagewidget-list v-if="activeName==='pageWdiget'" :cid="selectedCatalogId"></cms-pagewidget-list>
           </el-tab-pane>
-          <el-tab-pane label="回收站"
-                       name="recycle">
+          <el-tab-pane :label="$t('CMS.Content.Tab.RecycleBin')" name="recycle">
             <cms-recycle-list v-if="activeName==='recycle'" :cid="selectedCatalogId"></cms-recycle-list>
           </el-tab-pane>
         </el-tabs>

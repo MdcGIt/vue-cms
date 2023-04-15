@@ -18,9 +18,9 @@ public interface SysMenuPriv {
 	
 	public String MonitorLogsView = "monitor:logs:view";
 	
-	public String GroovyExec = "sys:groovy:exec";
+	public String AsyncTaskList = "monitor:async:view";
 	
-	public String AsyncTaskList = "sys:async:view";
+	public String GroovyExec = "tool:groovy:exec";
 	
 	public String SysConfigList = "system:config:view";
 
@@ -96,7 +96,7 @@ public interface SysMenuPriv {
 	
 	public String SysRoleRemove = "system:role:remove";
 	
-	public String SysSecurityList = "sys:security:view";
+	public String SysSecurityList = "system:security:view";
 	
 	public String SysUserList = "system:user:view";
 	

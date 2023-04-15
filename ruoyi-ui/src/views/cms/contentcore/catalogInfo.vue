@@ -1,53 +1,61 @@
 <template>
-  <div>
-    <el-row :gutter="10"
-            class="mb8">
+  <div class="catalog-info-container">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
-        <el-button type="success"
-                    icon="el-icon-edit"
-                    size="mini"
-                    plain
-                    :disabled="!this.catalogId"
-                    @click="handleUpdate">保存</el-button>
+        <el-button 
+          plain
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="!this.catalogId"
+          @click="handleUpdate">{{ $t("Common.Save") }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary"
-                    size="mini"
-                    plain
-                    :disabled="!this.catalogId"
-                    @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>预览</el-button>
+        <el-button 
+          plain
+          type="primary"
+          size="mini"
+          :disabled="!this.catalogId"
+          @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>{{ $t('CMS.ContentCore.Preview') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-dropdown>
-          <el-button plain
-                      size="mini" 
-                      type="primary"
-                      icon="el-icon-s-promotion"
-                      :disabled="!this.catalogId"
-                      @click="handlePublish(-1)">
-            发布<i class="el-icon-arrow-down el-icon--right"></i>
+          <el-button 
+            plain
+            size="mini" 
+            type="primary"
+            icon="el-icon-s-promotion"
+            :disabled="!this.catalogId"
+            @click="handlePublish(-1)">
+            {{ $t('CMS.ContentCore.Publish') }}<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="dict in dict.type.CMSContentStatus" :key="dict.value" icon="el-icon-s-promotion" @click.native="handlePublish(dict.value)">发布{{dict.label}}的内容</el-dropdown-item>
-            
+            <el-dropdown-item 
+              v-for="dict in dict.type.CMSContentStatus" 
+              :key="dict.value" 
+              icon="el-icon-s-promotion" 
+              @click.native="handlePublish(dict.value)"
+            >{{dict.label}}{{ $t('CMS.Catalog.Content') }}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary"
-                    icon="el-icon-edit"
-                    size="mini"
-                    plain
-                    :disabled="!this.catalogId"
-                    @click="handleChangeVisible">{{ catalogVisible ? "隐藏" : "显示" }}</el-button>
+        <el-button 
+          plain
+          type="warning"
+          :icon="catalogVisible?'el-icon-circle-close':'el-icon-circle-check'"
+          size="mini"
+          :disabled="!this.catalogId"
+          @click="handleChangeVisible">{{ catalogVisible ? $t("Common.Hide") : $t("Common.Show") }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary"
-                    icon="el-icon-rank"
-                    size="mini"
-                    plain
-                    :disabled="!this.catalogId"
-                    @click="handleMoveCatalog">移动</el-button>
+        <el-button 
+          type="primary"
+          icon="el-icon-rank"
+          size="mini"
+          plain
+          :disabled="!this.catalogId"
+          @click="handleMoveCatalog">{{ $t('Common.Move') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-popover
@@ -56,11 +64,11 @@
           v-model="showSortPop">
           <el-input-number v-model="sortValue" size="small" style="width:200px;" />
           <div style="color: #909399;font-size:12px;line-height: 30px;">
-            <i class="el-icon-info mr5"></i>正数下移，负数上移
+            <i class="el-icon-info mr5"></i>{{ $t('CMS.Catalog.SortTip') }}
           </div>
           <div style="text-align: right; margin-top: 5px;">
-            <el-button size="mini" type="text" @click="handleSortCatalogCancel">取消</el-button>
-            <el-button type="primary" size="mini" @click="handleSortCatalog">确定</el-button>
+            <el-button size="mini" type="text" @click="handleSortCatalogCancel">{{ $t('Common.Cancel') }}</el-button>
+            <el-button type="primary" size="mini" @click="handleSortCatalog">{{ $t('Common.Confirm') }}</el-button>
           </div>
           <el-button 
             slot="reference" 
@@ -68,159 +76,152 @@
             plain
             type="primary"
             icon="el-icon-sort"
-          >排序</el-button>
+          >{{ $t('Common.Sort') }}</el-button>
         </el-popover>
       </el-col>
       <el-col :span="1.5">
-        <el-popconfirm title="删除栏目会删除包括子栏目下所有数据确定删除吗？" @confirm="handleDelete">
+        <el-popconfirm :title="$t('CMS.Catalog.DeleteTip')" @confirm="handleDelete">
             <el-button 
               type="danger" 
               icon="el-icon-delete"
               size="mini"
               plain
               :disabled="!this.catalogId"
-              slot="reference">删除</el-button>
+              slot="reference">{{ $t("Common.Delete") }}</el-button>
           </el-popconfirm>
       </el-col>
     </el-row>
-    <el-form ref="form_info"
-              v-loading="loading"
-              :model="form_info"
-              :rules="rules"
-              :disabled="!this.catalogId"
-              label-width="140px"
-              label-suffix="：">
+    <el-form 
+      ref="form_info"
+      v-loading="loading"
+      :model="form_info"
+      :rules="rules"
+      :disabled="!this.catalogId"
+      label-width="165px">
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>基础属性</span>
+          <span>{{ $t('CMS.Catalog.Basic') }}</span>
         </div>
-        <el-form-item label="栏目ID"
-                      prop="catalogId">
+        <el-form-item :label="$t('CMS.Catalog.CatalogId')" prop="catalogId">
           <span class="span_catalogid" v-if="form_info.catalogId!=undefined">{{form_info.catalogId}}</span>
         </el-form-item>
-        <el-form-item label="栏目名称"
-                      prop="name">
+        <el-form-item :label="$t('CMS.Catalog.Name')" prop="name">
           <el-input v-model="form_info.name" />
         </el-form-item>
-        <el-form-item label="栏目别名"
-                      prop="alias">
+        <el-form-item :label="$t('CMS.Catalog.Alias')" prop="alias">
           <el-input v-model="form_info.alias" />
         </el-form-item>
-        <el-form-item label="栏目目录"
-                      prop="path">
+        <el-form-item :label="$t('CMS.Catalog.Path')" prop="path">
           <el-input v-model="form_info.path" />
         </el-form-item>
-        <el-form-item label="栏目类型"
-                      prop="catalogType">
-          <el-select v-model="form_info.catalogType"
-                    placeholder="栏目类型">
-            <el-option v-for="ct in catalogTypeOptions"
-                      :key="ct.id"
-                      :label="ct.name"
-                      :value="ct.id" />
+        <el-form-item :label="$t('CMS.Catalog.CatalogType')" prop="catalogType">
+          <el-select v-model="form_info.catalogType" :placeholder="$t('CMS.Catalog.CatalogType')">
+            <el-option 
+              v-for="ct in catalogTypeOptions"
+              :key="ct.id"
+              :label="ct.name"
+              :value="ct.id" />
           </el-select>
         </el-form-item>
         <el-form-item
-          label="链接地址"
+          :label="$t('CMS.Catalog.RedirectUrl')"
           v-if="form_info.catalogType==='link'"
           prop="redirectUrl">
           <el-input v-model="form_info.redirectUrl" placeholder="http(s)://">
             <el-dropdown slot="append" @command="handleLinkTo">
               <el-button>
-                内部链接<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ $t('CMS.ContentCore.InternalUrl') }}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="content">选择内容</el-dropdown-item>
-                <el-dropdown-item command="catalog">选择栏目</el-dropdown-item>
+                <el-dropdown-item command="content">{{ $t('CMS.ContentCore.SelectContent') }}</el-dropdown-item>
+                <el-dropdown-item command="catalog">{{ $t('CMS.ContentCore.SelectCatalog') }}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-input>
         </el-form-item>
-        <el-form-item label="栏目描述"
-                      prop="description">
-          <el-input v-model="form_info.description"
-                    type="textarea"
-                    maxlength="100" />
+        <el-form-item :label="$t('CMS.Catalog.Desc')" prop="description">
+          <el-input v-model="form_info.description" type="textarea" maxlength="100" />
         </el-form-item>
-        <el-form-item label="栏目Logo" prop="logo">
+        <el-form-item :label="$t('CMS.Catalog.Logo')" prop="logo">
           <cms-logo-view v-model="form_info.logo" :src="form_info.logoSrc" :height="150"></cms-logo-view>
         </el-form-item>
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>发布通道属性</span>
+          <span>{{ $t('CMS.Catalog.PublishPipeConf') }}</span>
         </div>
         <el-tabs v-model="publishPipeActiveName">
-          <el-tab-pane v-for="pp in this.form_info.publishPipeDatas"
-                        :key="pp.pipeCode"
-                        :command="pp"
-                        :name="pp.pipeCode"
-                        :label="pp.pipeName">
-            <el-form-item label="首页模板"
-                          prop="indexTemplate">
+          <el-tab-pane 
+            v-for="pp in this.form_info.publishPipeDatas"
+            :key="pp.pipeCode"
+            :command="pp"
+            :name="pp.pipeCode"
+            :label="pp.pipeName">
+            <el-form-item :label="$t('CMS.Catalog.IndexTemplate')" prop="indexTemplate">
               <el-input v-model="pp.props.indexTemplate">
-                <el-button slot="append"
-                          type="primary"
-                          @click="handleSelectTemplate('indexTemplate')">选择</el-button>
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('indexTemplate')"
+                >{{ $t("Common.Select") }}</el-button>
               </el-input>
             </el-form-item>
-            <el-form-item label="列表页模板"
-                          prop="listTemplate">
+            <el-form-item :label="$t('CMS.Catalog.ListTemplate')" prop="listTemplate">
               <el-input v-model="pp.props.listTemplate">
-                <el-button slot="append"
-                          type="primary"
-                          @click="handleSelectTemplate('listTemplate')">选择</el-button>
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('listTemplate')"
+                >{{ $t("Common.Select") }}</el-button>
               </el-input>
-              <el-button class="ml5"
-                         icon="el-icon-bottom-right" 
-                         type="primary" 
-                         plain 
-                         @click="handleApplyToChildren('listTemplate')">应用到子栏目</el-button>
+              <el-button 
+                plain 
+                class="ml5"
+                icon="el-icon-bottom-right" 
+                type="primary" 
+                @click="handleApplyToChildren('listTemplate')">{{ $t('CMS.Catalog.ApplyToChildren') }}</el-button>
             </el-form-item>
-            <el-form-item v-for="ct of contentTypes" 
-                          :key="ct.id" 
-                          :command="ct"
-                          :label="ct.name + '详情页模板'"
-                          :prop="`detailTemplate_${ct.id}`">
+            <el-form-item 
+              v-for="ct of contentTypes" 
+              :key="ct.id" 
+              :command="ct"
+              :label="ct.name + $t('CMS.Catalog.DetailTemplate')"
+              :prop="`detailTemplate_${ct.id}`">
               <el-input v-model="pp.props[`detailTemplate_${ct.id}`]">
-                <el-button slot="append"
-                          type="primary"
-                          @click="handleSelectTemplate(`detailTemplate_${ct.id}`)">选择</el-button>
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate(`detailTemplate_${ct.id}`)"
+                >{{ $t("Common.Select") }}</el-button>
               </el-input>
-              <el-button class="ml5"
-                         icon="el-icon-bottom-right" 
-                         type="primary" 
-                         plain 
-                         @click="handleApplyToChildren(`detailTemplate_${ct.id}`)">应用到子栏目</el-button>
+              <el-button 
+                class="ml5"
+                icon="el-icon-bottom-right" 
+                type="primary" 
+                plain 
+                @click="handleApplyToChildren(`detailTemplate_${ct.id}`)"
+              >{{ $t('CMS.Catalog.ApplyToChildren') }}</el-button>
             </el-form-item>
           </el-tab-pane>
         </el-tabs>
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
-          <span>SEO属性</span>
+          <span>{{ $t('CMS.ContentCore.SEOConfig') }}</span>
         </div>
-        <el-form-item label="SEO标题"
-                      prop="seoTitle">
-          <el-input v-model="form_info.seoTitle"
-                    placeholder="请输入SEO标题" />
+        <el-form-item :label="$t('CMS.ContentCore.SEOTitle')" prop="seoTitle">
+          <el-input v-model="form_info.seoTitle" />
         </el-form-item>
-        <el-form-item label="SEO关键字"
-                      prop="seoKeywords">
-          <el-input v-model="form_info.seoKeywords"
-                    placeholder="请输入SEO关键字" />
+        <el-form-item :label="$t('CMS.ContentCore.SEOKeyword')" prop="seoKeywords">
+          <el-input v-model="form_info.seoKeywords" />
         </el-form-item>
-        <el-form-item label="SEO描述"
-                      prop="seoDescription">
-          <el-input v-model="form_info.seoDescription"
-                    type="textarea"
-                    maxlength="100"
-                    placeholder="请输入SEO描述" />
+        <el-form-item :label="$t('CMS.ContentCore.SEODescription')" prop="seoDescription">
+          <el-input v-model="form_info.seoDescription" type="textarea" :maxlength="100" />
         </el-form-item>
       </el-card>
       <el-card v-if="showEXModel" shadow="hover">
         <div slot="header" class="clearfix">
-          <span>扩展模型属性</span>
+          <span>{{ $t('CMS.Catalog.ExModelProps') }}</span>
         </div>
         
         <cms-exmodel-editor 
@@ -231,25 +232,26 @@
       </el-card>
     </el-form>
     <el-dialog 
-      title="发布栏目"
+      :title="$t('CMS.Catalog.PublishDialogTitle')"
       :visible.sync="publishDialogVisible"
       width="500px"
       class="publish-dialog">
       <div>
-        <p>提示：</p>
-        <p>本次生成的静态页面将覆盖原有页面，确认生成所有静态页面吗？</p>
-        <el-checkbox v-model="publishChild">包含子栏目</el-checkbox>
+        <p>{{ $t('Common.Tips') }}</p>
+        <p>{{ $t('CMS.Catalog.PublishTips') }}</p>
+        <el-checkbox v-model="publishChild">{{ $t('CMS.Catalog.ContainsChildren') }}</el-checkbox>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="publishDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleDoPublish">确 定</el-button>
+        <el-button @click="publishDialogVisible = false">{{ $t("Common.Cancel") }}</el-button>
+        <el-button type="primary" @click="handleDoPublish">{{ $t("Common.Confirm") }}</el-button>
       </span>
     </el-dialog>
     <!-- 模板选择组件 -->
-    <cms-template-selector :open="openTemplateSelector" 
-                       :publishPipeCode="publishPipeActiveName"
-                       @ok="handleTemplateSelected"
-                       @cancel="handleTemplateSelectorCancel" />
+    <cms-template-selector 
+      :open="openTemplateSelector" 
+      :publishPipeCode="publishPipeActiveName"
+      @ok="handleTemplateSelected"
+      @cancel="handleTemplateSelectorCancel" />
     <!-- 栏目选择组件 -->
     <cms-catalog-selector
       :open="openCatalogSelector"
@@ -311,12 +313,13 @@ export default {
       propKey: "", // 选择模板时记录变更的模板对应属性Key
       openProgress: false, // 是否显示任务进度条
       progressTitle: "",
+      progressType: "",
       taskId: "", // 任务ID
       // 发布选项弹窗
       publishDialogVisible: false,
       publishChild: false,
       publishStatus: -1,
-      publishPipeActiveName: "pc", // 当前选中的发布通道Tab
+      publishPipeActiveName: "", // 当前选中的发布通道Tab
       catalogId: parseInt(this.cid),
       showSortPop: false,
       sortValue: 0,
@@ -329,16 +332,16 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "栏目名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.Catalog.RuleTips.Name'), trigger: "blur" }
         ],
         alias: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.Catalog.RuleTips.Alias'), trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9_/]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_/]*$", message: this.$t('CMS.Catalog.RuleTips.Path'), trigger: "blur" }
         ],
         catalogType: [
-          { required: true, message: "栏目类型不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.Catalog.RuleTips.CatalogType'), trigger: "blur" }
         ]
       }
     };
@@ -372,7 +375,7 @@ export default {
     },
     loadCatalogInfo () {
       if (!this.catalogId) {
-        this.$modal.msgError("请先选择一个栏目");
+        this.$modal.msgError(this.$t('CMS.Catalog.SelectCatalogFirst'));
         return;
       }
       this.loading = true;
@@ -391,12 +394,8 @@ export default {
             this.form_info.params = this.$refs.EXModelEditor.getDatas();
           }
           catalogApi.updateCatalog(this.form_info).then(response => {
-            if (response.code === 200) {
-              this.$modal.msgSuccess("保存成功");
-              this.$emit("update", response.data);
-            } else {
-              this.$modal.msgError(response.msg);
-            }
+            this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
+            this.$emit("update", response.data);
           });
         }
       });
@@ -404,12 +403,8 @@ export default {
     handleChangeVisible () {
         const visible = this.form_info.visibleFlag == "Y" ? "N" : "Y";
         catalogApi.changeVisible(this.form_info.catalogId, visible).then(response => {
-          if (response.code === 200) {
-              this.$modal.msgSuccess(response.msg);
-              this.form_info.visibleFlag = visible;
-          } else {
-              this.$modal.msgError(response.msg);
-          }
+          this.$modal.msgSuccess(response.msg);
+          this.form_info.visibleFlag = visible;
         });
     },
     handlePreview () {
@@ -433,22 +428,22 @@ export default {
       this.publishDialogVisible = false;
       this.publishChild = false;
       catalogApi.publishCatalog(data).then(response => {
-        if (response.data && response.data != "") {
-          this.taskId = response.data;
-          this.progressTitle = "发布任务";
-          this.openProgress = true;
-        }
+        this.taskId = response.data;
+        this.progressTitle = this.$t('CMS.Catalog.PublishProgressTitle');
+        this.progressType = "Publish";
+        this.openProgress = true;
       }); 
     },
     handleDelete () {
       if (!this.catalogId) {
-        this.msgError("请先选择一个栏目");
+        this.msgError(this.$t('CMS.Catalog.SelectCatalogFirst'));
         retrun;
       }
       catalogApi.delCatalog(this.catalogId).then(response => {
         if (response.data && response.data != "") {
           this.taskId = response.data;
-          this.progressTitle = "删除栏目";
+          this.progressTitle = this.$t('CMS.Catalog.DeleteProgressTitle');
+          this.progressType = "Delete";
           this.openProgress = true;
         }
       });
@@ -458,7 +453,7 @@ export default {
       this.openCatalogSelector = true;
     },
     handleCloseProgress() {
-      if (this.progressTitle == '删除栏目' || this.progressTitle == '转移栏目') {
+      if (this.progressTitle == 'Delete' || this.progressTitle == 'Move') {
           this.resetForm("form_info");
           this.$emit("remove", this.catalogId); 
       }
@@ -504,7 +499,8 @@ export default {
         catalogApi.moveCatalog(this.catalogId, toCatalog).then(response => {
           if (response.data && response.data != "") {
             this.taskId = response.data;
-            this.progressTitle = "转移栏目";
+            this.progressTitle = this.$t('CMS.Catalog.MoveProgressTitle');;
+            this.progressType = "Move";
             this.openProgress = true;
           }
         })
@@ -551,7 +547,7 @@ export default {
 <style scoped>
 .el-form-item {
   margin-bottom: 18px;
-  width: 620px;
+  width: 700px;
 }
 .el-input, .el-select, .el-textarea {
   width: 330px;

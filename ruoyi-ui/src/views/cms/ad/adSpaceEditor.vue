@@ -1,49 +1,45 @@
 <template>
   <div class="app-container adspace-editor-container">
-    <div class="mb10">
+    <div class="mb12">
       <el-button 
         plain
         type="success"
         icon="el-icon-edit"
         size="mini"
-        @click="handleSave">保存</el-button>
+        @click="handleSave">{{ $t("Common.Save") }}</el-button>
       <el-button 
         plain
         type="primary"
         icon="el-icon-s-promotion"
         size="mini"
-        @click="handlePublish">发布</el-button>
+        @click="handlePublish">{{ $t('CMS.ContentCore.Publish') }}</el-button>
       <el-button 
         plain
         type="primary"
         icon="el-icon-view"
         size="mini"
-        @click="handlePreview">预览</el-button>
+        @click="handlePreview">{{ $t('CMS.ContentCore.Preview') }}</el-button>
     </div>
     <el-form 
       ref="form"
       :model="form"
       :rules="rules"
-      label-width="80px">
+      label-width="110px">
       <el-card shadow="never">
         <div slot="header" class="clearfix">
-          <span>基础属性</span>
+          <span>{{ $t('CMS.Adv.Basic') }}</span>
         </div>
         <div class="form-col">
-          <el-form-item label="名称"
-                        prop="name">
+          <el-form-item :label="$t('CMS.PageWidget.Name')" prop="name">
             <el-input v-model="form.name" />
           </el-form-item>
-          <el-form-item label="编码"
-                        prop="code">
+          <el-form-item :label="$t('CMS.PageWidget.Code')" prop="code">
             <el-input v-model="form.code" />
           </el-form-item>
-          <el-form-item label="发布目录"
-                        prop="path">
+          <el-form-item :label="$t('CMS.PageWidget.Path')" prop="path">
             <el-input v-model="form.path" />
           </el-form-item>
-          <el-form-item label="发布通道"
-                        prop="publishPipeCode">
+          <el-form-item :label="$t('CMS.PageWidget.PublishPipe')" prop="publishPipeCode">
             <el-select v-model="form.publishPipeCode">
               <el-option
                 v-for="pp in publishPipes"
@@ -53,18 +49,16 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="模板"
-                        prop="template">
+          <el-form-item :label="$t('CMS.PageWidget.Template')" prop="template">
             <el-input v-model="form.template" :disabled="templateDisabled" >
               <el-button 
                 slot="append"
                 type="primary"
                 :disabled="templateDisabled"
-                @click="handleSelectTemplate()">选择</el-button>
+                @click="handleSelectTemplate()">{{ $t("Common.Select") }}</el-button>
             </el-input>
           </el-form-item>
-          <el-form-item label="备注"
-                        prop="remark">
+          <el-form-item :label="$t('Common.Remark')" prop="remark">
             <el-input v-model="form.remark" />
           </el-form-item>
         </div>
@@ -72,42 +66,42 @@
     </el-form>
     <el-card class="mt10" shadow="never">
       <div slot="header" class="clearfix">
-        <span>广告列表</span>
+        <span>{{ $t('CMS.Adv.AdList') }}</span>
       </div>
-      <el-row :gutter="24" class="mb8">
+      <el-row :gutter="24" class="mb12">
         <el-col :span="12">
           <el-button 
             plain
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            @click="handleAddAdvertisement">新建</el-button>
+            @click="handleAddAdvertisement">{{ $t("Common.Add") }}</el-button>
           <el-button 
             plain
             type="success"
             icon="el-icon-edit"
             size="mini"
             :disabled="selectedRows.length!==1"
-            @click="handleEditAdvertisement">编辑</el-button>
+            @click="handleEditAdvertisement">{{ $t('Common.Edit') }}</el-button>
           <el-button 
             plain
             type="danger"
             icon="el-icon-plus"
             size="mini"
             :disabled="selectedRows.length===0"
-            @click="handleDeleteAdvertisements">删除</el-button>
+            @click="handleDeleteAdvertisements">{{ $t("Common.Delete") }}</el-button>
         </el-col>
         <el-col :span="12" style="text-align: right">
-          <el-input placeholder="广告名称" v-model="queryParams.name" size="mini" style="width: 200px;" class="mr10"></el-input>
+          <el-input :placeholder="$t('CMS.Adv.Placeholder.Name')" v-model="queryParams.name" size="mini" style="width: 200px;" class="mr10"></el-input>
           <el-button 
             type="primary"
             icon="el-icon-search"
             size="mini"
-            @click="handleQuery">搜索</el-button>
+            @click="handleQuery">{{ $t("Common.Search") }}</el-button>
           <el-button 
             icon="el-icon-refresh"
             size="mini"
-            @click="resetQuery">重置</el-button>
+            @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -116,93 +110,74 @@
           :data="dataList"
           @selection-change="handleSelectionChange"
           @row-dblclick="handleEditAdvertisement">
-          <el-table-column type="selection"
-                          width="50"
-                          align="center" />
-          <el-table-column label="名称"
-                          prop="name">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column :label="$t('CMS.Adv.AdName')" prop="name">
           </el-table-column>
-          <el-table-column label="类型"
-                            width="100"
-                            align="center"
-                            prop="typeName">
+          <el-table-column :label="$t('CMS.Adv.Type')" width="100" align="center" prop="typeName">
           </el-table-column>
-          <el-table-column label="权重"
-                            width="100"
-                            align="center"
-                            prop="weight" />
-          <el-table-column label="状态"
-                            width="100"
-                            align="center"
-                            prop="state">
+          <el-table-column :label="$t('CMS.Adv.Weight')" width="100" align="center" prop="weight" />
+          <el-table-column :label="$t('CMS.Adv.Status')" width="100" align="center" prop="state">
             <template slot-scope="scope">
               <dict-tag :options="dict.type.EnableOrDisable" :value="scope.row.state"/>
             </template>
           </el-table-column>
-          <el-table-column label="上线时间"
-                            align="center"
-                            prop="onlineDate"
-                            width="160">
+          <el-table-column :label="$t('CMS.Adv.OnlineDate')" align="center" prop="onlineDate" width="160">
             <template slot-scope="scope">
               <span>{{ scope.row.onlineDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="下线时间"
-                            align="center"
-                            prop="offlineDate"
-                            width="160">
+          <el-table-column :label="$t('CMS.Adv.OfflineDate')" align="center" prop="offlineDate" width="160">
             <template slot-scope="scope">
               <span>{{ scope.row.offlineDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作"
-                            align="center"
-                            width="300" 
-                            class-name="small-padding fixed-width">
+          <el-table-column :label="$t('Common.Operation')" align="center" width="200" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button 
                 v-if="scope.row.state==='1'"
                 size="mini"
                 type="text"
                 icon="el-icon-switch-button"
-                @click="handleEnableAdvertisements(scope.row)">启用</el-button>
+                @click="handleEnableAdvertisements(scope.row)">{{ $t('Common.Enable') }}</el-button>
               <el-button 
                 v-if="scope.row.state==='0'"
                 size="mini"
                 type="text"
                 icon="el-icon-switch-button"
-                @click="handleDisableAdvertisements(scope.row)">停用</el-button>
+                @click="handleDisableAdvertisements(scope.row)">{{ $t('Common.Disable') }}</el-button>
               <el-button 
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
-                @click="handleEditAdvertisement(scope.row)">修改</el-button>
+                @click="handleEditAdvertisement(scope.row)">{{ $t("Common.Edit") }}</el-button>
               <el-button 
                 size="mini"
                 type="text"
                 icon="el-icon-delete"
-                @click="handleDeleteAdvertisements(scope.row)">删除</el-button>
+                @click="handleDeleteAdvertisements(scope.row)">{{ $t("Common.Delete") }}</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total>0"
-                  :total="total"
-                  :page.sync="queryParams.pageNum"
-                  :limit.sync="queryParams.pageSize"
-                  @pagination="loadAdvertisementList" />
+        <pagination 
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="loadAdvertisementList" />
       </el-row>
     </el-card>
     <!-- 模板选择组件 -->
-    <cms-template-selector :open="openTemplateSelector" 
-                       :publishPipeCode="form.publishPipeCode"
-                       @ok="handleTemplateSelected"
-                       @cancel="handleTemplateSelectorCancel" />
+    <cms-template-selector 
+      :open="openTemplateSelector" 
+      :publishPipeCode="form.publishPipeCode"
+      @ok="handleTemplateSelected"
+      @cancel="handleTemplateSelectorCancel" />
   </div>
 </template>
 <script>
 import { getPublishPipeSelectData } from "@/api/contentcore/publishpipe";
 import { getPageWidget, addPageWidget, editPageWidget, publishPageWidgets } from "@/api/contentcore/pagewidget";
-import { listAdvertisements, listAdvertisementTypes, deleteAdvertisement, enableAdvertisement, disableAdvertisement } from "@/api/advertisement/advertisement";
+import { listAdvertisements, deleteAdvertisement, enableAdvertisement, disableAdvertisement } from "@/api/advertisement/advertisement";
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
 
 export default {
@@ -223,16 +198,16 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, message: "编码不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Code'), trigger: "blur" }
         ],
         publishPipeCode: [
-          { required: true, message: "发布通道不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.PublishPipe'), trigger: "blur" }
         ],
         path: [
-          { required: true, message: "目录不能为空", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Path'), trigger: "blur" }
         ]
       },
       openTemplateSelector: false,
@@ -259,7 +234,7 @@ export default {
       this.loadPageWidgetInfo();
       this.loadAdvertisementList();
     } else {
-      this.$modal.msgError("参数异常");
+      this.$modal.msgError(this.$t('CMS.PageWidget.InvalidPageWidgetId', [ this.pageWidgetId ]));
     }
   },
   methods: {
@@ -270,10 +245,8 @@ export default {
     },
     loadPageWidgetInfo() {
       getPageWidget(this.pageWidgetId).then(response => {
-        if (response.code == 200) {
-          this.form = response.data;
-          this.dataList = this.form.content ? JSON.parse(this.form.content) : [];
-        }
+        this.form = response.data;
+        this.dataList = this.form.content ? JSON.parse(this.form.content) : [];
       });
     },
     handleSave () {
@@ -283,16 +256,12 @@ export default {
           this.form.content = JSON.stringify(this.dataList);
           if (this.pageWidgetId) {
             editPageWidget(this.form).then(response => {
-              if (response.code === 200) {
-                this.$modal.msgSuccess(response.msg);
-              }
+              this.$modal.msgSuccess(response.msg);
             });
           } else {
             addPageWidget(this.form).then(response => {
-              if (response.code === 200) {
-                this.$modal.msgSuccess(response.msg);
-                this.$router.push({ path: form.route, query: { id: response.data } });
-              }
+              this.$modal.msgSuccess(response.msg);
+              this.$router.push({ path: form.route, query: { id: response.data } });
             });
           }
         }
@@ -357,7 +326,7 @@ export default {
       if (advertisementIds.length == 0) {
         return;
       }
-      this.$modal.confirm("确认删除？").then(function() {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function() {
         return deleteAdvertisement(advertisementIds);
       }).then(response => {
         if (response.code === 200) {
@@ -369,19 +338,15 @@ export default {
     handleEnableAdvertisements(row) {
       const advertisementIds = row.advertisementId ? [ row.advertisementId ] : this.selectedRows.map(item => item.advertisementId);
       enableAdvertisement(advertisementIds).then(response => {
-        if (response.code == 200) {
-          this.$modal.msgSuccess(response.msg);
-          this.loadAdvertisementList();
-        }
+        this.$modal.msgSuccess(response.msg);
+        this.loadAdvertisementList();
       });
     },
     handleDisableAdvertisements(row) {
       const advertisementIds = row.advertisementId ? [ row.advertisementId ] : this.selectedRows.map(item => item.advertisementId);
       disableAdvertisement(advertisementIds).then(response => {
-        if (response.code == 200) {
-          this.$modal.msgSuccess(response.msg);
-          this.loadAdvertisementList();
-        }
+        this.$modal.msgSuccess(response.msg);
+        this.loadAdvertisementList();
       });
     }
   }

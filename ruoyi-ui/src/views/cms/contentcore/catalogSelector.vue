@@ -1,57 +1,58 @@
 <template>
   <div id="catalog-selector">
-    <el-dialog title="选择栏目"
-              :visible.sync="visible"
-              width="450px"
-              :close-on-click-modal="false"
-              append-to-body
-              class="catalog-selector"
-              style="padding: 10px 20x;">
+    <el-dialog 
+      :title="$t('CMS.Catalog.SelectCatalog')"
+      :visible.sync="visible"
+      width="450px"
+      :close-on-click-modal="false"
+      append-to-body
+      class="catalog-selector"
+      style="padding: 10px 20x;">
       <div v-if="showToolbar" class="header-toolbar">
         <div v-if="showCopyToolbar">
           <el-radio-group v-model="copyType" size="mini">
-            <el-radio-button label="1">拷贝副本</el-radio-button>
-            <el-radio-button label="2">映射内容</el-radio-button>
+            <el-radio-button label="1">{{ $t('CMS.Catalog.CopyContent') }}</el-radio-button>
+            <el-radio-button label="2">{{ $t('CMS.Catalog.MappingContent') }}</el-radio-button>
           </el-radio-group>
           <el-tooltip placement="right" style="margin-left:5px;">
             <div slot="content">
-              拷贝副本：完整复制内容，独立于来源自由修改。<br/>
-              映射内容：仅生成基础信息，独立页面，扩展内容共享自源内容。
+              {{ $t('CMS.Catalog.CopyContentTip') }}<br/>
+              {{ $t('CMS.Catalog.MappingContentTip') }}
             </div>
             <i class="el-icon-info"></i>
           </el-tooltip>
         </div>
       </div>
       <div class="search-toolbar">
-        <el-input placeholder="输入栏目名称"
-                  v-model="filterCatalogName"
-                  clearable
-                  size="small"
-                  suffix-icon="el-icon-search">
+        <el-input 
+          :placeholder="$t('CMS.Catalog.CatalogNamePlaceholder')"
+          v-model="filterCatalogName"
+          clearable
+          size="small"
+          suffix-icon="el-icon-search">
         </el-input>
       </div>
       <div class="tree-container">
         <el-scrollbar style="height: 400px;">
-          <el-tree :data="catalogOptions" 
-                  :props="defaultProps" 
-                  :expand-on-click-node="false"
-                  :filter-node-method="filterNode"
-                  :show-checkbox="multiple"
-                  :check-strictly="checkStrictly"
-                  v-loading="loading"
-                  node-key="id"
-                  ref="tree"
-                  default-expand-all
-                  highlight-current
-                  @node-click="handleNodeClick">
+          <el-tree 
+            :data="catalogOptions" 
+            :props="defaultProps" 
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+            :show-checkbox="multiple"
+            :check-strictly="checkStrictly"
+            v-loading="loading"
+            node-key="id"
+            ref="tree"
+            default-expand-all
+            highlight-current
+            @node-click="handleNodeClick">
           </el-tree>
         </el-scrollbar>
       </div>
-      <div slot="footer"
-            class="dialog-footer">
-        <el-button type="primary" 
-                    @click="handleOk">确 定</el-button>
-        <el-button @click="handleCancel">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleCancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -158,7 +159,7 @@ export default {
         })
       }
       if (this.selectedCatalogs.length == 0) {
-        this.$modal.alertWarning("请选择栏目");
+        this.$modal.alertWarning(this.$t('CMS.Catalog.SelectCatalogFirst'));
         return;
       }
       this.$emit("ok", this.selectedCatalogs, this.copyType);

@@ -1,23 +1,25 @@
 <template>
   <div class="pagewidget-container">
-    <el-row class="mb8">
+    <el-row class="mb12">
       <el-col :span="8">
         <el-button 
           plain
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="handleAdd">新建</el-button>
+          @click="handleAdd">{{ $t("Common.Add") }}</el-button>
       </el-col>
       <el-col :span="16" style="text-align: right;">
-        <el-select v-model="queryParams.type"
-                    placeholder="选择类型"
-                    clearable
-                    @change="loadPageWidgetList">
-          <el-option v-for="item in pageWidgetTypes"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id" />
+        <el-select 
+          v-model="queryParams.type" size="mini"
+          :placeholder="$t('CMS.PageWidget.Placeholder.Type')"
+          clearable
+          @change="loadPageWidgetList">
+          <el-option 
+            v-for="item in pageWidgetTypes"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id" />
         </el-select>
       </el-col>
     </el-row>
@@ -34,10 +36,10 @@
           </div>
           <div class="item-row2">
             <el-descriptions class="margin-top" :column="4">
-              <el-descriptions-item label="类型">{{ pageWidgetTypeName(pageWidget.type) }}</el-descriptions-item>
-              <el-descriptions-item label="编码">{{ pageWidget.code }}</el-descriptions-item>
-              <el-descriptions-item label="发布通道">{{ publishPipeName(pageWidget.publishPipeCode) }}</el-descriptions-item>
-              <el-descriptions-item label="发布目录">{{ pageWidget.path }}</el-descriptions-item>
+              <el-descriptions-item :label="$t('CMS.PageWidget.Type')">{{ pageWidgetTypeName(pageWidget.type) }}</el-descriptions-item>
+              <el-descriptions-item :label="$t('CMS.PageWidget.Code')">{{ pageWidget.code }}</el-descriptions-item>
+              <el-descriptions-item :label="$t('CMS.PageWidget.PublishPipe')">{{ publishPipeName(pageWidget.publishPipeCode) }}</el-descriptions-item>
+              <el-descriptions-item :label="$t('CMS.PageWidget.Path')">{{ pageWidget.path }}</el-descriptions-item>
             </el-descriptions>
           </div>
           <div class="item-row3">
@@ -49,19 +51,19 @@
                 <el-button size="mini"
                         type="text"
                         icon="el-icon-s-promotion"
-                        @click="handlePublish(pageWidget)">发布</el-button>
+                        @click="handlePublish(pageWidget)">{{ $t('CMS.ContentCore.Publish') }}</el-button>
                 <el-button size="mini"
                           type="text"
                           icon="el-icon-view"
-                          @click="handlePreview(pageWidget)">预览</el-button>
+                          @click="handlePreview(pageWidget)">{{ $t('CMS.ContentCore.Preview') }}</el-button>
                 <el-button size="mini"
                           type="text"
                           icon="el-icon-edit"
-                          @click="handleEdit(pageWidget)">编辑</el-button>
+                          @click="handleEdit(pageWidget)">{{ $t('Common.Edit') }}</el-button>
                 <el-button size="mini"
                           type="text"
                           icon="el-icon-delete"
-                          @click="handleDelete(pageWidget)">删除</el-button>
+                          @click="handleDelete(pageWidget)">{{ $t("Common.Delete") }}</el-button>
               </el-col>
             </el-row>
           </div>
@@ -76,36 +78,29 @@
       />
     </el-row>
     <!-- 添加对话框 -->
-    <el-dialog title="新建页面部件"
-               :visible.sync="dialogVisible"
-               :close-on-click-modal="false"
-               width="600px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item label="类型"
-                      prop="type">
-          <el-select v-model="form.type"
-                     placeholder="类型"
-                     clearable>
-            <el-option v-for="item in pageWidgetTypes"
-                       :key="item.id"
-                       :label="item.name"
-                       :value="item.id" />
+    <el-dialog 
+      :title="$t('CMS.PageWidget.AddTitle')"
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      width="600px"
+      append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+        <el-form-item :label="$t('CMS.PageWidget.Type')" prop="type">
+          <el-select v-model="form.type" clearable>
+            <el-option  
+              v-for="item in pageWidgetTypes"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="名称"
-                      prop="name">
+        <el-form-item :label="$t('CMS.PageWidget.Name')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="编码"
-                      prop="code">
+        <el-form-item :label="$t('CMS.PageWidget.Code')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="发布通道"
-                      prop="publishPipeCode">
+        <el-form-item :label="$t('CMS.PageWidget.PublishPipe')" prop="publishPipeCode">
           <el-select v-model="form.publishPipeCode">
             <el-option
               v-for="pp in publishPipes"
@@ -115,22 +110,16 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="发布目录"
-                      prop="path">
+        <el-form-item :label="$t('CMS.PageWidget.Path')" prop="path">
           <el-input v-model="form.path" />
         </el-form-item>
-        <el-form-item label="备注"
-                      prop="remark">
-          <el-input v-model="form.remark"
-                    type="textarea"
-                    maxlength="100" />
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" maxlength="100" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary"
-                   @click="handleAddDialogOk">确 定</el-button>
-        <el-button @click="handleAddDialogClose">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAddDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="handleAddDialogClose">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -168,19 +157,19 @@ export default {
       },
       rules: {
         type: [
-          { required: true, message: "类型不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.Type'), trigger: "blur" }
         ],
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Code'), trigger: "blur" }
         ],
         publishPipeCode: [
-          { required: true, message: "发布通道不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.PageWidget.RuleTips.PublishPipe'), trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9_\/]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_\/]*$", message: this.$t('CMS.PageWidget.RuleTips.Path'), trigger: "blur" }
         ]
       }
     };
@@ -204,9 +193,7 @@ export default {
     },
     loadPageWdigetTypes() {
       listPageWidgetTypes().then(response => {
-        if (response.code == 200) {
-          this.pageWidgetTypes = response.data.rows;
-        }
+        this.pageWidgetTypes = response.data.rows;
       });
     },
     pageWidgetTypeName(type) {
@@ -226,11 +213,9 @@ export default {
       this.loading = true;
       this.queryParams.catalogId = this.catalogId;
       listPageWidgets(this.queryParams).then(response => {
-        if (response.code == 200) {
-          this.pageWidgetList = response.data.rows;
-          this.total = parseInt(response.data.total);
-          this.loading = false;
-        }
+        this.pageWidgetList = response.data.rows;
+        this.total = parseInt(response.data.total);
+        this.loading = false;
       });
     },
     handleAdd() {
@@ -245,24 +230,20 @@ export default {
         if (valid) {
           this.form.catalogId = this.catalogId;
           addPageWidget(this.form).then(response => {
-            if (response.code === 200) {
-              this.$modal.msgSuccess(response.msg);
-              this.loadPageWidgetList();
-              this.handleAddDialogClose();
-            }
+            this.$modal.msgSuccess(response.msg);
+            this.loadPageWidgetList();
+            this.handleAddDialogClose();
           });
         }
       });
     },
     handleDelete(row) {
       const pageWidgetIds = [ row.pageWidgetId ];
-      this.$modal.confirm("确认删除？").then(function() {
+      this.$modal.confirm(this.$t('Common.ConfigmDelete')).then(function() {
         return deletePageWidget(pageWidgetIds);
       }).then(response => {
-        if (response.code === 200) {
-          this.$modal.msgSuccess(response.msg);
-          this.loadPageWidgetList();
-        }
+        this.$modal.msgSuccess(response.msg);
+        this.loadPageWidgetList();
       }).catch(() => {});
     },
     handleEdit(row) {

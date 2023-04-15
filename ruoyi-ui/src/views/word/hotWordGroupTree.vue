@@ -3,13 +3,11 @@
     <div class="head-container">
       <el-button type="text"
                  icon="el-icon-plus"
-                 @click="handleAdd"
-                 style="margin-top:2px;">新增分组</el-button>
+                 @click="handleAdd">新增分组</el-button>
       <el-input placeholder="输入分组名称"
                 v-model="filterGroupName"
                 clearable
                 size="small"
-                style="margin-top: 7px;"
                 suffix-icon="el-icon-search">
       </el-input>
     </div>
@@ -69,8 +67,8 @@
       <div slot="footer"
            class="dialog-footer">
         <el-button type="primary"
-                   @click="handleSave">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+                   @click="handleSave">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

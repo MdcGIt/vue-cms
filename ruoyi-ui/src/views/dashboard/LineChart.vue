@@ -91,7 +91,7 @@ export default {
         },
         toolbox: {
           feature: {
-            saveAsImage: {}
+            // saveAsImage: {}
           }
         },
         tooltip: {

@@ -1,19 +1,19 @@
 <template>
   <div class="app-container" v-loading="loading">
-    <el-card class="btn-card" style="margin-bottom:10px;">
+    <el-card class="btn-card mb12">
       <div class="grid-btn-bar bg-purple-white">
-        <el-button plain type="primary" size="mini" icon="el-icon-edit" @click="handleSave"
-          >保存</el-button
-        >
+        <el-button plain type="primary" size="mini" icon="el-icon-edit" @click="handleSave">{{ $t('Common.Save') }}</el-button>
       </div>
     </el-card>
     <el-row>
-      <codemirror class="file-editor"
-                  ref="cmEditor"
-                  v-model="form.fileContent" 
-                  :options="cmOptions"
-                  @ready="handleCMReady"
-                  @input="handleCMChange"></codemirror>
+      <codemirror 
+        class="file-editor"
+        ref="cmEditor"
+        v-model="form.fileContent" 
+        :options="cmOptions"
+        @ready="handleCMReady"
+        @input="handleCMChange"
+      ></codemirror>
     </el-row>
   </div>
 </template>
@@ -90,11 +90,7 @@ export default {
     },
     handleSave () {
       editFile(this.form).then(response => {
-        if (response.code === 200) {
-          this.$modal.msgSuccess("保存成功");
-        } else {
-          this.$modal.msgError(response.msg);
-        }
+        this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
       });
     },
     handleCMReady () {

@@ -16,7 +16,7 @@ public class RepeatTitleCheckProperty implements IProperty {
 
 	public final static String ID = "RepeatTitleCheck";
 
-	static UseType[] UseTypes = new UseType[] { UseType.Site, UseType.Catalog };
+	static UseType[] UseTypes = new UseType[] { UseType.Site };
 
 	public static final String CheckType_None = "0"; // 不校验
 	public static final String CheckType_Site = "1"; // 全站校验
@@ -48,8 +48,8 @@ public class RepeatTitleCheckProperty implements IProperty {
 		return CheckType_None;
 	}
 
-	public static String getValue(Map<String, String> firstConfigProps, Map<String, String> secondConfigProps) {
-		String value = ConfigPropertyUtils.getStringValue(ID, firstConfigProps, secondConfigProps);
+	public static String getValue(Map<String, String> firstConfigProps) {
+		String value = ConfigPropertyUtils.getStringValue(ID, firstConfigProps);
 		return StringUtils.isEmpty(value) ? CheckType_None : value;
 	}
 }

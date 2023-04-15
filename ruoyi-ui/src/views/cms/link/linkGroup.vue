@@ -1,58 +1,63 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-col>
-        <el-form :model="queryParams"
-                ref="queryForm"
-                :inline="true"
-                class="el-form-search">
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-row :gutter="10">
+          <el-col :span="1.5">
+            <el-button 
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              plain
+              v-hasPermi="['cms:friendlink:add']"
+              @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              type="success"
+              icon="el-icon-edit"
+              size="mini"
+              plain
+              :disabled="single"
+              v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
+              @click="handleEdit">编辑</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              plain
+              :disabled="multiple"
+              v-hasPermi="['cms:friendlink:delete']"
+              @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="12">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          class="el-form-search"
+          v-show="showSearch">
           <el-form-item prop="query">
-            <el-input v-model="queryParams.query" size="small" placeholder="输入分组名称查询">
+            <el-input v-model="queryParams.query" placeholder="输入分组名称查询">
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"
-                      icon="el-icon-search"
-                      size="small"
-                      @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh"
-                      size="small"
-                      @click="resetQuery">重置</el-button>
+            <el-button-group>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+            </el-button-group>
           </el-form-item>
         </el-form>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="10"
-            class="mb8">
-      <el-col :span="1.5">
-        <el-button 
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          plain
-          v-hasPermi="['cms:friendlink:add']"
-          @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button 
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          plain
-          :disabled="single"
-          v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
-          @click="handleEdit">编辑</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button 
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          plain
-          :disabled="multiple"
-          v-hasPermi="['cms:friendlink:delete']"
-          @click="handleDelete">删除</el-button>
       </el-col>
     </el-row>
 
@@ -86,7 +91,7 @@
               <span v-else>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作"
+          <el-table-column :label="$t('Common.Operation')"
                           align="center"
                           width="180" 
                           class-name="small-padding fixed-width">
@@ -102,7 +107,7 @@
                 type="text"
                 icon="el-icon-delete"
                 v-hasPermi="[ 'cms:friendlink:delete' ]"
-                @click="handleDelete(scope.row)">删除</el-button>
+                @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -127,10 +132,9 @@
           <el-input v-model="form.code" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

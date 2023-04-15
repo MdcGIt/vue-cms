@@ -1,9 +1,8 @@
 <template>
-  <div class="app-container">
+  <div class="app-container catalog-container">
     <el-row :gutter="20">
       <!--栏目数据-->
-      <el-col :span="4"
-              :xs="24">
+      <el-col :span="4" :xs="24">
         <cms-catalog-tree 
           ref="catalogTree"
           :new-btn="true"    
@@ -11,18 +10,16 @@
         </cms-catalog-tree>
       </el-col>
       <!--栏目数据-->
-      <el-col :span="20"
-              :xs="24">
-        <el-tabs v-model="activeName"
-                 @tab-click="handleTabClick">
-          <el-tab-pane label="基本信息"
-                       name="basicInfo">
-            <cms-catalog-info :cid="selectedCatalogId"
-                              @update="handleCatalogUpdate"
-                              @remove="handleCatalogDelete"></cms-catalog-info>
+      <el-col :span="20" :xs="24">
+        <el-tabs v-model="activeName" @tab-click="handleTabClick">
+          <el-tab-pane :label="$t('CMS.Catalog.Tab.Basic')" name="basicInfo">
+            <cms-catalog-info 
+              :cid="selectedCatalogId"
+              @update="handleCatalogUpdate"
+              @remove="handleCatalogDelete"
+            ></cms-catalog-info>
           </el-tab-pane>
-          <el-tab-pane label="扩展配置"
-                       name="extend">
+          <el-tab-pane :label="$t('CMS.Catalog.Tab.Extend')" name="extend">
             <cms-catalog-extend v-if="this.activeName=='extend'" :cid="selectedCatalogId"></cms-catalog-extend>
           </el-tab-pane>
         </el-tabs>
@@ -70,7 +67,7 @@ export default {
 };
 </script>
 <style scoped>
-.el-tabs__header {
+.catalog-container .el-tabs__header {
   margin-bottom: 10px;
 }
 </style>

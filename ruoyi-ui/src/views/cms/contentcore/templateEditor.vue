@@ -4,27 +4,26 @@
       <el-row>
         <el-col :span="4" style="text-algin:right;">
           <div class="grid-btn-bar bg-purple-white">
-            <el-button plain type="primary" size="mini" icon="el-icon-edit" @click="handleSave"
-              >保存</el-button
-            >
+            <el-button plain type="primary" size="mini" icon="el-icon-edit" @click="handleSave">{{ $t('Common.Save') }}</el-button>
           </div>
         </el-col>
         <el-col :span="20">
           <div class="template-info">
-            <el-tag>模板：{{ this.form.path }}</el-tag>
+            <el-tag>{{ $t('CMS.Template.Name') }} : {{ this.form.path }}</el-tag>
             <el-divider direction="vertical"></el-divider>
-            <el-tag type="success">发布通道：{{ this.form.publishPipeCode }}</el-tag>
+            <el-tag type="success">{{ $t('CMS.ContentCore.PublishPipe') }} : {{ this.form.publishPipeCode }}</el-tag>
           </div>
         </el-col>
       </el-row>
     </el-card>
     <el-row>
-      <codemirror class="template-editor"
-                  ref="cmEditor"
-                  v-model="form.content" 
-                  :options="cmOptions"
-                  @ready="handleCMReady"
-                  @input="handleCMChange"></codemirror>
+      <codemirror 
+        class="template-editor"
+        ref="cmEditor"
+        v-model="form.content" 
+        :options="cmOptions"
+        @ready="handleCMReady"
+        @input="handleCMChange"></codemirror>
     </el-row>
   </div>
 </template>

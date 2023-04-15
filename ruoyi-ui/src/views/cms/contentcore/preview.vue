@@ -4,7 +4,7 @@
       <el-header class="header-bar" v-if="type!=='pagewidget'" style="padding-top: 15px">
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
-            <span style="font-size: 14px">发布通道：</span>
+            <span class="mr10" style="font-size: 14px;">{{ $t('CMS.ContentCore.PublishPipe') }}</span>
             <el-select 
               v-model="selectedPublishPipe"
               type="primary"
@@ -22,7 +22,7 @@
                   type="primary"
                   size="small"
                   icon="el-icon-refresh"
-                  @click="handleRefresh">刷新</el-button>
+                  @click="handleRefresh">{{ $t('Common.Refresh') }}</el-button>
           </el-col>
         </el-row>
       </el-header>

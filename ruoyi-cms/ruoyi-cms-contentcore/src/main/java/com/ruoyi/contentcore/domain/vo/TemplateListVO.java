@@ -1,5 +1,7 @@
 package com.ruoyi.contentcore.domain.vo;
 
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,5 +38,5 @@ public class TemplateListVO {
     /**
      * 模板文件最后变更时间
      */
-    private Long modifyTime;
+    private LocalDateTime modifyTime;
 }

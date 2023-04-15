@@ -1,40 +1,39 @@
 <template>
   <div class="error-prone-word-container">
-    <el-row>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              class="el-form-search">
-        <el-form-item prop="query">
-          <el-input v-model="queryParams.query" size="small" placeholder="输入易错词查询">
-          </el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="small"
-                    @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="small"
-                    @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-button type="primary"
+                    icon="el-icon-plus"
+                    size="mini"
+                    plain
+                    @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+        <el-button type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                    plain
+                    :disabled="selectedIds.length==0"
+                    @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+      </el-col>
+      <el-col :span="12" style="text-align:right">
+        <el-form
+         :model="queryParams"
+          ref="queryForm"
+          size="mini"
+          :inline="true"
+          class="el-form-search">
+          <el-form-item prop="query">
+            <el-input v-model="queryParams.query" placeholder="输入易错词查询">
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+              <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
-
-    <el-row class="mb8">
-      <el-button type="primary"
-                  icon="el-icon-plus"
-                  size="mini"
-                  plain
-                  @click="handleAdd">新增</el-button>
-      <el-button type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                  plain
-                  :disabled="selectedIds.length==0"
-                  @click="handleDelete">删除</el-button>
-    </el-row>
-
     <el-row>
       <el-table v-loading="loading"
                 :data="wordList"
@@ -63,7 +62,7 @@
                         align="center"
                         width="160"
                         prop="createBy" />
-        <el-table-column label="操作"
+        <el-table-column :label="$t('Common.Operation')"
                         align="center"
                         width="180" 
                         class-name="small-padding fixed-width">
@@ -72,7 +71,7 @@
               size="mini"
               type="text"
               icon="el-icon-delete"
-              @click="handleDelete(scope.row)">删除</el-button>
+              @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,8 +104,8 @@
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
   </div>

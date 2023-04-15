@@ -1,24 +1,21 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams"
-             ref="queryForm"
-             :inline="true"
-             label-width="70px"
-             class="el-form-search">
-      <el-form-item :label="$t('Monitor.Async.Type')" prop="type">
-        <el-input v-model="queryParams.type" size="small" />
+    <el-form 
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      size="small">
+      <el-form-item prop="type">
+        <el-input v-model="queryParams.type" :placeholder="$t('Monitor.Async.Type')" size="small" />
       </el-form-item>
-      <el-form-item :label="$t('Monitor.Async.TaskID')" prop="id">
-        <el-input v-model="queryParams.id" size="small" />
+      <el-form-item prop="id">
+        <el-input v-model="queryParams.id" :placeholder="$t('Monitor.Async.TaskID')" size="small" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary"
-                   icon="el-icon-search"
-                   size="small"
-                   @click="handleQuery">{{ $t('Common.Search') }}</el-button>
-        <el-button icon="el-icon-refresh"
-                   size="small"
-                   @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t('Common.Search') }}</el-button>
+          <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t('Common.Reset') }}</el-button>
+        </el-button-group>
       </el-form-item>
     </el-form>
     <el-table v-loading="loading"
