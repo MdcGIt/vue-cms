@@ -1068,6 +1068,19 @@ export default {
     VisitTrend: "Visit Trend",
     VisitLocation: "Visit Location",
     Location: "Location",
-    Ratio: "Ratio"
+    Ratio: "Ratio",
+    Adv: {
+      AdName: "Ad Name",
+      Location: "Location",
+      Source: "Source",
+      DeviceType: "Device Type",
+      Browser: "Browser",
+      Time: "Time",
+      Click: "Cick",
+      View: "View",
+      ClickRatio: "Click Ratio",
+      Trend: "Trend",
+      TrendDialogTitle: "Trend charts"
+    }
   }
 };
