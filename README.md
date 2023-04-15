@@ -14,6 +14,8 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。技术栈：SpringBoot3 +
 
 前台网站地址：<http://www.swikoon.com>
 
+##### QQ交流群： 568506424
+
 ##### 演示站静态资源
 演示站的静态资源已提交到ruoyi-vue-cms-wwwroot，如有需要自行下载吧。
 CMS资源路径配置application.yml中ruoyi.cms.resourceRoot，默认与项目同级的wwwroot_release

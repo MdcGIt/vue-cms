@@ -10,7 +10,7 @@
               icon="el-icon-refresh-left"
               size="mini"
               :disabled="multiple"
-              @click="handleRecover">恢复
+              @click="handleRecover">{{ $t('CMS.Content.Restore') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -35,7 +35,7 @@
           <el-form-item prop="title">
             <el-input 
               v-model="queryParams.title"
-              placeholder="请输入内容标题"
+              :placeholder="$t('CMS.Content.Placeholder.Title')"
               clearable
               style="width: 200px"
               @keyup.enter.native="handleQuery" />
@@ -43,9 +43,9 @@
           <el-form-item prop="contentType">
             <el-select 
               v-model="queryParams.contentType"
-              placeholder="内容类型"
+              :placeholder="$t('CMS.Content.ContentType')"
               clearable
-              style="width: 110px">
+              style="width: 125px">
               <el-option 
                 v-for="ct in contentTypeOptions"
                 :key="ct.id"
@@ -56,7 +56,7 @@
           <el-form-item prop="status">
             <el-select  
               v-model="queryParams.status"
-              placeholder="状态"
+              :placeholder="$t('CMS.Content.Status')"
               clearable
               style="width: 110px">
               <el-option 
@@ -93,15 +93,15 @@
         type="selection"
         width="50"
         align="center" />
-      <el-table-column label="标题" :show-overflow-tooltip="true" prop="title" />
+      <el-table-column :label="$t('CMS.Content.Title')" :show-overflow-tooltip="true" prop="title" />
       <el-table-column 
-        label="类型"
+        :label="$t('CMS.Content.ContentType')" 
         width="110"
         align="center"
         prop="contentType"
         :formatter="contentTypeFormat" />
       <el-table-column 
-        label="删除前状态"
+        :label="$t('CMS.Content.StatusBefore')"
         width="110"
         align="center">
         <template slot-scope="scope">
@@ -109,7 +109,7 @@
         </template>
       </el-table-column>
       <el-table-column 
-        label="删除时间"
+        :label="$t('CMS.Content.DeleteTime')"
         align="center"
         prop="backupTime"
         width="160">
@@ -117,7 +117,7 @@
           <span>{{ parseTime(scope.row.backupTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作人" align="center" :show-overflow-tooltip="true" prop="backupOperator" width="140" />
+      <el-table-column :label="$t('CMS.Content.DeleteUser')" align="center" :show-overflow-tooltip="true" prop="backupOperator" width="140" />
       <el-table-column 
         :label="$t('Common.Operation')"
         align="center"
@@ -132,11 +132,12 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="loadRecyclecontentRecycleList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="loadRecyclecontentRecycleList" />
   </div>
 </template>
 <script>
@@ -254,11 +255,11 @@ export default {
     },
     handleDelete (row) {
       const backupIds = row.backupId ? [ row.backupId ] : this.selectedRows.map(row => row.backupId);
-      this.$modal.confirm("是否确认删除?").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteRecycleContents(backupIds);
       }).then(() => {
         this.loadRecyclecontentRecycleList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     },
     changeTableHeight () {
@@ -270,7 +271,7 @@ export default {
       const backupIds = row.backupId ? [ row.backupId ] : this.selectedRows.map(row => row.backupId);
       recoverRecycleContent(backupIds).then(response => {
         this.loadRecyclecontentRecycleList();
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
       });
     }
   }

@@ -1,25 +1,25 @@
 <template>
-  <div class="app-container">
+  <div class="app-container content-editor-container">
     <el-row>
       <el-col :span="24">
         <div class="grid-btn-bar bg-purple-white">
-          <el-button plain type="info" size="mini" icon="el-icon-back" @click="handleGoBack">返回列表</el-button>
+          <el-button plain type="info" size="mini" icon="el-icon-back" @click="handleGoBack">{{ $t('CMS.Content.BackToList') }}</el-button>
           <el-button plain type="success" size="mini" icon="el-icon-edit" @click="handleSave">{{ $t("Common.Save") }}</el-button>
-          <el-button plain type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePublish">发布</el-button>
-          <el-button plain type="primary" size="mini" @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>预览</el-button>
-          <el-button plain type="warning" v-if="isLock" size="mini" icon="el-icon-unlock" @click="handleChangeLockState">解锁</el-button>
-          <el-button plain type="primary" v-else size="mini" icon="el-icon-lock" @click="handleChangeLockState">锁定</el-button>
+          <el-button plain type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePublish">{{ $t('CMS.ContentCore.Publish') }}</el-button>
+          <el-button plain type="primary" size="mini" @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>{{ $t('CMS.ContentCore.Preview') }}</el-button>
+          <el-button plain type="warning" v-if="isLock" size="mini" icon="el-icon-unlock" @click="handleChangeLockState">{{ $t('CMS.Content.Unlock') }}</el-button>
+          <el-button plain type="primary" v-else size="mini" icon="el-icon-lock" @click="handleChangeLockState">{{ $t('CMS.Content.Lock') }}</el-button>
         </div>
       </el-col>
     </el-row>
     <el-row class="art-editor-container" :gutter="10" v-loading="loading">
-      <el-form ref="form" :model="form" :rules="rules" label-width="70px">
-        <el-col :lg="18" :md="16">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-col :span="16">
           <el-row>
             <el-col class="pr10">
               <el-card shadow="always" class="card-title">
                 <div class="art-title bg-purple-white">
-                  <el-form-item label="标题" prop="title">
+                  <el-form-item :label="$t('CMS.Content.Title')" prop="title">
                     <el-input
                       v-model="form.title"
                       maxlength="360"
@@ -32,36 +32,35 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item
-                    label="短标题"
+                    :label="$t('CMS.Content.ShortTitle')"
                     v-if="showOtherTitle"
                     prop="shortTitle">
                     <el-input v-model="form.shortTitle" maxlength="120" show-word-limit />
                   </el-form-item>
                   <el-form-item
-                    label="副标题"
+                    :label="$t('CMS.Content.SubTitle')"
                     v-if="showOtherTitle"
                     prop="subTitle">
                     <el-input v-model="form.subTitle" maxlength="120" show-word-limit />
                   </el-form-item>
                   <el-form-item
-                    label="链接内容"
+                    :label="$t('CMS.Content.LinkFlag')"
                     prop="linkFlag">
                     <el-checkbox v-model="form.linkFlag" true-label="Y" false-label="N"></el-checkbox>
                   </el-form-item>
                   <el-form-item
-                    label="链接地址"
+                    :label="$t('CMS.Content.RedirectUrl')"
                     v-if="form.linkFlag==='Y'"
                     prop="redirectUrl">
-                    <el-input v-model="form.redirectUrl" placeholder="http(s)://" />
+                    <el-input v-model="form.redirectUrl" placeholder="http(s)://" class="mb12" />
                     <el-dropdown @command="handleLinkTo">
                       <el-button
-                        size="mini" 
                         type="primary">
-                        内部链接<i class="el-icon-arrow-down el-icon--right"></i>
+                        {{ $t('CMS.ContentCore.InternalUrl') }}<i class="el-icon-arrow-down el-icon--right"></i>
                       </el-button>
                       <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="content">选择内容</el-dropdown-item>
-                        <el-dropdown-item command="catalog">选择栏目</el-dropdown-item>
+                        <el-dropdown-item command="content">{{ $t('CMS.ContentCore.SelectContent') }}</el-dropdown-item>
+                        <el-dropdown-item command="catalog">{{ $t('CMS.ContentCore.SelectCatalog') }}</el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                   </el-form-item>
@@ -83,11 +82,12 @@
           <el-row v-if="this.form.linkFlag !== 'Y' && this.contentType === 'article'">
             <el-col class="pr10">
               <el-card shadow="always">
-                <el-form-item label="下载图片" prop="downloadRemoteImage">
+                <el-form-item :label="$t('CMS.Content.DownloadImage')" prop="downloadRemoteImage">
                   <el-switch
                     v-model="form.downloadRemoteImage"
                     active-value="Y"
                     inactive-value="N" />
+                    <span style="color: #909399;font-size:12px;"><i class="el-icon-info mr5 ml10"></i>{{ $t('CMS.Content.DownloadImageTip') }}</span>
                 </el-form-item>
               </el-card>
               <el-card shadow="always" class="card-editor">
@@ -113,70 +113,70 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :lg="6" :md="8">
+        <el-col :span="8">
           <div class="bg-purple-white">
             <el-card shadow="always">
               <el-tabs v-model="activeName" @tab-click="handleTabClick">
-                <el-tab-pane label="基本属性" name="basic">
-                  <el-form-item label="所属栏目" prop="catalogId">
+                <el-tab-pane :label="$t('CMS.Content.Basic')" name="basic">
+                  <el-form-item :label="$t('CMS.Content.Catalog')" prop="catalogId">
                     <el-button-group>
                       <el-button plain type="primary" style="width:152px;" disabled>{{ form.catalogName }}</el-button>
                       <el-button type="primary" icon="el-icon-edit" @click="handleCatalogChange"></el-button>
                     </el-button-group>
                   </el-form-item>
-                  <el-form-item label="引导图" prop="logo">
+                  <el-form-item :label="$t('CMS.Content.Logo')" prop="logo">
                     <cms-logo-view v-model="form.logo" :src="form.logoSrc"
                                    :width="210" :height="150"></cms-logo-view>
                   </el-form-item>
-                  <el-form-item label="作者" prop="author">
+                  <el-form-item :label="$t('CMS.Content.Author')" prop="author">
                     <el-input v-model="form.author" />
                   </el-form-item>
-                  <el-form-item label="编辑" prop="editor">
+                  <el-form-item :label="$t('CMS.Content.Editor')" prop="editor">
                     <el-input v-model="form.editor" />
                   </el-form-item>
-                  <el-form-item label="是否原创" prop="original">
+                  <el-form-item :label="$t('CMS.Content.Original')" prop="original">
                     <el-switch
                       v-model="form.original"
                       active-value="Y"
                       inactive-value="N"
                     ></el-switch>
                   </el-form-item>
-                  <el-form-item label="属性" prop="attributes">
+                  <el-form-item :label="$t('CMS.Content.Attribute')" prop="attributes">
                     <el-checkbox-group v-model="form.attributes">
                       <el-checkbox v-for="dict in dict.type.CMSContentAttribute" :label="dict.value" :key="dict.value">{{ dict.label }}</el-checkbox>
                     </el-checkbox-group>
                   </el-form-item>
-                  <el-form-item label="摘要" prop="summary">
+                  <el-form-item :label="$t('CMS.Content.Summary')" prop="summary">
                     <el-input type="textarea" v-model="form.summary" :autosize="summaryInputSize" maxlength="500" show-word-limit />
                   </el-form-item>
-                  <el-form-item label="标签" prop="tags">
+                  <el-form-item :label="$t('CMS.Content.Tags')" prop="tags">
                     <cms-tag-editor v-model="form.tags"></cms-tag-editor>
                   </el-form-item>
-                  <el-form-item label="关键词" prop="keywords">
+                  <el-form-item :label="$t('CMS.Content.Keywords')" prop="keywords">
                     <cms-tag-editor v-model="form.keywords"></cms-tag-editor>
                   </el-form-item>
-                  <el-form-item label="来源名称" prop="source">
+                  <el-form-item :label="$t('CMS.Content.Source')" prop="source">
                     <el-input v-model="form.source" />
                   </el-form-item>
-                  <el-form-item label="来源地址" prop="sourceUrl">
+                  <el-form-item :label="$t('CMS.Content.SourceUrl')" prop="sourceUrl">
                     <el-input v-model="form.sourceUrl" placeholder="http(s)://" />
                   </el-form-item>
                   <el-divider></el-divider>
-                  <el-form-item label="发布时间" prop="publishDate">
+                  <el-form-item :label="$t('CMS.Content.PublishDate')" prop="publishDate">
                     <el-date-picker v-model="form.publishDate" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" style="width:195px;" />
                   </el-form-item>
-                  <el-form-item label="下线时间" prop="offlineDate">
+                  <el-form-item :label="$t('CMS.Content.OfflineDate')" prop="offlineDate">
                     <el-date-picker v-model="form.offlineDate" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" style="width:195px;" />
                   </el-form-item>
-                  <el-form-item label="发布通道" prop="publishPipe">
+                  <el-form-item :label="$t('CMS.Content.PublishPipe')" prop="publishPipe">
                     <el-checkbox-group v-model="form.publishPipe">
                       <el-checkbox v-for="pp in publishPipeTemplates" :label="pp.pipeCode" :key="pp.pipeCode">{{ pp.pipeName }}</el-checkbox>
                     </el-checkbox-group>
                   </el-form-item>
-                  <el-form-item label="独立路径">
+                  <el-form-item :label="$t('CMS.Content.StaticPath')">
                     <el-input v-model="form.staticPath" placeholder="请输入相对站点路径..." />
                   </el-form-item>
-                  <el-form-item label="独立模板">
+                  <el-form-item :label="$t('CMS.Content.Template')">
                     <el-switch v-model="showTemplate" @change="handleShowTemplateChange" />
                   </el-form-item>
                   <el-form-item v-show="showTemplate" 
@@ -301,7 +301,7 @@ export default {
       },
       publishPipeTemplates: [],
       rules: {
-        title: [{ required: true, message: "标题不能为空", trigger: "blur" }]
+        title: [{ required: true, message: this.$t('CMS.Content.RuleTips.Title'), trigger: "blur" }]
       },
       openResourceDialog: false,
       summaryInputSize: { minRows: 3, maxRows: 6 },
@@ -416,7 +416,7 @@ export default {
             saveContent(this.form).then(response => {
               this.taskId = response.data.taskId;
               this.openProgress = true;
-              this.progressTitle = "保存任务"
+              this.progressTitle = this.$t('CMS.Content.SaveProgressTitle')
             });
           } else {
             this.form.catalogId = this.catalogId;
@@ -424,7 +424,7 @@ export default {
             addContent(this.form).then(response => {
               this.taskId = response.data.taskId;
               this.openProgress = true;
-              this.progressTitle = "保存任务"
+              this.progressTitle = this.$t('CMS.Content.SaveProgressTitle')
             });
           }
         }
@@ -432,7 +432,7 @@ export default {
     },
     handlePublish () {
       publishContent([ this.form.contentId ]).then(response => {
-          this.$modal.msgSuccess("发布成功");
+          this.$modal.msgSuccess(this.$t('CMS.ContentCore.PublishSuccess'));
       });
     },
     handleProgressClose (result) {
@@ -455,13 +455,13 @@ export default {
       if (this.isLock) {
         unLockContent(this.form.contentId).then(response => {
           this.form.isLock = 'N';
-          this.$modal.msgSuccess("解锁成功");
+          this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         });
       } else {
         lockContent(this.form.contentId).then(response => {
           this.form.isLock = 'Y';
           this.form.lockUser = response.data;
-          this.$modal.msgSuccess("锁定成功");
+          this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         });
       }
     },
@@ -480,7 +480,7 @@ export default {
             };
             moveContent(data).then(response => {
               if (response.code == 200) {
-                this.$modal.msgSuccess("操作成功");
+                this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
                 this.form.catalogId = catalogs[0].id;
                 this.form.catalogName = catalogs[0].name;
               }
@@ -514,7 +514,7 @@ export default {
         this.form.redirectUrl = contents[0].internalUrl;
         this.openContentSelector = false;
       } else {
-        this.$modal.msgWarning("请先选择一条记录");
+        this.$modal.msgWarning(this.$t('Common.SelectFirst'));
       }
     },
     handleContentSelectorClose() {
@@ -523,32 +523,31 @@ export default {
   }
 };
 </script>
-
 <style scoped>
-.el-form {
+.content-editor-container .el-form {
     width: 100%;
 }
-.el-form-item {
+.content-editor-container .el-form-item {
   margin-bottom: 5px;  
 }
-.card-title {
+.content-editor-container .card-title {
   margin-bottom: 5px;
 }
-.card-title .el-card__body {
+.content-editor-container .card-title .el-card__body {
   padding-bottom: 10px;
 }
-.card-editor {
+.content-editor-container .card-editor {
   margin-top: 10px;
   min-height: 700px;
 }
-.art-editor-container {
+.content-editor-container .art-editor-container {
   margin-top: 10px;
-  max-width: 1320px;
+  /* max-width: 1320px; */
 }
-#toolbar-container {
+.content-editor-container #toolbar-container {
   z-index: 101;
 }
-#editor-container {
+.content-editor-container #editor-container {
   z-index: 100;
 }
 </style>

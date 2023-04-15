@@ -1,11 +1,12 @@
 <template>
   <div class="app-container">
-    <el-dialog :title="title"
-               :visible.sync="visible"
-               width="1100px"
-               :close-on-click-modal="false"
-               custom-class="content-selector-dialog"
-               append-to-body>
+    <el-dialog 
+      :title="$t('CMS.ContentCore.SelectContent')"
+      :visible.sync="visible"
+      width="1100px"
+      :close-on-click-modal="false"
+      custom-class="content-selector-dialog"
+      append-to-body>
       <el-container>
         <el-aside>
           <cms-catalog-tree 
@@ -20,7 +21,7 @@
               size="small"
               class="el-form-search mb12">
             <el-form-item label="" prop="query">
-              <el-input v-model="queryParams.query" placeholder="输入标题查询">
+              <el-input v-model="queryParams.query" :placeholder="$t('CMS.Content.Placeholder.Title')">
               </el-input>
             </el-form-item>
             <el-form-item>
@@ -38,12 +39,12 @@
             @row-click="handleRowClick"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50" align="center" />
-            <el-table-column label="标题" align="left" prop="title">
+            <el-table-column :label="$t('CMS.Content.Title')" align="left" prop="title">
               <template slot-scope="scope">
-                <span><i v-if="scope.row.topFlag>0" class="el-icon-top top-icon" title="置顶"></i> {{ scope.row.title }}</span>
+                <span><i v-if="scope.row.topFlag>0" class="el-icon-top top-icon" :title="$t('CMS.Content.SetTop')"></i> {{ scope.row.title }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="发布时间" align="center" prop="publishDate" width="160">
+            <el-table-column :label="$t('CMS.Content.PublishDate')" align="center" prop="publishDate" width="160">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.publishDate) }}</span>
               </template>
@@ -67,19 +68,6 @@
     </el-dialog>
   </div>
 </template>
-<style>
-.content-selector-dialog .el-dialog__body {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.content-selector-dialog .el-aside {
-  padding: 10px;
-  background-color: #fff;
-}
-.content-selector-dialog .el-main {
-  padding: 10px;
-}
-</style>
 <script>
 import { getContentList } from "@/api/contentcore/content";
 import CMSCatalogTree from '@/views/cms/contentcore/catalogTree';
@@ -90,11 +78,6 @@ export default {
     'cms-catalog-tree': CMSCatalogTree,
   },
   props: {
-    title: {
-      type: String,
-      default: "选择内容",
-      required: false
-    },
     open: {
       type: Boolean,
       default: false,
@@ -180,3 +163,16 @@ export default {
   }
 };
 </script>
+<style>
+.content-selector-dialog .el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.content-selector-dialog .el-aside {
+  padding: 10px;
+  background-color: #fff;
+}
+.content-selector-dialog .el-main {
+  padding: 10px;
+}
+</style>

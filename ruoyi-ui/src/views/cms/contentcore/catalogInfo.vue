@@ -42,8 +42,8 @@
       <el-col :span="1.5">
         <el-button 
           plain
-          type="primary"
-          icon="el-icon-edit"
+          type="warning"
+          :icon="catalogVisible?'el-icon-circle-close':'el-icon-circle-check'"
           size="mini"
           :disabled="!this.catalogId"
           @click="handleChangeVisible">{{ catalogVisible ? $t("Common.Hide") : $t("Common.Show") }}</el-button>
@@ -97,7 +97,7 @@
       :model="form_info"
       :rules="rules"
       :disabled="!this.catalogId"
-      label-width="140px">
+      label-width="165px">
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
           <span>{{ $t('CMS.Catalog.Basic') }}</span>
@@ -547,7 +547,7 @@ export default {
 <style scoped>
 .el-form-item {
   margin-bottom: 18px;
-  width: 620px;
+  width: 700px;
 }
 .el-input, .el-select, .el-textarea {
   width: 330px;

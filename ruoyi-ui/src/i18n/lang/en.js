@@ -725,10 +725,6 @@ export default {
       IndexTemplate: "Home Template",
       NoPublishPipeTip: "Preivew or publish need add publish pipe first.",
       GoAddPublishPipe: "Add",
-      SEOCardTitle: "SEO Configuration",
-      SEOTitle: "SEO Title",
-      SEOKeyword: "SEO Keyword",
-      SEODescription: "SEO Description",
       ExModelCardTitle: "Ex-Model Configuration",
       Tab: {
         Basic: "Basic Information",
@@ -828,10 +824,10 @@ export default {
       PublishTips: "Are you sure to publish the catalog?",
       ContainsChildren: "Include children",
       SelectCatalog: "Select Catalog",
-      CopyContent: "Copy Content",
-      CopyContentTip: "Copy Content: independently of the source.",
-      MappingContent: "Mapping Content",
-      MappingContentTip: "Mapping Content: only basic content, the extend content is from source.",
+      CopyContent: "Deep Copy",
+      CopyContentTip: "Depe Copy: independently of the source.",
+      MappingContent: "Mapping",
+      MappingContentTip: "Mapping: only basic content, the extend content is from source.",
       RuleTips: {
         Name: "Cannot be empty",
         Alias: "Cannot be empty and only [A-Za-z0-9_]+",
@@ -850,6 +846,108 @@ export default {
         ContentConfig: "Content Configuration",
         WordConfig: "Word Configuration",
         HotWordGroup: "Hot Word Group"
+      }
+    },
+    Content: {
+      Tab: {
+        ContentList: "Content",
+        PageWidget: "Page Widget",
+        RecycleBin: "Recycle Bin"
+      },
+      Placeholder: {
+        Title: "Input content title",
+      },
+      Title: "Title",
+      SubTitle: "Subtitle",
+      ShortTitle: "Short Title",
+      ContentType: "Content Type",
+      Status: "Status",
+      SetTop: "Topping",
+      CancelTop: "Cancel Topping",
+      TopEndTime: "Topping End",
+      Offline: "Offline",
+      Archive: "Archive",
+      GenIndex: "Create Index",
+      SortOption: {
+        Default: "Default Sorting",
+        CreateTimeAsc: 'Create Time ASC',
+        CreateTimeDesc: 'Create Time DESC',
+        PublishDateAsc: 'Publish Date ASC',
+        PublishDateDesc: 'Publish Date DESC'
+      },
+      Restore: "Restore",
+      SelectCatalogFirst: "Select catalog first",
+      StatusBefore: " Status",
+      DeleteTime: "Delete Time",
+      DeleteUser: "Delete User",
+      BackToList: "Go Back",
+      Lock: "Lock",
+      Unlock: "Unlock",
+      LinkFlag: "Link Content",
+      RedirectUrl: "Redirect Url",
+      DownloadImage: "Download",
+      DownloadImageTip: "Download the remote image in article body.",
+      Basic: "Basic",
+      Catalog: "Catalog",
+      Logo: "LOGO",
+      Author: "Author",
+      Editor: "Editor",
+      Original: "Original",
+      Attribute: "Attributes",
+      Summary: "Summary",
+      Tags: "Tag",
+      Keywords: "Keyword",
+      Source: "Source",
+      SourceUrl: "Source Url",
+      PublishDate: "Publish Date",
+      OfflineDate: "Offline Date",
+      PublishPipe: "Publish Pipe",
+      StaticPath: "Static Path",
+      Template: "Template",
+      RuleTips:  {
+        Title: "Title cannot be empty."
+      },
+      SaveProgressTitle: "Content Saving",
+      SortDialogTitle: "Content Sort",
+      SortDialogTip: "The content will be sort before the selected content in this list. If the selected content is at the top, the sorting content will also be added to the top status, and if not, the top status will be cancelled."
+    },
+    PageWidget: {
+      Type: "Type",
+      Name: "Name",
+      Code: "Code",
+      PublishPipe: "Publish Pipe",
+      Path: "Path",
+      Template: "Template",
+      Placeholder: {
+        Type: "Select Type"
+      },
+      RuleTips: {
+        Type: "Type cannot be empty.",
+        Name: "Name cannot be empty.",
+        Code: "Code cannot be empty and only [A-Za-z0-9_]+",
+        PublishPipe: "Publish pipe cannot be empty.",
+        Path: "Path cannot be empty and only [A-Za-z0-9_]+"
+      },
+      AddTitle: "Add Page Widget",
+    },
+    Adv: {
+      Basic: "Basic",
+      AdList: "Advertisement List",
+      AdName: "Ad Name",
+      Type: "Type",
+      Status: "Status",
+      Weight: "Weight",
+      OnlineDate: "Online Date",
+      OfflineDate: "Offlien Date",
+      InvalidPageWidgetId: "Invalid page widget id: {0}",
+      Placeholder: {
+        Name: "Input name"
+      },
+      RuleTips: {
+        Name: "Name cannot be empty.",
+        Code: "Code cannot be empty.",
+        PublishPipe: "Publish pipe cannot be empty.",
+        Path: "Path cannot be empty."
       }
     },
     Stat: {

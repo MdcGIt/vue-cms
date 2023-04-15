@@ -848,6 +848,111 @@ export default {
         HotWordGroup: "热词分组"
       }
     },
+    Content: {
+      Tab: {
+        ContentList: "内容列表",
+        PageWidget: "页面部件",
+        RecycleBin: "回收站"
+      },
+      Placehoder: {
+        Title: "输入内容标题",
+      },
+      Title: "标题",
+      SubTitle: "副标题",
+      ShortTitle: "短标题",
+      ContentType: "内容类型",
+      Status: "状态",
+      SetTop: "置顶",
+      CancelTop: "取消置顶",
+      TopEndTime: "置顶结束时间",
+      Offline: "下线",
+      Archive: "归档",
+      GenIndex: "生成索引",
+      SortOption: {
+        Default: "默认排序",
+        CreateTimeAsc: '添加时间升序',
+        CreateTimeDesc: '添加时间降序',
+        PublishDateAsc: '发布时间升序',
+        PublishDateDesc: '发布时间降序'
+      },
+      Restore: "恢复",
+      SelectCatalogFirst: "请先选择一个栏目",
+      StatusBefore: " 删除前状态",
+      DeleteTime: "删除时间",
+      DeleteUser: "删除人",
+      BackToList: "返回列表",
+      Lock: "锁定",
+      Unlock: "解锁",
+      LinkFlag: "链接内容",
+      RedirectUrl: "链接地址",
+      DownloadImage: "下载图片",
+      DownloadImageTip: "下载文章正文中的远程图片",
+      Basic: "基本属性",
+      Catalog: "所属栏目",
+      Logo: "LOGO",
+      Author: "作者",
+      Editor: "编辑",
+      Original: "原创",
+      Attribute: "属性",
+      Summary: "摘要",
+      Tags: "标签",
+      Keywords: "关键词",
+      Source: "来源",
+      SourceUrl: "来源地址",
+      PublishDate: "发布时间",
+      OfflineDate: "下线时间",
+      PublishPipe: "发布通道",
+      StaticPath: "独立路径",
+      Template: "独立模板",
+      RuleTips:  {
+        Title: "标题不能为空"
+      },
+      SaveProgressTitle: "保存内容中",
+      SortDialogTitle: "内容排序",
+      SortDialogTip: "内容将会排在下方列表选中的内容之前，选中内容置顶则排序内容也会添加置顶状态，反之则会取消置顶状态。"
+    },
+    PageWidget: {
+      Type: "类型",
+      Name: "名称",
+      Code: "编码",
+      PublishPipe: "发布通道",
+      Path: "发布目录",
+      Template: "模板",
+      Placeholder: {
+        Type: "选择类型"
+      },
+      RuleTips: {
+        Type: "类型不能为空",
+        Name: "名称不能为空",
+        Code: "不能为空且只能使用字母、数字和下划线",
+        PublishPipe: "发布通道不能为空",
+        Path: "不能为空且只能使用字母、数字和下划线"
+      },
+      AddTitle: "添加页面部件",
+    },
+    Adv: {
+      Basic: "基础属性",
+      AdList: "广告列表",
+      AdName: "广告名称",
+      Type: "类型",
+      Status: "状态",
+      Weight: "权重",
+      OnlineDate: "上线时间",
+      OfflineDate: "下线时间",
+      InvalidPageWidgetId: "页面部件ID错误：{0}",
+      Placeholder: {
+        Name: "广告名称"
+      },
+      RuleTips: {
+        Name: "名称不能为空",
+        Code: "编码不能为空",
+        PublishPipe: "发布通道不能为空",
+        Path: "发布目录不能为空"
+      }
+    },
+    Block: {
+
+    },
     Stat: {
       VisitTrend: "访问趋势",
       VisitLocation: "地域分布",

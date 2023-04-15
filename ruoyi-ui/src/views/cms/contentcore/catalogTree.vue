@@ -46,18 +46,19 @@
       </el-tree>
     </div>
     <!-- 添加栏目对话框 -->
-    <el-dialog :title="$t('CMS.Catalog.AddCatalog')"
-               :visible.sync="diagOpen"
-               :close-on-click-modal="false"
-               width="600px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
+    <el-dialog 
+      :title="$t('CMS.Catalog.AddCatalog')"
+      :visible.sync="diagOpen"
+      :close-on-click-modal="false"
+      width="600px"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="120px">
         <el-form-item :label="$t('CMS.Catalog.ParentCatalog')" prop="parentId">
-          <treeselect v-model="form.parentId"
-                      :options="catalogOptions" />
+          <treeselect v-model="form.parentId" :options="catalogOptions" />
         </el-form-item>
         <el-form-item :label="$t('CMS.Catalog.Name')"  prop="name">
           <el-input v-model="form.name" />

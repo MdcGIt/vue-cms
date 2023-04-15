@@ -1,106 +1,110 @@
 <template>
   <div class="cms-content-list">
-    <el-row :gutter="10" class="mb5">
+    <el-row :gutter="10" class="mb12">
       <el-col :span="1.5">
-        <el-popover placement="bottom-start"
-                    :width="304"
-                    trigger="click">
-          <el-row style="margin-bottom:20px">
+        <el-popover placement="bottom-start" :width="350" trigger="click">
+          <el-row style="margin-bottom:20px;text-align:right;">
             <el-radio-group v-model="addContentType">
-              <el-radio-button v-for="ct in contentTypeOptions"
-                                :key="ct.id"
-                                :label="ct.id">{{ct.name}}</el-radio-button>
+              <el-radio-button 
+                v-for="ct in contentTypeOptions"
+                :key="ct.id"
+                :label="ct.id"
+              >{{ct.name}}</el-radio-button>
             </el-radio-group>
           </el-row>
           <el-row style="text-align:right;">
-            <el-button type="primary"
-                        size="mini"
-                        plain
-                        @click="handleAdd">确认</el-button>
+            <el-button 
+              plain
+              type="primary"
+              size="mini"
+              @click="handleAdd">{{ $t('Common.Confirm') }}</el-button>
           </el-row>
-          <el-button type="primary"
-                      slot="reference"
-                      icon="el-icon-plus"
-                      size="mini"
-                      plain>{{ $t("Common.Add") }}
-            <i class="el-icon-arrow-down el-icon--right"></i>
+          <el-button 
+            type="primary"
+            slot="reference"
+            icon="el-icon-plus"
+            size="mini"
+            plain>{{ $t("Common.Add") }}<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
         </el-popover>
       </el-col>
       <el-col :span="1.5">
-        <el-button plain
-                    type="danger"
-                    icon="el-icon-delete"
-                    size="mini"
-                    :disabled="multiple"
-                    @click="handleDelete">{{ $t("Common.Delete") }}
+        <el-button 
+          plain
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete">{{ $t("Common.Delete") }}
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="loadContentList"></right-toolbar>
     </el-row>
-    <el-row style="text-align:right" class="mb12">
-      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search" :inline="true" v-show="showSearch">
-        <el-form-item prop="title">
-          <el-input v-model="queryParams.title"
-                    placeholder="请输入内容标题"
-                    clearable
-                    style="width: 200px"
-                    @keyup.enter.native="handleQuery" />
-        </el-form-item>
-        <el-form-item prop="contentType">
-          <el-select v-model="queryParams.contentType"
-                      placeholder="内容类型"
-                      clearable
-                      style="width: 110px">
-            <el-option v-for="ct in contentTypeOptions"
-                        :key="ct.id"
-                        :label="ct.name"
-                        :value="ct.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="status">
-          <el-select v-model="queryParams.status"
-                      placeholder="状态"
-                      clearable
-                      style="width: 110px">
-            <el-option v-for="dict in dict.type.CMSContentStatus"
-                        :key="dict.value"
-                        :label="dict.label"
-                        :value="dict.value" />
-          </el-select>
-          
-        </el-form-item>
-        <el-form-item label="创建时间">
-          <el-date-picker v-model="dateRange"
-                          size="small"
-                          style="width: 240px"
-                          value-format="yyyy-MM-dd"
-                          type="daterange"
-                          range-separator="-"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-select @change="loadContentList"
-                    v-model="queryParams.sorts"
-                    size="small"
-                    style="width: 140px">
-            <el-option value="" label="默认排序"></el-option>
-            <el-option value="[{'column':'create_time','direction':'ASC'}]" label="添加时间升序"></el-option>
-            <el-option value="[{'column':'create_time','direction':'DESC'}]" label="添加时间降序"></el-option>
-            <el-option value="[{'column':'publish_date','direction':'ASC'}]" label="发布时间升序"></el-option>
-            <el-option value="[{'column':'publish_date','direction':'DESC'}]" label="发布时间降序"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button-group>
-            <el-button type="primary"
-                        icon="el-icon-search"
-                        @click="handleQuery">{{ $t("Common.Search") }}</el-button>
-            <el-button icon="el-icon-refresh"
-                        @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
-          </el-button-group>
-        </el-form-item>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search" style="text-align:left;" :inline="true">
+        <div class="mb12">
+          <el-form-item prop="title">
+            <el-input 
+              v-model="queryParams.title"
+              :placeholder="$t('CMS.Content.Placeholder.Title')"
+              clearable
+              style="width: 200px"
+              @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item prop="contentType">
+            <el-select 
+              v-model="queryParams.contentType"
+              :placeholder="$t('CMS.Content.ContentType')"
+              clearable
+              style="width: 125px">
+              <el-option 
+                v-for="ct in contentTypeOptions"
+                :key="ct.id"
+                :label="ct.name"
+                :value="ct.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="status">
+            <el-select 
+              v-model="queryParams.status"
+              :placeholder="$t('CMS.Content.Status')"
+              clearable
+              style="width: 110px">
+              <el-option 
+                v-for="dict in dict.type.CMSContentStatus"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-select  v-model="queryParams.sorts" @change="loadContentList" style="width: 140px">
+              <el-option value="" :label="$t('CMS.Content.SortOption.Default')"></el-option>
+              <el-option value="[{'column':'create_time','direction':'ASC'}]" :label="$t('CMS.Content.SortOption.CreateTimeAsc')"></el-option>
+              <el-option value="[{'column':'create_time','direction':'DESC'}]" :label="$t('CMS.Content.SortOption.CreateTimeDesc')"></el-option>
+              <el-option value="[{'column':'publish_date','direction':'ASC'}]" :label="$t('CMS.Content.SortOption.PublishDateAsc')"></el-option>
+              <el-option value="[{'column':'publish_date','direction':'DESC'}]" :label="$t('CMS.Content.SortOption.PublishDateDesc')"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button-group>
+              <el-button type="primary" icon="el-icon-search" @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+              <el-button icon="el-icon-refresh" @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+            </el-button-group>
+            <el-button icon="el-icon-plus" class="ml10" @click="showSearch=!showSearch">{{ $t("Common.More") }}</el-button>
+          </el-form-item>
+        </div>
+        <div class="mb12" v-show="showSearch">
+          <el-form-item :label="$t('Common.CreateTime')">
+            <el-date-picker 
+              v-model="dateRange"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              :start-placeholder="$t('Common.BeginDate')"
+              :end-placeholder="$t('Common.EndDate')"></el-date-picker>
+          </el-form-item>
+        </div>
       </el-form>
     </el-row>
 
@@ -114,14 +118,12 @@
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column label="标题" :show-overflow-tooltip="true">
+      <el-table-column :label="$t('CMS.Content.Title')" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <el-link type="primary"
-                    @click="handleEdit(scope.row)"
-                    class="link-type">
+          <el-link type="primary" @click="handleEdit(scope.row)" class="link-type">
             <span>{{ scope.row.title }}</span>
           </el-link>
-          <span class="content_attr" v-if="scope.row.topFlag>0" title="置顶">[<svg-icon icon-class="top" />]</span>
+          <span class="content_attr" v-if="scope.row.topFlag>0" :title="$t('CMS.Content.SetTop')">[<svg-icon icon-class="top" />]</span>
           <span 
             v-for="dict in dict.type.CMSContentAttribute"
             :key="dict.value"
@@ -130,84 +132,86 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" width="110" align="center" prop="contentType" :formatter="contentTypeFormat" />
-      <el-table-column label="状态" width="110" align="center">
+      <el-table-column :label="$t('CMS.Content.ContentType')" width="110" align="center" prop="contentType" :formatter="contentTypeFormat" />
+      <el-table-column :label="$t('CMS.Content.Status')" width="110" align="center">
         <template slot-scope="scope">
           <el-tag :type="statusTagType(scope.row.status)">{{ statusFormat(scope.row, 'status') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column :label="$t('Common.CreateTime')" align="center" prop="createTime" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Common.Operation')"
-                        align="center"
-                        width="300"
-                        class-name="small-padding fixed-width">
+      <el-table-column 
+        :label="$t('Common.Operation')"
+        align="center"
+        width="300"
+        class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                      type="text"
-                      icon="el-icon-s-promotion"
-                      @click="handlePublish(scope.row)">发布</el-button>
-          <el-button size="mini"
-                      type="text"
-                      icon="el-icon-view"
-                      @click="handlePreview(scope.row)">预览</el-button>
-          <el-button size="mini"
-                      type="text"
-                      icon="el-icon-sort"
-                      @click="handleSort(scope.row)">排序</el-button>
-          <el-button size="mini"
-                      type="text"
-                      icon="el-icon-download"
-                      @click="handleOffline(scope.row)">下线</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-s-promotion"
+            @click="handlePublish(scope.row)">{{ $t('CMS.ContentCore.Publish') }}</el-button>
+          <el-button
+            type="text"
+            icon="el-icon-view"
+            @click="handlePreview(scope.row)">{{ $t('CMS.ContentCore.Preview') }}</el-button>
+          <el-button
+            type="text"
+            icon="el-icon-sort"
+            @click="handleSort(scope.row)">{{ $t('Common.Sort') }}</el-button>
+          <el-button
+            type="text"
+            icon="el-icon-download"
+            @click="handleOffline(scope.row)">{{ $t('CMS.Content.Offline') }}</el-button>
           <el-dropdown>
             <el-link :underline="false" class="row-more-btn" icon="el-icon-more"></el-link>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-edit" @click.native="handleEdit(scope.row)">编辑</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-delete" @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
-              <el-dropdown-item v-show="scope.row.topFlag<=0" icon="el-icon-top" @click.native="handleSetTop(scope.row)">置顶</el-dropdown-item>
-              <el-dropdown-item v-show="scope.row.topFlag>0" icon="el-icon-bottom" @click.native="handleCancelTop(scope.row)">取消置顶</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-document-copy" @click.native="handleCopy(scope.row)">复制</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-right" @click.native="handleMove(scope.row)">转移</el-dropdown-item>
-              <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleArchive(scope.row)">归档</el-dropdown-item> -->
-              <el-dropdown-item icon="el-icon-search" @click.native="handleCreateIndex(scope.row)">生成索引</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-edit" @click.native="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-delete" @click.native="handleDelete(scope.row)">{{ $t('Common.Delete') }}</el-dropdown-item>
+              <el-dropdown-item v-show="scope.row.topFlag<=0" icon="el-icon-top" @click.native="handleSetTop(scope.row)">{{ $t('CMS.Content.SetTop') }}</el-dropdown-item>
+              <el-dropdown-item v-show="scope.row.topFlag>0" icon="el-icon-bottom" @click.native="handleCancelTop(scope.row)">{{ $t('CMS.Content.CancelTop') }}</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-document-copy" @click.native="handleCopy(scope.row)">{{ $t('Common.Copy') }}</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-right" @click.native="handleMove(scope.row)">{{ $t('Common.Move') }}</el-dropdown-item>
+              <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleArchive(scope.row)">{{ $t('CMS.Content.Archive') }}</el-dropdown-item> -->
+              <el-dropdown-item icon="el-icon-search" @click.native="handleCreateIndex(scope.row)">{{ $t('CMS.Content.GenIndex') }}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="loadContentList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="loadContentList" />
               
     <!-- 置顶时间设置弹窗 -->  
-    <el-dialog title="置顶"
-               width="400px"
-               :visible.sync="topDialogVisible"
-               :close-on-click-modal="false"
-               append-to-body>
-      <el-form ref="top_form"
-               label-width="100px"
-               :model="topForm">
-        <el-form-item label="置顶结束时间" prop="topEndTime">
-          <el-date-picker v-model="topForm.topEndTime" 
-                          :picker-options="topEndTimePickerOptions"
-                          type="datetime">
+    <el-dialog 
+      :title="$t('CMS.Content.SetTop')"
+      width="400px"
+      :visible.sync="topDialogVisible"
+      :close-on-click-modal="false"
+      append-to-body>
+      <el-form ref="top_form" label-width="100px" :model="topForm">
+        <el-form-item :label="$t('CMS.Content.TopEndTime')" prop="topEndTime">
+          <el-date-picker 
+            v-model="topForm.topEndTime" 
+            :picker-options="topEndTimePickerOptions"
+            type="datetime">
           </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" 
-                    @click="handleTopDialogOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button type="primary" @click="handleTopDialogOk">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="this.topDialogVisible=false">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 进度条 -->
-    <cms-progress title="发布任务" :open.sync="openProgress" :taskId="taskId"></cms-progress>
+    <cms-progress :title="$t('CMS.ContentCore.PublishProgressTitle')" :open.sync="openProgress" :taskId="taskId"></cms-progress>
     <!-- 栏目选择组件 -->
     <cms-catalog-selector
       :open="openCatalogSelector"
@@ -253,7 +257,7 @@ export default {
     return {
       // 遮罩层
       loading: false,
-      showSearch: true,
+      showSearch: false,
       contentTypeOptions: [],
       catalogId: this.cid,
       contentList: null,
@@ -370,7 +374,7 @@ export default {
     },
     handleAdd () {
       if (!this.catalogId) {
-        this.$modal.msgError("请先选择一个栏目");
+        this.$modal.msgError(this.$t("CMS.Content.SelectCatalogFirst"));
         return;
       }
       this.openEditor(this.catalogId, 0, this.addContentType);
@@ -389,27 +393,23 @@ export default {
     },
     handleDelete (row) {
       const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(row => row.contentId);
-      this.$modal.confirm("是否确认删除?").then(function () {
+      this.$modal.confirm(this.$t("Common.ConfirmDelete")).then(function () {
         return delContent(contentIds);
       }).then(() => {
         this.loadContentList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     },
     handlePublish (row) {
       const contentIds = row ? [ row.contentId ] : this.selectedRows.map(item => { return item.contentId });
       if (contentIds.length == 0) {
-        this.$modal.msgWarn("请先选择一条记录");
+        this.$modal.msgWarn(this.$t('CMS.Content.SelectRowFirst'));
         return;
       }
-      this.$modal.loading("正在发布...");
+      this.$modal.loading("Loading...");
       publishContent(contentIds).then(response => {
         this.$modal.closeLoading();
-        if (response.code == 200) {
-          this.loadContentList();
-        } else {
-          this.$modal.msgError(response.msg);
-        }
+        this.loadContentList();
       });
     },
     handlePreview (row) {
@@ -419,7 +419,7 @@ export default {
       } else if (this.selectedRows.length > 0) {
         contentId = this.selectedRows[0].contentId;
       } else {
-        this.$modal.msgWarn("请先选择一条记录");
+        this.$modal.msgWarn(this.$t('CMS.Content.SelectRowFirst'));
         return;
       }
       let routeData = this.$router.resolve({
@@ -437,11 +437,7 @@ export default {
     },
     handleCreateIndex(row) {
       createIndexes(row.contentId).then(response => {
-        if (response.code == 200) {
-          this.$modal.msgSuccess("操作成功");
-        } else {
-          this.$modal.msgError(response.msg);
-        }
+        this.$modal.msgSuccess($t('Common.OpSuccess'));
       });
     },
     handleCopy(row) {
@@ -458,10 +454,8 @@ export default {
         copyType: copyType
       };
       copyContent(data).then(response => {
-        if (response.code == 200) {
-          this.$modal.msgSuccess("操作成功");
-          this.openCatalogSelector = false;
-        }
+        this.$modal.msgSuccess($t('Common.OpSuccess'));
+        this.openCatalogSelector = false;
       });
     },
     handleMove(row) {
@@ -477,11 +471,9 @@ export default {
         catalogId: catalogs[0].id
       };
       moveContent(data).then(response => {
-        if (response.code == 200) {
-          this.$modal.msgSuccess("操作成功");
-          this.openCatalogSelector = false;
-          this.loadContentList();
-        }
+        this.$modal.msgSuccess($t('Common.OpSuccess'));
+        this.openCatalogSelector = false;
+        this.loadContentList();
       });
     },
     handleCatalogSelectorOk(catalogs, copyType) {
@@ -504,7 +496,7 @@ export default {
     handleTopDialogOk() {
       const contentIds = this.selectedRows.map(item => item.contentId);
       if (contentIds.length == 0) {
-        this.$modal.msgWarn("请先选择一条记录");
+        this.$modal.msgWarn(this.$t('CMS.Content.SelectRowFirst'));
         return;
       }
       this.$refs["top_form"].validate(valid => {
@@ -566,27 +558,27 @@ export default {
 };
 </script>
 <style scoped>
-.head-container .el-select .el-input {
+.cms-content-list .head-container .el-select .el-input {
   width: 110px;
 }
-.el-divider {
+.cms-content-list .el-divider {
   margin-top: 10px;
 }
-.el-tabs__header {
+.cms-content-list .el-tabs__header {
   margin-bottom: 10px;
 }
-.pagination-container {
+.cms-content-list .pagination-container {
   height: 30px;
 }
-.row-more-btn {
+.cms-content-list .row-more-btn {
   padding-left: 10px;
 }
-.top-icon {
+.cms-content-list .top-icon {
   font-weight: bold;
   font-size: 12px;
   color:green;
 }
-.content_attr {
+.cms-content-list .content_attr {
   margin-left: 2px;
 }
 </style>
