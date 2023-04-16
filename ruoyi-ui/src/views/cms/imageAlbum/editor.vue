@@ -18,37 +18,35 @@
           <el-container>
             <el-main>
               <el-row>
-                <el-form-item label="标题">
+                <el-form-item :label="$t('CMS.Image.Title')">
                   <el-input v-model="item.title"></el-input>
                 </el-form-item>
               </el-row>
               <el-row>
-                <el-form-item label="摘要">
-                  <el-input type="textarea"
-                          :rows="2"
-                          v-model="item.desc"></el-input>
+                <el-form-item :label="$t('CMS.Image.Summary')">
+                  <el-input type="textarea" :rows="2" v-model="item.desc"></el-input>
                 </el-form-item>
               </el-row>
               <el-row>
-                <el-form-item label="链接">
+                <el-form-item :label="$t('CMS.Image.RedirectUrl')">
                   <el-input v-model="item.redirectUrl"></el-input>
                 </el-form-item>
               </el-row>
               <el-row class="r-opr-row">
                 <el-link icon="el-icon-top"
                         v-if="index > 0" 
-                        @click="upImage(index)">上移</el-link>
+                        @click="upImage(index)">{{ $t('CMS.Image.MoveUp') }}</el-link>
                 <el-link icon="el-icon-bottom"
                               v-if="imageList.length > 1 && index < imageList.length - 1" 
-                        @click="downImage(index)">下移</el-link>
+                        @click="downImage(index)">{{ $t('CMS.Image.MoveDown') }}</el-link>
                 <el-link icon="el-icon-search"
-                        @click="showImage(index)">查看</el-link>
+                        @click="showImage(index)">{{ $t('Common.View') }}</el-link>
                 <el-link icon="el-icon-picture"
-                        @click="chooseImage(index)">设为LOGO</el-link>
+                        @click="chooseImage(index)">{{ $t('CMS.Image.SetLogo') }}</el-link>
                 <el-link icon="el-icon-edit"
-                        @click="editImage(index)">编辑</el-link>
+                        @click="editImage(index)">{{ $t('Common.Edit') }}</el-link>
                 <el-link icon="el-icon-delete"
-                        @click="deleteImage(index)">删除</el-link>
+                        @click="deleteImage(index)">{{ $t('Common.Delete') }}</el-link>
               </el-row>
             </el-main>
           </el-container>
@@ -58,7 +56,7 @@
     <el-card shadow="always" class="mt10">
         <div class="btn-add-image bg-purple-white" @click="addImage">
           <svg-icon icon-class="image" style="width:60px;height:60px;"></svg-icon>
-          <div>添加图片</div>
+          <div>{{ $t('CMS.Image.Add') }}</div>
         </div>
     </el-card>
     <cms-resource-dialog 
@@ -66,10 +64,11 @@
       :upload-limit="uploadLimit"
       @ok="handleResourceDialogOk">
     </cms-resource-dialog>
-    <el-image-viewer v-if="showImageViewer" 
-                     :initialIndex="imageViewerIndex"
-                     :on-close="handleImageViewerClose"
-                     :url-list="imageList.map(img=>img.src)">
+    <el-image-viewer 
+      v-if="showImageViewer" 
+      :initialIndex="imageViewerIndex"
+      :on-close="handleImageViewerClose"
+      :url-list="imageList.map(img=>img.src)">
     </el-image-viewer>
   </div>
 </template>

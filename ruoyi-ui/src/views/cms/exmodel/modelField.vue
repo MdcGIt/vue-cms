@@ -1,60 +1,62 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-form 
-        :model="queryParams"
-        ref="queryForm"
-        :inline="true"
-        label-width="68px"
-        class="el-form-search">
-        <el-form-item prop="query">
-          <el-input placeholder="数据字段名称/编码查询" v-model="queryParams.query" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button 
-            type="primary"
-            icon="el-icon-search"
-            size="mini"
-            @click="handleQuery">{{ $t("Common.Search") }}</el-button>
-          <el-button 
-            icon="el-icon-refresh"
-            size="mini"
-            @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
-    <el-row class="mb10">
-      <el-button 
-        plain
-        type="info"
-        icon="el-icon-back"
-        size="mini"
-        @click="handleGoBack">返回模型列表</el-button>
-      <el-button 
-        plain
-        type="primary"
-        icon="el-icon-plus"
-        size="mini"
-        @click="handleAdd">{{ $t("Common.Add") }}</el-button>
-      <el-button 
-        type="danger"
-        icon="el-icon-delete"
-        size="mini"
-        :disabled="multiple"
-        @click="handleBatchDelete">{{ $t("Common.Delete") }}</el-button>
+    <el-row :gutter="24" class="mb12">
+      <el-col :span="12">
+        <el-button 
+          plain
+          type="info"
+          icon="el-icon-back"
+          size="mini"
+          @click="handleGoBack">{{ $t('CMS.ExModel.GoBack') }}</el-button>
+        <el-button 
+          plain
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+        <el-button 
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleBatchDelete">{{ $t("Common.Delete") }}</el-button>
+      </el-col>
+      <el-col :span="12">
+        <el-form 
+          :model="queryParams"
+          ref="queryForm"
+          :inline="true"
+          size="mini"
+          class="el-form-search">
+          <el-form-item prop="query">
+            <el-input :placeholder="$t('CMS.ExModel.Placeholder.FieldQuery')" v-model="queryParams.query"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button-grou>
+              <el-button 
+                type="primary"
+                icon="el-icon-search"
+                @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+              <el-button 
+                icon="el-icon-refresh"
+                @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+            </el-button-grou>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
     <el-row>
       <el-table v-loading="loading" :data="fieldList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="名称" align="center" prop="name" />
-        <el-table-column label="编码" align="center" prop="code" />
-        <el-table-column label="控件类型" align="center" prop="controlType">
+        <el-table-column :label="$t('CMS.ExModel.FieldName')" align="center" prop="name" />
+        <el-table-column :label="$t('CMS.ExModel.FieldCode')" align="center" prop="code" />
+        <el-table-column :label="$t('CMS.ExModel.FieldControlType')" align="center" prop="controlType">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.MetaControlType" :value="scope.row.controlType"/>
           </template>
         </el-table-column>
-        <el-table-column label="对应数据表字段" align="center" prop="fieldName" />
-        <el-table-column label="是否必填" align="center" prop="mandatoryFlag">
+        <el-table-column :label="$t('CMS.ExModel.FieldMappingName')" align="center" prop="fieldName" />
+        <el-table-column :label="$t('CMS.ExModel.FieldMandatory')" align="center" prop="mandatoryFlag">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.YesOrNo" :value="scope.row.mandatoryFlag"/>
           </template>
@@ -88,15 +90,15 @@
       width="600px"
       :close-on-click-modal="false"
       append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px" class="el-form-dialog">
-        <el-form-item label="名称" prop="name">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px" class="el-form-dialog">
+        <el-form-item :label="$t('CMS.ExModel.FieldName')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="编码" prop="code">
+        <el-form-item :label="$t('CMS.ExModel.FieldCode')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item v-if="!isDefaultTable" label="数据表字段" prop="fieldName">
-          <el-select v-model="form.fieldName" placeholder="请选择" size="small">
+        <el-form-item v-if="!isDefaultTable" :label="$t('CMS.ExModel.FieldMappingName')" prop="fieldName">
+          <el-select v-model="form.fieldName">
             <el-option
               v-for="fieldName in tableFields"
               :key="fieldName"
@@ -105,8 +107,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="isDefaultTable" label="字段类型" prop="fieldType">
-          <el-select v-model="form.fieldType" placeholder="请选择" size="small">
+        <el-form-item v-if="isDefaultTable" :label="$t('CMS.ExModel.FieldType')" prop="fieldType">
+          <el-select v-model="form.fieldType">
             <el-option
               v-for="dict in dict.type.MetaFieldType"
               :key="dict.value"
@@ -115,8 +117,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="控件类型" prop="controlType">
-          <el-select v-model="form.controlType" placeholder="请选择" size="small">
+        <el-form-item :label="$t('CMS.ExModel.FieldControlType')" prop="controlType">
+          <el-select v-model="form.controlType">
             <el-option
               v-for="dict in dict.type.MetaControlType"
               :key="dict.value"
@@ -125,8 +127,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="是否必填" prop="mandatoryFlag">
-          <el-select v-model="form.mandatoryFlag" placeholder="请选择" size="small">
+        <el-form-item :label="$t('CMS.ExModel.FieldMandatory')" prop="mandatoryFlag">
+          <el-select v-model="form.mandatoryFlag">
             <el-option
               v-for="dict in dict.type.YesOrNo"
               :key="dict.value"
@@ -135,14 +137,14 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="默认值" prop="defaultValue">
+        <el-form-item :label="$t('CMS.ExModel.FieldDefaultValue')" prop="defaultValue">
           <el-input v-model="form.defaultValue" />
         </el-form-item>
-        <el-form-item v-if="showOptions" label="可选项配置" prop="options">
+        <el-form-item v-if="showOptions" :label="$t('CMS.ExModel.FieldOptions')" prop="options">
           <div>
             <el-radio-group v-model="form.options.type">
-              <el-radio label="text">手动输入</el-radio>
-              <el-radio label="dict">字典数据</el-radio>
+              <el-radio label="text">{{ $t('CMS.ExModel.FieldOptionsInput') }}</el-radio>
+              <el-radio label="dict">{{ $t('CMS.ExModel.FieldOptionsDict') }}</el-radio>
             </el-radio-group>
           </div>
           <div>
@@ -162,11 +164,6 @@
     </el-dialog>
   </div>
 </template>
-<style scoped>
-.el-form-item {
-  margin-bottom: 18px;
-}
-</style>
 <script>
 import { addXModelField, editXModelField, deleteXModelField, listXModelField, listXModelTableFields } from "@/api/contentcore/exmodel";
 
@@ -204,21 +201,21 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.ExModel.RuleTips.FieldName'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.ExModel.RuleTips.FieldCode'), trigger: "blur" }
         ],
         controlType: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.ExModel.RuleTips.FieldControlType'), trigger: "blur" }
         ],
         mandatoryFlag: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.ExModel.RuleTips.FieldMandatory'), trigger: "blur" }
         ],
         fieldType: [
           { required: true, validator: (rule, value, callback) => {
                 if (this.isDefaultTable && (!value || value == null || value == '')) {
-                  return callback(new Error("字段类型不能为空"));
+                  return callback(new Error(this.$t('CMS.ExModel.RuleTips.FieldType')));
                 }
                 callback();
               }, trigger: "blur" }
@@ -227,11 +224,11 @@ export default {
           { required: true, validator: (rule, value, callback) => {
                 if (!this.isDefaultTable) {
                   if (!value || value == null || value == '') {
-                    return callback(new Error("数据表字段不能为空"));
+                    return callback(new Error(this.$t('CMS.ExModel.RuleTips.FieldMappingName')));
                   }
                   for(let i = 0; i < this.fieldList.length; i++) {
                     if (this.fieldList[i].fieldName == value) {
-                      return callback(new Error("数据表字段已占用"));
+                      return callback(new Error(this.$t('CMS.ExModel.RuleTips.FieldMappingUsed')));
                     }
                   }
                 }
@@ -292,12 +289,12 @@ export default {
     },
     handleAdd () {
       this.form = { options:{ type: "text" } };
-      this.title = "添加字段";
+      this.title = this.$t('CMS.ExModel.AddFieldTitle');
       this.open = true;
     },
     handleEdit (row) {
       this.form = row;
-      this.title = "编辑字段信息";
+      this.title = this.$t('CMS.ExModel.EditFieldTitle');
       this.open = true;
     },
     handleAddSave () {
@@ -328,10 +325,10 @@ export default {
     },
     doDelete (fields) {
       const fieldIds = fields.map(f => f.fieldId);
-      this.$modal.confirm("确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteXModelField(fieldIds);
       }).then(() => {
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
         this.loadXModelFieldList();
       }).catch(function () { });
     },

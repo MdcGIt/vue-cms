@@ -18,67 +18,67 @@
         <el-row>
           <el-col :span="4" >
             <div class="a-left-item"> 
-              <label class="a-left-label">类型</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.Type') }}</label>
               <div class="a-left-value">{{ item.type }}</div>
             </div>
             <div class="a-left-item"> 
-              <label class="a-left-label">大小</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.FileSize') }}</label>
               <div class="a-left-value">{{ item.fileSizeName }}</div>
             </div>
             <div class="a-left-item"> 
-              <label class="a-left-label">格式</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.Format') }}</label>
               <div class="a-left-value">{{ item.format }}</div>
             </div>
             <div class="a-left-item"> 
-              <label class="a-left-label">时长</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.Duration') }}</label>
               <div class="a-left-value">{{ transferDuration(item.duration) }}</div>
             </div>
             <div class="a-left-item"> 
-              <label class="a-left-label">编码方式</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.Decoder') }}</label>
               <div class="a-left-value">{{ item.decoder }}</div>
             </div>
             <div class="a-left-item"> 
-              <label class="a-left-label">声道数</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.Channels') }}</label>
               <div class="a-left-value">{{ item.channels }}</div>
             </div>
             <div class="a-left-item"> 
-              <label class="a-left-label">比特率</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.BitRate') }}</label>
               <div class="a-left-value">{{ item.bitRate }}</div>
             </div>
             <div class="a-left-item"> 
-              <label class="a-left-label">采样率</label>
+              <label class="a-left-label">{{ $t('CMS.Audio.SamplingRate') }}</label>
               <div class="a-left-value">{{ item.samplingRate }}</div>
             </div>
           </el-col>
           <el-col :span="20">
             <el-row>
-              <el-form-item label="标题">
+              <el-form-item :label="$t('CMS.Audio.Title')">
                 <el-input v-model="item.title"></el-input>
               </el-form-item>
             </el-row>
             <el-row>
-              <el-form-item label="作者">
+              <el-form-item :label="$t('CMS.Audio.Author')">
                 <el-input v-model="item.author"></el-input>
               </el-form-item>
             </el-row>
             <el-row>
-              <el-form-item label="简介">
-                <el-input type="textarea"
-                        :rows="2"
-                        v-model="item.description"></el-input>
+              <el-form-item :label="$t('CMS.Audio.Desc')">
+                <el-input type="textarea" :rows="2" v-model="item.description"></el-input>
               </el-form-item>
             </el-row>
             <el-row class="r-opr-row">
-              <el-link icon="el-icon-top"
-                      v-if="index > 0" 
-                      @click="moveUp(index)">上移</el-link>
-              <el-link icon="el-icon-bottom"
-                            v-if="itemList.length > 1 && index < itemList.length - 1" 
-                      @click="moveDown(index)">下移</el-link>
-              <el-link icon="el-icon-edit"
-                      @click="editItem(index)">编辑</el-link>
-              <el-link icon="el-icon-delete"
-                      @click="deleteImage(index)">删除</el-link>
+              <el-link 
+                icon="el-icon-top"
+                v-if="index > 0" 
+                @click="moveUp(index)"
+              >{{ $t('CMS.Audio.MoveUp') }}</el-link>
+              <el-link 
+                icon="el-icon-bottom"
+                v-if="itemList.length > 1 && index < itemList.length - 1" 
+                @click="moveDown(index)"
+              >{{ $t('CMS.Audio.MoveUp') }}</el-link>
+              <el-link icon="el-icon-edit" @click="editItem(index)">{{ $t('Common.Edit') }}</el-link>
+              <el-link icon="el-icon-delete" @click="deleteImage(index)">{{ $t('Common.Delete') }}</el-link>
             </el-row>
           </el-col>
         </el-row>
@@ -87,7 +87,7 @@
     <el-card shadow="always" class="mt10">
         <div class="btn-add-audio bg-purple-white" @click="addItem">
           <svg-icon icon-class="video" style="width:60px;height:60px;"></svg-icon>
-          <div>添加音频</div>
+          <div>{{ $t('CMS.Audio.Add') }}</div>
         </div>
     </el-card>
     <cms-resource-dialog 
