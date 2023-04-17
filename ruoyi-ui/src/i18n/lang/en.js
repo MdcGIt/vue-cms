@@ -715,7 +715,16 @@ export default {
       SEOTitle: "SEO Title",
       SEOKeyword: "SEO Keyword",
       SEODescription: "SEO Description",
-      PublishPipe: "Publish Pipe"
+      PublishPipe: "Publish Pipe",
+      Route: {
+        EditSite: "Site Details",
+        EditTemplate: "Template Details",
+        EditFile: "File Details",
+        EditContent: "Content Details",
+        EditManualBlock: "Manual Block",
+        EditAdvSpace: "AD Space",
+        EditAdv: "Advertising",
+      }
     },
     Site: {
       SiteId: "Site ID",
@@ -1136,6 +1145,7 @@ export default {
       FieldOptionsDict: "Dictionary",
       AddFieldTitle: "Add ex-model field",
       EditFieldTitle: "Edit ex-model field",
+      RouteExModelField: "Ex-Model Fields",
       Placeholder: {
         Query: "Input model name/code",
         FieldQuery: "Input field name/code"
@@ -1163,6 +1173,7 @@ export default {
       LinkUrl: "URL",
       AddLinkTitle: "Add friend-link",
       EditLinkTitle: "Edit friend-link",
+      RouteLinkList: "Friend-Links",
       Placeholder: {
         GroupQuery: "Input group name/code",
         LinkQuery: "Input name/url"

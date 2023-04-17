@@ -715,7 +715,16 @@ export default {
       SEOTitle: "SEO标题",
       SEOKeyword: "SEO关键字",
       SEODescription: "SEO描述",
-      PublishPipe: "发布通道"
+      PublishPipe: "发布通道",
+      Route: {
+        EditSite: "站点编辑",
+        EditTemplate: "模板编辑",
+        EditFile: "文件编辑",
+        EditContent: "内容编辑",
+        EditManualBlock: "编辑区块",
+        EditAdvSpace: "编辑广告位",
+        EditAdv: "编辑广告",
+      }
     },
     Site: {
       SiteId: "站点ID",
@@ -1136,6 +1145,7 @@ export default {
       FieldOptionsDict: "字典数据",
       AddFieldTitle: "添加模型字段",
       EditFieldTitle: "编辑模型字段",
+      RouteExModelField: "扩展模型字段",
       Placeholder: {
         Query: "输入模型名称/编码查询",
         FieldQuery: "字段名称/编码查询"
@@ -1163,6 +1173,7 @@ export default {
       LinkUrl: "链接",
       AddLinkTitle: "添加友情链接",
       EditLinkTitle: "编辑友情链接",
+      RouteLinkList: "友链列表",
       Placeholder: {
         GroupQuery: "输入分组名称/编码",
         LinkQuery: "输入友链名称/链接查询"

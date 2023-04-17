@@ -111,49 +111,49 @@ export const constantRoutes = [
         path: 'site/tabs',
         component: () => import('@/views/cms/contentcore/siteTab'),
         name: 'CMSSiteTab',
-        meta: { title: '站点编辑', activeMenu: '/configs/site'}
+        meta: { title: i18n.t('CMS.ContentCore.Route.EditSite'), activeMenu: '/configs/site'}
       },
       {
         path: 'template/editor',
         component: () => import('@/views/cms/contentcore/templateEditor'),
         name: 'CMSTemplateEditor',
-        meta: { noCache: true, title: '模板编辑', activeMenu: '/configs/template'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditTemplate'), activeMenu: '/configs/template'}
       },
       {
         path: 'file/editor',
         component: () => import('@/views/cms/contentcore/fileEditor'),
         name: 'CMSFileEditor',
-        meta: { noCache: true, title: '文件编辑', activeMenu: '/configs/file'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditFile'), activeMenu: '/configs/file'}
       },
       {
         path: 'content/editor',
         component: () => import('@/views/cms/contentcore/contentEditor'),
         name: 'CMSContentEditor',
-        meta: { noCache: true, title: '内容编辑', activeMenu: '/configs/content'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditContent'), activeMenu: '/configs/content'}
       },
       {
         path: 'exmodel/field',
         component: () => import('@/views/cms/exmodel/modelField'),
         name: 'CMSEXModelField',
-        meta: { noCache: true, title: '扩展模型字段', activeMenu: '/configs/exmodel'}
+        meta: { noCache: true, title: i18n.t('CMS.ExModel.RouteExModelField'), activeMenu: '/configs/exmodel'}
       },
       {
         path: 'block/manual/editor',
         component: () => import('@/views/cms/block/manualBlockEditor'),
         name: 'CMSBlockManualEditor',
-        meta: { noCache: true, title: '编辑区块', activeMenu: '/configs/content'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditManualBlock'), activeMenu: '/configs/content'}
       },
       {
         path: 'adspace/editor',
         component: () => import('@/views/cms/ad/adSpaceEditor'),
         name: 'CMSAdSpaceEditor',
-        meta: { noCache: true, title: '编辑广告位', activeMenu: '/interact/advertisement'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditAdvSpace'), activeMenu: '/interact/advertisement'}
       },
       {
         path: 'ad/editor',
         component: () => import('@/views/cms/ad/advertisementEditor'),
         name: 'CMSAdvertisementEditor',
-        meta: { noCache: true, title: '编辑广告', activeMenu: '/interact/advertisement'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditAdv'), activeMenu: '/interact/advertisement'}
       }
     ]
   },
@@ -167,7 +167,7 @@ export const constantRoutes = [
         path: 'link/list',
         component: () => import('@/views/cms/link/link'),
         name: 'CmsLink',
-        meta: { title: '友链列表', activeMenu: '/interact/link'}
+        meta: { title: i18n.t('CMS.FriendLink.RouteLinkList'), activeMenu: '/interact/link'}
       }
     ]
   }
