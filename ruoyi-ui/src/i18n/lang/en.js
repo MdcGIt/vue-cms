@@ -47,6 +47,7 @@ export default {
     Move: "Move",
     Copy: "Copy",
     Sort: "Sort",
+    Details: "Details",
     Remark: 'Remark',
     CreateTime: 'Create Time',
     CreateBy: 'Create User',
@@ -79,7 +80,14 @@ export default {
     Loading: 'Loading...',
     DownloadFailed: 'Download failed, please contact the administrator.',
     InvalidFileSuffix: 'Unsupport file format, only "{0}" is supported.',
-    SelectFirst: 'Please select first.'
+    SelectFirst: 'Please select first.',
+    RuleTips: {
+      NotEmpty: "Cannot be empty.",
+      Email: "Invalid email.",
+      Url: "Invalid url, must starts with http(s)://.",
+      Code: "Only 'A-Za-z', '0-9' and '_' can be used.",
+      PhoneNumber: "Invalid phone number."
+    }
   },
   Router: {
     Home: 'Home',
@@ -691,6 +699,10 @@ export default {
   },
   CMS: {
     ContentCore: {
+      ContentType: "Content Type",
+      CatalogType: "Catalog Type",
+      InternalDataType: "Internal Data Type",
+      ResourceType: "Resource Type",
       InternalUrl: "Internal Url",
       SelectCatalog: "Select Catalog",
       SelectContent: "Select Content",
@@ -1140,13 +1152,52 @@ export default {
         FieldMappingName: "Table column name cannot be empty.",
         FieldMappingUsed: "The table column alreay used.",
       }
+    },
+    FriendLink: {
+      GroupName: "Name",
+      GroupCode: "Code",
+      AddTitle: "Add friend-link group",
+      EditTitle: "Edit friend-link group",
+      GoBack: "Go Back",
+      LinkName: "Name",
+      LinkUrl: "URL",
+      AddLinkTitle: "Add friend-link",
+      EditLinkTitle: "Edit friend-link",
+      Placeholder: {
+        GroupQuery: "Input group name/code",
+        LinkQuery: "Input name/url"
+      }
+    },
+    ESIndex: {
+      RebuildAll: "Re-build All Indices",
+      Query: "Input search query",
+      OnlyTitle: "Only Match Title",
+      IndexDetails: "Index Details",
+      ProgressTitle: "Create index task",
     }
   },
   Stat: {
-    VisitTrend: "Visit Trend",
-    VisitLocation: "Visit Location",
-    Location: "Location",
-    Ratio: "Ratio",
+    Site: {
+      PageView: "PV",
+      UserView: "UV",
+      IPView: "IP",
+      AvgVisitTime: "Visit Time",
+      VisitCount: "Visit Count",
+      VisitTrend: "Visit Trend",
+      Gran: "Time Granularity",
+      GranHour: "Hour",
+      GranDay: "Day",
+      GranWeek: "Week",
+      GranMonth: "Month",
+      Top10EntryPage: "Top10 Entry Page",
+      URL: "URL",
+      Ratio: "Ratio",
+      VisitLocation: "Visit Location",
+      Location: "Location",
+      NoSite: "No site!",
+      UnitSecond: "(s)",
+      TrendCharts: "Trend Charts",
+    },
     Adv: {
       AdName: "Ad Name",
       Location: "Location",
@@ -1159,6 +1210,88 @@ export default {
       ClickRatio: "Click Ratio",
       Trend: "Trend",
       TrendDialogTitle: "Trend charts"
+    }
+  },
+  Comment: {
+    AuditPass: "Pass",
+    AuditNotPass: "Not Pass",
+    SourceType: "Source Type",
+    SourceId: "Source ID",
+    UID: "User ID",
+    AuditStatus: "Status",
+    Content: "Content",
+    LikeCount: "Like",
+    ReplyCount: "Reply",
+    Time: "Time",
+    Location: "Location",
+    ClientType: "Client Type",
+    ReplyContent: "Reply Content",
+    ReplyTime: "Time",
+    LikeList: "Like List",
+    LikeTime: "Time"
+  },
+  Vote: {
+    Title: "Title",
+    Code: "Code",
+    CodeTip: "Only letters, numbers and underline can be used.",
+    Status: "Status",
+    TimeRange: "Time Range",
+    Total: "Total",
+    UserType: "User Type",
+    ViewType: "Result View",
+    DayAndTotalLimit: "Day/Total Limit",
+    EidtSubjects: "Subjects",
+    DayLimit: "Day Limit",
+    TotalLimit: "Total Limit",
+    AddVoteTitle: "Add Vote",
+    EditVoteTitle: "Edit Vote",
+    ItemTotal: "Poll",
+    InputItemTip: "The input subject no items required.",
+    Subject: "Subject",
+    SubjectType: "Type",
+    SubjectTitle: "Title",
+    InsertSubject: "Insert",
+    SubjectItemType: "Type",
+    InsertSubjectItem: "Insert",
+    AddSubjectItem: "Add",
+    AddSubjectTitle: "Add Vote Subject",
+    EditSubjectTitle: "Edit Vote Subject"
+  },
+  Member: {
+    UID: "UID",
+    UserName: "User Name",
+    NickName: "Nick Name",
+    PhoneNumber: "Phone Number",
+    Password: "Password",
+    Birthday: "Birthday",
+    Status: "Status",
+    Source: "Source",
+    RegistTime: "Regist Time",
+    LastLoginTime: "Last Login Time",
+    ResetPwd: "Rest Password",
+    InputPwd: "Input {0}'s new password",
+    RestPwdSuccess: "Success, the new password is '{0}'.",
+    AddTitle: "Add member",
+    EditTitle: "Edit member",
+    LevelType: "Level Type",
+    Level: {
+      Type: "Type",
+      Level: "Level",
+      Name: "Name",
+      NextNeedExp: "Next Need Exp",
+      AddTitle: "Add level config",
+      EditTitle: "Edit level config"
+    },
+    ExpOpType: "Exp Operation Type",
+    ExpOpNoLimit: "No Limit",
+    Exp: "Exp",
+    ExpOpDayLimit: "Day Limit",
+    ExpOpTotalLimit: "Total Limit",
+    AddExpOpTitle: "Add exp config",
+    EditExpOpTitle: "Edit exp config",
+    RuleTips: {
+      UserName: "Must starts with letter and only letters, numbers and underline can be useds.",
+      Member: "The username phonenumber and email cannot all be empty."
     }
   }
 };

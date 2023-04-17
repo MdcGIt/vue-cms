@@ -41,7 +41,7 @@
           <el-input
             v-model="queryParams.title"
             clearable
-            placeholder="请输入标题"
+            :placeholder="$t('Vote.Title')"
             style="width: 240px"
             @keyup.enter.native="handleQuery"
           />
@@ -50,7 +50,7 @@
           <el-select
             v-model="queryParams.status"
             clearable
-            placeholder="状态"
+            :placeholder="$t('Vote.Status')"
             style="width: 100px"
           >
             <el-option
@@ -73,34 +73,32 @@
     <el-table v-loading="loading" :data="voteList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" prop="voteId" width="140" />
-      <el-table-column label="编码" prop="code" width="120" :show-overflow-tooltip="true" />
-      <el-table-column label="标题" :show-overflow-tooltip="true">
+      <el-table-column :label="$t('Vote.Code')" prop="code" width="120" :show-overflow-tooltip="true" />
+      <el-table-column :label="$t('Vote.Title')" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <el-link type="primary"
-                    @click="handleVoteSubject(scope.row)"
-                    class="link-type">
+          <el-link type="primary" @click="handleVoteSubject(scope.row)" class="link-type">
             <span>{{ scope.row.title }}</span>
           </el-link>
         </template>
       </el-table-column>
-      <el-table-column label="时间" align="center" width="300">
+      <el-table-column :label="$t('Vote.TimeRange')" align="center" width="300">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startTime) }} - {{ parseTime(scope.row.endTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="80">
+      <el-table-column :label="$t('Vote.Status')" align="center" width="80">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.VoteStatus" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="参与数" align="center" prop="total" width="80" />
-      <el-table-column label="用户类型" align="center" prop="userType" width="100" />
-      <el-table-column label="结果类型" align="center" width="100">
+      <el-table-column :label="$t('Vote.Total')" align="center" prop="total" width="80" />
+      <el-table-column :label="$t('Vote.UserType')" align="center" prop="userType" width="100" />
+      <el-table-column :label="$t('Vote.ViewType')" align="center" width="100">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.VoteViewType" :value="scope.row.viewType"/>
         </template>
       </el-table-column>
-      <el-table-column label="日/总上限" align="center" width="140">
+      <el-table-column :label="$t('Vote.DayAndTotalLimit')" align="center" width="140">
         <template slot-scope="scope">
           {{ scope.row.dayLimit + " / " + scope.row.totalLimit }}
         </template>
@@ -110,10 +108,10 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-s-grid"
             @click="handleVoteSubject(scope.row)"
             v-hasPermi="['vote:add', 'vote:edit']"
-          >编辑主题</el-button>
+          >{{ $t('Vote.EidtSubjects') }}</el-button>
           <el-button
             size="mini"
             type="text"
@@ -142,29 +140,29 @@
 
     <el-dialog :title="title" :visible.sync="open" width="560px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="标题" prop="title">
+        <el-form-item :label="$t('Vote.Title')" prop="title">
           <el-input v-model="form.title" style="width:400px" />
         </el-form-item>
         <el-form-item prop="code">
           <span slot="label">
-            <el-tooltip content="只能使用大小写字母、数字和下划线组合" placement="top">
+            <el-tooltip :content="$t('Vote.CodeTip')" placement="top">
               <i class="el-icon-question"></i>
             </el-tooltip>
-            编码
+            {{ $t('Vote.Code') }}
           </span>
           <el-input v-model="form.code" style="width:400px" />
         </el-form-item>
-        <el-form-item label="时间" prop="timeRange">
+        <el-form-item :label="$t('Vote.TimeRange')" prop="timeRange">
           <el-date-picker
             v-model="form.timeRange"
             type="datetimerange"
             value-format="yyyy-MM-dd HH:mm:ss"
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间">
+            range-separator="-"
+            :start-placeholder="$t('Common.BeginTime')"
+            :end-placeholder="$t('Common.EndTime')">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="用户类型">
+        <el-form-item :label="$t('Vote.UserType')">
           <el-radio-group v-model="form.userType">
             <el-radio
               v-for="ut in userTypeOptions"
@@ -173,13 +171,13 @@
             >{{ ut.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="日次数上限" prop="totalLimit">
+        <el-form-item :label="$t('Vote.DayLimit')" prop="totalLimit">
           <el-input-number v-model="form.dayLimit" controls-position="right" :min="1" />
         </el-form-item>
-        <el-form-item label="总次数上限" prop="totalLimit">
+        <el-form-item :label="$t('Vote.TotalLimit')" prop="totalLimit">
           <el-input-number v-model="form.totalLimit" controls-position="right" :min="1" />
         </el-form-item>
-        <el-form-item label="结果查看方式" prop="viewType">
+        <el-form-item :label="$t('Vote.ViewType')" prop="viewType">
           <el-radio-group v-model="form.viewType">
             <el-radio
               v-for="dict in dict.type.VoteViewType"
@@ -188,7 +186,7 @@
             >{{ dict.label }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item :label="$t('Vote.Status')">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in dict.type.VoteStatus"
@@ -210,6 +208,7 @@
 </template>
 
 <script>
+import { codeValidator } from '@/utils/validate'
 import { getVoteUserTypes, getVoteList, getVoteDetail, addVote, updateVote, deleteVotes } from "@/api/vote/vote";
 
 export default {
@@ -238,31 +237,31 @@ export default {
       form: {},
       rules: {
         title: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, validator: codeValidator, trigger: "blur" }
         ],
         startTime: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         endTime: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         userType: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         dayLimit: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         totalLimit: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         status: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         resultViewType: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ]
       }
     };
@@ -318,7 +317,7 @@ export default {
         totalLimit: 1
       }
       this.open = true;
-      this.title = "新增调查投票";
+      this.title = this.$t('Vote.AddVoteTitle');
     },
     handleUpdate(row) {
       this.reset();
@@ -327,7 +326,7 @@ export default {
         this.form = response.data;
         this.form.timeRange = [ this.form.startTime, this.form.endTime ]
         this.open = true;
-        this.title = "编辑调查投票";
+      this.title = this.$t('Vote.EditVoteTitle');
       });
     },
     handleVoteSubject: function(row) {

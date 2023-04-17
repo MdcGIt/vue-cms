@@ -8,7 +8,7 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              浏览量（PV）
+              {{ $t('Stat.Site.PageView') }}
             </div>
             {{ sum.pv }}
           </div>
@@ -21,7 +21,7 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              访客数（UV）
+              {{ $t('Stat.Site.UserView') }}
             </div>
             {{ sum.uv }}
           </div>
@@ -34,7 +34,7 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              IP数
+              {{ $t('Stat.Site.IPView') }}
             </div>
             {{ sum.ip }}
           </div>
@@ -47,9 +47,9 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              平均访问时长
+              {{ $t('Stat.Site.AvgVisitTime') }}
             </div>
-            {{ sum.avgVisitTime }} 秒
+            {{ sum.avgVisitTime }} {{ $t('Stat.Site.UnitSecond') }}
           </div>
         </div>
       </el-col>
@@ -89,7 +89,7 @@
     <el-row :gutter="10" class="mb8">
         <el-card v-loading="loading" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>访问趋势</span>
+            <span>{{ $t('Stat.Site.VisitTrend') }}</span>
           </div>
           <line-chart :chart-data="lineChartData" />
         </el-card>
@@ -99,11 +99,11 @@
       <el-col :span="12">
         <el-card v-loading="loading" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>Top10入口页面</span>
+            <span>{{ $t('Stat.Site.Top10EntryPage') }}</span>
           </div>
           <el-table v-loading="loadingOther" :data="top10LandingPage" height="405" size="mini">
             <el-table-column 
-              label="页面地址"
+              :label="$t('Stat.Site.URL')"
               align="left"
               prop="name" />
             <el-table-column 
@@ -112,7 +112,7 @@
               width="70"
               prop="pv_count" />
             <el-table-column 
-              label="占比"
+              :label="$t('Stat.Site.Ratio')"
               align="right"
               width="70"
               prop="ratio">
@@ -126,11 +126,11 @@
       <el-col :span="12">
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
-            <span>地域分布</span>
+            <span>{{ $t('Stat.Site.VisitLocation') }}</span>
           </div>
           <el-table v-loading="loadingDistrict" :data="districtList" height="405" size="mini">
             <el-table-column 
-              label="区域"
+              :label="$t('Stat.Site.Location')"
               align="center"
               prop="name" />
             <el-table-column 
@@ -138,7 +138,7 @@
               align="center"
               prop="pv_count" />
             <el-table-column 
-              label="占比"
+              :label="$t('Stat.Site.Ratio')"
               align="center"
               prop="ratio">
               <template slot-scope="scope">
@@ -172,7 +172,7 @@ export default {
       },
       pickerOptions: {
         shortcuts: [{
-          text: '最近一周',
+          text: this.$t('Common.LastWeek'),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -180,7 +180,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: '最近一个月',
+          text: this.$t('Common.LastMonth'),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -188,7 +188,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: '最近三个月',
+          text: this.$t('Common.LastThreeMonth'),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -233,7 +233,7 @@ export default {
     },
     loadSiteTrendOverviewDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
+        this.$modal.msgWarning(this.$t('Stat.Site.NoSite'));
         return;
       }
       this.loading = true;
@@ -253,7 +253,7 @@ export default {
     },
     loadSiteDistrictOverviewDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
+        this.$modal.msgWarning(this.$t('Stat.Site.NoSite'));
         return;
       }
       this.loadingDistrict = true;
@@ -266,7 +266,7 @@ export default {
     },
     loadSiteOtherOverviewDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
+        this.$modal.msgWarning(this.$t('Stat.Site.NoSite'));
         return;
       }
       this.loadingOther = true;
@@ -291,7 +291,6 @@ export default {
   }
 };
 </script>
-
 <style lang="scss" scoped>
 .panel-group {
   margin-top: 18px;

@@ -90,7 +90,7 @@
                   size="mini"
                   type="text"
                   icon="el-icon-edit"
-                  @click="handleEdit(scope.row)">编辑</el-button>
+                  @click="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-button>
                 <el-button 
                   size="mini"
                   type="text"

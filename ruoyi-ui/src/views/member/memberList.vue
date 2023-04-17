@@ -36,7 +36,7 @@
           <el-input
             v-model="queryParams.userName"
             clearable
-            placeholder="用户名"
+            :placeholder="$t('Member.UserName')"
             style="width: 160px"
             @keyup.enter.native="handleQuery"
           />
@@ -45,7 +45,7 @@
           <el-input
             v-model="queryParams.nickName"
             clearable
-            placeholder="昵称"
+            :placeholder="$t('Member.NickName')"
             style="width: 160px"
             @keyup.enter.native="handleQuery"
           />
@@ -63,7 +63,7 @@
           <el-input
             v-model="queryParams.phoneNumber"
             clearable
-            placeholder="手机号"
+            :placeholder="$t('Member.PhoneNumber')"
             style="width: 160px"
             @keyup.enter.native="handleQuery"
           />
@@ -72,7 +72,7 @@
           <el-select 
             v-model="queryParams.status"
             clearable
-            placeholder="状态"
+            :placeholder="$t('Member.Status')"
             style="width: 110px">
             <el-option 
               v-for="dict in dict.type.MemberStatus"
@@ -99,83 +99,90 @@
         width="55"
         align="center" />
       <el-table-column 
-        label="会员ID"
+        :label="$t('Member.UID')"
         align="center"
         :show-overflow-tooltip="true"
         width="140"
         prop="memberId" />
       <el-table-column 
-        label="用户名"
+        :label="$t('Member.UserName')"
         align="center"
         :show-overflow-tooltip="true"
         prop="userName" />
       <el-table-column 
-        label="昵称"
+        :label="$t('Member.NickName')"
         align="center"
         :show-overflow-tooltip="true"
         prop="nickName" />
       <el-table-column 
-        label="邮箱"
+        label="Email"
         align="center"
         :show-overflow-tooltip="true"
         prop="email" />
       <el-table-column 
-        label="手机号"
+        :label="$t('Member.PhoneNumber')"
         align="center"
         :show-overflow-tooltip="true"
         prop="phoneNumber" />
-      <el-table-column label="状态" align="center" prop="status" width="80">
+      <el-table-column :label="$t('Member.Status')" align="center" prop="status" width="80">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.MemberStatus" :value="scope.row.status"/>
           </template>
         </el-table-column>
       <el-table-column 
-        label="来源"
+        :label="$t('Member.Source')"
         align="center"
         width="100"
         :show-overflow-tooltip="true"
         prop="sourceType" />
-      <el-table-column label="注册时间"
-                       align="center"
-                       prop="createTime"
-                       width="180">
+      <el-table-column 
+        :label="$t('Member.RegistTime')"
+        align="center"
+        prop="createTime"
+        width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="最近登录"
-                       align="center"
-                       prop="createTime"
-                       width="180">
+      <el-table-column 
+        :label="$t('Member.LastLoginTime')"
+        align="center"
+        prop="createTime"
+        width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.lastLoginTime) }} - {{ scope.row.lastLoginIp }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Common.Operation')"
-                       align="center"
-                       width="180" 
-                       class-name="small-padding fixed-width">
+      <el-table-column  
+        :label="$t('Common.Operation')"
+        align="center"
+        width="220" 
+        class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-key"
-                     @click="handleResetPwd(scope.row)">重置密码</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-key"
+            @click="handleResetPwd(scope.row)">{{ $t('Member.ResetPwd') }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="getList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList" />
 
 
     <!-- 添加或修改用户配置对话框 -->
@@ -185,26 +192,26 @@
       :close-on-click-modal="false" 
       width="600px" 
       append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item v-if="form.memberId == undefined" label="用户名" prop="userName">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item v-if="form.memberId == undefined" :label="$t('Member.UserName')" prop="userName">
           <el-input v-model="form.userName" :maxlength="30" />
         </el-form-item>
-        <el-form-item label="昵称" prop="nickName">
+        <el-form-item :label="$t('Member.NickName')" prop="nickName">
           <el-input v-model="form.nickName" :maxlength="30" />
         </el-form-item>
-        <el-form-item v-if="form.memberId == undefined" label="密码" prop="password">
+        <el-form-item v-if="form.memberId == undefined" :label="$t('Member.Password')" prop="password">
           <el-input v-model="form.password" type="password" :maxlength="32" show-password/>
         </el-form-item>
         <el-form-item label="Email" prop="email">
           <el-input v-model="form.email" :maxlength="30" />
         </el-form-item>
-        <el-form-item label="手机号" prop="phoneNumber">
+        <el-form-item :label="$t('Member.PhoneNumber')" prop="phoneNumber">
           <el-input v-model="form.phoneNumber" :maxlength="11" />
         </el-form-item>
-        <el-form-item label="出生日期" prop="birthday">
+        <el-form-item :label="$t('Member.Birthday')" prop="birthday">
           <el-date-picker v-model="form.birthday" type="date"></el-date-picker>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item :label="$t('Member.Status')">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in dict.type.MemberStatus"
@@ -225,6 +232,7 @@
   </div>
 </template>
 <script>
+import { isBlank, validEmail, validPhoneNumber } from '@/utils/validate';
 import { getMemberList, getMemberDetail, addMember, updateMember, deleteMembers, resetMemberPassword } from "@/api/member/member";
 
 export default {
@@ -232,8 +240,22 @@ export default {
   dicts: [ 'MemberStatus' ],
   data () {
     const validateMember = (rule, value, callback) => {
-        if (this.form.userName == '' && this.form.phoneNumber == '' && this.form.email == '') {
-          callback(new Error("用户名/手机号/Email不能全为空"));
+        if (isBlank(this.form.userName) && isBlank(this.form.phoneNumber) && isBlank(this.form.email)) {
+          callback(new Error(this.$t('Member.RuleTips.Member')));
+        } else {
+          callback();
+        }
+      };
+    const emailValidator = (rule, value, callback) => {
+        if (!isBlank(value) && !validEmail(value)) {
+          callback(new Error(this.$t('Common.RuleTips.Email')));
+        } else {
+          callback();
+        }
+      };
+    const phoneNumberValidator = (rule, value, callback) => {
+        if (!isBlank(value) && !validPhoneNumber(value)) {
+          callback(new Error(this.$t('Common.RuleTips.Email')));
         } else {
           callback();
         }
@@ -270,32 +292,24 @@ export default {
         userName: [,
           {
             pattern: /^[A-Za-z][A-Za-z0-9_]+$/,
-            message: "必须以字母开头，且只能为（大小写字母，数字，下滑线）",
+            message: this.$t('Member.RuleTips.UserName'),
             trigger: "blur"
           },
           { validator: validateMember }
         ],
         password: [
-          { required: true, message: "密码不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         email: [
-          { validator: validateMember },
-          {
-            type: "email",
-            message: "Email格式错误",
-            trigger: "blur"
-          }
+          { validator: emailValidator, trigger: "blur" },
+          { validator: validateMember, trigger: "blur" }
         ],
         phoneNumber: [
-          { validator: validateMember },
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "手机号格式错误",
-            trigger: "blur"
-          }
+          { validator: phoneNumberValidator, trigger: "blur" },
+          { validator: validateMember, trigger: "blur" }
         ],
         status: [
-          { required: true, message: "状态不能为空", trigger: "blur" },
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" },
         ]
       }
     };
@@ -332,7 +346,7 @@ export default {
     handleAdd () {
       this.reset();
       this.open = true;
-      this.title = "添加会员信息";
+      this.title = this.$t('Member.AddTitle');
     },
     handleUpdate (row) {
       this.reset();
@@ -340,7 +354,7 @@ export default {
       getMemberDetail(memberId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改会员信息";
+      this.title = this.$t('Member.EditTitle');
       });
     },
     handleCancel () {
@@ -352,13 +366,13 @@ export default {
         if (valid) {
           if (this.form.memberId != undefined) {
             updateMember(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
+              this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
               this.open = false;
               this.getList();
             });
           } else {
             addMember(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess(this.$t('Common.AddSuccess'));
               this.open = false;
               this.getList();
             });
@@ -368,21 +382,21 @@ export default {
     },
     handleDelete (row) {
       const memberIds = row.memberId ? [ row.memberId ] : this.ids;
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteMembers(memberIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     },
     handleResetPwd(row) {
-      this.$prompt("请输入" + row.userName + "的新密码", this.$t('Common.Tips'), {
+      this.$prompt(this.$t('Member.InputPwd', [ row.userName ]), this.$t('Common.Tips'), {
         confirmButtonText: this.$t('Common.Confirm'),
         cancelButtonText: this.$t('Common.Cancel'),
         closeOnClickModal: false
       }).then(({ value }) => {
           resetMemberPassword(row.memberId, value).then(response => {
-            this.$modal.msgSuccess('修改成功，新密码是：' + value);
+            this.$modal.msgSuccess(this.$t('Member.RestPwdSuccess', [ value ]));
           });
         }).catch(() => {});
     },

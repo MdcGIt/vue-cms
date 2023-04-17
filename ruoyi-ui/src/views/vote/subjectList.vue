@@ -9,7 +9,7 @@
           icon="el-icon-minus"
           size="mini"
           @click="handleTableExpand"
-        >收起</el-button>
+        >{{ $t('Common.Collapse') }}</el-button>
         <el-button
           v-else
           type="primary"
@@ -17,7 +17,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleTableExpand"
-        >展开</el-button>
+        >{{ $t('Common.Expand') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -88,32 +88,28 @@
                 {{ scope2.row.content }}
               </template>
             </el-table-column>
-            <el-table-column lable="票数" width="200">
+            <el-table-column :lable="$t('Vote.ItemTotal')" width="200">
               <template slot-scope="scope2">
-                票数：{{ scope2.row.total }}
+                {{ $t('Vote.ItemTotal') }}：{{ scope2.row.total }}
                 <el-progress :percentage="itemProgressPercent(scope2.row)"></el-progress> 
               </template>
             </el-table-column>
           </el-table>
           <div v-else style="background-color: #f4f4f5;color: #909399;font-size:12px;line-height: 30px;padding-left:10px;">
-            <i class="el-icon-info mr5"></i>输入类型主题无需配置选项
+            <i class="el-icon-info mr5"></i>{{ $t('Vote.InputItemTip') }}
           </div>
         </template>
       </el-table-column>
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column
-        type="index"
-        label="序号"
-        width="50">
+      <el-table-column type="index" :label="$t('Common.RowNo')" width="50">
       </el-table-column>
-      <el-table-column
-        label="主题">
+      <el-table-column :label="$t('Vote.Subject')">
         <template slot-scope="scope">
           <el-link v-if="scope.row.type!='input'" type="primary" @click="handleItemList(scope.row)">{{ scope.row.title }}</el-link>
           <span v-else>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" prop="type" width="280">
+      <el-table-column :label="$t('Vote.SubjectType')" align="center" prop="type" width="140">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.VoteSubjectType" :value="scope.row.type"/>
         </template>
@@ -128,13 +124,13 @@
             size="mini"
             icon="el-icon-plus"
             v-hasPermi="['vote:add', 'vote:edit']"
-            @click="handleAddVoteSubject(scope.row)">插入主题</el-button>
+            @click="handleAddVoteSubject(scope.row)">{{ $t('Vote.InsertSubject') }}</el-button>
           <el-button
             plain
             size="mini"
             icon="el-icon-edit"
             v-hasPermi="['vote:add', 'vote:edit']"
-            @click="handleEditVoteSubject(scope.row)">编辑</el-button>
+            @click="handleEditVoteSubject(scope.row)">{{ $t('Common.Edit') }}</el-button>
           <el-button
             plain
             size="mini"
@@ -148,14 +144,15 @@
 
     <el-dialog :title="title" :visible.sync="open" width="560px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="标题" prop="title">
+        <el-form-item :label="$t('Vote.SubjectTitle')" prop="title">
           <el-input v-model="form.title" style="width:400px" />
         </el-form-item>
-        <el-form-item label="类型" prop="type">
+        <el-form-item :label="$t('Vote.SubjectType')" prop="type">
           <el-radio-group v-model="form.type">
-            <el-radio v-for="dict in dict.type.VoteSubjectType"
-                              :key="dict.value"
-                              :label="dict.value">{{dict.label}}</el-radio>
+            <el-radio 
+              v-for="dict in dict.type.VoteSubjectType"
+              :key="dict.value"
+              :label="dict.value">{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -208,12 +205,12 @@
               @click="handleDownItem(scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column label="序号" type="index" align="center" width="80">
+        <el-table-column :label="$t('Common.RowNo')" type="index" align="center" width="80">
           <template slot-scope="scope">
             {{ subjectItemIndex(scope.$index) }}
           </template>
         </el-table-column>
-        <el-table-column label="类型" width="120">
+        <el-table-column :label="$t('Vote.SubjectItemType')" width="120">
           <template slot-scope="scope">
             <el-select v-model="scope.row.type">
               <el-option
@@ -225,7 +222,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="详情">
+        <el-table-column :label="$t('Comment.Details')">
           <template slot-scope="scope">
             <el-input v-if="scope.row.type==='Text'" type="text" v-model="scope.row.content"></el-input>
           </template>
@@ -237,7 +234,7 @@
               type="primary"
               icon="el-icon-plus"
               size="mini"
-              @click="handleAddItem(scope.$index)">插入</el-button>
+              @click="handleAddItem(scope.$index)">{{ $t('Vote.InsertSubjectItem') }}</el-button>
             <el-button
               plain
               type="danger"
@@ -256,7 +253,7 @@
             size="mini"
             style="float:right"
             @click="handleAddItem(itemList.length)"
-          >添加选项</el-button>
+          >{{ $t('Vote.AddSubjectItem') }}</el-button>
         </el-col>
       </el-row>
     </el-drawer>
@@ -288,10 +285,10 @@ export default {
       form: {},
       rules: {
         title: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         type: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
       },
       openSubjectItems: false,
@@ -364,14 +361,14 @@ export default {
         nextSubjectId: row.subjectId || undefined
       }
       this.open = true;
-      this.title = "新增主题信息";
+      this.title = this.$t('AddSubjectTitle');
     },
     handleEditVoteSubject(row) {
       this.reset();
       const subjectId = row.subjectId || this.ids[0];
       getVoteSubjectDetail(subjectId).then(response => {
         this.form = response.data;
-        this.title = "编辑主题信息";
+        this.title = this.$t('EditSubjectTitle');
         this.open = true;
       });
     },

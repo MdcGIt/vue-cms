@@ -15,7 +15,7 @@
             <el-button 
               icon="el-icon-refresh"
               size="mini"
-              @click="handleRebuildIndex">重建全站索引</el-button>
+              @click="handleRebuildIndex">{{ $t('CMS.ESIndex.RebuildAll') }}</el-button>
           </el-col>
         </el-row>
       </el-col>
@@ -27,22 +27,20 @@
           size="mini"
           class="el-form-search">
           <el-form-item prop="contentType">
-            <el-select v-model="queryParams.contentType"
-                        placeholder="内容类型"
-                        clearable
-                        style="width: 110px">
-              <el-option v-for="ct in contentTypeOptions"
-                          :key="ct.id"
-                          :label="ct.name"
-                          :value="ct.id" />
+            <el-select v-model="queryParams.contentType" :placeholder="$t('CMS.ContentCore.ContentType')" clearable style="width: 120px">
+              <el-option 
+                v-for="ct in contentTypeOptions"
+                :key="ct.id"
+                :label="ct.name"
+                :value="ct.id" />
             </el-select>
           </el-form-item>
           <el-form-item prop="query">
-            <el-input v-model="queryParams.query" placeholder="请输入搜索词">
+            <el-input v-model="queryParams.query" :placeholder="$t('CMS.ESIndex.Query')">
             </el-input>
           </el-form-item>
           <el-form-item prop="onlyTitle">
-            <el-checkbox v-model="queryParams.onlyTitle" label="仅匹配标题" border></el-checkbox>
+            <el-checkbox v-model="queryParams.onlyTitle" :label="$t('CMS.ESIndex.OnlyTitle')" border></el-checkbox>
           </el-form-item>
           <el-form-item>
             <el-button-group>
@@ -59,68 +57,41 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading"
-              :data="contentList"
-              @selection-change="handleSelectionChange">
-      <el-table-column type="selection"
-                       width="55"
-                       align="center" />
-      <el-table-column label="ID"
-                       align="center"
-                       prop="contentId"
-                       width="180" />
-      <el-table-column label="栏目"
-                       align="center"
-                       width="180"
-                       prop="catalogName" />
-      <el-table-column label="标题"
-                       align="left"
-                       prop="title">
+    <el-table v-loading="loading" :data="contentList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="contentId" width="180" />
+      <el-table-column :label="$t('CMS.Content.Catalog')" align="center" width="180" prop="catalogName" />
+      <el-table-column :label="$t('CMS.Content.Title')" align="left" prop="title">
         <template slot-scope="scope">
           <span v-html="scope.row.title"></span>
         </template>
       </el-table-column>
-      <el-table-column label="类型"
-                        width="110"
-                        align="center"
-                        prop="contentType"
-                        :formatter="contentTypeFormat" />
-      <el-table-column label="状态"
-                        width="110"
-                        align="center">
+      <el-table-column :label="$t('CMS.Content.ContentType')" width="110" align="center" prop="contentType" :formatter="contentTypeFormat" />
+      <el-table-column :label="$t('CMS.Content.Status')" width="110" align="center">
         <template slot-scope="scope">
           <el-tag :type="statusTagType(scope.row.status)">{{ statusFormat(scope.row, 'status') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="发布时间"
-                       align="center"
-                       prop="_publishDate"
-                       width="180">
+      <el-table-column :label="$t('CMS.Content.PublishDate')" align="center" prop="_publishDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row._publishDate) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
-                       align="center"
-                       prop="_createTime"
-                       width="180">
+      <el-table-column :label="$t('Common.CreateTime')" align="center" prop="_createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row._createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Common.Operation')"
-                       align="center"
-                       width="180" 
-                       class-name="small-padding fixed-width">
+      <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-search"
-                     @click="handleShowDetail(scope.row)">详情</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+          <el-button 
+            type="text"
+            icon="el-icon-search"
+            @click="handleShowDetail(scope.row)">{{ $t("Common.Details") }}</el-button>
+          <el-button 
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -131,13 +102,14 @@
                 @pagination="getList" />
 
     <!-- 添加或修改资源对话框 -->
-    <el-dialog title="索引详情"
-               :visible.sync="open"
-               width="960px"
-               append-to-body>
+    <el-dialog 
+      :title="$t('CMS.ESIndex.IndexDetails')"
+      :visible.sync="open"
+      width="960px"
+      append-to-body>
       <el-row class="data_row" v-for="(value, key, index) in showData" :key="index">
         <el-col :span="4" class="data_row_left">
-          {{ key }}：
+          {{ key }}
         </el-col>
         <el-col :span="20">
           <span v-if="isHtmlField(key)" v-html="value"></span>
@@ -146,11 +118,11 @@
       </el-row>
       <div slot="footer"
            class="dialog-footer">
-        <el-button @click="cancel">关 闭</el-button>
+        <el-button @click="cancel">{{ $t('Common.Close') }}</el-button>
       </div>
     </el-dialog>
     <!-- 进度条 -->
-    <cms-progress title="索引任务" :open.sync="openProgress" :taskId="taskId" @close="handleProgressClose"></cms-progress>
+    <cms-progress :title="$t('CMS.ESIndex.ProgressTitle')" :open.sync="openProgress" :taskId="taskId" @close="handleProgressClose"></cms-progress>
   </div>
 </template>
 <script>
@@ -259,11 +231,11 @@ export default {
     },
     handleDelete (row) {
       const contentIds = row.contentId ? [ row.contentId ] : this.ids;
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteContentIndex(contentIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     },
     handleRebuildIndex() {

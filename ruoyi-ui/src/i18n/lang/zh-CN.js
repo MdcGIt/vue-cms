@@ -47,6 +47,7 @@ export default {
     Move: "移动",
     Copy: "复制",
     Sort: "排序",
+    Details: "详情",
     Remark: '备注',
     CreateTime: '创建时间',
     CreateBy: '创建人',
@@ -79,7 +80,14 @@ export default {
     Loading: '正在加载，请稍后',
     DownloadFailed: '下载文件出现错误，请联系管理员！',
     InvalidFileSuffix: '文件格式错误，仅支持：{0}',
-    SelectFirst: '请先选择至少一条记录'
+    SelectFirst: '请先选择至少一条记录',
+    RuleTips: {
+      NotEmpty: "不能为空",
+      Email: "Email格式错误",
+      Url: "URL链接格式错误，必须以http(s)://开头",
+      Code: "只能使用大小写字母、数字和下划线",
+      PhoneNumber: "手机号码格式错误"
+    }
   },
   Router: {
     Home: '首页',
@@ -691,6 +699,10 @@ export default {
   },
   CMS: {
     ContentCore: {
+      ContentType: "内容类型",
+      CatalogType: "栏目类型",
+      InternalDataType: "内部数据类型",
+      ResourceType: "资源类型",
       InternalUrl: "内部链接",
       SelectCatalog: "选择栏目",
       SelectContent: "选择内容",
@@ -1140,13 +1152,52 @@ export default {
         FieldMappingName: "数据表字段不能为空",
         FieldMappingUsed: "数据表字段已被占用",
       }
+    },
+    FriendLink: {
+      GroupName: "分组名称",
+      GroupCode: "分组编码",
+      AddTitle: "添加友情链接分组",
+      EditTitle: "编辑友情链接分组",
+      GoBack: "返回",
+      LinkName: "名称",
+      LinkUrl: "链接",
+      AddLinkTitle: "添加友情链接",
+      EditLinkTitle: "编辑友情链接",
+      Placeholder: {
+        GroupQuery: "输入分组名称/编码",
+        LinkQuery: "输入友链名称/链接查询"
+      }
+    },
+    ESIndex: {
+      RebuildAll: "重建全站索引",
+      Query: "输入搜索词",
+      OnlyTitle: "仅匹配标题",
+      IndexDetails: "索引详情",
+      ProgressTitle: "创建索引任务",
     }
   },
   Stat: {
-    VisitTrend: "访问趋势",
-    VisitLocation: "地域分布",
-    Location: "地域",
-    Ratio: "占比",
+    Site: {
+      PageView: "浏览量（PV）",
+      UserView: "访客数（UV）",
+      IPView: "IP数",
+      AvgVisitTime: "平均访问时长",
+      VisitCount: "访问次数",
+      VisitTrend: "访问趋势",
+      Gran: "时间粒度",
+      GranHour: "按小时",
+      GranDay: "按天",
+      GranWeek: "按周",
+      GranMonth: "按月",
+      Top10EntryPage: "TOP10入口页面",
+      URL: "URL地址",
+      Ratio: "占比",
+      VisitLocation: "地域分布",
+      Location: "地域",
+      NoSite: "无可用站点数据",
+      UnitSecond: "秒",
+      TrendCharts: "趋势分析",
+    },
     Adv: {
       AdName: "广告名称",
       Location: "地域",
@@ -1159,6 +1210,88 @@ export default {
       ClickRatio: "点击率",
       Trend: "趋势",
       TrendDialogTitle: "趋势图"
+    }
+  },
+  Comment: {
+    AuditPass: "审核通过",
+    AuditNotPass: "审核不通过",
+    SourceType: "来源类型",
+    SourceId: "来源标识",
+    UID: "用户ID",
+    AuditStatus: "审核状态",
+    Content: "评论内容",
+    LikeCount: "点赞数",
+    ReplyCount: "回复数",
+    Time: "评论时间",
+    Location: "属地",
+    ClientType: "客户端类型",
+    ReplyContent: "回复内容",
+    ReplyTime: "回复时间",
+    LikeList: "点赞记录",
+    LikeTime: "点赞时间"
+  },
+  Vote: {
+    Title: "标题",
+    Code: "编码",
+    CodeTip: "只能使用大小写字母、数字和下划线组合",
+    Status: "状态",
+    TimeRange: "时间",
+    Total: "参与数",
+    UserType: "用户类型",
+    ViewType: "结果查看方式",
+    DayAndTotalLimit: "日/总上限",
+    EidtSubjects: "编辑主题",
+    DayLimit: "日次数上限",
+    TotalLimit: "总次数上限",
+    AddVoteTitle: "新增调查问卷",
+    EditVoteTitle: "编辑调查问卷",
+    ItemTotal: "票数",
+    InputItemTip: "输入类型主题无需配置选项",
+    Subject: "主题",
+    SubjectType: "类型",
+    SubjectTitle: "标题",
+    InsertSubject: "插入主题",
+    SubjectItemType: "类型",
+    InsertSubjectItem: "插入选项",
+    AddSubjectItem: "添加选项",
+    AddSubjectTitle: "新增主题信息",
+    EditSubjectTitle: "编辑主题信息"
+  },
+  Member: {
+    UID: "会员ID",
+    UserName: "用户名",
+    NickName: "昵称",
+    PhoneNumber: "手机号",
+    Password: "密码",
+    Birthday: "生日",
+    Status: "状态",
+    Source: "来源",
+    RegistTime: "注册时间",
+    LastLoginTime: "最近登录时间",
+    ResetPwd: "重置密码",
+    InputPwd: "请输入`{0}`的新密码",
+    RestPwdSuccess: "修改成功，新密码是：{0}",
+    AddTitle: "添加会员",
+    EditTitle: "编辑会员",
+    LevelType: "积分类型",
+    Level: {
+      Type: "类型",
+      Level: "等级",
+      Name: "名称",
+      NextNeedExp: "下一级所需经验",
+      AddTitle: "添加等级配置",
+      EditTitle: "添加等级配置"
+    },
+    ExpOpType: "操作类型",
+    ExpOpNoLimit: "无限制",
+    Exp: "经验值",
+    ExpOpDayLimit: "日上限",
+    ExpOpTotalLimit: "总上限",
+    AddExpOpTitle: "添加经验配置",
+    EditExpOpTitle: "编辑经验配置",
+    RuleTips: {
+      UserName: "必须以字母开头，且只能为（大小写字母，数字，下滑线）",
+      Member: "用户名/手机号/Email不能全为空"
     }
   }
 };
