@@ -27,6 +27,15 @@
           inactive-value="N">
         </el-switch>
       </el-form-item>
+      <el-form-item label="内容编辑是否使用新窗口打开" prop="IncludeChildContent">
+        <el-switch
+          v-model="form.OpenContentEditorW"
+          active-text="是"
+          inactive-text="否"
+          active-value="Y"
+          inactive-value="N">
+        </el-switch>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" size="smjall" @click="handleSave">{{ $t('Common.Save') }}</el-button>
       </el-form-item>

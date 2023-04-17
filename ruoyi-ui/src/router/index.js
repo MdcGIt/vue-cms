@@ -102,6 +102,13 @@ export const constantRoutes = [
     name: 'ContentCorePreview'
   },
   {
+    path: '/cms/content/editorW',
+    component: () => import('@/views/cms/contentcore/contentEditor'),
+    hidden: true,
+    name: 'CMSContentEditor',
+    meta: { title: i18n.t('CMS.ContentCore.Route.EditContent') }
+  },
+  {
     path: '/cms',
     component: Layout,
     hidden: true,

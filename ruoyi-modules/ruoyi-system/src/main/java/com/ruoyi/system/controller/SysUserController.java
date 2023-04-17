@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,6 +56,7 @@ import com.ruoyi.system.user.preference.IUserPreference;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -248,6 +251,19 @@ public class SysUserController extends BaseRestController {
 	public R<?> getPreferences() {
 		SysUser user = this.userService.getById(StpAdminUtil.getLoginIdAsLong());
 		return R.ok(Objects.isNull(user.getPreferences()) ? Map.of() : user.getPreferences());
+	}
+
+	@SaAdminCheckLogin
+	@GetMapping("/preference")
+	public R<?> getUserPreference(@RequestParam("id") @NotEmpty String id) {
+		LoginUser loginUser = StpAdminUtil.getLoginUser();
+		SysUser user = (SysUser) loginUser.getUser();
+		Optional<IUserPreference> findFirst = this.userPreferenceList.stream().filter(up -> up.getId().equals(id)).findFirst();
+		if (!findFirst.isPresent()) {
+			return R.fail();
+		}
+		Object object = user.getPreferences().getOrDefault(id, findFirst.get().getDefaultValue());
+		return R.ok(object);
 	}
 
 	@SaAdminCheckLogin
