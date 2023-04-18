@@ -93,10 +93,19 @@ export function saveCatalogExtends(catalogId, data) {
   })
 }
 
-// 栏目属性应用到子栏目
-export function applyToChildren(data) {
+// 栏目扩展配置应用到栏目
+export function applyConfigPropsToChildren(data) {
   return request({
-    url: '/cms/catalog/apply_children',
+    url: '/cms/catalog/apply_children/config_props',
+    method: 'put',
+    data: data
+  })
+}
+
+// 栏目发布通道配置应用到子栏目
+export function applyPublishPipeToChildren(data) {
+  return request({
+    url: '/cms/catalog/apply_children/publish_pipe',
     method: 'put',
     data: data
   })

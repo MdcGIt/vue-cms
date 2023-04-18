@@ -11,7 +11,7 @@ public class FileOperateDTO {
 	/*
 	 * 文件路径
 	 */
-	@NotNull(message = "文件路径不能为空")
+	@NotNull
 	private String filePath;
 
 	/*

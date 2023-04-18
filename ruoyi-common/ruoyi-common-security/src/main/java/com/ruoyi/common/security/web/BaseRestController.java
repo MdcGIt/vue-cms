@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
@@ -23,6 +24,7 @@ import com.ruoyi.common.utils.StringUtils;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+@Validated
 public class BaseRestController {
 
 	@InitBinder

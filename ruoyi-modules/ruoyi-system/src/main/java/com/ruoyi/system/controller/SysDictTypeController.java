@@ -30,6 +30,7 @@ import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysDictTypeService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -110,7 +111,7 @@ public class SysDictTypeController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictRemove)
 	@Log(title = "字典类型", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> dictIds) {
+	public R<?> remove(@RequestBody @NotEmpty List<Long> dictIds) {
 		dictTypeService.deleteDictTypeByIds(dictIds);
 		return R.ok();
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,9 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -100,7 +103,7 @@ public class TemplateController extends BaseRestController {
 	 * @throws IOException
 	 */
 	@GetMapping("/{templateId}")
-	public R<?> getTemplateDetail(@PathVariable("templateId") String templateId) throws IOException {
+	public R<?> getTemplateDetail(@PathVariable("templateId") @LongId String templateId) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		this.templateService.scanTemplates(site);
 
@@ -120,7 +123,7 @@ public class TemplateController extends BaseRestController {
 	@Log(title = "新增模板", businessType = BusinessType.INSERT)
 	@XssIgnore
 	@PostMapping
-	public R<?> add(@RequestBody TemplateAddDTO dto) throws IOException {
+	public R<?> add(@RequestBody @Validated TemplateAddDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		dto.setSiteId(site.getSiteId());
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -137,7 +140,7 @@ public class TemplateController extends BaseRestController {
 	 */
 	@Log(title = "重命名模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/rename")
-	public R<?> rename(@RequestBody TemplateRenameDTO dto) throws IOException {
+	public R<?> rename(@RequestBody @Validated TemplateRenameDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.templateService.renameTemplate(dto);
 		return R.ok();
@@ -153,7 +156,7 @@ public class TemplateController extends BaseRestController {
 	@Log(title = "编辑模板", businessType = BusinessType.UPDATE)
 	@XssIgnore
 	@PutMapping
-	public R<?> save(@RequestBody TemplateUpdateDTO dto) throws IOException {
+	public R<?> save(@RequestBody @Validated TemplateUpdateDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.templateService.saveTemplate(dto);
 		return R.ok();
@@ -168,7 +171,7 @@ public class TemplateController extends BaseRestController {
 	 */
 	@Log(title = "删除模板", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> delete(@RequestBody List<Long> templateIds) throws IOException {
+	public R<?> delete(@RequestBody @NotEmpty List<Long> templateIds) throws IOException {
 		Assert.notEmpty(templateIds, () -> CommonErrorCode.NOT_EMPTY.exception());
 		this.templateService.deleteTemplates(templateIds);
 		return R.ok();

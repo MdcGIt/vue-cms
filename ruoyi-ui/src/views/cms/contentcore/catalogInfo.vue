@@ -479,7 +479,7 @@ export default {
         publishPipeCode: this.publishPipeActiveName,
         publishPipePropKeys: [ propKey ]
        }
-       catalogApi.applyToChildren(data).then(res => {
+       catalogApi.applyPublishPipeToChildren(data).then(res => {
          this.$modal.msgSuccess(res.msg);
        });
     },

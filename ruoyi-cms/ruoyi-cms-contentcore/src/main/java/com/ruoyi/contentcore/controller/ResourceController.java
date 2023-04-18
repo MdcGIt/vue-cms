@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
@@ -97,7 +99,7 @@ public class ResourceController extends BaseRestController {
 	}
 
 	@GetMapping("/{resourceId}")
-	public R<CmsResource> getInfo(@PathVariable("resourceId") Long resourceId) {
+	public R<CmsResource> getInfo(@PathVariable("resourceId") @LongId Long resourceId) {
 		CmsResource resource = this.resourceService.getById(resourceId);
 		if (resource == null) {
 			return R.fail("资源ID错误：" + resourceId);
@@ -143,7 +145,7 @@ public class ResourceController extends BaseRestController {
 	}
 
 	@GetMapping("/downlad/{resourceId}")
-	public void downloadResourceFile(@PathVariable Long resourceId, HttpServletResponse response) {
+	public void downloadResourceFile(@PathVariable @LongId Long resourceId, HttpServletResponse response) {
 		CmsResource resource = this.resourceService.getById(resourceId);
 		Assert.notNull(resource, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("resourceId", resourceId));
 		this.resourceService.downloadResource(resource, response);
@@ -151,7 +153,7 @@ public class ResourceController extends BaseRestController {
 
 	@Log(title = "图片裁剪", businessType = BusinessType.UPDATE)
 	@PostMapping("/image/cut")
-	public R<?> cutImage(@RequestBody ImageCropDTO imageCutDTO) {
+	public R<?> cutImage(@RequestBody @Validated ImageCropDTO imageCutDTO) {
 		// TODO 
 		return R.fail("TODO");
 	}

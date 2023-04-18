@@ -1,5 +1,7 @@
 package com.ruoyi.contentcore.domain.dto;
 
+import com.ruoyi.system.validator.LongId;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,20 +14,20 @@ public class PublishCatalogDTO {
 	/**
 	 * 栏目ID
 	 */
-	@NotNull
+	@LongId
 	private Long catalogId;
 	
 	/**
 	 * 是否发布子栏目
 	 */
 	@NotNull
-	private boolean publishChild;
+	private Boolean publishChild;
 	
 	/**
 	 * 是否发布栏目内容
 	 */
 	@NotNull
-	private boolean publishDetail;
+	private Boolean publishDetail;
 	
 	/**
 	 * 发布内容状态

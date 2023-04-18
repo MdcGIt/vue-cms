@@ -3,6 +3,7 @@ package com.ruoyi.contentcore.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,7 +83,7 @@ public class FileController extends BaseRestController {
 	 */
 	@Log(title = "文件重命名", businessType = BusinessType.UPDATE)
 	@PostMapping("/rename")
-	public R<?> renameFile(@RequestBody FileOperateDTO dto) throws IOException {
+	public R<?> renameFile(@RequestBody @Validated FileOperateDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		this.fileService.renameFile(site, dto.getFilePath(), dto.getRename());
 		return R.ok();
@@ -97,7 +98,7 @@ public class FileController extends BaseRestController {
 	 */
 	@Log(title = "新建文件", businessType = BusinessType.UPDATE)
 	@PostMapping("/add")
-	public R<?> addFile(@RequestBody FileAddDTO dto) throws IOException {
+	public R<?> addFile(@RequestBody @Validated FileAddDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		this.fileService.addFile(site, dto);
 		return R.ok();
@@ -129,7 +130,7 @@ public class FileController extends BaseRestController {
 	 */
 	@Log(title = "读取文", businessType = BusinessType.OTHER)
 	@PostMapping("/read")
-	public R<?> readFile(@RequestBody FileOperateDTO dto) throws IOException {
+	public R<?> readFile(@RequestBody @Validated FileOperateDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		return R.ok(this.fileService.readFile(site, dto.getFilePath()));
 	}
@@ -143,7 +144,7 @@ public class FileController extends BaseRestController {
 	 */
 	@Log(title = "修改文件", businessType = BusinessType.UPDATE)
 	@PostMapping("/edit")
-	public R<?> editFile(@RequestBody FileOperateDTO dto) throws IOException {
+	public R<?> editFile(@RequestBody @Validated FileOperateDTO dto) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		this.fileService.editFile(site, dto.getFilePath(), dto.getFileContent());
 		return R.ok();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,12 +35,15 @@ import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.core.IPublishPipeProp.PublishPipePropUseType;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.domain.dto.CatalogApplyChildrenDTO;
-import com.ruoyi.contentcore.domain.dto.CatalogDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogAddDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogApplyConfigPropsDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogApplyPublishPipeDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogUpdateDTO;
 import com.ruoyi.contentcore.domain.dto.ChangeCatalogVisibleDTO;
 import com.ruoyi.contentcore.domain.dto.PublishCatalogDTO;
 import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
 import com.ruoyi.contentcore.domain.dto.SortCatalogDTO;
+import com.ruoyi.contentcore.domain.vo.CatalogVO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
@@ -53,8 +57,9 @@ import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -90,7 +95,7 @@ public class CatalogController extends BaseRestController {
 	 * @return
 	 */
 	@GetMapping
-	public R<?> list(CmsCatalog catalog) {
+	public R<?> list() {
 		List<CmsCatalog> list = catalogService.lambdaQuery().list().stream().filter(c -> CmsPrivUtils
 				.hasCatalogPermission(c.getCatalogId(), CatalogPrivItem.View, StpAdminUtil.getLoginUser())).toList();
 		return this.bindDataTable(list);
@@ -103,12 +108,12 @@ public class CatalogController extends BaseRestController {
 	 * @return
 	 */
 	@GetMapping("/{catalogId}")
-	public R<?> catalogInfo(@PathVariable Long catalogId) {
+	public R<?> catalogInfo(@PathVariable @LongId Long catalogId) {
 		CmsCatalog catalog = catalogService.getById(catalogId);
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
 		CmsPrivUtils.checkCatalogPermission(catalog.getCatalogId(), CatalogPrivItem.View, StpAdminUtil.getLoginUser());
 
-		CatalogDTO dto = CatalogDTO.newInstance(catalog);
+		CatalogVO dto = CatalogVO.newInstance(catalog);
 		CmsSite site = siteService.getById(dto.getSiteId());
 		if (StringUtils.isNotEmpty(dto.getLogo())) {
 			dto.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(dto.getLogo()));
@@ -129,7 +134,7 @@ public class CatalogController extends BaseRestController {
 	 */
 	@Log(title = "新增栏目", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> addSave(@RequestBody CatalogDTO dto) throws IOException {
+	public R<?> addSave(@RequestBody @Validated CatalogAddDTO dto) throws IOException {
 		CmsSite currentSite = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		dto.setSiteId(currentSite.getSiteId());
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -145,7 +150,7 @@ public class CatalogController extends BaseRestController {
 	 */
 	@Log(title = "编辑栏目", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> editSave(@RequestBody CatalogDTO dto) throws IOException {
+	public R<?> editSave(@RequestBody @Validated CatalogUpdateDTO dto) throws IOException {
 		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.Edit, StpAdminUtil.getLoginUser());
 
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -161,7 +166,7 @@ public class CatalogController extends BaseRestController {
 	 */
 	@Log(title = "删除", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{catalogId}")
-	public R<String> remove(@PathVariable("catalogId") @Min(1) Long catalogId) {
+	public R<String> remove(@PathVariable("catalogId") @LongId Long catalogId) {
 		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.Delete, StpAdminUtil.getLoginUser());
 
 		AsyncTask task = new AsyncTask() {
@@ -184,7 +189,7 @@ public class CatalogController extends BaseRestController {
 	 */
 	@Log(title = "显隐栏目", businessType = BusinessType.UPDATE)
 	@PutMapping("/visible")
-	public R<String> changeVisible(@RequestBody ChangeCatalogVisibleDTO dto) {
+	public R<String> changeVisible(@RequestBody @Validated ChangeCatalogVisibleDTO dto) {
 		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.ShowHide, StpAdminUtil.getLoginUser());
 
 		catalogService.changeVisible(dto.getCatalogId(), dto.getVisible());
@@ -239,13 +244,13 @@ public class CatalogController extends BaseRestController {
 	 */
 	@Log(title = "发布栏目", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
-	public R<String> publish(@RequestBody PublishCatalogDTO dto) {
+	public R<String> publish(@RequestBody @Validated PublishCatalogDTO dto) {
 		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
 		CmsPrivUtils.checkCatalogPermission(catalog.getCatalogId(), CatalogPrivItem.Publish,
 				StpAdminUtil.getLoginUser());
 
-		AsyncTask task = this.publishService.publishCatalog(catalog, dto.isPublishChild(), dto.isPublishDetail(),
+		AsyncTask task = this.publishService.publishCatalog(catalog, dto.getPublishChild(), dto.getPublishDetail(),
 				dto.getPublishStatus());
 		return R.ok(task.getTaskId());
 	}
@@ -257,7 +262,7 @@ public class CatalogController extends BaseRestController {
 	 * @return
 	 */
 	@GetMapping("/extends")
-	public R<?> getCatalogExtends(@RequestParam("catalogId") @Min(1) Long catalogId) {
+	public R<?> getCatalogExtends(@RequestParam("catalogId") @LongId Long catalogId) {
 		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
 		CmsPrivUtils.checkCatalogPermission(catalog.getCatalogId(), CatalogPrivItem.View, StpAdminUtil.getLoginUser());
@@ -278,8 +283,8 @@ public class CatalogController extends BaseRestController {
 	 */
 	@Log(title = "栏目扩展", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/extends/{catalogId}")
-	public R<?> saveCatalogExtends(@PathVariable("catalogId") Long catalogId,
-			@RequestBody Map<String, String> configs) {
+	public R<?> saveCatalogExtends(@PathVariable("catalogId") @LongId Long catalogId,
+			@RequestBody @NotNull Map<String, String> configs) {
 		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
 		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.Edit, StpAdminUtil.getLoginUser());
@@ -294,15 +299,33 @@ public class CatalogController extends BaseRestController {
 	 * @param dto
 	 * @return
 	 */
-	@Log(title = "应用扩展", businessType = BusinessType.UPDATE)
-	@PutMapping("/apply_children")
-	public R<?> applyChildren(@RequestBody CatalogApplyChildrenDTO dto) {
+	@Log(title = "扩展配置2子栏目", businessType = BusinessType.UPDATE)
+	@PutMapping("/apply_children/config_props")
+	public R<?> applyConfigPropsToChildren(@RequestBody @Validated CatalogApplyConfigPropsDTO dto) {
 		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
 		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.Edit, StpAdminUtil.getLoginUser());
 
 		dto.setOperator(StpAdminUtil.getLoginUser());
-		this.catalogService.applyChildren(dto);
+		this.catalogService.applyConfigPropsToChildren(dto);
+		return R.ok();
+	}
+
+	/**
+	 * 发布通道配置应用到子栏目
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@Log(title = "发布通道配置2子栏目", businessType = BusinessType.UPDATE)
+	@PutMapping("/apply_children/publish_pipe")
+	public R<?> applyPublishPipePropsToChildren(@RequestBody @Validated CatalogApplyPublishPipeDTO dto) {
+		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
+		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
+		CmsPrivUtils.checkCatalogPermission(dto.getCatalogId(), CatalogPrivItem.Edit, StpAdminUtil.getLoginUser());
+
+		dto.setOperator(StpAdminUtil.getLoginUser());
+		this.catalogService.applyPublishPipePropsToChildren(dto);
 		return R.ok();
 	}
 
@@ -315,7 +338,8 @@ public class CatalogController extends BaseRestController {
 	 */
 	@Log(title = "移动栏目", businessType = BusinessType.UPDATE)
 	@PostMapping("/move/{from}/{to}")
-	public R<?> moveCatalog(@PathVariable("from") @Min(1) Long fromCatalogId, @PathVariable("to") Long toCatalogId) {
+	public R<?> moveCatalog(@PathVariable("from") @LongId Long fromCatalogId,
+			@PathVariable("to") @LongId Long toCatalogId) {
 		CmsCatalog fromCatalog = this.catalogService.getCatalog(fromCatalogId);
 		Assert.notNull(fromCatalog,
 				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("fromCatalogId", fromCatalogId));
@@ -338,7 +362,7 @@ public class CatalogController extends BaseRestController {
 
 	@Log(title = "栏目排序", businessType = BusinessType.UPDATE)
 	@PutMapping("/sort")
-	public R<?> sortCatalog(@RequestBody SortCatalogDTO dto) {
+	public R<?> sortCatalog(@RequestBody @Validated SortCatalogDTO dto) {
 		if (dto.getSort() == 0) {
 			return R.fail("排序数值不能为0");
 		}

@@ -3,6 +3,7 @@ package com.ruoyi.member.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +33,8 @@ import com.ruoyi.member.service.IMemberExpConfigService;
 import com.ruoyi.member.service.IMemberLevelConfigService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
@@ -66,7 +67,7 @@ public class MemberExpConfigController extends BaseRestController {
 	}
 
 	@GetMapping("/{expOperationId}")
-	public R<?> getExpOperationDetail(@PathVariable("expOperationId") @Min(1) Long expOperationId) {
+	public R<?> getExpOperationDetail(@PathVariable("expOperationId") @LongId Long expOperationId) {
 		MemberExpConfig conf = this.memberExpOperationService.getById(expOperationId);
 		Assert.notNull(conf, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("id", expOperationId));
 		IExpOperation expOperation = this.memberExpOperationService.getExpOperation(conf.getOpType());
@@ -83,7 +84,7 @@ public class MemberExpConfigController extends BaseRestController {
 
 	@Log(title = "新增会员经验配置", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> addMemberExpOperation(@RequestBody MemberExpConfig expOp) {
+	public R<?> addMemberExpOperation(@RequestBody @Validated MemberExpConfig expOp) {
 		expOp.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.memberExpOperationService.addExpOperation(expOp);
 		return R.ok();
@@ -91,7 +92,7 @@ public class MemberExpConfigController extends BaseRestController {
 
 	@Log(title = "编辑会员经验配置", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> updateMemberExpOperation(@RequestBody MemberExpConfig expOp) {
+	public R<?> updateMemberExpOperation(@RequestBody @Validated MemberExpConfig expOp) {
 		expOp.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.memberExpOperationService.updateExpOperation(expOp);
 		return R.ok();

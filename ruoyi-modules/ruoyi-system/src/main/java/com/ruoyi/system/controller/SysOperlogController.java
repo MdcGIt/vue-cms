@@ -25,6 +25,7 @@ import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.service.ISysOperLogService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -72,7 +73,7 @@ public class SysOperlogController extends BaseRestController {
 
 	@Log(title = "操作日志", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> operIds) {
+	public R<?> remove(@RequestBody @NotEmpty List<Long> operIds) {
 		operLogService.removeByIds(operIds);
 		return R.ok();
 	}

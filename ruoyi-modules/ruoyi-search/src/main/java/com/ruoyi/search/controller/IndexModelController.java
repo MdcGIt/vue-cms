@@ -3,6 +3,7 @@ package com.ruoyi.search.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +47,7 @@ public class IndexModelController extends BaseRestController {
 
 	@Log(title = "新增索引模型", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> addIndexModel(@RequestBody SearchModelDTO dto) {
+	public R<?> addIndexModel(@RequestBody @Validated SearchModelDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.indexModelService.addIndexModel(dto);
 		return R.ok();

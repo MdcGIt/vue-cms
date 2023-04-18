@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +33,8 @@ import com.ruoyi.member.permission.MemberPriv;
 import com.ruoyi.member.service.IMemberLevelConfigService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
@@ -61,7 +62,7 @@ public class MemberLevelConfigController extends BaseRestController {
 	}
 
 	@GetMapping("/{configId}")
-	public R<?> getLevelConfigDetail(@PathVariable("configId") @Min(1) Long configId) {
+	public R<?> getLevelConfigDetail(@PathVariable("configId") @LongId Long configId) {
 		MemberLevelConfig lvConfig = this.memberLevelConfigService.getById(configId);
 		Assert.notNull(lvConfig, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("id", configId));
 		return R.ok(lvConfig);
@@ -76,7 +77,7 @@ public class MemberLevelConfigController extends BaseRestController {
 
 	@Log(title = "新增会员等级配置", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> addMemberConfig(@RequestBody LevelConfigDTO dto) {
+	public R<?> addMemberConfig(@RequestBody @Validated LevelConfigDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.memberLevelConfigService.addLevelConfig(dto);
 		return R.ok();
@@ -84,7 +85,7 @@ public class MemberLevelConfigController extends BaseRestController {
 
 	@Log(title = "编辑会员等级配置", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> updateMemberConfig(@RequestBody LevelConfigDTO dto) {
+	public R<?> updateMemberConfig(@RequestBody @Validated LevelConfigDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.memberLevelConfigService.updateLevelConfig(dto);
 		return R.ok();

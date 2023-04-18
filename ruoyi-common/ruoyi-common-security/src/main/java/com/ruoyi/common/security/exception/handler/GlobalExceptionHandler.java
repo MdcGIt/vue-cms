@@ -6,7 +6,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -102,18 +101,6 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(BindException.class)
 	public R<?> handleBindException(BindException e) {
-		log.error(e.getMessage(), e);
-		String message = e.getAllErrors().get(0).getDefaultMessage();
-		return R.fail(message);
-	}
-
-	/**
-	 * 自定义验证异常
-	 */
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public Object handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		log.error(e.getMessage(), e);
-		String message = e.getBindingResult().getFieldError().getDefaultMessage();
-		return R.fail(message);
+		return R.fail(e.getMessage());
 	}
 }

@@ -1,9 +1,10 @@
 package com.ruoyi.contentcore.controller;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,19 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
-import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSiteProperty;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ISitePropertyService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -75,7 +76,7 @@ public class SitePropertyController extends BaseRestController {
 	 * @return
 	 */
 	@GetMapping(value = "/{siteId}")
-	public R<?> getInfo(@PathVariable Long propertyId) {
+	public R<?> getInfo(@PathVariable @LongId Long propertyId) {
 		CmsSiteProperty siteProperty = sitePropertyService.getById(propertyId);
 		if (siteProperty == null) {
 			return R.fail("站点数据未找到：" + propertyId);
@@ -92,7 +93,7 @@ public class SitePropertyController extends BaseRestController {
 	 */
 	@Log(title = "新增站点属性", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<String> addSiteProperty(@RequestBody CmsSiteProperty siteProperty) throws IOException {
+	public R<String> addSiteProperty(@RequestBody @Validated CmsSiteProperty siteProperty) throws IOException {
 		siteProperty.createBy(StpAdminUtil.getLoginUser().getUsername());
 		return this.sitePropertyService.addSiteProperty(siteProperty);
 	}
@@ -106,7 +107,7 @@ public class SitePropertyController extends BaseRestController {
 	 */
 	@Log(title = "编辑站点属性", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<String> editSiteProperty(@RequestBody CmsSiteProperty siteProperty) throws IOException {
+	public R<String> editSiteProperty(@RequestBody @Validated CmsSiteProperty siteProperty) throws IOException {
 		siteProperty.updateBy(StpAdminUtil.getLoginUser().getUsername());
 		return this.sitePropertyService.saveSiteProperty(siteProperty);
 	}
@@ -121,11 +122,7 @@ public class SitePropertyController extends BaseRestController {
 	 */
 	@Log(title = "删除站点属性", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<String> removeSiteProperties(@RequestBody Long[] propertyIds) throws IOException {
-		if (propertyIds == null || propertyIds.length == 0) {
-			return R.fail("ID参数错误");
-		}
-		Assert.notEmpty(propertyIds, () -> CommonErrorCode.NOT_EMPTY.exception());
-		return this.sitePropertyService.deleteSiteProperties(Arrays.asList(propertyIds));
+	public R<String> removeSiteProperties(@RequestBody @NotEmpty List<Long> propertyIds) throws IOException {
+		return this.sitePropertyService.deleteSiteProperties(propertyIds);
 	}
 }

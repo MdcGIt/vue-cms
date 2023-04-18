@@ -16,14 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
-import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysDictData;
 import com.ruoyi.system.fixed.FixedDictUtils;
@@ -36,6 +33,7 @@ import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysDictTypeService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -132,9 +130,7 @@ public class SysDictDataController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDictRemove)
 	@Log(title = "字典类型", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> dictCodes) {
-		boolean validate = IdUtils.validate(dictCodes, true);
-		Assert.isTrue(validate, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception());
+	public R<?> remove(@RequestBody @NotEmpty List<Long> dictCodes) {
 		dictDataService.deleteDictDataByIds(dictCodes);
 		return R.ok();
 	}

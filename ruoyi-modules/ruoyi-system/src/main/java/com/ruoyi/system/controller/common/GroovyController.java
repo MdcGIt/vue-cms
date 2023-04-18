@@ -3,6 +3,7 @@ package com.ruoyi.system.controller.common;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ public class GroovyController {
 	@Log(title = "执行Groovy脚本", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.GroovyExec)
 	@PostMapping("/exec")
-	public R<?> execGroovyScript(@RequestBody ScriptBody scriptBody) throws Exception {
+	public R<?> execGroovyScript(@RequestBody @Validated ScriptBody scriptBody) throws Exception {
 		StringWriter writer = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(writer);
 		try {

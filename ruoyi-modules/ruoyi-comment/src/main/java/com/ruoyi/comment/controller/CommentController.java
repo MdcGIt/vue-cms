@@ -27,8 +27,8 @@ import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
@@ -60,7 +60,7 @@ public class CommentController extends BaseRestController {
 
 	@Priv(type = AdminUserType.TYPE, value = CommentPriv.View)
 	@GetMapping("/reply/{commentId}")
-	public R<?> getCommentReplyList(@PathVariable @Min(1) Long commentId) {
+	public R<?> getCommentReplyList(@PathVariable @LongId Long commentId) {
 		PageRequest pr = this.getPageRequest();
 		Page<Comment> page = this.commentService.lambdaQuery()
 				.eq(IdUtils.validate(commentId), Comment::getParentId, commentId)
@@ -70,7 +70,7 @@ public class CommentController extends BaseRestController {
 
 	@Priv(type = AdminUserType.TYPE, value = CommentPriv.View)
 	@GetMapping("/like/{commentId}")
-	public R<?> getCommentLikeList(@PathVariable @Min(1) Long commentId, @RequestParam(required = false) Long uid) {
+	public R<?> getCommentLikeList(@PathVariable @LongId Long commentId, @RequestParam(required = false) Long uid) {
 		PageRequest pr = this.getPageRequest();
 		Page<CommentLike> page = this.commentLikeService.lambdaQuery()
 				.eq(IdUtils.validate(commentId), CommentLike::getCommentId, commentId)

@@ -26,6 +26,7 @@ import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.validator.LongId;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,7 +61,7 @@ public class SysDeptController extends BaseRestController {
 	 */
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDeptList)
 	@GetMapping(value = "/{deptId}")
-	public R<?> getInfo(@PathVariable Long deptId) {
+	public R<?> getInfo(@PathVariable @LongId Long deptId) {
 		SysDept dept = deptService.getById(deptId);
 		Assert.notNull(dept, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(deptId));
 		this.deptService.getDept(dept.getParentId()).ifPresent(d -> dept.setParentName(d.getDeptName()));
@@ -97,7 +98,7 @@ public class SysDeptController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysDeptRemove)
 	@Log(title = "部门管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{deptId}")
-	public R<?> remove(@PathVariable Long deptId) {
+	public R<?> remove(@PathVariable @LongId Long deptId) {
 		deptService.deleteDeptById(deptId);
 		return R.ok();
 	}

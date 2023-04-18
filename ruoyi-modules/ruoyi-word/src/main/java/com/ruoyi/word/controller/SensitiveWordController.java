@@ -3,6 +3,7 @@ package com.ruoyi.word.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,14 +56,14 @@ public class SensitiveWordController extends BaseRestController {
 	}
 
 	@PostMapping
-	public R<?> add(@RequestBody SensitiveWord sensitiveWord) {
+	public R<?> add(@RequestBody @Validated SensitiveWord sensitiveWord) {
 		sensitiveWord.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.sensitiveWordService.addWord(sensitiveWord);
 		return R.ok();
 	}
 
 	@PutMapping
-	public R<?> edit(@RequestBody SensitiveWord sensitiveWord) {
+	public R<?> edit(@RequestBody @Validated SensitiveWord sensitiveWord) {
 		Assert.isTrue(IdUtils.validate(sensitiveWord.getWordId()),
 				() -> CommonErrorCode.INVALID_REQUEST_ARG.exception("wordId"));
 

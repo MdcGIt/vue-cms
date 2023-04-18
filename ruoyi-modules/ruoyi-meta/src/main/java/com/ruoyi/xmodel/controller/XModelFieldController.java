@@ -3,6 +3,7 @@ package com.ruoyi.xmodel.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +55,7 @@ public class XModelFieldController extends BaseRestController {
 
 	@Log(title = "新增元数据字段", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> add(@RequestBody XModelFieldDTO dto) {
+	public R<?> add(@RequestBody @Validated XModelFieldDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.modelFieldService.addModelField(dto);
 		return R.ok();
@@ -62,7 +63,7 @@ public class XModelFieldController extends BaseRestController {
 
 	@Log(title = "编辑元数据字段", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> edit(@RequestBody XModelFieldDTO dto) {
+	public R<?> edit(@RequestBody @Validated XModelFieldDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.modelFieldService.editModelField(dto);
 		return R.ok();

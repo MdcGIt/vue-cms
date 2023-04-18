@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,9 @@ import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.service.ISysPermissionService;
+import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -98,15 +101,17 @@ public class CmsPermissionController extends BaseRestController {
 	@Setter
 	static class SaveSitePermissionDTO {
 
+		@NotEmpty
 		private String ownerType;
 
+		@NotEmpty
 		private String owner;
 
 		private List<SitePrivVO> perms;
 	}
 
 	@PutMapping("/site")
-	public R<?> saveSitePermissions(@RequestBody SaveSitePermissionDTO dto) {
+	public R<?> saveSitePermissions(@RequestBody @Validated SaveSitePermissionDTO dto) {
 		Map<String, BitSet> map = new HashMap<>();
 		dto.getPerms().forEach(vo -> {
 			Long siteId = vo.getSiteId();
@@ -183,17 +188,20 @@ public class CmsPermissionController extends BaseRestController {
 	@Setter
 	static class SaveCatalogPermissionDTO {
 
+		@NotEmpty
 		private String ownerType;
 
+		@NotEmpty
 		private String owner;
 
+		@LongId
 		private Long siteId;
 
 		private List<CatalogPrivVO> perms;
 	}
 
 	@PutMapping("/catalog")
-	public R<?> saveCatalogPermissions(@RequestBody SaveCatalogPermissionDTO dto) {
+	public R<?> saveCatalogPermissions(@RequestBody @Validated SaveCatalogPermissionDTO dto) {
 		Map<String, BitSet> map;
 		SysPermission permissions = this.permissionService.getPermissions(dto.getOwnerType(), dto.getOwner());
 		String json = permissions.getPermissions().get(CatalogPermissionType.ID);

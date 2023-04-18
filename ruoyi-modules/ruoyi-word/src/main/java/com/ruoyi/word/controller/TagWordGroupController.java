@@ -3,6 +3,7 @@ package com.ruoyi.word.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,13 +61,13 @@ public class TagWordGroupController extends BaseRestController {
 	}
 
 	@PostMapping
-	public R<?> add(@RequestBody TagWordGroup group) {
+	public R<?> add(@RequestBody @Validated TagWordGroup group) {
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
 		return R.ok(this.tagWordGroupService.addTagWordGroup(group));
 	}
 
 	@PutMapping
-	public R<?> edit(@RequestBody TagWordGroup group) {
+	public R<?> edit(@RequestBody @Validated TagWordGroup group) {
 		group.updateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.tagWordGroupService.editTagWordGroup(group);
 		return R.ok();

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,7 +76,7 @@ public class LinkController extends BaseRestController {
 	@Log(title = "新增友链", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Add)
 	@PostMapping
-	public R<?> add(@RequestBody LinkDTO dto) {
+	public R<?> add(@RequestBody  @Validated LinkDTO dto) {
 		CmsLink link = new CmsLink();
 		BeanUtils.copyProperties(dto, link, "siteId", "sortFlag");
 
@@ -91,7 +92,7 @@ public class LinkController extends BaseRestController {
 	@Log(title = "编辑友链", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.Add, FriendLinkPriv.Edit } )
 	@PutMapping
-	public R<String> edit(@RequestBody LinkDTO dto) {
+	public R<String> edit(@RequestBody  @Validated LinkDTO dto) {
 		CmsLink link = new CmsLink();
 		BeanUtils.copyProperties(dto, link, "siteId", "groupId", "sortFlag");
 		link.updateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -102,7 +103,7 @@ public class LinkController extends BaseRestController {
 	@Log(title = "删除友链", businessType = BusinessType.DELETE)
 	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Delete)
 	@DeleteMapping
-	public R<String> remove(@RequestBody @NotEmpty List<LinkDTO> dtoList) {
+	public R<String> remove(@RequestBody @Validated @NotEmpty List<LinkDTO> dtoList) {
 		List<Long> linkIds = dtoList.stream().map(LinkDTO::getLinkId).toList();
 		this.linkService.removeByIds(linkIds);
 		return R.ok();

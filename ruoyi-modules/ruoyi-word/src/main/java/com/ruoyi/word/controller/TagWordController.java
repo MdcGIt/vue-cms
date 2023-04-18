@@ -3,6 +3,7 @@ package com.ruoyi.word.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,14 +55,14 @@ public class TagWordController extends BaseRestController {
 	}
 
 	@PostMapping
-	public R<?> add(@RequestBody TagWord tagWord) {
+	public R<?> add(@RequestBody @Validated TagWord tagWord) {
 		tagWord.createBy(StpAdminUtil.getLoginUser().getUsername());
 		this.tagWordService.addTagWord(tagWord);
 		return R.ok();
 	}
 
 	@PutMapping
-	public R<?> edit(@RequestBody TagWord tagWord) {
+	public R<?> edit(@RequestBody @Validated TagWord tagWord) {
 		tagWord.updateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.tagWordService.editTagWord(tagWord);
 		return R.ok();

@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
-import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.vo.SysPostSelectVO;
@@ -32,8 +29,10 @@ import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysPostService;
+import com.ruoyi.system.validator.LongId;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -80,7 +79,7 @@ public class SysPostController extends BaseRestController {
 	 */
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostList)
 	@GetMapping(value = "/{postId}")
-	public R<?> getInfo(@PathVariable Long postId) {
+	public R<?> getInfo(@PathVariable @LongId Long postId) {
 		return R.ok(postService.getById(postId));
 	}
 
@@ -114,8 +113,7 @@ public class SysPostController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysPostRemove)
 	@Log(title = "岗位管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> postIds) {
-		Assert.isTrue(IdUtils.validate(postIds), () -> CommonErrorCode.INVALID_REQUEST_ARG.exception());
+	public R<?> remove(@RequestBody @NotEmpty List<Long> postIds) {
 		postService.deletePostByIds(postIds);
 		return R.ok();
 	}

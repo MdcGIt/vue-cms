@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,13 +81,13 @@ public class HotWordGroupController extends BaseRestController {
 	}
 
 	@PostMapping
-	public R<?> add(@RequestBody HotWordGroup group) {
+	public R<?> add(@RequestBody @Validated HotWordGroup group) {
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
 		return R.ok(this.hotWordGroupService.addHotWordGroup(group));
 	}
 
 	@PutMapping
-	public R<String> edit(@RequestBody HotWordGroup group) {
+	public R<String> edit(@RequestBody @Validated HotWordGroup group) {
 		group.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.hotWordGroupService.updateHotWordGroup(group);
 		return R.ok();

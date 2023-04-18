@@ -9,8 +9,10 @@ import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.contentcore.domain.CmsCatalog;
-import com.ruoyi.contentcore.domain.dto.CatalogApplyChildrenDTO;
-import com.ruoyi.contentcore.domain.dto.CatalogDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogAddDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogApplyConfigPropsDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogApplyPublishPipeDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogUpdateDTO;
 import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
 
 public interface ICatalogService extends IService<CmsCatalog> {
@@ -58,7 +60,7 @@ public interface ICatalogService extends IService<CmsCatalog> {
      * @param dto
      * @throws IOException 
      */
-	public CmsCatalog addCatalog(CatalogDTO dto) throws IOException;
+	public CmsCatalog addCatalog(CatalogAddDTO dto) throws IOException;
 
 	/**
 	 * 编辑栏目
@@ -67,7 +69,7 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * @return
 	 * @throws IOException 
 	 */
-	public CmsCatalog editCatalog(CatalogDTO dto) throws IOException;
+	public CmsCatalog editCatalog(CatalogUpdateDTO dto) throws IOException;
 	
 	/**
 	 * 删除栏目
@@ -88,12 +90,20 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	String getCatalogLink(CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview);
 
 	/**
-	 * 站点配置应用到指定栏目或子栏目
+	 * 栏目扩展配置应用到指定栏目或子栏目
 	 * 
 	 * @param dto
 	 * @return
 	 */
-	void applyChildren(CatalogApplyChildrenDTO dto);
+	void applyConfigPropsToChildren(CatalogApplyConfigPropsDTO dto);
+
+	/**
+	 * 栏目发布通道配置应用到子栏目
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	void applyPublishPipePropsToChildren(CatalogApplyPublishPipeDTO dto);
 	
 	/**
 	 * 应用站点指定默认模板配置到指定的栏目

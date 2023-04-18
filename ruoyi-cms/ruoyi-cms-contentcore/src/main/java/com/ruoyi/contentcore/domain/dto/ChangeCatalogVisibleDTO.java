@@ -1,6 +1,7 @@
 package com.ruoyi.contentcore.domain.dto;
 
-import jakarta.validation.constraints.Min;
+import com.ruoyi.system.validator.LongId;
+
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +10,7 @@ import lombok.Setter;
 @Setter
 public class ChangeCatalogVisibleDTO {
 
-	@NotEmpty
-	@Min(1)
+	@LongId
 	public Long catalogId;
 	
 	@NotEmpty

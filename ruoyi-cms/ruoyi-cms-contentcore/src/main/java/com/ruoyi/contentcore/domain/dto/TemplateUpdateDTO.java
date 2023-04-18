@@ -1,9 +1,8 @@
 package com.ruoyi.contentcore.domain.dto;
 
 import com.ruoyi.common.security.domain.BaseDTO;
+import com.ruoyi.system.validator.LongId;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +10,7 @@ import lombok.Setter;
 @Setter
 public class TemplateUpdateDTO extends BaseDTO {
 
-	@NotNull
-	@Min(1)
+	@LongId
 	private Long templateId;
 
     private String content;

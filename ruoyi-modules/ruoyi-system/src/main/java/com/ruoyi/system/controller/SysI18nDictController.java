@@ -130,7 +130,7 @@ public class SysI18nDictController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictEdit)
 	@Log(title = "国际化管理", businessType = BusinessType.UPDATE)
 	@PutMapping("/batch")
-	public R<?> batchSave(@RequestBody List<SysI18nDict> i18nDicts) {
+	public R<?> batchSave(@RequestBody @NotEmpty @Validated List<SysI18nDict> i18nDicts) {
 		i18nDictService.batchSaveI18nDicts(i18nDicts);
 		return R.ok();
 	}
@@ -138,7 +138,7 @@ public class SysI18nDictController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysI18NDictRemove)
 	@Log(title = "国际化管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> i18nDictIds) {
+	public R<?> remove(@RequestBody @NotEmpty List<Long> i18nDictIds) {
 		Assert.notEmpty(i18nDictIds, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception());
 		i18nDictService.deleteI18nDictByIds(i18nDictIds);
 		return R.ok();
