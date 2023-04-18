@@ -18,7 +18,6 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。项目基于[RuoYi-Vue](h
 - 演示站的静态资源已提交到仓库[ruoyi-vue-cms-wwwroot](https://gitee.com/liweiyi/ruoyi-vue-cms-wwwroot)。
 - CMS资源路径配置application.yml中ruoyi.cms.resourceRoot，默认与项目同级的wwwroot_release。
 
-##### 本地部署开启es和xxl-job:
 
 #### 本地开发环境部署
 
@@ -125,6 +124,6 @@ services:
 | 缓存监控 | 对系统的缓存信息查询，命令统计等 |
 | GroovyScript | 支持Groovy脚本在线执行 |
 
-
+#### 如果本项目对您有一丢丢小帮助 :kissing_heart: 点个小星星吧 :star2: 
 
 #### QQ交流群： 568506424  口令：举个栗子
