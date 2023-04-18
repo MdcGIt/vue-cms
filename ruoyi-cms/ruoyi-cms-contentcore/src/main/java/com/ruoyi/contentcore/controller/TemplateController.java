@@ -40,7 +40,6 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
-import com.ruoyi.system.validator.LongId;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -103,7 +102,7 @@ public class TemplateController extends BaseRestController {
 	 * @throws IOException
 	 */
 	@GetMapping("/{templateId}")
-	public R<?> getTemplateDetail(@PathVariable("templateId") @LongId String templateId) throws IOException {
+	public R<?> getTemplateDetail(@PathVariable("templateId") String templateId) throws IOException {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		this.templateService.scanTemplates(site);
 
