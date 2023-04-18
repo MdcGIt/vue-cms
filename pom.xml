@@ -11,7 +11,7 @@
 	<description>RuoYi-Vue-CMS内容管理系统</description>
 
 	<properties>
-		<ruoyi.version>0.3.0</ruoyi.version>
+		<ruoyi.version>1.0.0</ruoyi.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
