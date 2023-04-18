@@ -301,6 +301,7 @@ export default {
         tags:[],
         keywords:[]
       },
+      initDataStr: undefined, // 初始化数据jsonString
       publishPipeTemplates: [],
       rules: {
         title: [{ required: true, message: this.$t('CMS.Content.RuleTips.Title'), trigger: "blur" }]
@@ -312,7 +313,6 @@ export default {
     };
   },
   created() {
-    console.log("opType", this.opType)
     this.initData();
   },
   methods: {
@@ -351,17 +351,43 @@ export default {
             this.showTemplate = true;
           }
         });
+        this.initDataStr = JSON.stringify(this.form);
       });
     },
     handleShowOtherTitle() {
       this.showOtherTitle = !this.showOtherTitle;
     },
+    isFormChanged() {
+      return JSON.stringify(this.form) != this.initDataStr;
+    },
     handleGoBack() {
-      const obj = { path: "/configs/content" };
-      this.$tab.closeOpenPage(obj);
+      const that = this;
+      if (this.isFormChanged()) {
+        this.$confirm(this.$t('CMS.Content.CloseContentEditorTip'), this.$t('Common.SystemTip'), {
+          confirmButtonText: this.$t('Common.Confirm'),
+          cancelButtonText: this.$t('Common.Cancel'),
+          type: "warning",
+        }).then(function () {
+          const obj = { path: "/configs/content" };
+          that.$tab.closeOpenPage(obj);
+        }).catch(function () { });
+      } else {
+        const obj = { path: "/configs/content" };
+        this.$tab.closeOpenPage(obj);
+      }
     },
     handleClose() {
-      window.close();
+      if (this.isFormChanged()) {
+        this.$confirm(this.$t('CMS.Content.CloseContentEditorTip'), this.$t('Common.SystemTip'), {
+          confirmButtonText: this.$t('Common.Confirm'),
+          cancelButtonText: this.$t('Common.Cancel'),
+          type: "warning",
+        }).then(function () {
+          window.close();
+        }).catch(function () { });
+      } else {
+        window.close();
+      }
     },
     // 表单重置
     reset() {

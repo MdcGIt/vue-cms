@@ -597,7 +597,7 @@ export default {
         Edit: "修改任务信息",
         Log: "调度日志详细",
       },
-      Placehoder: {
+      Placeholder: {
         InvokeTarget: "请输入调用目标字符串"
       },
       RuleTips: {
@@ -876,7 +876,7 @@ export default {
         PageWidget: "页面部件",
         RecycleBin: "回收站"
       },
-      Placehoder: {
+      Placeholder: {
         Title: "输入内容标题",
       },
       Title: "标题",
@@ -931,7 +931,8 @@ export default {
       },
       SaveProgressTitle: "保存内容中",
       SortDialogTitle: "内容排序",
-      SortDialogTip: "内容将会排在下方列表选中的内容之前，选中内容置顶则排序内容也会添加置顶状态，反之则会取消置顶状态。"
+      SortDialogTip: "内容将会排在下方列表选中的内容之前，选中内容置顶则排序内容也会添加置顶状态，反之则会取消置顶状态。",
+      CloseContentEditorTip: "关闭页面会导致未保存的内容丢失，确认关闭吗？"
     },
     Image: {
       Title: "标题",
@@ -943,6 +944,7 @@ export default {
       Add: "添加图片",
     },
     Audio: {
+      Parameter: "参数",
       Type: "类型",
       FileSize: "大小",
       Format: "格式",
@@ -959,6 +961,7 @@ export default {
       Add: "添加音频"
     },
     Video: {
+      Parameter: "参数",
       Type: "类型",
       FileSize: "大小",
       WidthHeight: "分辨率",

@@ -931,7 +931,8 @@ export default {
       },
       SaveProgressTitle: "Content Saving",
       SortDialogTitle: "Content Sort",
-      SortDialogTip: "The content will be sort before the selected content in this list. If the selected content is at the top, the sorting content will also be added to the top status, and if not, the top status will be cancelled."
+      SortDialogTip: "The content will be sort before the selected content in this list. If the selected content is at the top, the sorting content will also be added to the top status, and if not, the top status will be cancelled.",
+      CloseContentEditorTip: "Closing the page will lose unsaved content. Are you sure to close?"
     },
     Image: {
       Title: "Title",
@@ -943,6 +944,7 @@ export default {
       Add: "Add Image",
     },
     Audio: {
+      Parameter: "Parameter",
       Type: "Type",
       FileSize: "Size",
       Format: "Format",
@@ -959,6 +961,7 @@ export default {
       Add: "Add Audio"
     },
     Video: {
+      Parameter: "Parameter",
       Type: "Type",
       FileSize: "Size",
       WidthHeight: "Resolution",

@@ -36,7 +36,7 @@
           <el-container>
             <el-main>
               <el-row>
-                <el-form-item label="参数">
+                <el-form-item :label="$t('CMS.Video.Parameter')">
                   <div style="font-size:12px;color:#777;">
                     [ {{ $t('CMS.Video.Type') }}: {{ item.type }} ]
                     [ {{ $t('CMS.Video.FileSize') }}: {{ item.fileSizeName }} ]
