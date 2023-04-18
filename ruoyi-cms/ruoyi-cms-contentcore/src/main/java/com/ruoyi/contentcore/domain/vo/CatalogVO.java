@@ -1,19 +1,21 @@
-package com.ruoyi.contentcore.domain.dto;
+package com.ruoyi.contentcore.domain.vo;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 
-import com.ruoyi.common.security.domain.BaseDTO;
 import com.ruoyi.contentcore.domain.CmsCatalog;
+import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CatalogDTO extends BaseDTO {
+public class CatalogVO {
 
 	/*
 	 * 栏目ID
@@ -23,11 +25,13 @@ public class CatalogDTO extends BaseDTO {
     /*
      * 站点ID
      */
+	@Min(1)
     private Long siteId;
 
     /*
      * 父级栏目ID
      */
+	@Min(0)
     private Long parentId;
 
     /*
@@ -38,6 +42,7 @@ public class CatalogDTO extends BaseDTO {
     /*
      * 栏目名称 
      */
+    @NotBlank
     private String name;
 
     /*
@@ -53,6 +58,7 @@ public class CatalogDTO extends BaseDTO {
     /*
      * 栏目别名
      */
+    @NotBlank
     private String alias;
 
     /*
@@ -68,11 +74,13 @@ public class CatalogDTO extends BaseDTO {
     /*
      * 栏目类型
      */
+    @NotBlank
     private String catalogType;
     
     /*
      * 栏目目录
      */
+    @NotBlank
     private String path;
     
     /*
@@ -160,13 +168,8 @@ public class CatalogDTO extends BaseDTO {
      */
     private List<PublishPipeProp> publishPipeDatas;
     
-    /*
-     * 自定义参数
-     */
-    private Map<String, Object> params;
-    
-    public static CatalogDTO newInstance(CmsCatalog catalog) {
-    	CatalogDTO dto = new CatalogDTO();
+    public static CatalogVO newInstance(CmsCatalog catalog) {
+    	CatalogVO dto = new CatalogVO();
     	BeanUtils.copyProperties(catalog, dto);
     	return dto;
     }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -115,7 +116,7 @@ public class PageWidgetController extends BaseRestController {
 
 	@Log(title = "新增页面组件", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> addPageWidget(@RequestBody PageWidgetAddDTO dto)
+	public R<?> addPageWidget(@RequestBody @Validated PageWidgetAddDTO dto)
 			throws IOException {
 		IPageWidgetType pwt = this.pageWidgetService.getPageWidgetType(dto.getType());
 		Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORT_PAGE_WIDGET_TYPE.exception(dto.getType()));
@@ -140,7 +141,7 @@ public class PageWidgetController extends BaseRestController {
 
 	@Log(title = "编辑页面组件", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> editPageWidget(@RequestBody PageWidgetEditDTO dto)
+	public R<?> editPageWidget(@RequestBody @Validated PageWidgetEditDTO dto)
 			throws IOException {
 		CmsPageWidget pageWidget = this.pageWidgetService.getById(dto.getPageWidgetId());
 		Assert.notNull(dto.getPageWidgetId(), () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pageWidgetId", dto.getPageWidgetId()));

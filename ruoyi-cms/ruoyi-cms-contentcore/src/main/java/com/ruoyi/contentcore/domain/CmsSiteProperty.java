@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,11 +39,13 @@ public class CmsSiteProperty extends BaseEntity {
     /**
      * 属性名称
      */
+    @NotBlank
     private String propName;
 
     /**
      * 属性代码
      */
+    @Pattern(regexp = "[A-Za-z0-9_]+")
     private String propCode;
 
     /**

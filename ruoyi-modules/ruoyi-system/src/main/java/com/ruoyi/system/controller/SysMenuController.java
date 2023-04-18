@@ -33,6 +33,7 @@ import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysPermissionService;
+import com.ruoyi.system.validator.LongId;
 
 import lombok.RequiredArgsConstructor;
 
@@ -140,7 +141,7 @@ public class SysMenuController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysMenuRemove)
 	@Log(title = "菜单管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{menuId}")
-	public R<?> remove(@PathVariable("menuId") Long menuId) {
+	public R<?> remove(@PathVariable("menuId") @LongId Long menuId) {
 		menuService.deleteMenuById(menuId);
 		return R.ok();
 	}

@@ -26,7 +26,7 @@
           size="mini"
           class="el-form-search">
           <el-form-item prop="query">
-            <el-input placeholder="输入模型名称/编码查询" v-model="queryParams.query"></el-input>
+            <el-input :placeholder="$t('CMS.ExModel.Placeholder.Query')" v-model="queryParams.query"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button-group>
@@ -44,21 +44,17 @@
     </el-row>
     <el-row>
       <el-table v-loading="loading" :data="xmodelList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection"
-                       width="55"
-                       align="center" />
-        <el-table-column label="名称">
+      <el-table-column type="selection" width="55" align="center" />
+        <el-table-column :label="$t('CMS.ExModel.Name')">
           <template slot-scope="scope">
-            <el-link type="primary"
-                      @click="handleOpenModelField(scope.row)"
-                      class="link-type">
+            <el-link type="primary" @click="handleOpenModelField(scope.row)" class="link-type">
               <span>{{ scope.row.name }}</span>
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="编码" prop="code" />
-        <el-table-column label="分类" prop="ownerType" />
-        <el-table-column label="数据表" prop="tableName" />
+        <el-table-column :label="$t('CMS.ExModel.Code')" prop="code" />
+        <el-table-column :label="$t('CMS.ExModel.OwnerType')" prop="ownerType" />
+        <el-table-column :label="$t('CMS.ExModel.TableName')" prop="tableName" />
         <el-table-column :label="$t('Common.Operation')" align="center" width="300" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button 
@@ -94,13 +90,13 @@
         :rules="rules"
         label-width="100px"
         class="el-form-dialog">
-        <el-form-item label="名称" prop="name">
+        <el-form-item :label="$t('CMS.ExModel.Name')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="编码" prop="code">
+        <el-form-item :label="$t('CMS.ExModel.Code')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item label="数据存储表" prop="tableName">
+        <el-form-item :label="$t('CMS.ExModel.TableName')" prop="tableName">
           <el-select v-model="form.tableName" filterable placeholder="请选择">
             <el-option
               v-for="item in xmodelDataTableList"
@@ -155,13 +151,13 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.ExModel.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.ExModel.RuleTips.Code'), trigger: "blur" }
         ],
         tableName: [
-          { required: true, message: "数据表不能为空", trigger: "blur" }
+          { required: true, message: this.$t('CMS.ExModel.RuleTips.TableName'), trigger: "blur" }
         ]
       }
     };
@@ -205,12 +201,12 @@ export default {
     /** 新增按钮操作 */
     handleAdd () {
       this.form = {};
-      this.title = "新建模型";
+      this.title = this.$t('CMS.ExModel.AddTtitle');
       this.open = true;
     },
     handleEdit (row) {
       this.form = row;
-      this.title = "编辑模型";
+      this.title = this.$t('CMS.ExModel.EditTtitle');
       this.open = true;
     },
     handleAddSave () {
@@ -239,10 +235,10 @@ export default {
       }
     },
     doDelete (xmodels) {
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteXModel(xmodels);
       }).then(() => {
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
         this.loadXModelList();
       }).catch(function () { });
     },

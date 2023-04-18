@@ -3,6 +3,7 @@ package com.ruoyi.system.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,9 @@ import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISecurityConfigService;
+import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -74,7 +77,7 @@ public class SysSecurityController extends BaseRestController {
 
 	@Log(title = "安全配置", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> addConfig(@RequestBody SysSecurityConfig config) {
+	public R<?> addConfig(@Validated @RequestBody SysSecurityConfig config) {
 		config.setOperator(StpAdminUtil.getLoginUser());
 		this.securityConfigService.addConfig(config);
 		return R.ok();
@@ -82,7 +85,7 @@ public class SysSecurityController extends BaseRestController {
 
 	@Log(title = "安全配置", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> saveConfig(@RequestBody SysSecurityConfig config) {
+	public R<?> saveConfig(@Validated @RequestBody SysSecurityConfig config) {
 		config.setOperator(StpAdminUtil.getLoginUser());
 		this.securityConfigService.saveConfig(config);
 		return R.ok();
@@ -90,14 +93,14 @@ public class SysSecurityController extends BaseRestController {
 
 	@Log(title = "安全配置", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> delConfig(@RequestBody List<Long> configIds) {
+	public R<?> delConfig(@RequestBody @NotEmpty List<Long> configIds) {
 		this.securityConfigService.deleteConfigs(configIds);
 		return R.ok();
 	}
 
 	@Log(title = "安全配置", businessType = BusinessType.UPDATE)
 	@PutMapping("/changeStatus/{id}")
-	public R<?> changeConfigStatus(@PathVariable Long id) {
+	public R<?> changeConfigStatus(@PathVariable @LongId Long id) {
 		this.securityConfigService.changeConfigStatus(id);
 		return R.ok();
 	}

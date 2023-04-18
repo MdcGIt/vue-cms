@@ -9,7 +9,7 @@
               icon="el-icon-back"
               size="mini"
               plain
-              @click="handleGoBack">返回</el-button>
+              @click="handleGoBack">{{ $t('CMS.FriendLink.GoBack') }}</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button 
@@ -28,7 +28,7 @@
               plain
               :disabled="single"
               v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
-              @click="handleEdit">编辑</el-button>
+              @click="handleEdit">{{ $t('Common.Edit') }}</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button 
@@ -51,7 +51,7 @@
           class="el-form-search"
           v-show="showSearch">
           <el-form-item prop="query">
-            <el-input v-model="queryParams.query" placeholder="输入友链名称/链接查询">
+            <el-input v-model="queryParams.query" :placeholder="$t('CMS.FriendLink.Placeholder.LinkQuery')">
             </el-input>
           </el-form-item>
           <el-form-item>
@@ -75,20 +75,9 @@
           v-loading="loading"
           :data="linkList"
           @selection-change="handleSelectionChange">
-          <el-table-column 
-            type="selection"
-            width="50"
-            align="center" />
-          <el-table-column 
-            type="index"
-            label="序号"
-            align="center"
-            width="50" />
-          <el-table-column 
-            label="Logo"
-            align="left"
-            width="100"
-            prop="name">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column type="index" :label="$t('Common.RowNo')" align="center" width="50" />
+          <el-table-column label="Logo" align="left" width="100" prop="name">
             <template slot-scope="scope">
               <el-image v-if="scope.row.src!=null&&scope.row.src!=''" :src="scope.row.src"
                 style="height: 60px;"
@@ -96,39 +85,23 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column 
-            label="名称"
-            align="left"
-            width="300"
-            prop="name">
+          <el-table-column :label="$t('CMS.FriendLink.LinkName')" align="left" width="300" prop="name">
           </el-table-column>
-          <el-table-column 
-            label="链接"
-            align="left"
-            prop="url"/>
-          <el-table-column 
-            label="最近修改时间"
-            align="center"
-            width="160">
+          <el-table-column :label="$t('CMS.FriendLink.LinkUrl')" align="left" prop="url"/>
+          <el-table-column :label="$t('Common.UpdateTime')" align="center" width="160">
             <template slot-scope="scope">
               <span v-if="scope.row.updateTime!=null">{{ parseTime(scope.row.updateTime) }}</span>
               <span v-else>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column 
-            :label="$t('Common.Operation')"
-            align="center"
-            width="180" 
-            class-name="small-padding fixed-width">
+          <el-table-column :label="$t('Common.Operation')" align="center" width="180"  class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button 
-                size="mini"
                 type="text"
                 icon="el-icon-edit"
                 v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
-                @click="handleEdit(scope.row)">编辑</el-button>
+                @click="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-button>
               <el-button 
-                size="mini"
                 type="text"
                 icon="el-icon-delete"
                 v-hasPermi="[ 'cms:friendlink:delete' ]"
@@ -146,10 +119,10 @@
       width="500px"
       append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="名称" prop="name">
+        <el-form-item :label="$t('CMS.FriendLink.LinkName')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="链接" prop="url">
+        <el-form-item :label="$t('CMS.FriendLink.LinkUrl')" prop="url">
           <el-input v-model="form.url" placeholder="http(s)://" />
         </el-form-item>
         <el-form-item label="Logo" prop="logo">
@@ -210,11 +183,10 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         url: [
-          { required: true, message: "链接不能为空", trigger: "blur" },
-          { trigger: "blur", validator: urlValidator }
+          { required: true, validator: urlValidator, trigger: "blur" }
         ]
       }
     };
@@ -252,13 +224,14 @@ export default {
     },
     handleAdd () {
       this.reset();
-      this.title = "添加友情链接";
+      this.title = this.$t('CMS.FriendLink.AddLinkTitle');
       this.open = true;
     },
     handleEdit (row) {
+      const data = row.linkId ? row : this.selectedRows[0];
       this.reset();
-      this.title = "编辑友情链接信息";
-      this.form = row;
+      this.title = this.$t('CMS.FriendLink.EditLinkTitle');
+      this.form = data;
       this.open = true;
     },
     /** 提交按钮 */

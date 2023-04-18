@@ -26,6 +26,7 @@ import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.service.ISysLogininforService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -73,7 +74,7 @@ public class SysLogininforController extends BaseRestController {
 
 	@Log(title = "登录日志", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> infoIds) {
+	public R<?> remove(@RequestBody @NotEmpty List<Long> infoIds) {
 		logininforService.removeByIds(infoIds);
 		return R.ok();
 	}

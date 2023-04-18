@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,10 +62,10 @@ import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
 import freemarker.template.TemplateException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
@@ -136,7 +137,7 @@ public class ContentController extends BaseRestController {
 	 * 内容编辑数据初始化
 	 */
 	@GetMapping("/init/{catalogId}/{contentType}/{contentId}")
-	public R<ContentVO> initContentEditor(@PathVariable("catalogId") @Min(1) Long catalogId,
+	public R<ContentVO> initContentEditor(@PathVariable("catalogId") @LongId Long catalogId,
 			@PathVariable("contentType") String contentType, @PathVariable("contentId") Long contentId) {
 		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser());
 		IContentType ct = ContentCoreUtils.getContentType(contentType);
@@ -190,7 +191,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "发布内容", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
-	public R<String> publish(@RequestBody PublishContentDTO publishContentDTO) throws TemplateException, IOException {
+	public R<String> publish(@RequestBody @Validated PublishContentDTO publishContentDTO) throws TemplateException, IOException {
 		this.publishService.publishContent(publishContentDTO.getContentIds());
 		return R.ok();
 	}
@@ -200,7 +201,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "锁定内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/lock/{contentId}")
-	public R<String> lock(@PathVariable("contentId") @Min(1) Long contentId) {
+	public R<String> lock(@PathVariable("contentId") @LongId Long contentId) {
 		this.contentService.lock(contentId, StpAdminUtil.getLoginUser().getUsername());
 		return R.ok(StpAdminUtil.getLoginUser().getUsername());
 	}
@@ -210,7 +211,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "解锁内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/unlock/{contentId}")
-	public R<String> unLock(@PathVariable("contentId") @Min(1) Long contentId) {
+	public R<String> unLock(@PathVariable("contentId") @LongId Long contentId) {
 		this.contentService.unLock(contentId, StpAdminUtil.getLoginUser().getUsername());
 		return R.ok();
 	}
@@ -220,7 +221,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "复制内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/copy")
-	public R<?> copy(@RequestBody CopyContentDTO dto) {
+	public R<?> copy(@RequestBody @Validated CopyContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.contentService.copy(dto);
 		return R.ok();
@@ -231,7 +232,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "转移内容", businessType = BusinessType.UPDATE)
 	@PostMapping("/move")
-	public R<?> move(@RequestBody MoveContentDTO dto) {
+	public R<?> move(@RequestBody @Validated MoveContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.contentService.move(dto);
 		return R.ok();
@@ -242,7 +243,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "置顶", businessType = BusinessType.UPDATE)
 	@PostMapping("/set_top")
-	public R<?> setTop(@RequestBody SetTopContentDTO dto) {
+	public R<?> setTop(@RequestBody @Validated SetTopContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.contentService.setTop(dto);
 		return R.ok();
@@ -253,7 +254,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "取消置顶", businessType = BusinessType.UPDATE)
 	@PostMapping("/cancel_top")
-	public R<?> cancelTop(@RequestBody List<Long> contentIds) {
+	public R<?> cancelTop(@RequestBody @NotEmpty List<Long> contentIds) {
 		this.contentService.cancelTop(contentIds, StpAdminUtil.getLoginUser());
 		return R.ok();
 	}
@@ -263,7 +264,7 @@ public class ContentController extends BaseRestController {
 	 */
 	@Log(title = "内容排序", businessType = BusinessType.UPDATE)
 	@PostMapping("/sort")
-	public R<?> sort(@RequestBody SortContentDTO dto) {
+	public R<?> sort(@RequestBody @Validated SortContentDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.contentService.sort(dto);
 		return R.ok();

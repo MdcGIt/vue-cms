@@ -34,6 +34,7 @@ import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysConfigService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -130,7 +131,7 @@ public class SysConfigController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysConfigRemove)
 	@Log(title = "参数管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> configIds) {
+	public R<?> remove(@RequestBody @NotEmpty List<Long> configIds) {
 		Assert.notEmpty(configIds, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception());
 		configService.deleteConfigByIds(configIds);
 		return R.ok();

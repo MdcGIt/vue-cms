@@ -9,7 +9,7 @@
           size="mini" 
           :disabled="commentMultiple" 
           v-hasPermi="['comment:audit']"
-          @click="handleAuditPass">审核通过</el-button>
+          @click="handleAuditPass">{{ $t('Comment.AuditPass') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button 
@@ -19,7 +19,7 @@
           size="mini" 
           :disabled="commentMultiple"
           v-hasPermi="['comment:audit']"
-          @click="handleAuditNotPass">审核不通过</el-button>
+          @click="handleAuditNotPass">{{ $t('Comment.AuditNotPass') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button 
@@ -34,7 +34,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadCommentList"></right-toolbar>
     </el-row>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" style="float:right;" v-show="showSearch">
-      <el-form-item label="来源类型" prop="sourceType">
+      <el-form-item :label="$t('Comment.SourceType')" prop="sourceType">
         <el-input
           v-model="queryParams.sourceType"
           clearable
@@ -42,7 +42,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="来源ID" prop="sourceId">·
+      <el-form-item :label="$t('Comment.SourceId')" prop="sourceId">·
         <el-input
           v-model="queryParams.sourceId"
           clearable
@@ -50,7 +50,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户ID" prop="uid">
+      <el-form-item :label="$t('Comment.UID')" prop="uid">
         <el-input
           v-model="queryParams.uid"
           clearable
@@ -58,7 +58,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审核状态" prop="auditStatus">
+      <el-form-item :label="$t('Comment.AuditStatus')" prop="auditStatus">
         <el-select
           v-model="queryParams.auditStatus"
           clearable
@@ -81,31 +81,31 @@
     </el-form>
     <el-table v-loading="loading" :data="commentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="来源类型" prop="sourceType" width="80" :show-overflow-tooltip="true" />
-      <el-table-column label="来源ID" prop="sourceId" width="140" :show-overflow-tooltip="true" />
-      <el-table-column label="评论内容" prop="content" :show-overflow-tooltip="true" />
-      <el-table-column label="审核状态" align="center" width="100">
+      <el-table-column :label="$t('Comment.SourceType')" prop="sourceType" width="120" :show-overflow-tooltip="true" />
+      <el-table-column :label="$t('Comment.SourceId')" prop="sourceId" width="140" :show-overflow-tooltip="true" />
+      <el-table-column :label="$t('Comment.Content')" prop="content" :show-overflow-tooltip="true" />
+      <el-table-column :label="$t('Comment.AuditStatus')" align="center" width="100">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.CommentAuditStatus" :value="scope.row.auditStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="点赞数" align="center" width="80">
+      <el-table-column :label="$t('Comment.LikeCount')" align="center" width="80">
         <template slot-scope="scope">
           <el-link type="primary" @click="handleLikeList(scope.row)">{{ scope.row.likeCount }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="回复数" align="center" width="80">
+      <el-table-column :label="$t('Comment.ReplyCount')" align="center" width="80">
         <template slot-scope="scope">
           <el-link type="primary" @click="handleReplyList(scope.row)">{{ scope.row.replyCount }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="评论时间" align="center" prop="commentTime" width="150">
+      <el-table-column :label="$t('Comment.Time')" align="center" prop="commentTime" width="150">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.commentTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="属地" prop="location" align="center" width="120" :show-overflow-tooltip="true" />
-      <el-table-column label="客户端类型" prop="clientType" align="center" width="100" :show-overflow-tooltip="true" />
+      <el-table-column :label="$t('Comment.Location')" prop="location" align="center" width="120" :show-overflow-tooltip="true" />
+      <el-table-column :label="$t('Comment.ClientType')" prop="clientType" align="center" width="100" :show-overflow-tooltip="true" />
       <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width" width="220">
         <template slot-scope="scope" v-if="scope.row.roleId !== 1">
           <el-button
@@ -114,14 +114,14 @@
             type="text"
             icon="el-icon-circle-check"
             @click="handleAuditPass(scope.row)"
-          >审核通过</el-button>
+          >{{ $t('Comment.AuditPass') }}</el-button>
           <el-button
             v-if="scope.row.auditStatus==0||scope.row.auditStatus==1"
             size="mini"
             type="text"
             icon="el-icon-circle-close"
             @click="handleAuditNotPass(scope.row)"
-          >审核不通过</el-button>
+          >{{ $t('Comment.AuditNotPass') }}</el-button>
           <el-button
             size="mini"
             type="text"
@@ -147,24 +147,24 @@
       :before-close="handleReplyListClose">
       <el-table v-loading="replyLoading" :data="replyList" @selection-change="handleReplySelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="回复内容" prop="content" :show-overflow-tooltip="true" />
-        <el-table-column label="审核状态" align="center" width="100">
+        <el-table-column :label="$t('Comment.ReplyContent')" prop="content" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('Comment.AuditStatus')" align="center" width="100">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.CommentAuditStatus" :value="scope.row.auditStatus"/>
           </template>
         </el-table-column>
-        <el-table-column label="点赞数"  align="center" width="80">
+        <el-table-column :label="$t('Comment.LikeCount')" align="center" width="80">
           <template slot-scope="scope">
             <el-link type="primary" @click="handleLikeList(scope.row)">{{ scope.row.likeCount }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column label="回复时间" align="center" prop="commentTime" width="150">
+        <el-table-column :label="$t('Comment.ReplyTime')" align="center" prop="commentTime" width="150">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.commentTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="属地" prop="location" align="center" width="120" :show-overflow-tooltip="true" />
-        <el-table-column label="客户端类型" prop="clientType" align="center" width="100" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('Comment.Location')" prop="location" align="center" width="120" :show-overflow-tooltip="true" />
+        <el-table-column :label="$t('Comment.ClientType')" prop="clientType" align="center" width="100" :show-overflow-tooltip="true" />
         <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width" width="220">
           <template slot-scope="scope" v-if="scope.row.roleId !== 1">
             <el-button
@@ -173,14 +173,14 @@
               type="text"
               icon="el-icon-circle-check"
               @click="handleAuditPass(scope.row)"
-            >审核通过</el-button>
+            >{{ $t('Comment.AuditPass') }}</el-button>
             <el-button
             v-if="scope.row.auditStatus==0||scope.row.auditStatus==1"
               size="mini"
               type="text"
               icon="el-icon-circle-close"
               @click="handleAuditNotPass(scope.row)"
-            >审核不通过</el-button>
+            >{{ $t('Comment.AuditNotPass') }}</el-button>
             <el-button
               size="mini"
               type="text"

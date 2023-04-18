@@ -3,12 +3,13 @@
     <el-row>
       <el-col :span="24">
         <div class="grid-btn-bar bg-purple-white">
-          <el-button plain type="info" size="mini" icon="el-icon-back" @click="handleGoBack">{{ $t('CMS.Content.BackToList') }}</el-button>
           <el-button plain type="success" size="mini" icon="el-icon-edit" @click="handleSave">{{ $t("Common.Save") }}</el-button>
           <el-button plain type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePublish">{{ $t('CMS.ContentCore.Publish') }}</el-button>
           <el-button plain type="primary" size="mini" @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>{{ $t('CMS.ContentCore.Preview') }}</el-button>
           <el-button plain type="warning" v-if="isLock" size="mini" icon="el-icon-unlock" @click="handleChangeLockState">{{ $t('CMS.Content.Unlock') }}</el-button>
           <el-button plain type="primary" v-else size="mini" icon="el-icon-lock" @click="handleChangeLockState">{{ $t('CMS.Content.Lock') }}</el-button>
+          <el-button v-if="openEditorW=='true'" plain type="warning" size="mini" icon="el-icon-close" @click="handleClose">{{ $t('Common.Close') }}</el-button>
+          <el-button v-else plain type="warning" size="mini" icon="el-icon-back" @click="handleGoBack">{{ $t('CMS.Content.BackToList') }}</el-button>
         </div>
       </el-col>
     </el-row>
@@ -282,6 +283,7 @@ export default {
       activeName: "basic",
       catalogId: this.$route.query.catalogId || '0',
       contentId: this.$route.query.id || '0',
+      openEditorW: this.$route.query.w,
       contentType: this.$route.query.type,
       opType: !this.$route.query.id || this.$route.query.id == '0' ? 'ADD' : 'UPDATE',
       openCatalogSelector: false,
@@ -299,6 +301,7 @@ export default {
         tags:[],
         keywords:[]
       },
+      initDataStr: undefined, // 初始化数据jsonString
       publishPipeTemplates: [],
       rules: {
         title: [{ required: true, message: this.$t('CMS.Content.RuleTips.Title'), trigger: "blur" }]
@@ -310,7 +313,6 @@ export default {
     };
   },
   created() {
-    console.log("opType", this.opType)
     this.initData();
   },
   methods: {
@@ -349,14 +351,43 @@ export default {
             this.showTemplate = true;
           }
         });
+        this.initDataStr = JSON.stringify(this.form);
       });
     },
     handleShowOtherTitle() {
       this.showOtherTitle = !this.showOtherTitle;
     },
+    isFormChanged() {
+      return JSON.stringify(this.form) != this.initDataStr;
+    },
     handleGoBack() {
-      const obj = { path: "/configs/content" };
-      this.$tab.closeOpenPage(obj);
+      const that = this;
+      if (this.isFormChanged()) {
+        this.$confirm(this.$t('CMS.Content.CloseContentEditorTip'), this.$t('Common.SystemTip'), {
+          confirmButtonText: this.$t('Common.Confirm'),
+          cancelButtonText: this.$t('Common.Cancel'),
+          type: "warning",
+        }).then(function () {
+          const obj = { path: "/configs/content" };
+          that.$tab.closeOpenPage(obj);
+        }).catch(function () { });
+      } else {
+        const obj = { path: "/configs/content" };
+        this.$tab.closeOpenPage(obj);
+      }
+    },
+    handleClose() {
+      if (this.isFormChanged()) {
+        this.$confirm(this.$t('CMS.Content.CloseContentEditorTip'), this.$t('Common.SystemTip'), {
+          confirmButtonText: this.$t('Common.Confirm'),
+          cancelButtonText: this.$t('Common.Cancel'),
+          type: "warning",
+        }).then(function () {
+          window.close();
+        }).catch(function () { });
+      } else {
+        window.close();
+      }
     },
     // 表单重置
     reset() {

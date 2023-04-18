@@ -2,6 +2,7 @@ package com.ruoyi.vote.controller;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 import com.ruoyi.vote.domain.VoteSubject;
 import com.ruoyi.vote.domain.VoteSubjectItem;
 import com.ruoyi.vote.domain.dto.SaveSubjectItemsDTO;
@@ -43,14 +45,14 @@ public class VoteSubjectController extends BaseRestController {
 
 	@Priv(type = AdminUserType.TYPE, value = VotePriv.View)
 	@GetMapping
-	public R<?> getVoteSubjects(@RequestParam @Min(1) Long voteId) {
+	public R<?> getVoteSubjects(@RequestParam @LongId Long voteId) {
 		List<VoteSubject> subjects = this.voteSubjectService.getVoteSubjectList(voteId);
 		return this.bindDataTable(subjects);
 	}
 
 	@Priv(type = AdminUserType.TYPE, value = VotePriv.View)
 	@GetMapping("/{subjectId}")
-	public R<?> getVoteSubjectDetail(@PathVariable @Min(1) Long subjectId) {
+	public R<?> getVoteSubjectDetail(@PathVariable @LongId Long subjectId) {
 		VoteSubject subject = this.voteSubjectService.getById(subjectId);
 		Assert.notNull(subject, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("subjectId", subjectId));
 		return R.ok(subject);
@@ -59,7 +61,7 @@ public class VoteSubjectController extends BaseRestController {
 	@Log(title = "新增调查主题", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.Add, VotePriv.Edit })
 	@PostMapping
-	public R<?> add(@RequestBody VoteSubject voteSubject) {
+	public R<?> add(@RequestBody @Validated VoteSubject voteSubject) {
 		voteSubject.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.voteSubjectService.addVoteSubject(voteSubject);
 		return R.ok();
@@ -68,7 +70,7 @@ public class VoteSubjectController extends BaseRestController {
 	@Log(title = "编辑调查主题", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.Add, VotePriv.Edit })
 	@PutMapping
-	public R<?> update(@RequestBody VoteSubject voteSubject) {
+	public R<?> update(@RequestBody @Validated VoteSubject voteSubject) {
 		voteSubject.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.voteSubjectService.updateVoteSubject(voteSubject);
 		return R.ok();

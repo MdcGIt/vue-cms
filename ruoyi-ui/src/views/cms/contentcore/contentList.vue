@@ -16,7 +16,7 @@
             <el-button 
               plain
               type="primary"
-              size="mini"
+              size="small"
               @click="handleAdd">{{ $t('Common.Confirm') }}</el-button>
           </el-row>
           <el-button 
@@ -228,6 +228,7 @@
   </div>
 </template>
 <script>
+import { getUserPreference } from "@/api/system/user";
 import { getContentTypes } from "@/api/contentcore/catalog";
 import { 
   getContentList, delContent, publishContent, createIndexes, 
@@ -293,7 +294,8 @@ export default {
       addContentType: "",
       openCatalogSelector: false, // 栏目选择弹窗
       isCopy: false,
-      openContentSortDialog: false // 内容选择弹窗
+      openContentSortDialog: false, // 内容选择弹窗
+      openEditorW: false
     };
   },
   watch: {
@@ -313,6 +315,9 @@ export default {
     if (this.catalogId && this.catalogId > 0) {
       this.loadContentList();
     }
+    getUserPreference('OpenContentEditorW').then(response => {
+      this.openEditorW = response.data == 'Y'
+    })
   },
   methods: {
     loadContentList () {
@@ -383,13 +388,15 @@ export default {
       this.openEditor(row.catalogId, row.contentId, row.contentType);
     },
     openEditor(catalogId, contentId, contentType) {
-      this.$router.push({ path: "/cms/content/editor", query: { type: contentType, catalogId: catalogId, id: contentId } });
-      
-      // let routeData = this.$router.resolve({
-      //   path: "/cms/content/editor",
-      //   query: { type: contentType, catalogId: catalogId, id: contentId },
-      // });
-      // window.open(routeData.href, '_blank');
+      if (this.openEditorW) {
+        let routeData = this.$router.resolve({
+          path: "/cms/content/editor",
+          query: { type: contentType, catalogId: catalogId, id: contentId, w: this.openEditorW },
+        });
+        window.open(routeData.href, '_blank');
+      } else {
+        this.$router.push({ path: "/cms/content/editor", query: { type: contentType, catalogId: catalogId, id: contentId, w: this.openEditorW } });
+      }
     },
     handleDelete (row) {
       const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(row => row.contentId);

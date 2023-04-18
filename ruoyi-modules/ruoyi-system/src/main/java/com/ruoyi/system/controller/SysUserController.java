@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,9 +53,12 @@ import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.impl.SysUserServiceImpl.SysUserReadListener;
 import com.ruoyi.system.user.preference.IUserPreference;
+import com.ruoyi.system.validator.LongId;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -185,10 +190,7 @@ public class SysUserController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserRemove)
 	@Log(title = "用户管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
-	public R<?> remove(@RequestBody List<Long> userIds) {
-		boolean validate = IdUtils.validate(userIds);
-		Assert.isTrue(validate, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception());
-
+	public R<?> remove(@RequestBody @NotEmpty List<Long> userIds) {
 		userService.deleteUserByIds(userIds);
 		return R.ok();
 	}
@@ -199,7 +201,7 @@ public class SysUserController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserResetPwd)
 	@Log(title = "用户管理", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/resetPwd")
-	public R<?> resetPwd(@RequestBody SysUser user) {
+	public R<?> resetPwd(@Validated @RequestBody SysUser user) {
 		userService.resetPwd(user);
 		return R.ok();
 	}
@@ -209,7 +211,7 @@ public class SysUserController extends BaseRestController {
 	 */
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserList)
 	@GetMapping("/authRole/{userId}")
-	public R<?> authRole(@PathVariable("userId") Long userId) {
+	public R<?> authRole(@PathVariable("userId") @LongId Long userId) {
 		SysUser user = userService.getById(userId);
 		Assert.notNull(user, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(userId));
 
@@ -225,7 +227,7 @@ public class SysUserController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserEdit)
 	@Log(title = "用户管理", businessType = BusinessType.GRANT)
 	@PutMapping("/authRole")
-	public R<?> insertAuthRole(@RequestBody AuthRoleDTO dto) {
+	public R<?> insertAuthRole(@Validated @RequestBody AuthRoleDTO dto) {
 		userService.insertUserAuth(dto.getUserId(), dto.getRoleIds());
 		return R.ok();
 	}
@@ -251,11 +253,25 @@ public class SysUserController extends BaseRestController {
 	}
 
 	@SaAdminCheckLogin
+	@GetMapping("/preference")
+	public R<?> getUserPreference(@RequestParam("id") @NotEmpty String id) {
+		LoginUser loginUser = StpAdminUtil.getLoginUser();
+		SysUser user = (SysUser) loginUser.getUser();
+		Optional<IUserPreference> findFirst = this.userPreferenceList.stream().filter(up -> up.getId().equals(id))
+				.findFirst();
+		if (!findFirst.isPresent()) {
+			return R.fail();
+		}
+		Object object = user.getPreferences().getOrDefault(id, findFirst.get().getDefaultValue());
+		return R.ok(object);
+	}
+
+	@SaAdminCheckLogin
 	@PutMapping("/savePreferences")
-	public R<?> saveUserPreferences(@RequestBody Map<String, Object> userPreferences) throws Exception {
+	public R<?> saveUserPreferences(@RequestBody @NotNull Map<String, Object> userPreferences) throws Exception {
 		SysUser user = this.userService.getById(StpAdminUtil.getLoginIdAsLong());
-		Map<String, Object> map = this.userPreferenceList.stream()
-				.collect(Collectors.toMap(IUserPreference::getId, up -> userPreferences.getOrDefault(up.getId(), up.getDefaultValue())));
+		Map<String, Object> map = this.userPreferenceList.stream().collect(Collectors.toMap(IUserPreference::getId,
+				up -> userPreferences.getOrDefault(up.getId(), up.getDefaultValue())));
 		user.setPreferences(map);
 		this.userService.updateById(user);
 		LoginUser loginUser = StpAdminUtil.getLoginUser();

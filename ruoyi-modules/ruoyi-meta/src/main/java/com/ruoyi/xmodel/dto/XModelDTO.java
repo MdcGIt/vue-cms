@@ -1,12 +1,12 @@
 package com.ruoyi.xmodel.dto;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.springframework.beans.BeanUtils;
 
 import com.ruoyi.common.security.domain.BaseDTO;
 import com.ruoyi.xmodel.domain.XModel;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,11 +20,13 @@ public class XModelDTO extends BaseDTO {
     
     private String ownerId;
     
-    @NotNull
+    @NotBlank
     private String name;
 
+    @Pattern(regexp = "[A-Za-z0-9_]+")
     private String code;
 
+    @NotBlank
     private String tableName;
     
 	public static XModelDTO newInstance(XModel model) {

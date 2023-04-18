@@ -20,7 +20,7 @@
               plain
               :disabled="single"
               v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
-              @click="handleEdit">编辑</el-button>
+              @click="handleEdit">{{ $t("Common.Edit") }}</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button 
@@ -40,10 +40,9 @@
           ref="queryForm"
           :inline="true"
           size="mini"
-          class="el-form-search"
-          v-show="showSearch">
+          class="el-form-search">
           <el-form-item prop="query">
-            <el-input v-model="queryParams.query" placeholder="输入分组名称查询">
+            <el-input v-model="queryParams.query" :placeholder="$t('CMS.FriendLink.Placeholder.GroupQuery')">
             </el-input>
           </el-form-item>
           <el-form-item>
@@ -66,44 +65,28 @@
         <el-table v-loading="loading"
                   :data="linkGroupList"
                   @selection-change="handleSelectionChange">
-          <el-table-column type="selection"
-                          width="50"
-                          align="center" />
-          <el-table-column type="index"
-                          label="序号"
-                          align="center"
-                          width="50" />
-          <el-table-column label="名称"
-                          align="left"
-                          prop="name">
+          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column type="index" :label="$t('Common.RowNo')" align="center" width="50" />
+          <el-table-column :label="$t('CMS.FriendLink.GroupName')" align="left" prop="name">
             <template slot-scope="scope">
               <el-button type="text" @click="handleGroupClick(scope.row)">{{ scope.row.name }}</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="编码"
-                          align="left"
-                          prop="code"/>
-          <el-table-column label="最近修改时间"
-                            align="center"
-                            width="160">
+          <el-table-column :label="$t('CMS.FriendLink.GroupCode')" align="left" prop="code"/>
+          <el-table-column :label="$t('Common.UpdateTime')" align="center" width="160">
             <template slot-scope="scope">
               <span v-if="scope.row.updateTime!=null">{{ parseTime(scope.row.updateTime) }}</span>
               <span v-else>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('Common.Operation')"
-                          align="center"
-                          width="180" 
-                          class-name="small-padding fixed-width">
+          <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button 
-                size="mini"
                 type="text"
                 icon="el-icon-edit"
                 v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
-                @click="handleEdit(scope.row)">编辑</el-button>
+                @click="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-button>
               <el-button 
-                size="mini"
                 type="text"
                 icon="el-icon-delete"
                 v-hasPermi="[ 'cms:friendlink:delete' ]"
@@ -114,21 +97,17 @@
       </el-col> 
     </el-row>
     <!-- 添加或修改弹窗 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               :close-on-click-modal="false"
-               width="500px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item label="名称"
-                      prop="name">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      :close-on-click-modal="false"
+      width="500px"
+      append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item :label="$t('CMS.FriendLink.GroupName')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="编码"
-                      prop="code">
+        <el-form-item :label="$t('CMS.FriendLink.GroupCode')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
       </el-form>
@@ -142,6 +121,7 @@
 <style scoped>
 </style>
 <script>
+import { codeValidator } from '@/utils/validate'
 import { getLinkGroupList, addLinkGroup, editLinkGroup, deleteLinkGroup } from "@/api/link/linkGroup";
 
 export default {
@@ -173,10 +153,10 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: "不能为空且只能使用字母、数字和下划线", trigger: "blur" }
+          { required: true, validator: codeValidator, trigger: "blur" }
         ]
       }
     };
@@ -214,12 +194,12 @@ export default {
     },
     handleAdd () {
       this.reset();
-      this.title = "添加友情链接分组";
+      this.title = this.$t('CMS.FriendLink.AddTitle')
       this.open = true;
     },
     handleEdit (row) {
       this.reset();
-      this.title = "编辑友情链接分组信息";
+      this.title = this.$t('CMS.FriendLink.EditTitle')
       this.form = row;
       this.open = true;
     },
@@ -245,10 +225,10 @@ export default {
     },
     handleDelete (row) {
       const rows = row.linkGroupId ? [ row ] : this.selectedRows
-      this.$modal.confirm('是否确认删除选中的友链分组?').then(function() {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function() {
         return deleteLinkGroup(rows);
       }).then((response) => {
-        this.$modal.msgSuccess(response.msg);
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
         this.loadListData();
       }).catch(() => {});
     },

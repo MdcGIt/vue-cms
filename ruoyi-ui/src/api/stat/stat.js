@@ -6,3 +6,10 @@ export function getStatMenuTreeData() {
     method: 'get'
   })
 }
+
+export function getStatMenuTreeSelectorData() {
+  return request({
+    url: '/stat/menu/options',
+    method: 'get'
+  })
+}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,7 +87,7 @@ public class VoteController extends BaseRestController {
 	@Log(title = "新增问卷调查", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = VotePriv.Add)
 	@PostMapping
-	public R<?> add(@RequestBody Vote vote) {
+	public R<?> add(@RequestBody @Validated Vote vote) {
 		vote.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.voteService.addVote(vote);
 		return R.ok();
@@ -95,7 +96,7 @@ public class VoteController extends BaseRestController {
 	@Log(title = "编辑问卷调查", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { VotePriv.Add, VotePriv.Edit })
 	@PutMapping
-	public R<?> update(@RequestBody Vote vote) {
+	public R<?> update(@RequestBody @Validated Vote vote) {
 		vote.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.voteService.updateVote(vote);
 		return R.ok();

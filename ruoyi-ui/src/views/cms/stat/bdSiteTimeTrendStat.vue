@@ -8,7 +8,7 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              浏览量（PV）
+              {{ $t('Stat.Site.PageView') }}
             </div>
             {{ sum.pv_count }}
           </div>
@@ -21,7 +21,7 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              访客数（UV）
+              {{ $t('Stat.Site.UserView') }}
             </div>
             {{ sum.visitor_count }}
           </div>
@@ -34,7 +34,7 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              IP数
+              {{ $t('Stat.Site.IPView') }}
             </div>
             {{ sum.ip_count }}
           </div>
@@ -47,7 +47,7 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              访问次数
+              {{ $t('Stat.Site.VisitCount') }}
             </div>
             {{ sum.visit_count }}
           </div>
@@ -89,10 +89,10 @@
       </el-col>
       <el-col :span="1.5">
         <el-radio-group v-model="queryParams.gran" size="small">
-          <el-radio-button label="hour">按小时</el-radio-button>
-          <el-radio-button label="day">按天</el-radio-button>
-          <el-radio-button label="week">按周</el-radio-button>
-          <el-radio-button label="month">按月</el-radio-button>
+          <el-radio-button label="hour">{{ $t('Stat.Site.GranHour') }}</el-radio-button>
+          <el-radio-button label="day">{{ $t('Stat.Site.GranDay') }}</el-radio-button>
+          <el-radio-button label="week">{{ $t('Stat.Site.GranWeek') }}</el-radio-button>
+          <el-radio-button label="month">{{ $t('Stat.Site.GranMonth') }}</el-radio-button>
         </el-radio-group>
       </el-col>
       <el-col :span="1.5">
@@ -106,7 +106,7 @@
     <el-row :gutter="10" class="mb8">
         <el-card v-loading="loading" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>趋势分析</span>
+            <span>{{ $t('Stat.Site.TrendCharts') }}</span>
           </div>
           <line-chart :chart-data="lineChartData" />
         </el-card>
@@ -117,7 +117,7 @@
 </style>
 <script>
 import * as baiduTongjiApi from "@/api/stat/baidu";
-import LineChart from '../../dashboard/LineChart'
+import LineChart from '@/views/dashboard/LineChart'
 
 export default {
   name: "CMSSiteBdTrendOverview",
@@ -135,7 +135,7 @@ export default {
       },
       pickerOptions: {
         shortcuts: [{
-          text: '最近一周',
+          text: this.$t('Common.LastWeek'),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -143,7 +143,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: '最近一个月',
+          text: this.$t('Common.LastMonth'),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -151,7 +151,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: '最近三个月',
+          text: this.$t('Common.LastThreeMonth'),
           onClick(picker) {
             const end = new Date();
             const start = new Date();
@@ -186,7 +186,7 @@ export default {
     },
     loadSiteTimeTrendDatas () {
       if (this.siteOptions.length == 0) {
-        this.$modal.msgWarning("无可用站点数据");
+        this.$modal.msgWarning(this.$t('Stat.Site.NoSite'));
         return;
       }
       this.loading = true;

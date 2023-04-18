@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,9 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -87,7 +90,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      */
     @GetMapping(value = "/{publishPipeId}")
-    public R<?> getInfo(@PathVariable Long publishPipeId) {
+    public R<?> getInfo(@PathVariable @LongId Long publishPipeId) {
         CmsPublishPipe publishPipe = publishPipeService.getById(publishPipeId);
         Assert.notNull(publishPipe, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("publishPipeId", publishPipeId));
         return R.ok(publishPipe);
@@ -102,7 +105,7 @@ public class PublishPipeController extends BaseRestController {
      */
 	@Log(title = "新增发布通道", businessType = BusinessType.INSERT)
     @PostMapping
-    public R<?> addSave(@RequestBody CmsPublishPipe publishPipe) throws IOException {
+    public R<?> addSave(@RequestBody @Validated CmsPublishPipe publishPipe) throws IOException {
     	CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
     	publishPipe.setSiteId(site.getSiteId());
     	publishPipe.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -119,7 +122,7 @@ public class PublishPipeController extends BaseRestController {
      */
 	@Log(title = "编辑发布通道", businessType = BusinessType.UPDATE)
     @PutMapping
-    public R<?> editSave(@RequestBody CmsPublishPipe publishPipe) throws IOException {
+    public R<?> editSave(@RequestBody @Validated CmsPublishPipe publishPipe) throws IOException {
     	publishPipe.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
         this.publishPipeService.savePublishPipe(publishPipe);
         return R.ok();
@@ -134,7 +137,7 @@ public class PublishPipeController extends BaseRestController {
      */
 	@Log(title = "删除发布通道", businessType = BusinessType.DELETE)
     @DeleteMapping
-    public R<String> remove(@RequestBody List<Long> publishPipeIds) throws IOException {
+    public R<String> remove(@RequestBody @NotEmpty List<Long> publishPipeIds) throws IOException {
     	this.publishPipeService.deletePublishPipe(publishPipeIds);
     	return R.ok();
     }
@@ -148,11 +151,10 @@ public class PublishPipeController extends BaseRestController {
      */
 	@Log(title = "启用发布通道", businessType = BusinessType.UPDATE)
     @PostMapping("/enable/{publishPipeId}")
-    public R<String> enable(@PathVariable("publishPipeId") Long publishPipeId) throws IOException {
+    public R<String> enable(@PathVariable("publishPipeId") @LongId Long publishPipeId) throws IOException {
     	CmsPublishPipe publishPipe = this.publishPipeService.getById(publishPipeId);
-    	if (publishPipe == null) {
-    		return R.fail("数据ID错误：" + publishPipeId);
-    	}
+    	Assert.notNull(publishPipe, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("publishPipeId", publishPipe));
+
     	publishPipe.setState(EnableOrDisable.ENABLE);
     	publishPipe.updateBy(StpAdminUtil.getLoginUser().getUsername());
     	this.publishPipeService.savePublishPipe(publishPipe);

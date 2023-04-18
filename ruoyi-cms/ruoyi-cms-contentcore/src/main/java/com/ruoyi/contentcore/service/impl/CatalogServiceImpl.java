@@ -34,8 +34,10 @@ import com.ruoyi.contentcore.core.impl.InternalDataType_Catalog;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.domain.dto.CatalogApplyChildrenDTO;
-import com.ruoyi.contentcore.domain.dto.CatalogDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogAddDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogApplyConfigPropsDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogApplyPublishPipeDTO;
+import com.ruoyi.contentcore.domain.dto.CatalogUpdateDTO;
 import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
 import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
@@ -143,7 +145,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
-	public CmsCatalog addCatalog(CatalogDTO dto) throws IOException {
+	public CmsCatalog addCatalog(CatalogAddDTO dto) throws IOException {
 		boolean checkCatalogUnique = this.checkCatalogUnique(dto.getSiteId(), null, dto.getName(), dto.getAlias(),
 				dto.getPath());
 		Assert.isTrue(checkCatalogUnique, ContentCoreErrorCode.CONFLICT_CATALOG::exception);
@@ -155,8 +157,13 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 			dto.setParentId(0L);
 		}
 		CmsCatalog catalog = new CmsCatalog();
-		BeanUtils.copyProperties(dto, catalog, "catalogId");
 		catalog.setCatalogId(IdUtils.getSnowflakeId());
+		catalog.setSiteId(dto.getSiteId());
+		catalog.setParentId(dto.getParentId());
+		catalog.setName(dto.getName());
+		catalog.setAlias(dto.getAlias());
+		catalog.setPath(dto.getPath());
+		catalog.setCatalogType(dto.getCatalogType());
 		catalog.setTreeLevel(1);
 		String parentAncestors = StringUtils.EMPTY;
 		if (catalog.getParentId() > 0) {
@@ -194,15 +201,16 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
-	public CmsCatalog editCatalog(CatalogDTO dto) throws IOException {
-		boolean checkCatalogUnique = this.checkCatalogUnique(dto.getSiteId(), dto.getCatalogId(), dto.getName(),
+	public CmsCatalog editCatalog(CatalogUpdateDTO dto) throws IOException {
+		CmsCatalog catalog = this.getById(dto.getCatalogId());
+		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
+		
+		boolean checkCatalogUnique = this.checkCatalogUnique(catalog.getSiteId(), catalog.getCatalogId(), dto.getName(),
 				dto.getAlias(), dto.getPath());
 		Assert.isTrue(checkCatalogUnique, ContentCoreErrorCode.CONFLICT_CATALOG::exception);
 
-		CmsCatalog catalog = this.getById(dto.getCatalogId());
 		String oldPath = catalog.getPath();
-		BeanUtils.copyProperties(dto, catalog, "siteId", "catalogId", "parentId", "innercode", "treeLevel",
-				"childCount", "contentCount", "hitCount");
+		BeanUtils.copyProperties(dto, catalog);
 		// 发布通道数据处理
 		Map<String, Map<String, Object>> publishPipeProps = dto.getPublishPipeDatas().stream()
 				.collect(Collectors.toMap(PublishPipeProp::getPipeCode, PublishPipeProp::getProps));
@@ -259,34 +267,46 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
-	public void applyChildren(CatalogApplyChildrenDTO dto) {
+	public void applyConfigPropsToChildren(CatalogApplyConfigPropsDTO dto) {
 		CmsCatalog catalog = this.getCatalog(dto.getCatalogId());
 
 		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<>();
-		if (dto.getToCatalogIds() != null && dto.getToCatalogIds().size() > 0) {
-			q.in(CmsCatalog::getCatalogId, dto.getToCatalogIds());
-		} else {
+		if (StringUtils.isEmpty(dto.getToCatalogIds())) {
 			q.likeRight(CmsCatalog::getAncestors, catalog.getAncestors() + CatalogUtils.ANCESTORS_SPLITER);
+		} else {
+			q.in(CmsCatalog::getCatalogId, dto.getToCatalogIds());
 		}
 		List<CmsCatalog> toCatalogs = this.list(q);
 		for (CmsCatalog toCatalog : toCatalogs) {
 			if (dto.isAllExtends()) {
 				toCatalog.setConfigProps(catalog.getConfigProps());
-			} else if (dto.getConfigPropKeys() != null) {
+			} else if (StringUtils.isNotEmpty(dto.getConfigPropKeys())) {
 				dto.getConfigPropKeys().forEach(propKey -> {
 					toCatalog.getConfigProps().put(propKey, catalog.getConfigProps().get(propKey));
 				});
-			} else if (StringUtils.isNotEmpty(dto.getPublishPipeCode()) && dto.getPublishPipePropKeys() != null
-					&& dto.getPublishPipePropKeys().size() > 0) {
-				Map<String, Object> publishPipeProps = toCatalog.getPublishPipeProps(dto.getPublishPipeCode());
-				for (String propKey : dto.getPublishPipePropKeys()) {
-					publishPipeProps.put(propKey, catalog.getPublishPipeProps(dto.getPublishPipeCode()).get(propKey));
-				}
 			}
 			toCatalog.updateBy(dto.getOperator().getUsername());
-			this.clearCache(toCatalog);
 		}
 		this.updateBatchById(toCatalogs);
+		toCatalogs.forEach(this::clearCache);
+	}
+
+	@Override
+	public void applyPublishPipePropsToChildren(CatalogApplyPublishPipeDTO dto) {
+		CmsCatalog catalog = this.getCatalog(dto.getCatalogId());
+
+		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<>();
+		q.likeRight(CmsCatalog::getAncestors, catalog.getAncestors() + CatalogUtils.ANCESTORS_SPLITER);
+		List<CmsCatalog> toCatalogs = this.list(q);
+		for (CmsCatalog toCatalog : toCatalogs) {
+			Map<String, Object> publishPipeProps = toCatalog.getPublishPipeProps(dto.getPublishPipeCode());
+			for (String propKey : dto.getPublishPipePropKeys()) {
+				publishPipeProps.put(propKey, catalog.getPublishPipeProps(dto.getPublishPipeCode()).get(propKey));
+			}
+			toCatalog.updateBy(dto.getOperator().getUsername());
+		}
+		this.updateBatchById(toCatalogs);
+		toCatalogs.forEach(this::clearCache);
 	}
 
 	@Override

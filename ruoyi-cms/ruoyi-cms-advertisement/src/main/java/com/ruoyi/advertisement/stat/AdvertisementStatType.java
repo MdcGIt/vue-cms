@@ -11,9 +11,9 @@ import com.ruoyi.stat.StatMenu;
 public class AdvertisementStatType implements IStatType {
 
 	private final static List<StatMenu> STAT_MENU = List.of(new StatMenu("CmsAdv", "", "{STAT.MENU.CmsAdv}", 2),
-			new StatMenu("CmsAdStat", "CmsAdv", "广告综合统计", 1),
-			new StatMenu("CmsAdClickLog", "CmsAdv", "广告点击日志", 2),
-			new StatMenu("CmsAdViewLog", "CmsAdv", "广告展现日志", 3));
+			new StatMenu("CmsAdStat", "CmsAdv", "{STAT.MENU.CmsAdStat}", 1),
+			new StatMenu("CmsAdClickLog", "CmsAdv", "{STAT.MENU.CmsAdClickLog}", 2),
+			new StatMenu("CmsAdViewLog", "CmsAdv", "{STAT.MENU.CmsAdViewLog}", 3));
 
 	@Override
 	public List<StatMenu> getStatMenus() {

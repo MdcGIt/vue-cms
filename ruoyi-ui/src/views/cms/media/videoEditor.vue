@@ -36,34 +36,32 @@
           <el-container>
             <el-main>
               <el-row>
-                <el-form-item label="参数">
+                <el-form-item :label="$t('CMS.Video.Parameter')">
                   <div style="font-size:12px;color:#777;">
-                    [ 类型: {{ item.type }} ]
-                    [ 大小: {{ item.fileSizeName }} ]
-                    [ 时长: {{ transferDuration(item.duration) }} ]
-                    [ 分辨率: {{ item.width }}x{{ item.height }} ]
+                    [ {{ $t('CMS.Video.Type') }}: {{ item.type }} ]
+                    [ {{ $t('CMS.Video.FileSize') }}: {{ item.fileSizeName }} ]
+                    [ {{ $t('CMS.Video.Duration') }}: {{ transferDuration(item.duration) }} ]
+                    [ {{ $t('CMS.Video.WidthHeight') }}: {{ item.width }}x{{ item.height }} ]
                     <el-tooltip placement="top" effect="light">
                       <div slot="content">
-                        <p>格式：[ {{ item.format ? item.format : '-' }} ]</p>
-                        <p>编码：[ {{ item.decoder ? item.decoder : '-'  }} ]</p>
-                        <p>码率：[ {{ item.bitRate }} ]</p>
-                        <p>帧率：[ {{ item.frameRate }} ]</p>
+                        <p>{{ $t('CMS.Video.Format') }}：[ {{ item.format ? item.format : '-' }} ]</p>
+                        <p>{{ $t('CMS.Video.Decoder') }}：[ {{ item.decoder ? item.decoder : '-'  }} ]</p>
+                        <p>{{ $t('CMS.Video.BitRate') }}：[ {{ item.bitRate }} ]</p>
+                        <p>{{ $t('CMS.Video.FrameRate') }}：[ {{ item.frameRate }} ]</p>
                       </div>
-                      <el-link type="primary" :underline="false">详情</el-link>
+                      <el-link type="primary" :underline="false">{{$t('CMS.Video.Details') }}</el-link>
                     </el-tooltip>
                   </div>
                 </el-form-item>
               </el-row>
               <el-row>
-                <el-form-item label="标题">
+                <el-form-item :label="$t('CMS.Video.Title')">
                   <el-input v-model="item.title"></el-input>
                 </el-form-item>
               </el-row>
               <el-row>
-                <el-form-item label="摘要">
-                  <el-input type="textarea"
-                          :rows="2"
-                          v-model="item.desc"></el-input>
+                <el-form-item :label="$t('CMS.Video.Desc')">
+                  <el-input type="textarea" :rows="2" v-model="item.desc"></el-input>
                 </el-form-item>
               </el-row>
               <el-row class="r-opr-row">
@@ -71,20 +69,20 @@
                   icon="el-icon-top"
                   :underline="false"
                   v-if="index > 0" 
-                  @click="moveUp(index)">上移</el-link>
+                  @click="moveUp(index)">{{ $t('CMS.Video.MoveUp') }}</el-link>
                 <el-link
                   icon="el-icon-bottom"
                   :underline="false"
                   v-if="itemList.length > 1 && index < itemList.length - 1" 
-                  @click="moveDown(index)">下移</el-link>
+                  @click="moveDown(index)">{{ $t('CMS.Video.MoveDown') }}</el-link>
                 <el-link 
                   icon="el-icon-edit"
                   :underline="false"
-                  @click="editItem(index)">编辑</el-link>
+                  @click="editItem(index)">{{ $t('Common.Edit') }}</el-link>
                 <el-link 
                   icon="el-icon-delete"
                   :underline="false"
-                  @click="deleteImage(index)">删除</el-link>
+                  @click="deleteImage(index)">{{ $t('Common.Delete') }}</el-link>
               </el-row>
             </el-main>
           </el-container>
@@ -94,7 +92,7 @@
     <el-card shadow="always" class="mt10">
         <div class="btn-add bg-purple-white" @click="addItem">
           <svg-icon icon-class="video" style="width:60px;height:60px;"></svg-icon>
-          <div>添加视频</div>
+          <div>{{ $t('CMS.Video.Add') }}</div>
         </div>
     </el-card>
     <cms-resource-dialog 

@@ -1,27 +1,31 @@
 <template>
   <div class="app-container">
-    <el-dialog title="点赞记录"
-               :visible.sync="visible"
-               width="700px"
-               :close-on-click-modal="false"
-               append-to-body>
-      <el-form :model="queryParams"
-              ref="queryForm"
-              :inline="true"
-              label-width="68px"
-              class="el-form-search">
-        <el-form-item label="用户ID" prop="uid">
-          <el-input v-model="queryParams.uid" size="small">
+    <el-dialog 
+      :title="$t('Comment.LikeList')"
+      :visible.sync="visible"
+      width="700px"
+      :close-on-click-modal="false"
+      append-to-body>
+      <el-form 
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        size="small"
+        label-width="68px"
+        class="el-form-search mb12"
+        style="text-align: left">
+        <el-form-item :label="$t('Comment.UID')" prop="uid">
+          <el-input v-model="queryParams.uid">
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"
-                    icon="el-icon-search"
-                    size="small"
-                    @click="handleQuery">{{ $t("Common.Search") }}</el-button>
-          <el-button icon="el-icon-refresh"
-                    size="small"
-                    @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+          <el-button 
+            type="primary"
+            icon="el-icon-search"
+            @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+          <el-button
+            icon="el-icon-refresh"
+            @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
         </el-form-item>
       </el-form>
       <el-table 
@@ -29,16 +33,9 @@
         :height="435"
         :data="likeList"
         highlight-current-row>
-        <el-table-column type="index"
-                        label="序号"
-                        align="center"
-                        width="50" />
-        <el-table-column label="用户UID"
-                        align="left"
-                        prop="uid"/>
-        <el-table-column label="点赞时间"
-                        align="right"
-                        prop="likeTime"/>
+        <el-table-column type="index" :label="$t('Common.RowNo')" align="center" width="50" />
+        <el-table-column :label="$t('Comment.UID')" align="left" prop="uid"/>
+        <el-table-column :label="$t('Comment.LikeTime')" align="right" prop="likeTime"/>
       </el-table>
       <pagination
         v-show="total>0"
@@ -47,8 +44,7 @@
         :limit.sync="queryParams.pageSize"
         @pagination="loadCommentLikeList"
       />
-      <div slot="footer"
-            class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="handleClose">{{ $t("Common.Close") }}</el-button>
       </div>
     </el-dialog>

@@ -3,6 +3,7 @@ package com.ruoyi.word.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +58,7 @@ public class HotWordController extends BaseRestController {
     }
 
 	@PostMapping
-	public R<?> add(@RequestBody HotWord hotWord) {
+	public R<?> add(@RequestBody @Validated HotWord hotWord) {
 		boolean checkUnique = checkUnique(hotWord.getGroupId(), null, hotWord.getWord());
 		Assert.isTrue(checkUnique, () -> CommonErrorCode.DATA_CONFLICT.exception("word: " + hotWord.getWord()));
 		
@@ -68,7 +69,7 @@ public class HotWordController extends BaseRestController {
 	}
 
 	@PutMapping
-	public R<String> edit(@RequestBody HotWord hotWord) {
+	public R<String> edit(@RequestBody @Validated HotWord hotWord) {
 		HotWord dbHotWord = this.hotWordService.getById(hotWord.getWordId());
 		Assert.notNull(dbHotWord, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("wordId", hotWord.getWordId()));
 		boolean checkUnique = checkUnique(hotWord.getGroupId(), hotWord.getWordId(), hotWord.getWord());

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,9 +54,9 @@ import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
 import freemarker.template.TemplateException;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
@@ -101,7 +102,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "切换站点", businessType = BusinessType.UPDATE)
 	@PostMapping("/setCurrentSite/{siteId}")
-	public R<Map<String, Object>> setCurrentSite(@PathVariable("siteId") @Min(1) Long siteId) {
+	public R<Map<String, Object>> setCurrentSite(@PathVariable("siteId") @LongId Long siteId) {
 		CmsSite site = this.siteService.getSite(siteId);
 		return R.ok(Map.of("siteId", site.getSiteId(), "siteName", site.getName()));
 	}
@@ -152,7 +153,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 */
 	@GetMapping(value = "/{siteId}")
-	public R<?> getInfo(@PathVariable Long siteId) {
+	public R<?> getInfo(@PathVariable @LongId Long siteId) {
 		CmsSite site = siteService.getById(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.View, StpAdminUtil.getLoginUser());
@@ -177,7 +178,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "新增站点", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> addSave(@RequestBody SiteDTO dto) throws IOException {
+	public R<?> addSave(@RequestBody @Validated SiteDTO dto) throws IOException {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		CmsSite site = this.siteService.addSite(dto);
 		return R.ok(site);
@@ -192,7 +193,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "编辑站点", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> editSave(@RequestBody SiteDTO dto) throws IOException {
+	public R<?> editSave(@RequestBody @Validated SiteDTO dto) throws IOException {
 		CmsPrivUtils.checkSitePermission(dto.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.siteService.saveSite(dto);
@@ -208,7 +209,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "删除站点", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{siteId}")
-	public R<String> remove(@PathVariable("siteId") Long siteId) throws IOException {
+	public R<String> remove(@PathVariable("siteId") @LongId Long siteId) throws IOException {
 		CmsSite site = siteService.getById(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(siteId, SitePrivItem.Delete, StpAdminUtil.getLoginUser());
@@ -235,7 +236,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "发布站点", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
-	public R<String> publishAll(@RequestBody PublishSiteDTO dto) throws IOException, TemplateException {
+	public R<String> publishAll(@RequestBody @Validated PublishSiteDTO dto) throws IOException, TemplateException {
 		CmsSite site = siteService.getById(dto.getSiteId());
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
 		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Publish, StpAdminUtil.getLoginUser());
@@ -255,7 +256,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 */
 	@GetMapping("/extends")
-	public R<?> getSiteExtends(@RequestParam("siteId") Long siteId) {
+	public R<?> getSiteExtends(@RequestParam("siteId") @LongId Long siteId) {
 		CmsSite site = this.siteService.getSite(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.View, StpAdminUtil.getLoginUser());
@@ -274,7 +275,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "站点扩展", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PostMapping("/extends/{siteId}")
-	public R<?> saveSiteExtends(@PathVariable("siteId") Long siteId, @RequestBody Map<String, String> configs) {
+	public R<?> saveSiteExtends(@PathVariable("siteId") @LongId Long siteId, @RequestBody Map<String, String> configs) {
 		CmsSite site = this.siteService.getSite(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
@@ -290,7 +291,7 @@ public class SiteController extends BaseRestController {
 	 * @return
 	 */
 	@GetMapping("/default_template")
-	public R<?> getDefaultTemplates(@RequestParam("siteId") Long siteId) {
+	public R<?> getDefaultTemplates(@RequestParam("siteId") @LongId Long siteId) {
 		CmsSite site = this.siteService.getSite(siteId);
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
@@ -312,7 +313,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "默认模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/default_template")
-	public R<?> saveDefaultTemplates(@RequestBody SiteDefaultTemplateDTO dto) {
+	public R<?> saveDefaultTemplates(@RequestBody @Validated SiteDefaultTemplateDTO dto) {
 		CmsSite site = this.siteService.getSite(dto.getSiteId());
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
 		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
@@ -330,7 +331,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "应用默认模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/apply_default_template")
-	public R<?> applyDefaultTemplateToCatalog(@RequestBody SiteDefaultTemplateDTO dto) {
+	public R<?> applyDefaultTemplateToCatalog(@RequestBody @Validated SiteDefaultTemplateDTO dto) {
 		CmsSite site = this.siteService.getSite(dto.getSiteId());
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
 		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
@@ -350,7 +351,7 @@ public class SiteController extends BaseRestController {
 	 */
 	@Log(title = "上传水印图", businessType = BusinessType.UPDATE)
 	@PostMapping("/upload_watermarkimage")
-	public R<?> uploadFile(@RequestParam("siteId") @Min(1) Long siteId,
+	public R<?> uploadFile(@RequestParam("siteId") @LongId Long siteId,
 			@RequestParam("file") @NotNull MultipartFile multipartFile) throws Exception {
 		try {
 			CmsSite site = this.siteService.getSite(siteId);

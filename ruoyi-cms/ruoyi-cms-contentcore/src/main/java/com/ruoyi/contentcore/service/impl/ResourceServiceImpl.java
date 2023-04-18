@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -153,7 +153,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		resource.createBy(operator);
 
 		String base64Str = StringUtils.substringAfter(base64Data, ",");
-		byte[] imageBytes = Base64Utils.decodeFromString(base64Str);
+		byte[] imageBytes = Base64.getDecoder().decode(base64Str);
 		this.processResource(resource, resourceType, site, imageBytes);
 		return resource;
 	}

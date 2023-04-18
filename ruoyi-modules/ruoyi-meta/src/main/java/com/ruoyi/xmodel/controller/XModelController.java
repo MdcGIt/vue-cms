@@ -3,6 +3,7 @@ package com.ruoyi.xmodel.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.dto.XModelDTO;
 import com.ruoyi.xmodel.service.IModelService;
@@ -60,7 +62,7 @@ public class XModelController extends BaseRestController {
 	}
 
 	@GetMapping("/tableFields")
-	public R<?> getModelTableFields(@RequestParam("modelId") Long modelId) {
+	public R<?> getModelTableFields(@RequestParam("modelId") @LongId Long modelId) {
 		XModel model = this.modelService.getById(modelId);
 		Assert.notNull(model, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("modelId", modelId));
 
@@ -70,7 +72,7 @@ public class XModelController extends BaseRestController {
 
 	@Log(title = "新增元数据", businessType = BusinessType.INSERT)
 	@PostMapping
-	public R<?> add(@RequestBody XModelDTO dto) {
+	public R<?> add(@RequestBody @Validated XModelDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.modelService.addModel(dto);
 		return R.ok();
@@ -78,7 +80,7 @@ public class XModelController extends BaseRestController {
 
 	@Log(title = "编辑元数据", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> edit(@RequestBody XModelDTO dto) {
+	public R<?> edit(@RequestBody @Validated XModelDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.modelService.editModel(dto);
 		return R.ok();

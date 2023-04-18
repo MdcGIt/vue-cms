@@ -104,7 +104,7 @@
   </div>
 </template>
 <script>
-import { getCatalogExtends, saveCatalogExtends, applyToChildren } from "@/api/contentcore/catalog";
+import { getCatalogExtends, saveCatalogExtends, applyConfigPropsToChildren } from "@/api/contentcore/catalog";
 import { getHotWordGroupOptions } from "@/api/word/hotWord";
 import { listXModel } from "@/api/contentcore/exmodel";
 import CMSCatalogSelector from "@/views/cms/contentcore/catalogSelector";
@@ -195,7 +195,7 @@ export default {
         allExtends: true
       }
       this.$modal.loading("Loading...");
-      applyToChildren(data).then(res => {
+      applyConfigPropsToChildren(data).then(res => {
         this.$modal.closeLoading();
         this.$modal.msgSuccess(res.msg);
       });
@@ -210,7 +210,7 @@ export default {
         toCatalogIds: catalogs.map(c => c.id),
         configPropKeys: [ this.applyConfigPropKey ]
       }
-      applyToChildren(data).then(res => {
+      applyConfigPropsToChildren(data).then(res => {
         this.$modal.msgSuccess(res.msg);
         this.openCatalogSelector = false;
       });

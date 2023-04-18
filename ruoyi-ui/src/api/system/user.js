@@ -143,6 +143,13 @@ export function getUserPreferences() {
   })
 }
 
+export function getUserPreference(preferenceId) {
+  return request({
+    url: '/system/user/preference?id=' + preferenceId,
+    method: 'get'
+  })
+}
+
 export function saveUserPreferences(data) {
   return request({
     url: '/system/user/savePreferences',

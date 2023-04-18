@@ -35,8 +35,8 @@
         <el-form-item prop="levelType">
           <el-select
             v-model="queryParams.levelType"
-            style="width: 160px"
-            placeholder="积分类型"
+            style="width: 140px"
+            :placeholder="$t('Member.LevelType')"
             clearable
             @keyup.enter.native="handleQuery">
             <el-option
@@ -51,8 +51,8 @@
           <el-input
             v-model="queryParams.opType"
             clearable
-            placeholder="操作项ID"
-            style="width: 160px"
+            :placeholder="$t('Member.ExpOpType')"
+            style="width: 180px"
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
@@ -64,15 +64,13 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-table v-loading="loading"
-              :data="dataList"
-              @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column 
         type="selection"
         width="55"
         align="center" />
       <el-table-column 
-        label="操作项"
+        :label="$t('Member.ExpOpType')"
         align="center"
         width="180">
         <template slot-scope="scope">
@@ -80,76 +78,78 @@
         </template>
       </el-table-column>
       <el-table-column 
-        label="积分类型"
+        :label="$t('Member.LevelType')"
         align="center"
         prop="levelTypeName" />
       <el-table-column 
-        label="经验值"
+        :label="$t('Member.Exp')"
         align="center"
         width="100"
         prop="exp" />
       <el-table-column 
-        label="日上限"
+        :label="$t('Member.ExpOpDayLimit')"
         align="center"
         width="100"
         prop="dayLimit">
         <template slot-scope="scope">
-          <span v-if="scope.row.dayLimit==0">无限制</span>
+          <span v-if="scope.row.dayLimit==0">{{ $t('Member.ExpOpNoLimit') }}</span>
           <span v-else>{{ scope.row.dayLimit }}</span>
         </template>
       </el-table-column>
       <el-table-column 
-        label="总上限"
+        :label="$t('Member.ExpOpTotalLimit')"
         align="center"
         width="100"
         prop="totalLimit">
         <template slot-scope="scope">
-          <span v-if="scope.row.totalLimit==0">无限制</span>
+          <span v-if="scope.row.totalLimit==0">{{ $t('Member.ExpOpNoLimit') }}</span>
           <span v-else>{{ scope.row.totalLimit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
-                       align="center"
-                       prop="createTime"
-                       width="180">
+      <el-table-column :label="$t('Common.CreateTime')" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Common.Operation')"
-                       align="center"
-                       width="180" 
-                       class-name="small-padding fixed-width">
+      <el-table-column 
+        :label="$t('Common.Operation')"
+        align="center"
+        width="180" 
+        class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="getList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改对话框 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               :close-on-click-modal="false"
-               width="400px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item label="操作项"
-                      prop="opTypeName">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      :close-on-click-modal="false"
+      width="600px"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="145px">
+        <el-form-item :label="$t('Member.ExpOpType')" prop="opTypeName">
           <el-input v-model="form.opTypeName" :disabled="true" style="width: 186px" />
           <el-button 
             class="ml5" 
@@ -158,8 +158,7 @@
             :disabled="form.configId!=undefined&&form.configId!=0" 
             @click="handleOpenSelector()">{{ $t('Common.Select') }}</el-button>
         </el-form-item>
-        <el-form-item label="积分类型"
-                      prop="levelType">
+        <el-form-item :label="$t('Member.LevelType')" prop="levelType">
           <el-select
             v-model="form.levelType"
             :disabled="form.configId!=undefined&&form.configId!=0"
@@ -172,35 +171,31 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="经验值"
-                      prop="exp">
+        <el-form-item :label="$t('Member.Exp')" prop="exp">
           <el-input-number v-model="form.exp" style="width:100%"></el-input-number>
         </el-form-item>
-        <el-form-item label="日上限"
-                      prop="dayLimit">
+        <el-form-item :label="$t('Member.ExpOpDayLimit')" prop="dayLimit">
           <el-input-number v-model="form.dayLimit" :min="0" style="width:100%"></el-input-number>
         </el-form-item>
-        <el-form-item label="总上限"
-                      prop="totalLimit">
+        <el-form-item :label="$t('Member.ExpOpTotalLimit')" prop="totalLimit">
           <el-input-number v-model="form.totalLimit" :min="0" style="width:100%"></el-input-number>
         </el-form-item>
-        <el-form-item :label="$t('Common.Remark')"
-                      prop="remark">
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
           <el-input v-model="form.remark" type="textarea" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmitForm">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="handleCancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
     <!-- 选择操作项列表弹窗 -->
-    <el-dialog :title="title"
-               :visible.sync="selectorVisible"
-               :close-on-click-modal="false"
-               width="500px"
-               append-to-body>
+    <el-dialog 
+      :title="title"
+      :visible.sync="selectorVisible"
+      :close-on-click-modal="false"
+      width="500px"
+      append-to-body>
       <el-table 
         v-loading="loading"
         :height="500"
@@ -208,22 +203,15 @@
         highlight-current-row
         @row-dblclick="handleOpTypeDblClick"
         @current-change="handleOpTypeSelectionChange">
-        <el-table-column type="index"
-                        label="序号"
-                        align="center"
-                        width="50" />
-        <el-table-column label="操作项"
-                        align="left">
+        <el-table-column type="index" :label="$t('Common.RowNo')" align="center" width="50" />
+        <el-table-column :label="$t('Member.ExpOpType')" align="left">
           <template slot-scope="scope">
             {{ scope.row.name }}[{{ scope.row.id }}]
           </template>
         </el-table-column>
       </el-table>
-      <div slot="footer"
-            class="dialog-footer">
-        <el-button type="primary"
-                    :disabled="okBtnDisabled"
-                    @click="handleSelectorOk">{{ $t("Common.Confirm") }}</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :disabled="okBtnDisabled" @click="handleSelectorOk">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="handleSelectorCancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
@@ -270,19 +258,19 @@ export default {
       // 表单校验
       rules: {
         opType: [
-          { required: true, message: "操作项不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         levelType: [
-          { required: true, message: "等级类型不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         exp: [
-          { required: true, message: "经验值不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         dayLimit: [
-          { required: true, message: "日次数不能为空", trigger: "blur" },
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" },
         ],
         totalLimit: [
-          { required: true, message: "总次数不能为空", trigger: "blur" },
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" },
         ]
       }
     };
@@ -327,7 +315,7 @@ export default {
     handleAdd () {
       this.reset();
       this.open = true;
-      this.title = "添加操作项配置";
+      this.title = this.$t('Member.AddExpOpTitle');
     },
     handleUpdate (row) {
       this.reset();
@@ -335,7 +323,7 @@ export default {
       getExpConfigDetail(configId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改操作项配置";
+      this.title = this.$t('Member.EditExpOpTitle');
       });
     },
     handleCancel () {
@@ -347,13 +335,13 @@ export default {
         if (valid) {
           if (this.form.configId != undefined) {
             updateExpConfig(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
+              this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
               this.open = false;
               this.getList();
             });
           } else {
             addExpConfig(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess(this.$t('Common.AddSuccess'));
               this.open = false;
               this.getList();
             });
@@ -363,11 +351,11 @@ export default {
     },
     handleDelete (row) {
       const configIds = row.configId ? [ row.configId ] : this.ids;
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return deleteExpConfigs(configIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     },
     handleOpenSelector() {

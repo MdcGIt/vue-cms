@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,7 +53,7 @@ public class DictWordController extends BaseRestController {
 	@Log(title = "新增检索词", businessType = BusinessType.UPDATE)
 	@SaAdminCheckLogin
 	@PostMapping
-	public R<?> add(@RequestBody DictWordDTO dto) {
+	public R<?> add(@RequestBody @Validated DictWordDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.dictWordService.batchAddDictWords(dto);
 		return R.ok();
@@ -73,7 +74,7 @@ public class DictWordController extends BaseRestController {
 	 * @param response
 	 */
 	@RequestMapping(value = "/ik/{type}", method = RequestMethod.HEAD)
-	public void checkDictNewest(@PathVariable("type") String type, HttpServletRequest request,
+	public void checkDictNewest(@PathVariable("type") @NotEmpty String type, HttpServletRequest request,
 			HttpServletResponse response) {
 		String lastModified = this.dictWordService.getLastModified(type);
 		response.setHeader("Last-Modified", StringUtils.isEmpty(lastModified) ? "0" : lastModified);
@@ -85,7 +86,7 @@ public class DictWordController extends BaseRestController {
 	 * @return 词库字符串，每行一个词
 	 */
 	@RequestMapping(value = "/ik/{type}", method = RequestMethod.GET, produces = { "text/html;charset=utf-8" })
-	public String dictNewest(@PathVariable("type") String type) {
+	public String dictNewest(@PathVariable("type") @NotEmpty String type) {
 		String words = this.dictWordService.lambdaQuery().eq(DictWord::getWordType, type).list().stream()
 				.map(DictWord::getWord).collect(Collectors.joining("\n"));
 		return words;

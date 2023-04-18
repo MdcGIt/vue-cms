@@ -5,7 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
+import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,21 +39,25 @@ public class CmsPublishPipe extends BaseEntity {
     /**
      * 站点ID
      */
+    @LongId
     private Long siteId;
 
     /**
      * 名称
      */
+    @NotBlank
     private String name;
 
     /**
      * 编码
      */
+    @Pattern(regexp = "[A-Za-z0-9_]+")
     private String code;
 
     /**
      * 发布通道状态
      */
+    @NotEmpty
     private String state;
 
     /**

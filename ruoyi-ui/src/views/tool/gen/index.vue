@@ -128,7 +128,7 @@
             icon="el-icon-edit"
             @click="handleEditTable(scope.row)"
             v-hasPermi="['tool:gen:edit']"
-          >编辑</el-button>
+          >{{ $t('Common.Edit') }}</el-button>
           <el-button
             type="text"
             size="small"

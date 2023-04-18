@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'RuoYiGit',
+  name: 'RuoyiVueCMSGit',
   data() {
     return {
       url: 'https://gitee.com/liweiyi/RuoYi-Vue-CMS'

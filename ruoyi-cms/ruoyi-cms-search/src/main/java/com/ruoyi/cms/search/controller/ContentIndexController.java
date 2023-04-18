@@ -41,12 +41,12 @@ import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.system.security.AdminUserType;
+import com.ruoyi.system.validator.LongId;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
@@ -129,7 +129,7 @@ public class ContentIndexController extends BaseRestController {
 	}
 
 	@GetMapping("/content/{contentId}")
-	public R<?> selectDocumentDetail(@PathVariable(value = "contentId") Long contentId) throws ElasticsearchException, IOException {
+	public R<?> selectDocumentDetail(@PathVariable(value = "contentId") @LongId Long contentId) throws ElasticsearchException, IOException {
 		if (!elasticSearchEnable) {
 			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
 		}
@@ -149,7 +149,7 @@ public class ContentIndexController extends BaseRestController {
 
 	@Log(title = "重建内容索引", businessType = BusinessType.UPDATE)
 	@PostMapping("/build/{contentId}")
-	public R<?> buildContentIndex(@PathVariable("contentId") @Min(1) Long contentId) {
+	public R<?> buildContentIndex(@PathVariable("contentId") @LongId Long contentId) {
 		if (!elasticSearchEnable) {
 			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
 		}

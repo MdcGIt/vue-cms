@@ -32,9 +32,10 @@ import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.validator.LongId;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -141,7 +142,7 @@ public class SysRoleController extends BaseRestController {
 	 */
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleList)
 	@GetMapping("/authUser/allocatedList")
-	public R<?> allocatedList(@RequestParam("roleId") @Min(1) Long roleId,
+	public R<?> allocatedList(@RequestParam("roleId") @LongId Long roleId,
 			@RequestParam(required = false) String userName, @RequestParam(required = false) String phonenumber) {
 		PageRequest pr = this.getPageRequest();
 		Page<SysUser> page = this.userMapper.selectAllocatedList(new Page<>(pr.getPageNumber(), pr.getPageSize()),
@@ -154,7 +155,7 @@ public class SysRoleController extends BaseRestController {
 	 */
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleList)
 	@GetMapping("/authUser/unallocatedList")
-	public R<?> unallocatedList(@RequestParam("roleId") @Min(1) Long roleId,
+	public R<?> unallocatedList(@RequestParam("roleId") @LongId Long roleId,
 			@RequestParam(required = false) String userName, @RequestParam(required = false) String phonenumber) {
 		PageRequest pr = this.getPageRequest();
 		Page<SysUser> page = this.userMapper.selectUnallocatedList(new Page<>(pr.getPageNumber(), pr.getPageSize()),
@@ -168,7 +169,7 @@ public class SysRoleController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleEdit)
 	@Log(title = "角色管理", businessType = BusinessType.GRANT)
 	@PutMapping("/authUser/cancel")
-	public R<?> cancelAuthUserAll(Long roleId, @RequestBody List<Long> userIds) {
+	public R<?> cancelAuthUserAll(@LongId Long roleId, @RequestBody @NotEmpty List<Long> userIds) {
 		roleService.deleteAuthUsers(roleId, userIds);
 		return R.ok();
 	}
@@ -179,7 +180,7 @@ public class SysRoleController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysRoleEdit)
 	@Log(title = "角色管理", businessType = BusinessType.GRANT)
 	@PutMapping("/authUser/grant")
-	public R<?> grantAuthUserAll(Long roleId, @RequestBody List<Long> userIds) {
+	public R<?> grantAuthUserAll(@LongId Long roleId, @RequestBody @NotEmpty List<Long> userIds) {
 		roleService.insertAuthUsers(roleId, userIds);
 		return R.ok();
 	}

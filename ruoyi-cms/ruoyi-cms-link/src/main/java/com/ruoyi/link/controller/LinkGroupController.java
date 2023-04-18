@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,7 +69,7 @@ public class LinkGroupController extends BaseRestController {
 	@Log(title = "新增友链分组", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Add)
 	@PostMapping
-	public R<?> add(@RequestBody LinkGroupDTO dto) {
+	public R<?> add(@RequestBody @Validated LinkGroupDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		if (this.linkGroupService.lambdaQuery().eq(CmsLinkGroup::getSiteId, site.getSiteId())
 				.eq(CmsLinkGroup::getCode, dto.getCode()).count() > 0) {
@@ -87,7 +88,7 @@ public class LinkGroupController extends BaseRestController {
 	@Log(title = "编辑友链分组", businessType = BusinessType.UPDATE)
 	@Priv(type = AdminUserType.TYPE, value = { FriendLinkPriv.Add, FriendLinkPriv.Edit })
 	@PutMapping
-	public R<String> edit(@RequestBody LinkGroupDTO dto) {
+	public R<String> edit(@RequestBody @Validated LinkGroupDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		if (this.linkGroupService.lambdaQuery().eq(CmsLinkGroup::getSiteId, site.getSiteId())
 				.eq(CmsLinkGroup::getCode, dto.getCode()).ne(CmsLinkGroup::getLinkGroupId, dto.getLinkGroupId())
@@ -104,7 +105,7 @@ public class LinkGroupController extends BaseRestController {
 	@Log(title = "删除友链分组", businessType = BusinessType.DELETE)
 	@Priv(type = AdminUserType.TYPE, value = FriendLinkPriv.Delete)
 	@DeleteMapping
-	public R<String> remove(@RequestBody @NotEmpty List<LinkGroupDTO> dtoList) {
+	public R<String> remove(@RequestBody @Validated @NotEmpty List<LinkGroupDTO> dtoList) {
 		List<Long> linkGroupIds = dtoList.stream().map(LinkGroupDTO::getLinkGroupId).toList();
 		this.linkGroupService.deleteLinkGroup(linkGroupIds);
 		return R.ok();

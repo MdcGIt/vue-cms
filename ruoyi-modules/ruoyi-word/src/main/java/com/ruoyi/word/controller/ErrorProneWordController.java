@@ -3,6 +3,7 @@ package com.ruoyi.word.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,14 +53,14 @@ public class ErrorProneWordController extends BaseRestController {
 	}
 
 	@PostMapping
-	public R<?> add(@RequestBody ErrorProneWord errorProneWord) {
+	public R<?> add(@RequestBody @Validated ErrorProneWord errorProneWord) {
 		errorProneWord.createBy(StpAdminUtil.getLoginUser().getUsername());
 		this.errorProneWordService.addErrorProneWord(errorProneWord);
 		return R.ok();
 	}
 
 	@PutMapping
-	public R<String> edit(@RequestBody ErrorProneWord errorProneWord) {
+	public R<String> edit(@RequestBody @Validated ErrorProneWord errorProneWord) {
 		errorProneWord.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.errorProneWordService.updateErrorProneWord(errorProneWord);
 		return R.ok();

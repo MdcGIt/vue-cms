@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +33,8 @@ import com.ruoyi.member.permission.MemberPriv;
 import com.ruoyi.member.service.IMemberService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
@@ -70,7 +71,7 @@ public class MemberController extends BaseRestController {
 	}
 
 	@GetMapping("/{memberId}")
-	public R<?> getExpOperationDetail(@PathVariable @Min(1) Long memberId) {
+	public R<?> getExpOperationDetail(@PathVariable @LongId Long memberId) {
 		Member member = this.memberService.getById(memberId);
 		Assert.notNull(member, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("memberId", memberId));
 		MemberListVO vo = new MemberListVO();
@@ -80,7 +81,7 @@ public class MemberController extends BaseRestController {
 
 	@Log(title = "新增会员", businessType = BusinessType.INSERT, isSaveRequestData = false)
 	@PostMapping
-	public R<?> addMember(@RequestBody MemberDTO dto) {
+	public R<?> addMember(@RequestBody @Validated MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.memberService.addMember(dto);
 		return R.ok();
@@ -88,7 +89,7 @@ public class MemberController extends BaseRestController {
 
 	@Log(title = "编辑会员", businessType = BusinessType.UPDATE)
 	@PutMapping
-	public R<?> updateMember(@RequestBody MemberDTO dto) {
+	public R<?> updateMember(@RequestBody @Validated MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.memberService.updateMember(dto);
 		return R.ok();
@@ -104,7 +105,7 @@ public class MemberController extends BaseRestController {
 
 	@Log(title = "重置会员密码", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/resetPassword")
-	public R<?> resetPassword(@RequestBody MemberDTO dto) {
+	public R<?> resetPassword(@RequestBody @Validated MemberDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.memberService.resetPwd(dto);
 		return R.ok();

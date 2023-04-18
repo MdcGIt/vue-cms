@@ -37,7 +37,7 @@
             v-model="queryParams.levelType"
             style="width: 160px"
             clearable
-            placeholder="积分类型"
+            :placeholder="$t('Member.LevelType')"
             @keyup.enter.native="handleQuery">
             <el-option
               v-for="lt in levelTypes"
@@ -55,69 +55,73 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-table v-loading="loading"
-              :data="dataList"
-              @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column 
         type="selection"
         width="55"
         align="center" />
       <el-table-column 
-        label="类型"
+        :label="$t('Member.Level.Type')"
         align="center"
         prop="levelTypeName" />
       <el-table-column 
-        label="等级"
+        :label="$t('Member.Level.Level')"
         align="center">
         <template slot-scope="scope">
           Lv{{ scope.row.level }}
         </template>
       </el-table-column>
       <el-table-column 
-        label="名称"
+        :label="$t('Member.Level.Name')"
         align="center"
         prop="name" />
       <el-table-column 
-        label="下一级所需经验值"
+        :label="$t('Member.Level.NextNeedExp')"
         align="center"
         prop="nextNeedExp" />
       <el-table-column 
         :label="$t('Common.Remark')"
         align="center"
         prop="remark" />
-      <el-table-column :label="$t('Common.Operation')"
-                       align="center"
-                       width="180" 
-                       class-name="small-padding fixed-width">
+      <el-table-column 
+        :label="$t('Common.Operation')"
+        align="center"
+        width="180" 
+        class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-delete"
-                     @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
+          <el-button 
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="getList" />
+    <pagination 
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改对话框 -->
-    <el-dialog :title="title"
-               :visible.sync="open"
-               :close-on-click-modal="false"
-               width="500px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="120px">
-        <el-form-item label="积分类型" prop="levelType">
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      :close-on-click-modal="false"
+      width="500px"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="120px">
+        <el-form-item :label="$t('Member.LevelType')" prop="levelType">
           <el-select
             v-model="form.levelType"
             :disabled="form.configId!=undefined&&form.configId!=0"
@@ -130,24 +134,20 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="等级" prop="level">
+        <el-form-item :label="$t('Member.Level.Level')" prop="level">
           <el-input-number v-model="form.level" :min="0" :disabled="form.configId!=undefined&&form.configId!=0" style="width:100%"></el-input-number>
         </el-form-item>
-        <el-form-item label="名称"
-                      prop="name">
+        <el-form-item :label="$t('Member.Level.Name')" prop="name">
           <el-input v-model="form.name" style="width:100%"></el-input>
         </el-form-item>
-        <el-form-item label="下一级所需经验"
-                      prop="nextNeedExp">
+        <el-form-item :label="$t('Member.Level.NextNeedExp')" prop="nextNeedExp">
           <el-input-number v-model="form.nextNeedExp" :min="0" style="width:100%"></el-input-number>
         </el-form-item>
-        <el-form-item :label="$t('Common.Remark')"
-                      prop="remark">
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
           <el-input v-model="form.remark" type="textarea" />
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmitForm">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="handleCancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
@@ -189,16 +189,16 @@ export default {
       // 表单校验
       rules: {
         levelType: [
-          { required: true, message: "等级类型不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         level: [
-          { required: true, message: "等级不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" },
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" },
         ],
         nextNeedExp: [
-          { required: true, message: "下一级所需经验不能为空", trigger: "blur" },
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" },
         ]
       }
     };
@@ -239,7 +239,7 @@ export default {
     handleAdd () {
       this.reset();
       this.open = true;
-      this.title = "添加操作项配置";
+      this.title = this.$t('Member.Level.AddTitle');
     },
     handleUpdate (row) {
       this.reset();
@@ -247,7 +247,7 @@ export default {
       getLevelConfigDetail(configId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改操作项配置";
+      this.title = this.$t('Member.Level.EditTitle');
       });
     },
     handleCancel () {
@@ -259,13 +259,13 @@ export default {
         if (valid) {
           if (this.form.configId != undefined) {
             updateLevelConfig(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
+              this.$modal.msgSuccess(ths.$t('Common.SaveSuccess'));
               this.open = false;
               this.getList();
             });
           } else {
             addLevelConfig(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess(ths.$t('Common.AddSuccess'));
               this.open = false;
               this.getList();
             });
@@ -275,11 +275,11 @@ export default {
     },
     handleDelete (row) {
       const configIds = row.configId ? [ row.configId ] : this.ids;
-      this.$modal.confirm("是否确认删除？").then(function () {
+      this.$modal.confirm(ths.$t('Common.ConfirmDelete')).then(function () {
         return deleteLevelConfigs(configIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(ths.$t('Common.DeleteSuccess'));
       }).catch(function () { });
     }
   }
