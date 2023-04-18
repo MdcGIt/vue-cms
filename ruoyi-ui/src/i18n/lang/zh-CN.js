@@ -274,6 +274,13 @@ export default {
         PhoneNumber: "请输入正确的手机号码"
       }
     },
+    UserPreference: {
+      Shortcut: "快捷导航菜单",
+      StatIndex: "统计分析默认菜单",
+      IncludeChildContent: "内容列表是否显示子栏目内容",
+      OpenContentEditorW: "内容编辑是否使用新窗口",
+      ShowContentSubTitle: "默认显示内容副标题"
+    },
     UserRole: {
       UserInfo: "用户信息",
       Roles: "角色信息",

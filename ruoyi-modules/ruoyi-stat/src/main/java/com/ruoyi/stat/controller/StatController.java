@@ -38,4 +38,10 @@ public class StatController extends BaseRestController {
 		SysUser user = (SysUser) StpAdminUtil.getLoginUser().getUser();
 		return R.ok(Map.of("treeData", treeMenus, "defaultMenu", StatIndexPreference.getValue(user.getPreferences())));
 	}
+	
+	@GetMapping("/menu/options")
+	public R<?> bindStatTreeSelector() {
+		List<TreeNode<String>> treeMenus = this.statService.getStatMenuTree();
+		return R.ok(treeMenus);
+	}
 }

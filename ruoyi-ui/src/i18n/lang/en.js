@@ -274,6 +274,13 @@ export default {
         PhoneNumber: "Invalid phone number"
       }
     },
+    UserPreference: {
+      Shortcut: "Shortcut Menu",
+      StatIndex: "Statistics Default Menu",
+      IncludeChildContent: "Include Children In Content List",
+      OpenContentEditorW: "New Window For Content Editor",
+      ShowContentSubTitle: "Show Content Subtitle"
+    },
     UserRole: {
       UserInfo: "User Information",
       Roles: "User Roles",

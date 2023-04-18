@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="220px">
-      <el-form-item label="快捷导航菜单" prop="Shortcut">
+    <el-form ref="form" :model="form" label-width="240px">
+      <el-form-item :label="$t('System.UserPreference.Shortcut')" prop="Shortcut">
         <treeselect
           v-model="form.Shortcut"
           :options="menuOptions"
@@ -9,7 +9,13 @@
           :placeholder="$t('System.Menu.Placeholder.ParentMenu')"
         />
       </el-form-item>
-      <el-form-item label="默认显示子标题" prop="ShowContentSubTitle">
+      <el-form-item :label="$t('System.UserPreference.StatIndex')" prop="StatIndex">
+        <treeselect
+          v-model="form.StatIndex"
+          :options="statMenuOptions"
+        />
+      </el-form-item>
+      <el-form-item :label="$t('System.UserPreference.ShowContentSubTitle')" prop="ShowContentSubTitle">
         <el-switch
           v-model="form.ShowContentSubTitle"
           active-text="是"
@@ -18,7 +24,7 @@
           inactive-value="N">
         </el-switch>
       </el-form-item>
-      <el-form-item label="内容列表默认包含子栏目内容" prop="IncludeChildContent">
+      <el-form-item :label="$t('System.UserPreference.IncludeChildContent')" prop="IncludeChildContent">
         <el-switch
           v-model="form.IncludeChildContent"
           active-text="是"
@@ -27,7 +33,7 @@
           inactive-value="N">
         </el-switch>
       </el-form-item>
-      <el-form-item label="内容编辑是否使用新窗口打开" prop="IncludeChildContent">
+      <el-form-item :label="$t('System.UserPreference.OpenContentEditorW')" prop="OpenContentEditorW">
         <el-switch
           v-model="form.OpenContentEditorW"
           active-text="是"
@@ -45,6 +51,7 @@
 
 <script>
 import { getUserMenuTree } from "@/api/system/menu";
+import { getStatMenuTreeSelectorData } from "@/api/stat/stat"
 import { getUserPreferences, saveUserPreferences } from "@/api/system/user";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -55,18 +62,25 @@ export default {
   data() {
     return {
       menuOptions: [],
+      statMenuOptions: [],
       form: {},
     };
   },
   created() {
-    this.loadUserPreference();
     this.loadMenuTreeselect();
+    this.loadStatMenuTreeSelectorData();
+    this.loadUserPreference();
   },
   methods: {
     loadMenuTreeselect() {
       getUserMenuTree().then(response => {
         this.menuOptions = [{ id: '0', parentId: '', label: this.$t('APP.TITLE'), isRoot: true, isDefaultExpanded: true, children: response.data }];
       });
+    },
+    loadStatMenuTreeSelectorData() {
+      getStatMenuTreeSelectorData().then(response => {
+        this.statMenuOptions = response.data;
+      })
     },
     loadUserPreference() {
       getUserPreferences().then(response => {
