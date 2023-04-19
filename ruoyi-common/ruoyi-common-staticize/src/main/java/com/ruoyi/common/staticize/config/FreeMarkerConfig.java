@@ -2,7 +2,6 @@ package com.ruoyi.common.staticize.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -11,9 +10,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.ResourceUtils;
 
 import com.ruoyi.common.staticize.config.properties.FreeMarkerProperties;
+import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 
@@ -69,20 +68,17 @@ public class FreeMarkerConfig {
 
 	@Bean
 	FileTemplateLoader defaultFileTemplateLoader(FreeMarkerProperties properties) throws IOException {
-		if (StringUtils.isBlank(properties.getTemplateLoaderPath()) || !new File(properties.getTemplateLoaderPath()).isDirectory()) {
+		String templateLoaderPath = properties.getTemplateLoaderPath();
+		if (StringUtils.isEmpty(templateLoaderPath)) {
 			// 默认取当前项目部署路径同级目录statics作为模板目录
-			String templateLoaderPath = ResourceUtils.getURL("classpath:").getPath();
-			if (templateLoaderPath.indexOf("/target/classes") > -1) {
-				if (templateLoaderPath.endsWith(StringUtils.SLASH)) {
-					templateLoaderPath = templateLoaderPath.substring(0, templateLoaderPath.length() - 1);
-				}
-				String[] arr = StringUtils.splitIgnoreEmpty(templateLoaderPath, StringUtils.SLASH);
-				templateLoaderPath = StringUtils.join(Arrays.copyOfRange(arr, 0, arr.length - 4), StringUtils.SLASH);
-			}
-			templateLoaderPath += "/statics/";
-			FileExUtils.mkdirs(templateLoaderPath);
-			properties.setTemplateLoaderPath(templateLoaderPath);
+			templateLoaderPath = SpringUtils.getAppParentDirectory() + "/statics/";
 		}
-		return new FileTemplateLoader(new File(properties.getTemplateLoaderPath()));
+		templateLoaderPath = FileExUtils.normalizePath(templateLoaderPath);
+		if (!templateLoaderPath.endsWith("/")) {
+			templateLoaderPath += "/";
+		}
+		FileExUtils.mkdirs(templateLoaderPath);
+		properties.setTemplateLoaderPath(templateLoaderPath);
+		return new FileTemplateLoader(new File(templateLoaderPath));
 	}
 }
