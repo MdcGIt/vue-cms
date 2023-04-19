@@ -45,7 +45,7 @@ public class AllowUploadFileType extends FixedConfig {
 			return false;
 		}
 		if (ext.indexOf(".") > -1) {
-			ext = ext.substring(ext.lastIndexOf(".") + 1);
+			ext = StringUtils.substringAfterLast(ext, ".");
 		}
 		if (ALLOWED_UPLOAD_EXTENSION.contains(ext)) {
 			return true;

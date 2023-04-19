@@ -133,7 +133,7 @@
     />
 
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
         <el-form-item :label="$t('System.I18n.LangTag')" prop="langTag">
           <el-select v-model="form.langTag">
             <el-option

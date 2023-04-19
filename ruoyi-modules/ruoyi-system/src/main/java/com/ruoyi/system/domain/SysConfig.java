@@ -32,7 +32,7 @@ public class SysConfig extends BaseEntity {
 
 	/** 参数名称 */
 	@ExcelProperty("参数名称")
-	@I18nField("{CONFIG.#{configId}}")
+	@I18nField("{CONFIG.#{configKey}}")
 	private String configName;
 
 	/** 参数键名 */
