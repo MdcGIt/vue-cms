@@ -1,6 +1,7 @@
 package com.ruoyi.common.utils;
 
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -9,10 +10,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
+
+import com.ruoyi.common.utils.file.FileExUtils;
 
 /**
  * spring工具类 方便在非spring管理环境中获取bean
@@ -21,7 +24,7 @@ import org.springframework.util.ResourceUtils;
  */
 @Component
 public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationContextAware {
-	
+
 	/** Spring应用上下文环境 */
 	private static ConfigurableListableBeanFactory beanFactory;
 
@@ -152,28 +155,23 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
 	public static String getRequiredProperty(String key) {
 		return applicationContext.getEnvironment().getRequiredProperty(key);
 	}
-	
+
 	/**
 	 * 获取应用当前所在目录
 	 * 
 	 * @return
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
+	 * @throws URISyntaxException
 	 */
 	public static String getAppParentDirectory() throws FileNotFoundException {
-		String appParentDirectory = null;
-		appParentDirectory = ResourceUtils.getURL("classpath:").getPath();
+		ApplicationHome applicationHome = new ApplicationHome(SpringUtils.class);
+		String appParentDirectory = FileExUtils.normalizePath(applicationHome.getSource().getParentFile().getAbsolutePath());
 		if (appParentDirectory.indexOf("/target/classes") > -1) {
 			if (appParentDirectory.endsWith(StringUtils.SLASH)) {
 				appParentDirectory = appParentDirectory.substring(0, appParentDirectory.length() - 1);
 			}
 			String[] arr = StringUtils.splitIgnoreEmpty(appParentDirectory, StringUtils.SLASH);
 			appParentDirectory = StringUtils.join(Arrays.copyOfRange(arr, 0, arr.length - 4), StringUtils.SLASH);
-		} else if (appParentDirectory.indexOf("/BOOT-INF/classes") > -1) {
-			if (appParentDirectory.endsWith(StringUtils.SLASH)) {
-				appParentDirectory = appParentDirectory.substring(0, appParentDirectory.length() - 1);
-			}
-			String[] arr = StringUtils.splitIgnoreEmpty(appParentDirectory, StringUtils.SLASH);
-			appParentDirectory = StringUtils.join(Arrays.copyOfRange(arr, 0, arr.length - 3), StringUtils.SLASH);
 		}
 		if (StringUtils.isEmpty(appParentDirectory)) {
 			throw new FileNotFoundException("Read app parent directory failed!");
