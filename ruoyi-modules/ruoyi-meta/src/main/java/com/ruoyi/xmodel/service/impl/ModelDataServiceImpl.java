@@ -126,7 +126,7 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 	public void deleteModelData(Long modeId, String pkValue) {
 		XModel model = this.modelMapper.selectById(modeId);
 		if (XModelUtils.isDefaultTable(model.getTableName())) {
-			this.remove(this.lambdaQuery().eq(XModelData::getModelId, modeId).eq(XModelData::getPkValue, pkValue));
+			this.remove(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modeId).eq(XModelData::getPkValue, pkValue));
 		} else {
 			this.modelDataMapper.deleteCustomModelData(model.getTableName(), pkValue);
 		}

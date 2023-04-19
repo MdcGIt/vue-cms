@@ -262,8 +262,11 @@ public class SysUserController extends BaseRestController {
 		if (!findFirst.isPresent()) {
 			return R.fail();
 		}
-		Object object = user.getPreferences().getOrDefault(id, findFirst.get().getDefaultValue());
-		return R.ok(object);
+		Object value = findFirst.get().getDefaultValue();
+		if (user.getPreferences() != null) {
+			value = user.getPreferences().getOrDefault(id, findFirst.get().getDefaultValue());
+		}
+		return R.ok(value);
 	}
 
 	@SaAdminCheckLogin

@@ -21,6 +21,7 @@ import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.template.exception.CatalogNotFoundException;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
+import com.ruoyi.system.fixed.dict.YesOrNo;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateException;
@@ -67,7 +68,7 @@ public class CmsCatalogTag extends AbstractListTag {
 		}
 
 		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<>();
-		q.eq(CmsCatalog::getSiteId, siteId);
+		q.eq(CmsCatalog::getSiteId, siteId).eq(CmsCatalog::getVisibleFlag, YesOrNo.YES);
 		if (CatalogTagLevel.isCurrent(level)) {
 			q.eq(CmsCatalog::getParentId, catalog.getParentId());
 		} else if (CatalogTagLevel.isChild(level)) {
