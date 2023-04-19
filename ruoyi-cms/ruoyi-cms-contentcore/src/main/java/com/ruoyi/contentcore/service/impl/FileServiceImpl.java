@@ -46,10 +46,16 @@ public class FileServiceImpl implements IFileService {
 		List<TreeNode<String>> list = new ArrayList<>();
 		// 资源目录
 		File siteResourceRoot = new File(SiteUtils.getSiteResourceRoot(site));
+		if (!siteResourceRoot.exists()) {
+			siteResourceRoot.mkdirs();
+		}
 		list.add(new TreeNode<>(siteResourceRoot.getName(), "", siteResourceRoot.getName(), true));
 		// 发布通道目录
 		this.publishPipeService.getAllPublishPipes(site.getSiteId()).forEach(publishPipe -> {
 			File siteRoot = new File(SiteUtils.getSiteRoot(site, publishPipe.getCode()));
+			if (!siteRoot.exists()) {
+				siteRoot.mkdirs();
+			}
 			list.add(new TreeNode<>(siteRoot.getName(), "", siteRoot.getName(), true));
 		});
 		list.forEach(node -> loadChildrenDirectories(node));

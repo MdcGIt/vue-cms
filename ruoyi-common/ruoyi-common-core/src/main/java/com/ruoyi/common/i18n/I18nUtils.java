@@ -68,7 +68,7 @@ public class I18nUtils {
 							return Objects.nonNull(fieldV) ? fieldV.toString() : StringUtils.EMPTY;
 						});
 						String langValue = get(langStr, locale);
-						if (!langStr.equals(langValue)) {
+						if (langStr.indexOf(langValue) < 0) {
 							ReflectASMUtils.invokeSetter(obj, field.getName(), langValue);
 						}
 					} else {
@@ -76,7 +76,7 @@ public class I18nUtils {
 						if (Objects.nonNull(fieldV)) {
 							String langKey = fieldV.toString();
 							String langValue = get(langKey, locale);
-							if (!langKey.equals(langValue)) {
+							if (langKey.indexOf(langValue) < 0) {
 								ReflectASMUtils.invokeSetter(obj, field.getName(), langValue);
 							}
 						}

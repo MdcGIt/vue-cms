@@ -22,7 +22,7 @@ public @interface I18nField {
 	/**
 	 * 国际化表键名，为空时使用字段值获取当前语言环境值
 	 * <p>
-	 * 可使用占位符来获取当前对象其他字段属性值，例如实体类的ID字段值，可使用{fieldName}，大括号内是字段名，会被替换为指定字段的值。
+	 * 可使用占位符来获取当前对象其他字段属性值，例如实体类的ID字段值，可使用#{fieldName}，大括号内是字段名，会被替换为指定字段的值。
 	 * </p>
 	 */
 	public String value() default StringUtils.EMPTY;
