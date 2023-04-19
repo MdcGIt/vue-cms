@@ -42,6 +42,12 @@ public class CMSConfig implements WebMvcConfigurer {
 					}
 					String[] arr = StringUtils.splitIgnoreEmpty(RESOURCE_ROOT, StringUtils.SLASH);
 					RESOURCE_ROOT = StringUtils.join(Arrays.copyOfRange(arr, 0, arr.length - 4), StringUtils.SLASH);
+				} else if (RESOURCE_ROOT.indexOf("/BOOT-INF/classes") > -1) {
+					if (RESOURCE_ROOT.endsWith(StringUtils.SLASH)) {
+						RESOURCE_ROOT = RESOURCE_ROOT.substring(0, RESOURCE_ROOT.length() - 1);
+					}
+					String[] arr = StringUtils.splitIgnoreEmpty(RESOURCE_ROOT, StringUtils.SLASH);
+					RESOURCE_ROOT = StringUtils.join(Arrays.copyOfRange(arr, 0, arr.length - 3), StringUtils.SLASH);
 				}
 				RESOURCE_ROOT += "/wwwroot_release/";
 				RESOURCE_ROOT = FileExUtils.normalizePath(RESOURCE_ROOT);
