@@ -83,7 +83,7 @@ public class SysSecurityConfig extends BaseEntity {
 	/**
 	 * 密码过期时间长度，单位：秒
 	 */
-	private Integer passwordExipreSeconds;
+	private Integer passwordExpireSeconds;
 	
 	/**
 	 * 触发密码重试安全策略的次数上限

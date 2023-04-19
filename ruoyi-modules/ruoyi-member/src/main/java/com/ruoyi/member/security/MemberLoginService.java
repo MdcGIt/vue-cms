@@ -60,7 +60,7 @@ public class MemberLoginService {
 		if (Objects.isNull(member)) {
 			throw MemberErrorCode.MEMBER_NOT_EXISTS.exception();
 		}
-		if (member.getStatus() == UserStatus.DISABLE) {
+		if (UserStatus.isDisbale(member.getStatus())) {
 			throw MemberErrorCode.MEMBER_DISABLED.exception();
 		}
 		// 密码校验

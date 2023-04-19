@@ -78,7 +78,7 @@ public class SysLoginService {
 		if (!user.isAccountNonLocked()) {
 			throw SysErrorCode.USER_LOCKED
 					.exception(Objects.isNull(user.getLockEndTime()) ? "forever" : user.getLockEndTime().toString());
-		} else if (user.getStatus() == UserStatus.DISABLE) {
+		} else if (UserStatus.isDisbale(user.getStatus())) {
 			throw SysErrorCode.USER_DISABLED.exception();
 		}
 		// 密码校验
