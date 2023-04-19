@@ -227,7 +227,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		insertUserPost(user);
 		// 变更未封禁或锁定状态时注销登录状态
 		if (!StringUtils.equals(db.getStatus(), oldStatus)
-				&& (db.getStatus() == UserStatus.DISABLE || db.getStatus() == UserStatus.LOCK)) {
+				&& (UserStatus.isDisbale(db.getStatus()) || UserStatus.isLocked(db.getStatus()))) {
 			StpAdminUtil.logout(user.getUserId());
 		}
 	}
@@ -306,7 +306,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		SysUser user = this.getById(userId);
 		Assert.notNull(user, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception(userId));
 
-		if (user.getStatus() != UserStatus.LOCK) {
+		if (!UserStatus.isLocked(user.getStatus())) {
 			return;
 		}
 		user.setStatus(UserStatus.ENABLE);

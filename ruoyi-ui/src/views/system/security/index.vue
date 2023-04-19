@@ -35,20 +35,20 @@
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="配置ID" align="center" prop="configId" width="100" />
-      <el-table-column label="密码长度" align="center" width="180">
+      <el-table-column label="ID" align="center" prop="configId" width="100" />
+      <el-table-column :label="$t('System.Security.PasswordLength')" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.passwordLenMin }} - {{ scope.row.passwordLenMax }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="密码校验规则" align="center" prop="passwordRule" width="180">
+      <el-table-column :label="$t('System.Security.PasswordRule')" align="center" prop="passwordRule" width="180">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.SecurityPasswordRule" :value="scope.row.passwordRule"/>
         </template>
       </el-table-column>
-      <el-table-column label="密码过期时长" align="center" prop="passwordExipreSeconds" width="180" />
-      <el-table-column label="密码重试阈值" align="center" prop="passwordRetryLimit" width="180" />
-      <el-table-column label="状态" align="center" prop="status" width="90">
+      <el-table-column :label="$t('System.Security.PasswordExpireSeconds')" align="center" prop="passwordExpireSeconds" width="180" />
+      <el-table-column :label="$t('System.Security.PasswordRetryLimit')" align="center" prop="passwordRetryLimit" width="180" />
+      <el-table-column :label="$t('System.Security.Status')" align="center" prop="status" width="90">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -89,18 +89,15 @@
       <el-form ref="form" :model="form" v-loading="loading" :rules="rules" label-width="200px">
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
-            <span>密码安全配置</span>
+            <span>{{ $t('System.Security.PasswordConfig') }}</span>
           </div>
-          <el-form-item label="密码最小长度"
-                        prop="passwordLenMin">
+          <el-form-item :label="$t('System.Security.PasswordMinLength')" prop="passwordLenMin">
             <el-input-number v-model="form.passwordLenMin" controls-position="right" :min="6" :max="16"></el-input-number>
           </el-form-item>
-          <el-form-item label="密码最大长度"
-                        prop="passwordLenMax">
+          <el-form-item :label="$t('System.Security.PasswordMaxLength')" prop="passwordLenMax">
             <el-input-number v-model="form.passwordLenMax" controls-position="right" :min="16" :max="30"></el-input-number>
           </el-form-item>
-          <el-form-item label="密码组成规则"
-                        prop="passwordRule">
+          <el-form-item :label="$t('System.Security.PasswordRule')" prop="passwordRule">
             <el-select v-model="form.passwordRule">
               <el-option
                 v-for="item in dict.type.SecurityPasswordRule"
@@ -110,8 +107,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="密码中不能包含字符"
-                        prop="passwordSensitive">
+          <el-form-item :label="$t('System.Security.PasswordSensitive')" prop="passwordSensitive">
             <el-checkbox-group v-model="form.passwordSensitive">
                   <el-checkbox
                     v-for="item in dict.type.SecurityPasswordSensitive"
@@ -120,46 +116,42 @@
                   >{{item.label}}</el-checkbox>
                 </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="弱密码"
-                        prop="weakPasswords">
-            <el-input type="textarea" v-model="form.weakPasswords" placeholder="每行一个弱密码" :rows="5"></el-input>
+          <el-form-item :label="$t('System.Security.WeakPasswords')" prop="weakPasswords">
+            <el-input type="textarea" v-model="form.weakPasswords" :placeholder="$t('System.Security.WeakPasswordsPlaceholder')" :rows="5"></el-input>
           </el-form-item>
           <el-form-item 
-            label="密码过期时长（单位：秒）"
-            prop="passwordExipreSeconds">
-            <el-input-number v-model="form.passwordExipreSeconds" controls-position="right" :min="0" :max="8640000"></el-input-number>
-            <i class="el-icon-info tips">0表示永不过期，最长不超过100天</i>
+            :label="$t('System.Security.PasswordExpireSeconds')"
+            prop="passwordExpireSeconds">
+            <el-input-number v-model="form.passwordExpireSeconds" controls-position="right" :min="0" :max="8640000"></el-input-number>
+            <i class="el-icon-info tips">{{ $t('System.Security.PasswordExpireSecondsTip') }}</i>
           </el-form-item>
-          <el-form-item label="首次登录是否强制修改密码"
-                        prop="forceModifyPwdAfterAdd">
+          <el-form-item :label="$t('System.Security.ForceModifyPwdAfterAdd')" prop="forceModifyPwdAfterAdd">
             <el-switch
               v-model="form.forceModifyPwdAfterAdd"
               active-value="Y"
               inactive-value="N">
             </el-switch>
-            <i class="el-icon-info tips">仅适用于后台添加用户</i>
+            <i class="el-icon-info tips">{{ $t('System.Security.ForceModifyPwdAfterAddTip') }}</i>
           </el-form-item>
-          <el-form-item label="重置密码后是否强制修改密码"
-                        prop="forceModifyPwdAfterReset">
+          <el-form-item :label="$t('System.Security.ForceModifyPwdAfterAdd')" prop="forceModifyPwdAfterReset">
             <el-switch
               v-model="form.forceModifyPwdAfterReset"
               active-value="Y"
               inactive-value="N">
             </el-switch>
-            <i class="el-icon-info tips">仅适用于后台重置用户密码</i>
+            <i class="el-icon-info tips">{{ $t('System.Security.ForceModifyPwdAfterAddTip') }}</i>
           </el-form-item>
         </el-card>
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
-            <span>登录校验配置</span>
+            <span>{{ $t('System.Security.LoginConfig') }}</span>
           </div>
-          <el-form-item label="每日密码错误次数阈值"
-                        prop="passwordRetryLimit">
+          <el-form-item :label="$t('System.Security.PasswordRetryLimit')" prop="passwordRetryLimit">
             <el-input-number v-model="form.passwordRetryLimit" controls-position="right" :min="0"></el-input-number>
-            <i class="el-icon-info tips">0表示无限制</i>
+            <i class="el-icon-info tips">{{ $t('System.Security.PasswordRetryLimitTip') }}</i>
           </el-form-item>
           <el-form-item 
-            label="密码错误阈值处理策略"
+            :label="$t('System.Security.PasswordRetryStrategy')"
             prop="passwordRetryStrategy">
             <el-select v-model="form.passwordRetryStrategy" :disabled="form.passwordRetryLimit===0">
               <el-option
@@ -171,11 +163,11 @@
             </el-select>
           </el-form-item>
           <el-form-item 
-            v-if="form.passwordRetryStrategy==='2'"
-            label="锁定用户时长（单位：秒）"
+            v-if="form.passwordRetryStrategy==='LOCK'"
+            :label="$t('System.Security.PasswordRetryLockSeconds')"
             prop="passwordRetryLockSeconds">
             <el-input-number v-model="form.passwordRetryLockSeconds" controls-position="right" :min="0" :max="31536000"></el-input-number>
-            <i class="el-icon-info tips">0表示永久锁定，最长不超过365天</i>
+            <i class="el-icon-info tips">{{ $t('System.Security.PasswordRetryLockSecondsTip') }}</i>
           </el-form-item>
         </el-card>
       </el-form>
@@ -220,7 +212,7 @@ export default {
       // 表单校验
       rules: {
         passwordLenMin: [
-          { required: true, message: "密码最小长度不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
       }
     };
@@ -251,7 +243,7 @@ export default {
         passwordLenMax: 0,
         passwordRule: '0',
         passwordSensitive: [],
-        passwordExipreSeconds: 0,
+        passwordExpireSeconds: 0,
         forceModifyPwdAfterAdd: 'N',
         forceModifyPwdAfterReset: 'N',
         passwordRetryLimit: 0,
@@ -263,7 +255,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加安全配置";
+      this.title = this.$t('System.Security.AddTitle');
     },
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.configId)
@@ -276,7 +268,7 @@ export default {
       getSecurityConfig(configId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改安全配置";
+      this.title = this.$t('System.Security.EditTitle');
       });
     },
     submitForm: function() {

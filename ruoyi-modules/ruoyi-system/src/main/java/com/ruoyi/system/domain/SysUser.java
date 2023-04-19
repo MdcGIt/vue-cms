@@ -181,7 +181,7 @@ public class SysUser extends BaseEntity implements ISecurityUser {
 
 	public boolean isAccountNonLocked() {
 		// 状态未锁定状态，并且锁定解锁时间未空或者未过期
-		return this.getStatus() != UserStatus.LOCK || (Objects.nonNull(this.getLockEndTime()) && LocalDateTime.now().isAfter(this.getLockEndTime()));
+		return !UserStatus.isLocked(this.status) || (Objects.nonNull(this.getLockEndTime()) && LocalDateTime.now().isAfter(this.getLockEndTime()));
 	}
 	
 	/**
