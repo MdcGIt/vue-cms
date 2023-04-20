@@ -171,6 +171,10 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
 			String dirPath = FileExUtils.normalizePath(applicationHome.getSource().getAbsolutePath());
 			applicationDir = new File(StringUtils.substringBefore(dirPath, "/ruoyi-common/"));
 		}
-		return FileExUtils.normalizePath(applicationDir.getParentFile().getAbsolutePath());
+		String dir = FileExUtils.normalizePath(applicationDir.getParentFile().getAbsolutePath());
+		if (dir.indexOf("/BOOT-INF/lib") > -1) {
+			dir = StringUtils.substringBefore(dir, "/BOOT-INF/lib"); 
+		}
+		return dir;
 	}
 }
