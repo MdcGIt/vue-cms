@@ -11,7 +11,7 @@
  Target Server Version : 50735
  File Encoding         : 65001
 
- Date: 20/04/2023 00:02:31
+ Date: 20/04/2023 09:43:14
 */
 
 SET NAMES utf8mb4;
@@ -2651,7 +2651,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 100, 'admin', '超级管理员', NULL, '00', 'admin@163.com', '18888888888', '0', NULL, '/avatar/2023/02/18/1.png', '$2a$10$0TSw1jijm.ALdRoqNENKkekEruukvY.YsENl1o6ISFlydfFzViIxi', '1', '127.0.0.1', '2023-04-15 14:54:03', NULL, NULL, NULL, '{\"IncludeChildContent\":\"N\",\"StatIndex\":\"BdSiteTimeTrend\",\"Shortcut\":[\"2028\",\"2027\",\"2026\",\"2030\",\"2034\",\"2038\",\"109\",\"2041\"],\"ShowContentSubTitle\":\"N\",\"OpenContentEditorW\":\"N\"}', 'admin', '2022-11-24 11:06:22', 'admin', '2023-02-21 17:41:23', '管理员');
+INSERT INTO `sys_user` VALUES (1, 100, 'admin', '超级管理员', NULL, '00', 'admin@163.com', '18888888888', '0', NULL, '/avatar/2023/02/18/1.png', '$2a$10$0TSw1jijm.ALdRoqNENKkekEruukvY.YsENl1o6ISFlydfFzViIxi', '0', '127.0.0.1', '2023-04-15 14:54:03', NULL, NULL, NULL, '{\"IncludeChildContent\":\"N\",\"StatIndex\":\"BdSiteTimeTrend\",\"Shortcut\":[\"2028\",\"2027\",\"2026\",\"2030\",\"2034\",\"2038\",\"109\",\"2041\"],\"ShowContentSubTitle\":\"N\",\"OpenContentEditorW\":\"N\"}', 'admin', '2022-11-24 11:06:22', 'admin', '2023-02-21 17:41:23', '管理员');
 INSERT INTO `sys_user` VALUES (2, 101, 'test', '测试员', NULL, '00', 'test@qq.com', '16666666666', '1', NULL, '/avatar/2023/02/10/2.png', '$2a$10$zOlLxLR83BtpwFBxde5kweagCP2MXmPY58vCi4Wi.ekHa8TrI9ad.', '0', '127.0.0.1', '2023-04-13 23:56:51', NULL, NULL, NULL, '{\"IncludeChildContent\":\"N\",\"StatIndex\":\"BdSiteTrendOverview\",\"Shortcut\":[\"2028\",\"2030\",\"2027\",\"2026\",\"2033\",\"2034\",\"2037\"],\"ShowContentSubTitle\":\"N\"}', 'admin', '2022-11-24 11:06:22', 'admin', '2023-04-10 11:15:18', '测试员');
 
 -- ----------------------------
