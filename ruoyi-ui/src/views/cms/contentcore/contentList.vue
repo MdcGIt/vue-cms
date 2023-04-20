@@ -155,18 +155,21 @@
             icon="el-icon-s-promotion"
             @click="handlePublish(scope.row)">{{ $t('CMS.ContentCore.Publish') }}</el-button>
           <el-button
+            size="mini"
             type="text"
             icon="el-icon-view"
             @click="handlePreview(scope.row)">{{ $t('CMS.ContentCore.Preview') }}</el-button>
           <el-button
+            size="mini"
             type="text"
             icon="el-icon-sort"
             @click="handleSort(scope.row)">{{ $t('Common.Sort') }}</el-button>
           <el-button
+            size="mini"
             type="text"
             icon="el-icon-download"
             @click="handleOffline(scope.row)">{{ $t('CMS.Content.Offline') }}</el-button>
-          <el-dropdown>
+          <el-dropdown size="mini">
             <el-link :underline="false" class="row-more-btn" icon="el-icon-more"></el-link>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit" @click.native="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-dropdown-item>
