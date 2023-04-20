@@ -469,8 +469,11 @@ export default {
     handleProgressClose (result) {
       if (result.status == 'SUCCESS') {
         if (this.opType == 'ADD') {
-          this.opType = 'UPDATE';
-          this.$router.push({ path: "/cms/content/editor", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
+          if (this.openEditorW == 'true') {
+            this.$router.push({ path: "/cms/content/editorW", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
+          } else {
+            this.$router.push({ path: "/cms/content/editor", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
+          }
         }
         this.initData();
       }

@@ -1,8 +1,8 @@
 package com.ruoyi.common.utils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.aop.framework.AopContext;
@@ -163,19 +163,14 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
 	 * @throws FileNotFoundException
 	 * @throws URISyntaxException
 	 */
-	public static String getAppParentDirectory() throws FileNotFoundException {
+	public static String getAppParentDirectory() {
 		ApplicationHome applicationHome = new ApplicationHome(SpringUtils.class);
-		String appParentDirectory = FileExUtils.normalizePath(applicationHome.getSource().getParentFile().getAbsolutePath());
-		if (appParentDirectory.indexOf("/target/classes") > -1) {
-			if (appParentDirectory.endsWith(StringUtils.SLASH)) {
-				appParentDirectory = appParentDirectory.substring(0, appParentDirectory.length() - 1);
-			}
-			String[] arr = StringUtils.splitIgnoreEmpty(appParentDirectory, StringUtils.SLASH);
-			appParentDirectory = StringUtils.join(Arrays.copyOfRange(arr, 0, arr.length - 4), StringUtils.SLASH);
+		File applicationDir = applicationHome.getSource();
+		String[] activeProfiles = applicationContext.getEnvironment().getActiveProfiles();
+		if (ArrayUtils.indexOf("dev", activeProfiles) > -1) {
+			String dirPath = FileExUtils.normalizePath(applicationHome.getSource().getAbsolutePath());
+			applicationDir = new File(StringUtils.substringBefore(dirPath, "/ruoyi-common/"));
 		}
-		if (StringUtils.isEmpty(appParentDirectory)) {
-			throw new FileNotFoundException("Read app parent directory failed!");
-		}
-		return appParentDirectory;
+		return FileExUtils.normalizePath(applicationDir.getParentFile().getAbsolutePath());
 	}
 }
