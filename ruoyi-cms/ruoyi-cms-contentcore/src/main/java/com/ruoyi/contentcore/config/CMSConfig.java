@@ -1,7 +1,6 @@
 package com.ruoyi.contentcore.config;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,7 +17,9 @@ import com.ruoyi.contentcore.config.properties.CMSProperties;
 import com.ruoyi.contentcore.fixed.config.BackendContext;
 
 import freemarker.cache.FileTemplateLoader;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 @EnableConfigurationProperties(CMSProperties.class)
 public class CMSConfig implements WebMvcConfigurer {
@@ -27,7 +28,7 @@ public class CMSConfig implements WebMvcConfigurer {
 
 	private static String RESOURCE_ROOT;
 	
-	public CMSConfig(CMSProperties properties) throws FileNotFoundException {
+	public CMSConfig(CMSProperties properties) {
 		// CMS缓存前缀
 		CACHE_PREFIX = properties.getCacheName();
 		// 站点资源存放根目录
@@ -41,6 +42,7 @@ public class CMSConfig implements WebMvcConfigurer {
 		}
 		FileExUtils.mkdirs(RESOURCE_ROOT);
 		properties.setResourceRoot(RESOURCE_ROOT);
+		log.info("ResourceRoot: " + RESOURCE_ROOT);
 	}
 	
 	@Bean
