@@ -68,9 +68,11 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 		} else {
 			// 用户权限
 			SysPermission userPermission = this.getPermissions(PermissionOwnerType.User.name(), userId.toString());
-			String json = userPermission.getPermissions().get(menuPermissionType.getId());
-			if (StringUtils.isNotEmpty(json)) {
-				permissions.addAll(menuPermissionType.deserialize(json));
+			if (userPermission != null) {
+				String json = userPermission.getPermissions().get(menuPermissionType.getId());
+				if (StringUtils.isNotEmpty(json)) {
+					permissions.addAll(menuPermissionType.deserialize(json));
+				}
 			}
 			// 角色权限
 			List<SysRole> roles = this.roleMapper.selectRolesByUserId(userId);
