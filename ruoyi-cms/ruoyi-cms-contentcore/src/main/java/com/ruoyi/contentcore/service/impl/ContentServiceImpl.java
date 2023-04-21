@@ -54,7 +54,6 @@ import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -106,7 +105,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 	
 	@Override
-	public void deleteRecycleContents(@NotEmpty List<Long> backupIds) {
+	public void deleteRecycleContents(List<Long> backupIds) {
 		List<RecycleContentVO> backupContents = this.contentMapper.selectRecycleContentByBackupIds(backupIds);
 		for (RecycleContentVO backupContent : backupContents) {
 			IContentType contentType = ContentCoreUtils.getContentType(backupContent.getContentType());
@@ -263,7 +262,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void move(MoveContentDTO dto) {
-		Long[] contentIds = dto.getContentIds();
+		List<Long> contentIds = dto.getContentIds();
 		for (Long contentId : contentIds) {
 			CmsContent cmsContent = this.getById(contentId);
 			Assert.notNull(cmsContent, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));

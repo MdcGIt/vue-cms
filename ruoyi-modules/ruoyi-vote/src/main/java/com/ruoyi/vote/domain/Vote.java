@@ -13,6 +13,7 @@ import com.ruoyi.vote.fixed.dict.VoteStatus;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,13 +51,13 @@ public class Vote extends BaseEntity {
 	/**
 	 * 开始时间
 	 */
-	@NotEmpty
+	@NotNull
 	private LocalDateTime startTime;
 
 	/**
 	 * 结束时间
 	 */
-	@NotEmpty
+	@NotNull
 	private LocalDateTime endTime;
 
 	/**

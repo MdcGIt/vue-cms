@@ -244,7 +244,7 @@ export default {
           { required: true, message: this.$t('System.Role.RuleTips.RoleName'), trigger: "blur" }
         ],
         roleKey: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('System.Role.RuleTips.RoleKey'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]+$", message: this.$t('System.Role.RuleTips.RoleKey'), trigger: "blur" }
         ],
         roleSort: [
           { required: true, message: this.$t('System.Role.RuleTips.Sort'), trigger: "blur" }

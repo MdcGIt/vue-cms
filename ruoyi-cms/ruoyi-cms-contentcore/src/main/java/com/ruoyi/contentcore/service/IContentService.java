@@ -14,8 +14,6 @@ import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
 
-import jakarta.validation.constraints.NotEmpty;
-
 public interface IContentService extends IBackupService<CmsContent> {
 
 	/**
@@ -169,5 +167,5 @@ public interface IContentService extends IBackupService<CmsContent> {
 	 * 
 	 * @param backupIds
 	 */
-	public void deleteRecycleContents(@NotEmpty List<Long> backupIds);
+	public void deleteRecycleContents(List<Long> backupIds);
 }

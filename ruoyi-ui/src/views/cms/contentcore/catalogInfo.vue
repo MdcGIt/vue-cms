@@ -335,10 +335,10 @@ export default {
           { required: true, message: this.$t('CMS.Catalog.RuleTips.Name'), trigger: "blur" }
         ],
         alias: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.Catalog.RuleTips.Alias'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]+$", message: this.$t('CMS.Catalog.RuleTips.Alias'), trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9_/]*$", message: this.$t('CMS.Catalog.RuleTips.Path'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_\/]+$", message: this.$t('CMS.Catalog.RuleTips.Path'), trigger: "blur" }
         ],
         catalogType: [
           { required: true, message: this.$t('CMS.Catalog.RuleTips.CatalogType'), trigger: "blur" }

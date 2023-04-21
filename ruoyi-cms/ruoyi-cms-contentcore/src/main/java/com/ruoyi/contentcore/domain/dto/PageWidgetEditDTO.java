@@ -1,6 +1,7 @@
 package com.ruoyi.contentcore.domain.dto;
 
-import jakarta.validation.constraints.Min;
+import com.ruoyi.system.validator.LongId;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -13,8 +14,7 @@ public class PageWidgetEditDTO {
 	/**
 	 * 页面部件ID
 	 */
-	@NotEmpty
-	@Min(1)
+	@LongId
     private Long pageWidgetId;
 
 	/**

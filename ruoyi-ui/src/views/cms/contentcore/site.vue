@@ -141,7 +141,7 @@ export default {
           { required: true, message: this.$t("CMS.Site.RuleTips.Name"), trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9]*$", message: this.$t("CMS.Site.RuleTips.Path"), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9]+$", message: this.$t("CMS.Site.RuleTips.Path"), trigger: "blur" }
         ]
       },
       openProgress: false,

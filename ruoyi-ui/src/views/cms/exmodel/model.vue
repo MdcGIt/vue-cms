@@ -154,7 +154,7 @@ export default {
           { required: true, message: this.$t('CMS.ExModel.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.ExModel.RuleTips.Code'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]+$", message: this.$t('CMS.ExModel.RuleTips.Code'), trigger: "blur" }
         ],
         tableName: [
           { required: true, message: this.$t('CMS.ExModel.RuleTips.TableName'), trigger: "blur" }

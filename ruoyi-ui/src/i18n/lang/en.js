@@ -1124,7 +1124,7 @@ export default {
       UploadTitle: "Upload file",
       UploadTip: "Drag the file here or click to upload.",
       RuleTips: {
-        FilePath: "Cannot be empty and only [A-Za-z0-9_]+"
+        FileName: "Cannot be empty and only [A-Za-z0-9_]+"
       }
     },
     Template: {
@@ -1133,7 +1133,7 @@ export default {
       ModifyTime: "Modify Time",
       Rename: "Rename",
       RuleTips: {
-        Name: "The template file name cannot be empty and the suffix must be '{0}'"
+        Name: "Cannot be empty and only [A-Za-z0-9_]+ and the suffix must be '{0}'"
       },
       AddTitle: "Add template file",
       EditTitle: "Rename template file",

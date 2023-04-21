@@ -1,5 +1,7 @@
 package com.ruoyi.contentcore.domain.dto;
 
+import com.ruoyi.system.validator.LongId;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +13,7 @@ public class PublishSiteDTO {
 	/**
 	 * 站点ID
 	 */
-	@NotNull
+	@LongId
 	private Long siteId;
 	
 	/**

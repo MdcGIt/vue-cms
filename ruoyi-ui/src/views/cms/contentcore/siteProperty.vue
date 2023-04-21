@@ -142,7 +142,7 @@ export default {
           { required: true, message: this.$t('CMS.Site.Property.RuleTips.PropName'), trigger: "blur" }
         ],
         propCode: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.Site.Property.RuleTips.PropCode'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]+$", message: this.$t('CMS.Site.Property.RuleTips.PropCode'), trigger: "blur" }
         ]
       }
     };

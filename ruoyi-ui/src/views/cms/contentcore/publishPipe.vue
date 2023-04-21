@@ -140,7 +140,7 @@ export default {
           { required: true, message: this.$t('CMS.PublishPipe.RuleTips.Name'), trigger: "blur" },
         ],
         code :[
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PublishPipe.RuleTips.Code'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]+$", message: this.$t('CMS.PublishPipe.RuleTips.Code'), trigger: "blur" }
         ],
         state :[
           { required: true, message: this.$t('CMS.PublishPipe.RuleTips.Status'), trigger: "blur" }

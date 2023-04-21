@@ -25,6 +25,11 @@ public enum ContentCoreErrorCode implements ErrorCode {
 	TEMPLATE_FILE_NOT_FOUND,
 	
 	/**
+	 * 模板文件名只能使用大小写字母和下划线，且必须以`{0}`结尾
+	 */
+	INVALID_TEMPLATE_NAME,
+	
+	/**
 	 * 不支持的内容类型：{0}
 	 */
 	UNSUPPORT_CONTENT_TYPE, 
