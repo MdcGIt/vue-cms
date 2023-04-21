@@ -140,15 +140,16 @@ export default {
       this.catalogId = newVal;
     },
     catalogId(newVal) {
-      if (newVal != undefined && newVal != null && newVal.length > 0) {
+      if (newVal && newVal > 0) {
         this.loadCatalogExtends();
+      } else {
+        this.form_extend = { HotWordGroups: [] };
       }
     },
   },
   created() {
     this.loadEXModelList();
     this.loadHotWordGroups();
-    this.loadCatalogExtends();
   },
   methods: {
     loadCatalogExtends () {
