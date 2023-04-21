@@ -176,11 +176,16 @@ export default {
   name: "CmsTemplate",
   data () {
     const validatePath = (rule, value, callback) => {
-        if (value === '' || !value.endsWith(this.templateSuffix)) {
+        if (!value || value.length == 0 || !value.endsWith(this.templateSuffix)) {
           callback(new Error(this.$t('CMS.Template.RuleTips.Name', [ this.templateSuffix ])));
-        } else {
-          callback();
+          return;
         }
+        const hasMatchFail = value.substring(0, value.indexOf('.template.html')).split('\/').some(item => !(/^[A-Za-z0-9_\.\/]+$/.test(item)));
+        if (hasMatchFail) {
+            callback(new Error(this.$t('CMS.Template.RuleTips.Name', [ this.templateSuffix ])));
+            return;
+        }
+        callback();
       };
     return {
       // 遮罩层

@@ -2,6 +2,7 @@ package com.ruoyi.contentcore.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.PageRequest;
@@ -29,12 +30,15 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.CmsTemplate;
 import com.ruoyi.contentcore.domain.dto.TemplateAddDTO;
 import com.ruoyi.contentcore.domain.dto.TemplateRenameDTO;
 import com.ruoyi.contentcore.domain.dto.TemplateUpdateDTO;
 import com.ruoyi.contentcore.domain.vo.TemplateListVO;
+import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
+import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
@@ -123,6 +127,7 @@ public class TemplateController extends BaseRestController {
 	@XssIgnore
 	@PostMapping
 	public R<?> add(@RequestBody @Validated TemplateAddDTO dto) throws IOException {
+		Assert.isTrue(validTemplateName(dto.getPath()), ContentCoreErrorCode.INVALID_TEMPLATE_NAME::exception);
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		dto.setSiteId(site.getSiteId());
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -140,9 +145,27 @@ public class TemplateController extends BaseRestController {
 	@Log(title = "重命名模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/rename")
 	public R<?> rename(@RequestBody @Validated TemplateRenameDTO dto) throws IOException {
+		Assert.isTrue(validTemplateName(dto.getPath()), ContentCoreErrorCode.INVALID_TEMPLATE_NAME::exception);
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.templateService.renameTemplate(dto);
 		return R.ok();
+	}
+	
+	private static boolean validTemplateName(String fileName) {
+		String suffix = TemplateSuffix.getValue();
+		if (StringUtils.isEmpty(fileName) || !fileName.endsWith(suffix)) {
+			return false;
+		}
+		fileName = FileExUtils.normalizePath(fileName);
+		String[] split = fileName.substring(0, fileName.indexOf(suffix)).split("\\/");
+		for (String item : split) {
+			System.out.println(item);
+			System.out.println(Pattern.matches("[a-zA-Z0-9_]+", item));
+			if (StringUtils.isEmpty(item) || !Pattern.matches("^[a-zA-Z0-9_]+$", item)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

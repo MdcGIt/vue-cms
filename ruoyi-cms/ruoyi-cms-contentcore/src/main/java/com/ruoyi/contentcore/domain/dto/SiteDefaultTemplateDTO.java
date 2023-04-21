@@ -2,10 +2,10 @@ package com.ruoyi.contentcore.domain.dto;
 
 import java.util.List;
 
-import jakarta.validation.constraints.NotEmpty;
-
 import com.ruoyi.common.security.domain.BaseDTO;
+import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +16,7 @@ public class SiteDefaultTemplateDTO extends BaseDTO {
 	/*
 	 * 站点ID
 	 */
-	@NotEmpty
+	@LongId
 	public Long siteId;
 
 	/*

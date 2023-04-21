@@ -195,8 +195,8 @@ export default {
       addForm: {},
       // 表单校验
       rules: {
-        filePath: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.File.RuleTips.FilePath'), trigger: "blur" }
+        fileName: [
+          { required: true, pattern: "^[A-Za-z0-9_\.]+$", message: this.$t('CMS.File.RuleTips.FileName'), trigger: "blur" }
         ]
       },
       openUploadDialog: false,

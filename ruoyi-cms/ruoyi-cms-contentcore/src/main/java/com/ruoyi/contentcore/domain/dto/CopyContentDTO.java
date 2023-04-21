@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.common.security.domain.BaseDTO;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +18,7 @@ public class CopyContentDTO extends BaseDTO {
 	 * 
 	 * @see com.ruoyi.contentcore.ContentCoreConsts
 	 */
-	@NotEmpty
+	@NotNull
 	public Integer copyType;
 	
 	/**

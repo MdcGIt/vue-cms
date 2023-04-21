@@ -1,5 +1,7 @@
 package com.ruoyi.contentcore.domain.dto;
 
+import java.util.List;
+
 import com.ruoyi.common.security.domain.BaseDTO;
 import com.ruoyi.system.validator.LongId;
 
@@ -15,7 +17,7 @@ public class MoveContentDTO extends BaseDTO {
 	 * 转移内容IDs
 	 */
 	@NotEmpty
-	public Long[] contentIds;
+	public List<Long> contentIds;
 	
 	/**
 	 * 目标栏目ID

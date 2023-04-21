@@ -204,7 +204,7 @@ export default {
           { required: true, message: this.$t('CMS.ExModel.RuleTips.FieldName'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.ExModel.RuleTips.FieldCode'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]+$", message: this.$t('CMS.ExModel.RuleTips.FieldCode'), trigger: "blur" }
         ],
         controlType: [
           { required: true, message: this.$t('CMS.ExModel.RuleTips.FieldControlType'), trigger: "blur" }

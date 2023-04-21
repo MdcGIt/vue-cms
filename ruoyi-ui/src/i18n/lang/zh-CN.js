@@ -1124,7 +1124,7 @@ export default {
       UploadTitle: "上传文件",
       UploadTip: "将文件拖到此处，或点击上传",
       RuleTips: {
-        FilePath: "不能为空且只能使用字母、数字和下划线"
+        FileName: "不能为空且只能使用字母、数字和下划线"
       }
     },
     Template: {
@@ -1133,7 +1133,7 @@ export default {
       ModifyTime: "更新时间",
       Rename: "重命名",
       RuleTips: {
-        Name: "模板文件名称不能为空且后缀必须为：{0}"
+        Name: "只能使用字母、数字和下划线，且后缀必须为：{0}"
       },
       AddTitle: "添加模板文件",
       EditTitle: "编辑模板文件名",
