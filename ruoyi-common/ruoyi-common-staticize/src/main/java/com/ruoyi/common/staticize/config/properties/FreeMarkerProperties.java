@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "staticize.freemarker")
+@ConfigurationProperties(prefix = "ruoyi.freemarker")
 public class FreeMarkerProperties {
 	
 	/**

@@ -43,13 +43,13 @@ public class MetaFieldType extends FixedDictType {
 	 */
 	public MetaFieldType() {
 		super(TYPE, "{DICT." + TYPE + "}");
-		super.addDictData("VARCHAR(50)", SHORT_TEXT, 1, "25");
-		super.addDictData("VARCHAR(200)", MEDIUM_TEXT, 2, "25");
-		super.addDictData("VARCHAR(2000)", LARGE_TEXT, 3, "4");
-		super.addDictData("MEDIUMTEXT", CLOB_TEXT, 4, "1");
-		super.addDictData("LONG", LONG, 5, "10");
-		super.addDictData("DOUBLE", DOUBLE, 6, "10");
-		super.addDictData("DATETIME", DATETIME, 7, "10");
+		super.addDictData("{DICT." + TYPE + "." + SHORT_TEXT + "}", SHORT_TEXT, 1, "25");
+		super.addDictData("{DICT." + TYPE + "." + MEDIUM_TEXT + "}", MEDIUM_TEXT, 2, "25");
+		super.addDictData("{DICT." + TYPE + "." + LARGE_TEXT + "}", LARGE_TEXT, 3, "4");
+		super.addDictData("{DICT." + TYPE + "." + CLOB_TEXT + "}", CLOB_TEXT, 4, "1");
+		super.addDictData("{DICT." + TYPE + "." + LONG + "}", LONG, 5, "10");
+		super.addDictData("{DICT." + TYPE + "." + DOUBLE + "}", DOUBLE, 6, "10");
+		super.addDictData("{DICT." + TYPE + "." + DATETIME + "}", DATETIME, 7, "10");
 	}
     
 	/**

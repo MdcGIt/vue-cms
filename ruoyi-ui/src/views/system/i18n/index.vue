@@ -62,7 +62,7 @@
             v-model="queryParams.langTag"
             clearable
             :placeholder="$t('System.I18n.LangTag')"
-            style="width: 100px"
+            style="width: 135px"
           >
             <el-option
               v-for="dict in dict.type.I18nDictType"
@@ -101,7 +101,7 @@
 
     <el-table v-loading="loading" :data="dictList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column :label="$t('System.I18n.LangTag')" align="center" width="80" prop="langTag" />
+      <el-table-column :label="$t('System.I18n.LangTag')" align="center" width="180" prop="langTag" />
       <el-table-column :label="$t('System.I18n.LangKey')" align="left" prop="langKey" :show-overflow-tooltip="true" />
       <el-table-column :label="$t('System.I18n.LangValue')" align="left" prop="langValue" :show-overflow-tooltip="true" />
       <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width">

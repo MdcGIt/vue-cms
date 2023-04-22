@@ -45,6 +45,7 @@
 		<jakarta-servlet.version>6.0.0</jakarta-servlet.version>
 		<jasypt.version>3.0.5</jasypt.version>
 		<xxl-job-core.version>2.4.0</xxl-job-core.version>
+		<flyway.version>9.16.3</flyway.version>
 	</properties>
 
 	<!-- 依赖声明 -->
@@ -101,6 +102,21 @@
 				<artifactId>jakarta.servlet-api</artifactId>
 				<version>${jakarta-servlet.version}</version>
 			</dependency>
+			
+			<!-- flyway -->
+			<dependency>
+			    <groupId>org.flywaydb</groupId>
+			    <artifactId>flyway-core</artifactId>
+			    <version>${flyway.version}</version>
+			</dependency>
+			
+			<!-- flyway-mysql -->
+			<dependency>
+			    <groupId>org.flywaydb</groupId>
+			    <artifactId>flyway-mysql</artifactId>
+			    <version>${flyway.version}</version>
+			</dependency>
+
 
 			<!-- SaToken -->
 			<dependency>
