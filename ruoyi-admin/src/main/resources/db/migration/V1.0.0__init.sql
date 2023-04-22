@@ -1,19 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : localhost-docker-mysql
- Source Server Type    : MySQL
- Source Server Version : 50735
- Source Host           : localhost:33066
- Source Schema         : ry-vue
-
- Target Server Type    : MySQL
- Target Server Version : 50735
- File Encoding         : 65001
-
- Date: 20/04/2023 09:43:14
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -22,18 +6,18 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_comment`;
 CREATE TABLE `cc_comment`  (
-  `comment_id` bigint(20) NOT NULL COMMENT 'ID',
-  `uid` bigint(20) NOT NULL COMMENT '评论用户ID',
-  `parent_id` bigint(20) NOT NULL COMMENT '父级评论ID',
-  `reply_uid` bigint(20) NOT NULL COMMENT '回复用户ID',
-  `reply_count` int(11) NOT NULL COMMENT '回复数',
+  `comment_id` bigint NOT NULL COMMENT 'ID',
+  `uid` bigint NOT NULL COMMENT '评论用户ID',
+  `parent_id` bigint NOT NULL COMMENT '父级评论ID',
+  `reply_uid` bigint NOT NULL COMMENT '回复用户ID',
+  `reply_count` int NOT NULL COMMENT '回复数',
   `source_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论对象类型',
   `source_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论对象ID',
   `content` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论内容',
-  `like_count` int(11) NOT NULL COMMENT '评论点赞数',
-  `audit_status` int(11) NOT NULL COMMENT '评论审核状态',
-  `comment_time` datetime(0) NOT NULL COMMENT '评论时间',
-  `del_flag` int(11) NOT NULL COMMENT '删除标识',
+  `like_count` int NOT NULL COMMENT '评论点赞数',
+  `audit_status` int NOT NULL COMMENT '评论审核状态',
+  `comment_time` datetime NOT NULL COMMENT '评论时间',
+  `del_flag` int NOT NULL COMMENT '删除标识',
   `ip` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'IP地址',
   `location` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '属地',
   `client_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户端类型',
@@ -55,25 +39,25 @@ INSERT INTO `cc_comment` VALUES (5, 5, 0, 0, 0, 'cms:123', '3', '啊撒旦立刻
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_comment_like`;
 CREATE TABLE `cc_comment_like`  (
-  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `comment_id` bigint(20) NOT NULL COMMENT '评论ID',
-  `uid` bigint(20) NOT NULL COMMENT '点赞用户ID',
-  `like_time` datetime(0) NOT NULL COMMENT '点赞时间',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `comment_id` bigint NOT NULL COMMENT '评论ID',
+  `uid` bigint NOT NULL COMMENT '点赞用户ID',
+  `like_time` datetime NOT NULL COMMENT '点赞时间',
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cc_error_prone_word
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_error_prone_word`;
 CREATE TABLE `cc_error_prone_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
   `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '替换词',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`word_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -90,17 +74,17 @@ INSERT INTO `cc_error_prone_word` VALUES (1482979792091742209, '幅射', '辐射
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_hot_word`;
 CREATE TABLE `cc_hot_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
+  `group_id` bigint NOT NULL COMMENT '分组ID',
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
   `url_target` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '跳转方式',
-  `use_count` int(255) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(255) NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `use_count` int NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint NOT NULL DEFAULT 0 COMMENT '点击次数',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`word_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -115,14 +99,14 @@ INSERT INTO `cc_hot_word` VALUES (401960948670533, 401960868323397, '王者荣�
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_hot_word_group`;
 CREATE TABLE `cc_hot_word_group`  (
-  `group_id` bigint(20) NOT NULL,
+  `group_id` bigint NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sort_flag` bigint(20) NULL DEFAULT NULL,
+  `sort_flag` bigint NULL DEFAULT NULL,
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`group_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -137,7 +121,7 @@ INSERT INTO `cc_hot_word_group` VALUES (401960868323397, '游戏热词', 'game',
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member`;
 CREATE TABLE `cc_member`  (
-  `member_id` bigint(20) NOT NULL COMMENT ' ',
+  `member_id` bigint NOT NULL COMMENT ' ',
   `user_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
   `nick_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -145,16 +129,16 @@ CREATE TABLE `cc_member`  (
   `avatar` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像',
   `phonenumber` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '手机号码',
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱',
-  `birthday` datetime(0) NULL DEFAULT NULL COMMENT '出生日期',
+  `birthday` datetime NULL DEFAULT NULL COMMENT '出生日期',
   `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '状态',
   `source_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源类型',
   `source_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源唯一标识',
   `last_login_ip` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最近登录IP',
-  `last_login_time` datetime(0) NULL DEFAULT NULL COMMENT '最近登录时间',
+  `last_login_time` datetime NULL DEFAULT NULL COMMENT '最近登录时间',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`member_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -169,19 +153,19 @@ INSERT INTO `cc_member` VALUES (398339741712453, 'aaa123', '$2a$10$7tnkif.OcTcrz
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_exp_config`;
 CREATE TABLE `cc_member_exp_config`  (
-  `config_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `config_id` bigint NOT NULL AUTO_INCREMENT,
   `op_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '操作项唯一标识',
   `level_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '等级类型',
-  `exp` int(11) NOT NULL COMMENT '经验值',
-  `day_limit` int(11) NOT NULL COMMENT '每日经验值生效次数上限',
-  `total_limit` int(11) NOT NULL COMMENT '总经验值生效次数上限',
+  `exp` int NOT NULL COMMENT '经验值',
+  `day_limit` int NOT NULL COMMENT '每日经验值生效次数上限',
+  `total_limit` int NOT NULL COMMENT '总经验值生效次数上限',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cc_member_exp_config
@@ -193,29 +177,29 @@ INSERT INTO `cc_member_exp_config` VALUES (2, 'SignIn', 'Default', 10, 1, 0, 'ad
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_exp_log`;
 CREATE TABLE `cc_member_exp_log`  (
-  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `member_id` bigint(20) NOT NULL COMMENT '会员ID',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `member_id` bigint NOT NULL COMMENT '会员ID',
   `op_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '操作项唯一标识',
   `level_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '等级类型',
-  `change_exp` int(11) NOT NULL COMMENT '变更经验值',
-  `level` int(11) NOT NULL COMMENT '变更后等级',
-  `exp` int(11) NOT NULL COMMENT '变更后经验值',
-  `day_limit` int(11) NOT NULL COMMENT '当前日上限',
-  `total_limit` int(11) NOT NULL COMMENT '当前总上限',
-  `log_time` datetime(0) NULL DEFAULT NULL COMMENT '日志时间',
+  `change_exp` int NOT NULL COMMENT '变更经验值',
+  `level` int NOT NULL COMMENT '变更后等级',
+  `exp` int NOT NULL COMMENT '变更后经验值',
+  `day_limit` int NOT NULL COMMENT '当前日上限',
+  `total_limit` int NOT NULL COMMENT '当前总上限',
+  `log_time` datetime NULL DEFAULT NULL COMMENT '日志时间',
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cc_member_level
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_level`;
 CREATE TABLE `cc_member_level`  (
-  `data_id` bigint(20) NOT NULL,
-  `member_id` bigint(20) NOT NULL COMMENT '会员ID',
+  `data_id` bigint NOT NULL,
+  `member_id` bigint NOT NULL COMMENT '会员ID',
   `level_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '等级类型',
-  `level` int(11) NOT NULL COMMENT '当前等级',
-  `exp` bigint(20) NOT NULL COMMENT '当前经验值',
+  `level` int NOT NULL COMMENT '当前等级',
+  `exp` bigint NOT NULL COMMENT '当前经验值',
   PRIMARY KEY (`data_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -229,16 +213,16 @@ INSERT INTO `cc_member_level` VALUES (398343051264069, 398339741712453, 'Default
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_level_config`;
 CREATE TABLE `cc_member_level_config`  (
-  `config_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `config_id` bigint NOT NULL AUTO_INCREMENT,
   `level_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '等级类型',
-  `level` int(11) NOT NULL COMMENT '等级',
+  `level` int NOT NULL COMMENT '等级',
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '等级名称',
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '等级图标',
-  `next_need_exp` bigint(20) NOT NULL COMMENT '升级到下一等级需要的经验值',
+  `next_need_exp` bigint NOT NULL COMMENT '升级到下一等级需要的经验值',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`config_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 398021016633414 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -258,26 +242,26 @@ INSERT INTO `cc_member_level_config` VALUES (398021016633413, 'Default', 5, '一
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_signin_log`;
 CREATE TABLE `cc_member_signin_log`  (
-  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '日志主键ID',
-  `member_id` bigint(20) NOT NULL COMMENT '会员ID',
-  `sign_in_key` int(11) NOT NULL COMMENT '签到日志唯一标识，格式：yyyyMMdd',
-  `log_time` datetime(0) NOT NULL COMMENT '签到时间',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志主键ID',
+  `member_id` bigint NOT NULL COMMENT '会员ID',
+  `sign_in_key` int NOT NULL COMMENT '签到日志唯一标识，格式：yyyyMMdd',
+  `log_time` datetime NOT NULL COMMENT '签到时间',
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cc_sensitive_word
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_sensitive_word`;
 CREATE TABLE `cc_sensitive_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
   `type` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型：BLACK=敏感词，WHITE=白名单',
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
   `replace_word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '替换词',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`word_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -296,17 +280,17 @@ INSERT INTO `cc_sensitive_word` VALUES (1491730583887720449, 'BLACK', '游行', 
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_tag_word`;
 CREATE TABLE `cc_tag_word`  (
-  `word_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(20) NOT NULL COMMENT '分组ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
+  `group_id` bigint NOT NULL COMMENT '分组ID',
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '词汇',
   `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
-  `use_count` int(11) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(20) NOT NULL DEFAULT 0 COMMENT '点击次数',
-  `sort_flag` bigint(255) NOT NULL COMMENT '排序标识',
+  `use_count` int NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `sort_flag` bigint NOT NULL COMMENT '排序标识',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`word_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -316,16 +300,16 @@ CREATE TABLE `cc_tag_word`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_tag_word_group`;
 CREATE TABLE `cc_tag_word_group`  (
-  `group_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `parent_id` bigint(20) NOT NULL COMMENT '父级ID',
+  `group_id` bigint NOT NULL COMMENT '主键ID',
+  `parent_id` bigint NOT NULL COMMENT '父级ID',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一编码',
   `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
-  `sort_flag` bigint(20) NULL DEFAULT NULL COMMENT '排序标识',
+  `sort_flag` bigint NULL DEFAULT NULL COMMENT '排序标识',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`group_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -335,22 +319,22 @@ CREATE TABLE `cc_tag_word_group`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote`;
 CREATE TABLE `cc_vote`  (
-  `vote_id` bigint(20) NOT NULL COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT 'ID',
   `code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码，唯一标识',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
-  `start_time` datetime(0) NOT NULL COMMENT '开始时间',
-  `end_time` datetime(0) NOT NULL COMMENT '结束时间',
+  `start_time` datetime NOT NULL COMMENT '开始时间',
+  `end_time` datetime NOT NULL COMMENT '结束时间',
   `user_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户类型',
-  `day_limit` int(11) NOT NULL COMMENT '日上限',
-  `total_limit` int(11) NOT NULL COMMENT '总上限',
+  `day_limit` int NOT NULL COMMENT '日上限',
+  `total_limit` int NOT NULL COMMENT '总上限',
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '状态',
   `view_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '结果查看方式',
-  `total` int(11) NOT NULL COMMENT '总参与人数',
+  `total` int NOT NULL COMMENT '总参与人数',
   `source` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源归属标识',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`vote_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -365,18 +349,18 @@ INSERT INTO `cc_vote` VALUES (400489247899717, 'test', '测试阿斯顿发送到
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote_item`;
 CREATE TABLE `cc_vote_item`  (
-  `item_id` bigint(20) NOT NULL COMMENT 'ID',
-  `vote_id` bigint(20) NOT NULL COMMENT '归属调查投票ID',
-  `subject_id` bigint(20) NOT NULL COMMENT '归属主题ID',
+  `item_id` bigint NOT NULL COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT '归属调查投票ID',
+  `subject_id` bigint NOT NULL COMMENT '归属主题ID',
   `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型（文字、图片）',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '选项内容',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '选项描述',
-  `sort_flag` int(11) NOT NULL COMMENT '排序标识',
-  `total` int(11) NOT NULL COMMENT '票数',
+  `sort_flag` int NOT NULL COMMENT '排序标识',
+  `total` int NOT NULL COMMENT '票数',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`item_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -406,16 +390,16 @@ INSERT INTO `cc_vote_item` VALUES (400788606664773, 400489247899717, 40056404947
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote_log`;
 CREATE TABLE `cc_vote_log`  (
-  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `vote_id` bigint(20) NOT NULL COMMENT '调查投票ID',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT '调查投票ID',
   `user_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '投票人类型',
   `user_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '投票人唯一标识',
   `result` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '投票结果（格式：<subjectId, itemId|inputText>）',
-  `log_time` datetime(0) NOT NULL COMMENT '日志记录时间',
+  `log_time` datetime NOT NULL COMMENT '日志记录时间',
   `ip` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源IP',
   `user_agent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源UA',
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cc_vote_log
@@ -427,15 +411,15 @@ INSERT INTO `cc_vote_log` VALUES (2, 400489247899717, 'ip', '127.0.0.1', '{\"400
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote_subject`;
 CREATE TABLE `cc_vote_subject`  (
-  `subject_id` bigint(20) NOT NULL COMMENT 'ID',
-  `vote_id` bigint(20) NOT NULL COMMENT '归属调查投票ID',
+  `subject_id` bigint NOT NULL COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT '归属调查投票ID',
   `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型（单选、多选、输入）',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
-  `sort_flag` int(11) NOT NULL COMMENT '排序值',
+  `sort_flag` int NOT NULL COMMENT '排序值',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`subject_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -452,9 +436,9 @@ INSERT INTO `cc_vote_subject` VALUES (400564049473605, 400489247899717, 'radio',
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_ad_click_log`;
 CREATE TABLE `cms_ad_click_log`  (
-  `log_id` bigint(20) NOT NULL COMMENT 'ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
-  `ad_id` bigint(20) NOT NULL COMMENT '广告ID',
+  `log_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `ad_id` bigint NOT NULL COMMENT '广告ID',
   `host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '请求域',
   `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'IP地址',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'IP所属地区',
@@ -464,7 +448,7 @@ CREATE TABLE `cms_ad_click_log`  (
   `os` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作系统',
   `device_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '设备类型',
   `locale` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '语言',
-  `evt_time` datetime(0) NULL DEFAULT NULL COMMENT '事件发生时间',
+  `evt_time` datetime NULL DEFAULT NULL COMMENT '事件发生时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -486,12 +470,12 @@ INSERT INTO `cms_ad_click_log` VALUES (403303365144645, 1630092239507464193, 403
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_ad_hour_stat`;
 CREATE TABLE `cms_ad_hour_stat`  (
-  `stat_id` bigint(20) NOT NULL,
-  `site_id` bigint(20) NULL DEFAULT NULL,
+  `stat_id` bigint NOT NULL,
+  `site_id` bigint NULL DEFAULT NULL,
   `hour` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `advertisement_id` bigint(20) NOT NULL,
-  `click` bigint(20) NOT NULL,
-  `view` bigint(20) NOT NULL,
+  `advertisement_id` bigint NOT NULL,
+  `click` bigint NOT NULL,
+  `view` bigint NOT NULL,
   PRIMARY KEY (`stat_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -509,9 +493,9 @@ INSERT INTO `cms_ad_hour_stat` VALUES (403304285704261, 1630092239507464193, '20
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_ad_view_log`;
 CREATE TABLE `cms_ad_view_log`  (
-  `log_id` bigint(20) NOT NULL COMMENT 'ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
-  `ad_id` bigint(20) NOT NULL COMMENT '广告ID',
+  `log_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `ad_id` bigint NOT NULL COMMENT '广告ID',
   `host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '请求域',
   `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'IP地址',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'IP所属地区',
@@ -521,7 +505,7 @@ CREATE TABLE `cms_ad_view_log`  (
   `os` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作系统',
   `device_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '设备类型',
   `locale` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '语言',
-  `evt_time` datetime(0) NULL DEFAULT NULL COMMENT '事件发生时间',
+  `evt_time` datetime NULL DEFAULT NULL COMMENT '事件发生时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -557,22 +541,22 @@ INSERT INTO `cms_ad_view_log` VALUES (403280209260613, 1630092239507464193, 4032
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_advertisement`;
 CREATE TABLE `cms_advertisement`  (
-  `advertisement_id` bigint(20) NOT NULL COMMENT 'ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
-  `ad_space_id` bigint(20) NOT NULL COMMENT '所属广告位ID',
+  `advertisement_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `ad_space_id` bigint NOT NULL COMMENT '所属广告位ID',
   `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
-  `weight` int(11) NOT NULL COMMENT '权重',
+  `weight` int NOT NULL COMMENT '权重',
   `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关键词',
   `state` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '状态（0=正常，1=停用）',
-  `online_date` datetime(0) NOT NULL COMMENT '上线时间',
-  `offline_date` datetime(0) NOT NULL COMMENT '下线时间',
+  `online_date` datetime NOT NULL COMMENT '上线时间',
+  `offline_date` datetime NOT NULL COMMENT '下线时间',
   `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转地址',
   `resource_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '素材地址',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`advertisement_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -588,8 +572,8 @@ INSERT INTO `cms_advertisement` VALUES (403269705142341, 1630092239507464193, 39
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_article_detail`;
 CREATE TABLE `cms_article_detail`  (
-  `content_id` bigint(20) NOT NULL COMMENT 'ID',
-  `site_id` bigint(20) NULL DEFAULT NULL,
+  `content_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NULL DEFAULT NULL,
   `content_html` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文章正文（json格式）',
   `content_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '文章正文（html格式）',
   `page_titles` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分页标题',
@@ -643,15 +627,15 @@ INSERT INTO `cms_article_detail` VALUES (393784398516293, 1630092239507464193, '
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_article_detail_backup`;
 CREATE TABLE `cms_article_detail_backup`  (
-  `content_id` bigint(20) NOT NULL,
-  `site_id` bigint(20) NULL DEFAULT NULL,
+  `content_id` bigint NOT NULL,
+  `site_id` bigint NULL DEFAULT NULL,
   `content_html` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `content_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `page_titles` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `download_remote_image` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_id` bigint NOT NULL AUTO_INCREMENT,
   `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `backup_time` datetime(0) NOT NULL,
+  `backup_time` datetime NOT NULL,
   `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`backup_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -663,32 +647,33 @@ INSERT INTO `cms_article_detail_backup` VALUES (402685051154501, 163009223950746
 INSERT INTO `cms_article_detail_backup` VALUES (402684225175621, 1630092239507464193, '<p>阿萨德法师的</p>', NULL, NULL, '0', 3, 'admin', '2023-04-02 23:10:06', NULL);
 INSERT INTO `cms_article_detail_backup` VALUES (402684175700037, 1630092239507464193, '<p>轻微qwe无群二</p>', NULL, NULL, '0', 4, 'admin', '2023-04-02 23:10:06', NULL);
 INSERT INTO `cms_article_detail_backup` VALUES (402687118942277, 1630092239507464193, '<p>自行车自行车</p>', NULL, NULL, '0', 5, 'admin', '2023-04-02 23:18:19', NULL);
+INSERT INTO `cms_article_detail_backup` VALUES (408933475221573, 1630092239507464193, '<p>test11</p>', NULL, NULL, '0', 8, 'admin', '2023-04-20 14:55:02', NULL);
 
 -- ----------------------------
 -- Table structure for cms_audio
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_audio`;
 CREATE TABLE `cms_audio`  (
-  `audio_id` bigint(20) NOT NULL COMMENT 'ID',
-  `content_id` bigint(20) NOT NULL COMMENT '所属内容ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
+  `audio_id` bigint NOT NULL COMMENT 'ID',
+  `content_id` bigint NOT NULL COMMENT '所属内容ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '音频标题',
   `author` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '作者',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '简介',
   `type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '音频类型',
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '音频文件路径',
-  `file_size` bigint(20) NOT NULL COMMENT '文件大小',
+  `file_size` bigint NOT NULL COMMENT '文件大小',
   `format` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '视频格式',
-  `duration` bigint(20) NOT NULL COMMENT '音频时长',
+  `duration` bigint NOT NULL COMMENT '音频时长',
   `decoder` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '编码方式',
-  `channels` int(11) NOT NULL COMMENT '声道数',
-  `bit_rate` int(11) NOT NULL COMMENT '比特率',
-  `sampling_rate` int(11) NOT NULL COMMENT '采样率',
-  `sort_flag` int(11) NOT NULL COMMENT '排序字段',
+  `channels` int NOT NULL COMMENT '声道数',
+  `bit_rate` int NOT NULL COMMENT '比特率',
+  `sampling_rate` int NOT NULL COMMENT '采样率',
+  `sort_flag` int NOT NULL COMMENT '排序字段',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`audio_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -698,53 +683,53 @@ CREATE TABLE `cms_audio`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_audio_backup`;
 CREATE TABLE `cms_audio_backup`  (
-  `audio_id` bigint(20) NOT NULL,
-  `content_id` bigint(20) NOT NULL,
-  `site_id` bigint(20) NOT NULL,
+  `audio_id` bigint NOT NULL,
+  `content_id` bigint NOT NULL,
+  `site_id` bigint NOT NULL,
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `author` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `file_size` bigint(20) NOT NULL,
+  `file_size` bigint NOT NULL,
   `format` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `duration` bigint(20) NOT NULL,
+  `duration` bigint NOT NULL,
   `decoder` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `channels` int(11) NOT NULL,
-  `bit_rate` int(11) NOT NULL,
-  `sampling_rate` int(11) NOT NULL,
-  `sort_flag` int(11) NOT NULL,
+  `channels` int NOT NULL,
+  `bit_rate` int NOT NULL,
+  `sampling_rate` int NOT NULL,
+  `sort_flag` int NOT NULL,
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `create_time` datetime(0) NOT NULL,
+  `create_time` datetime NOT NULL,
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_id` bigint NOT NULL AUTO_INCREMENT,
   `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `backup_time` datetime(0) NOT NULL,
+  `backup_time` datetime NOT NULL,
   `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`backup_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cms_block
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_block`;
 CREATE TABLE `cms_block`  (
-  `block_id` bigint(20) NOT NULL COMMENT 'ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
-  `catalog_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
+  `block_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `catalog_id` bigint NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
   `block_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '区块类型',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '区块名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '区块编码，站内唯一标识',
-  `state` int(11) NOT NULL COMMENT '状态',
+  `state` int NOT NULL COMMENT '状态',
   `publish_pipe_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布通道编码',
   `template` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模板',
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布目录',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`block_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -754,44 +739,44 @@ CREATE TABLE `cms_block`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_catalog`;
 CREATE TABLE `cms_catalog`  (
-  `catalog_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父级栏目ID',
+  `catalog_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
+  `parent_id` bigint NULL DEFAULT NULL COMMENT '父级栏目ID',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '栏目名称',
   `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '栏目引导图',
   `alias` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '栏目别名',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '栏目简介',
   `ancestors` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '栏目祖级IDs',
-  `dept_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所属部门编码',
-  `catalog_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '栏目类型',
-  `path` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '站点路径',
+  `dept_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属部门编码',
+  `catalog_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '栏目类型',
+  `path` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '站点路径',
   `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题栏目跳转地址',
   `static_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1' COMMENT '是否生成静态页面',
   `visible_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1' COMMENT '栏目是否可见',
-  `sort_flag` bigint(20) NOT NULL COMMENT '排序字段',
-  `index_template` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '栏目首页模板',
-  `index_file_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '栏目首页命名',
-  `list_template` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列表页模板',
-  `list_name_rule` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '列表页命名规则',
-  `detail_template` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详情页模板',
-  `detail_name_rule` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详情页命名规则',
-  `tree_level` int(11) NOT NULL COMMENT '栏目层级',
-  `child_count` int(11) NOT NULL COMMENT '子栏目数',
-  `content_count` int(11) NOT NULL COMMENT '内容数量',
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
+  `index_template` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '栏目首页模板',
+  `index_file_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '栏目首页命名',
+  `list_template` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '列表页模板',
+  `list_name_rule` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '列表页命名规则',
+  `detail_template` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '详情页模板',
+  `detail_name_rule` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '详情页命名规则',
+  `tree_level` int NOT NULL COMMENT '栏目层级',
+  `child_count` int NOT NULL COMMENT '子栏目数',
+  `content_count` int NOT NULL COMMENT '内容数量',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '状态',
-  `hit_count` int(11) NULL DEFAULT NULL COMMENT '点击量',
-  `seo_keywords` varchar(400) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'SEO关键词',
-  `seo_description` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'SEO描述',
-  `seo_title` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'SEO标题',
+  `hit_count` int NULL DEFAULT NULL COMMENT '点击量',
+  `seo_keywords` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'SEO关键词',
+  `seo_description` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'SEO描述',
+  `seo_title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'SEO标题',
   `publish_pipe_props` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '发布平台属性',
   `config_props` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '扩展配置',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`catalog_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 390572061470790 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 390572061470789 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cms_catalog
@@ -822,19 +807,19 @@ INSERT INTO `cms_catalog` VALUES (390572061470789, 1630092239507464193, 39057139
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_content`;
 CREATE TABLE `cms_content`  (
-  `content_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
-  `catalog_id` bigint(20) NOT NULL COMMENT '所属栏目ID',
+  `content_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `catalog_id` bigint NOT NULL COMMENT '所属栏目ID',
   `catalog_ancestors` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属栏目祖级IDs',
-  `top_catalog` bigint(20) NOT NULL COMMENT '所属顶级栏目ID',
-  `dept_id` bigint(20) NULL DEFAULT NULL COMMENT '部门ID',
+  `top_catalog` bigint NOT NULL COMMENT '所属顶级栏目ID',
+  `dept_id` bigint NULL DEFAULT NULL COMMENT '部门ID',
   `dept_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '部门编码',
   `content_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '内容类型',
   `title` varchar(360) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
   `sub_title` varchar(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '副标题',
   `short_title` varchar(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '短标题',
   `title_style` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题样式',
-  `logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '引导图',
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '引导图',
   `source` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源',
   `source_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源URL',
   `original` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '是否原创（Y=是，N=否）',
@@ -843,16 +828,16 @@ CREATE TABLE `cms_content`  (
   `summary` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '摘要',
   `static_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '自定义内容静态化文件路径',
   `status` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '内容状态',
-  `attributes` int(11) NULL DEFAULT 0 COMMENT '内容属性',
-  `top_flag` bigint(20) NOT NULL DEFAULT 0 COMMENT '置顶标识',
-  `top_date` datetime(0) NULL DEFAULT NULL COMMENT '置顶时间',
-  `sort_flag` bigint(20) NOT NULL COMMENT '排序字段',
+  `attributes` int NULL DEFAULT 0 COMMENT '内容属性',
+  `top_flag` bigint NOT NULL DEFAULT 0 COMMENT '置顶标识',
+  `top_date` datetime NULL DEFAULT NULL COMMENT '置顶时间',
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
   `keywords` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关键词',
   `tags` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'TAGs',
-  `copy_type` tinyint(4) NOT NULL DEFAULT 0 COMMENT '复制类型',
-  `copy_id` bigint(20) NULL DEFAULT 0 COMMENT '复制源ID',
-  `publish_date` datetime(0) NULL DEFAULT NULL COMMENT '发布时间',
-  `offline_date` datetime(0) NULL DEFAULT NULL COMMENT '下线时间',
+  `copy_type` tinyint NOT NULL DEFAULT 0 COMMENT '复制类型',
+  `copy_id` bigint NULL DEFAULT 0 COMMENT '复制源ID',
+  `publish_date` datetime NULL DEFAULT NULL COMMENT '发布时间',
+  `offline_date` datetime NULL DEFAULT NULL COMMENT '下线时间',
   `publish_pipe` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发布通道',
   `publish_pipe_props` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发布通道属性，配置独立模板用',
   `link_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '是否链接内容（Y=是，N=否）',
@@ -861,12 +846,12 @@ CREATE TABLE `cms_content`  (
   `lock_user` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '锁定用户名',
   `config_props` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '扩展属性',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`content_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 399145884594246 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 408933475221574 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cms_content
@@ -885,7 +870,7 @@ INSERT INTO `cms_content` VALUES (391272737792069, 1630092239507464193, 39057074
 INSERT INTO `cms_content` VALUES (391304549122117, 1630092239507464193, 390570748936261, '390570663739461:390570748936261', 390570663739461, 100, NULL, 'article', 'DK101N', NULL, 'dk', NULL, 'iurl://resources/image/2023/03/01/391304550248517.png?type=resource&id=391304550248517&sid=1630092239507464193', NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167766974000, '[]', '[]', 0, 0, '2023-03-02 11:30:47', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-01 19:22:19', 'admin', '2023-03-02 15:23:38', NULL);
 INSERT INTO `cms_content` VALUES (391598214479941, 1630092239507464193, 390567566614597, '390567488348229:390567566614597', 390567488348229, 100, NULL, 'article', '开源人机界面（HMI）软件可行吗？', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774143500, '[]', '[]', 0, 0, '2023-03-02 15:17:18', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:17:15', 'admin', '2023-04-15 17:47:46', NULL);
 INSERT INTO `cms_content` VALUES (391605537321029, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试111', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774322200, '[]', '[]', 0, 0, '2023-03-02 15:47:08', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:03', 'admin', '2023-03-02 15:47:03', NULL);
-INSERT INTO `cms_content` VALUES (391605605204037, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试222', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774323900, '[]', '[]', 0, 0, '2023-03-02 15:47:20', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:19', 'admin', '2023-03-02 15:47:19', NULL);
+INSERT INTO `cms_content` VALUES (391605605204037, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试222', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '60', 0, 0, NULL, 167774323900, '[]', '[]', 0, 0, '2023-03-02 15:47:20', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:19', 'admin', '2023-04-20 14:54:31', NULL);
 INSERT INTO `cms_content` VALUES (391605718069317, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试555', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 24, 0, NULL, 167774326600, '[]', '[]', 0, 0, '2023-03-02 15:54:52', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 15:47:47', 'admin', '2023-03-08 17:37:50', NULL);
 INSERT INTO `cms_content` VALUES (391610790780997, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '测试文章内容分页', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167774450600, '[]', '[]', 0, 0, '2023-03-02 16:08:26', NULL, '[\"pc\",\"h5\"]', NULL, '0', NULL, 'N', NULL, NULL, 'admin', '2023-03-02 16:08:25', 'admin', '2023-04-05 14:27:26', NULL);
 INSERT INTO `cms_content` VALUES (392223934677061, 1630092239507464193, 390570748936261, '390570663739461:390570748936261', 390570663739461, 100, NULL, 'article', 'DK101B', NULL, 'dk', NULL, 'iurl://resources/image/2023/03/04/392224004616261.png?type=resource&id=392224004616261&sid=1630092239507464193', NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 167789419800, '[]', '[]', 0, 0, '2023-03-04 09:43:20', NULL, '[\"pc\",\"h5\"]', NULL, 'N', NULL, 'N', NULL, NULL, 'admin', '2023-03-04 09:43:19', 'admin', '2023-03-04 09:43:46', NULL);
@@ -917,12 +902,12 @@ INSERT INTO `cms_content` VALUES (399145884594245, 1630092239507464193, 39057148
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_content_backup`;
 CREATE TABLE `cms_content_backup`  (
-  `content_id` bigint(20) NOT NULL,
-  `site_id` bigint(20) NOT NULL,
-  `catalog_id` bigint(20) NOT NULL,
+  `content_id` bigint NOT NULL,
+  `site_id` bigint NOT NULL,
+  `catalog_id` bigint NOT NULL,
   `catalog_ancestors` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `top_catalog` bigint(20) NOT NULL,
-  `dept_id` bigint(20) NULL DEFAULT NULL,
+  `top_catalog` bigint NOT NULL,
+  `dept_id` bigint NULL DEFAULT NULL,
   `dept_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `content_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `title` varchar(360) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -938,16 +923,16 @@ CREATE TABLE `cms_content_backup`  (
   `summary` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `static_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `status` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `attributes` int(11) NULL DEFAULT NULL,
-  `top_flag` bigint(20) NOT NULL,
-  `top_date` datetime(0) NULL DEFAULT NULL,
-  `sort_flag` bigint(20) NOT NULL,
+  `attributes` int NULL DEFAULT NULL,
+  `top_flag` bigint NOT NULL,
+  `top_date` datetime NULL DEFAULT NULL,
+  `sort_flag` bigint NOT NULL,
   `keywords` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `tags` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `copy_type` tinyint(4) NOT NULL,
-  `copy_id` bigint(20) NULL DEFAULT NULL,
-  `publish_date` datetime(0) NULL DEFAULT NULL,
-  `offline_date` datetime(0) NULL DEFAULT NULL,
+  `copy_type` tinyint NOT NULL,
+  `copy_id` bigint NULL DEFAULT NULL,
+  `publish_date` datetime NULL DEFAULT NULL,
+  `offline_date` datetime NULL DEFAULT NULL,
   `publish_pipe` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `publish_pipe_props` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `link_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -956,13 +941,13 @@ CREATE TABLE `cms_content_backup`  (
   `lock_user` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `config_props` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `create_time` datetime(0) NOT NULL,
+  `create_time` datetime NOT NULL,
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_id` bigint NOT NULL AUTO_INCREMENT,
   `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `backup_time` datetime(0) NOT NULL,
+  `backup_time` datetime NOT NULL,
   `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`backup_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -974,31 +959,32 @@ INSERT INTO `cms_content_backup` VALUES (402685051154501, 1630092239507464193, 3
 INSERT INTO `cms_content_backup` VALUES (402684225175621, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '去玩儿人', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '0', 0, 0, NULL, 168044799000, '[]', '[]', 0, 0, NULL, NULL, '[\"pc\"]', 'null', '0', NULL, 'N', NULL, 'null', 'admin', '2023-04-02 23:06:30', 'admin', '2023-04-02 23:06:30', NULL, 5, 'admin', '2023-04-02 23:10:05', NULL);
 INSERT INTO `cms_content_backup` VALUES (402684175700037, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '轻微qwe无群二', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '0', 0, 0, NULL, 168044797400, '[]', '[]', 0, 0, NULL, NULL, '[\"pc\"]', 'null', '0', NULL, 'N', NULL, 'null', 'admin', '2023-04-02 23:06:13', 'admin', '2023-04-02 23:06:13', NULL, 6, 'admin', '2023-04-02 23:10:06', NULL);
 INSERT INTO `cms_content_backup` VALUES (402687118942277, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', '自行车自行车', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '30', 0, 0, NULL, 168044869100, '[]', '[]', 0, 0, '2023-04-02 23:18:12', NULL, '[\"pc\"]', 'null', '0', NULL, 'N', NULL, 'null', 'admin', '2023-04-02 23:18:11', 'admin', '2023-04-02 23:18:11', NULL, 7, 'admin', '2023-04-02 23:18:19', NULL);
+INSERT INTO `cms_content_backup` VALUES (408933475221573, 1630092239507464193, 390567488348229, '390567488348229', 390567488348229, 100, NULL, 'article', 'test11', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, '0', 0, 0, NULL, 168197368200, '[]', '[]', 0, 0, NULL, NULL, '[\"pc\"]', 'null', '0', NULL, 'N', NULL, 'null', 'admin', '2023-04-20 14:54:42', 'admin', '2023-04-20 14:54:42', NULL, 10, 'admin', '2023-04-20 14:55:02', NULL);
 
 -- ----------------------------
 -- Table structure for cms_image
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_image`;
 CREATE TABLE `cms_image`  (
-  `image_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(20) NULL DEFAULT NULL,
-  `content_id` bigint(20) NOT NULL COMMENT '所属内容ID',
+  `image_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NULL DEFAULT NULL,
+  `content_id` bigint NOT NULL COMMENT '所属内容ID',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图片标题',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片摘要',
   `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图片原文件名',
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图片路径',
   `image_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图片类型',
-  `file_size` bigint(20) NOT NULL COMMENT '图片文件大小',
-  `width` int(11) NOT NULL DEFAULT 0 COMMENT '图片宽度',
-  `height` int(11) NOT NULL DEFAULT 0 COMMENT '图片高度',
+  `file_size` bigint NOT NULL COMMENT '图片文件大小',
+  `width` int NOT NULL DEFAULT 0 COMMENT '图片宽度',
+  `height` int NOT NULL DEFAULT 0 COMMENT '图片高度',
   `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
   `hit_count` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '点击量',
-  `sort_flag` bigint(20) NOT NULL COMMENT '排序字段',
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
   `remark` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最近修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最近修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最近修改时间',
   PRIMARY KEY (`image_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -1018,48 +1004,48 @@ INSERT INTO `cms_image` VALUES (390590523232330, 1630092239507464193, 3905905228
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_image_backup`;
 CREATE TABLE `cms_image_backup`  (
-  `image_id` bigint(20) NOT NULL,
-  `site_id` bigint(20) NULL DEFAULT NULL,
-  `content_id` bigint(20) NOT NULL,
+  `image_id` bigint NOT NULL,
+  `site_id` bigint NULL DEFAULT NULL,
+  `content_id` bigint NOT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `image_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `file_size` bigint(20) NOT NULL,
-  `width` int(11) NOT NULL,
-  `height` int(11) NOT NULL,
+  `file_size` bigint NOT NULL,
+  `width` int NOT NULL,
+  `height` int NOT NULL,
   `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `hit_count` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `sort_flag` bigint(20) NOT NULL,
+  `sort_flag` bigint NOT NULL,
   `remark` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `create_time` datetime(0) NOT NULL,
+  `create_time` datetime NOT NULL,
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
-  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `update_time` datetime NULL DEFAULT NULL,
+  `backup_id` bigint NOT NULL AUTO_INCREMENT,
   `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `backup_time` datetime(0) NOT NULL,
+  `backup_time` datetime NOT NULL,
   `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`backup_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cms_link
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_link`;
 CREATE TABLE `cms_link`  (
-  `link_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `group_id` bigint(20) NOT NULL COMMENT '所属分组ID',
+  `link_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
+  `group_id` bigint NOT NULL COMMENT '所属分组ID',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '友链名称',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '友链地址',
   `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '引导图',
-  `sort_flag` bigint(255) NOT NULL COMMENT '排序字段',
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`link_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1074,15 +1060,15 @@ INSERT INTO `cms_link` VALUES (390876534640709, 1630092239507464193, 39087647465
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_link_group`;
 CREATE TABLE `cms_link_group`  (
-  `link_group_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
+  `link_group_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '分组名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '分组编码',
-  `sort_flag` bigint(20) NOT NULL COMMENT '排序标识',
+  `sort_flag` bigint NOT NULL COMMENT '排序标识',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`link_group_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1097,22 +1083,22 @@ INSERT INTO `cms_link_group` VALUES (390876474650693, 1630092239507464193, '首�
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_page_widget`;
 CREATE TABLE `cms_page_widget`  (
-  `page_widget_id` bigint(20) NOT NULL COMMENT 'ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
-  `catalog_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
+  `page_widget_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `catalog_id` bigint NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
   `catalog_ancestors` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型ID',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码，站内唯一标识',
-  `state` int(11) NOT NULL COMMENT '状态',
+  `state` int NOT NULL COMMENT '状态',
   `publish_pipe_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布通道编码',
   `template` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模板',
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布目录',
   `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '页面部件内容',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`page_widget_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1128,17 +1114,17 @@ INSERT INTO `cms_page_widget` VALUES (394778222964805, 1630092239507464193, 0, N
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_publishpipe`;
 CREATE TABLE `cms_publishpipe`  (
-  `publishpipe_id` bigint(20) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
+  `publishpipe_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布点名称',
   `code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布点编码（同站点唯一标识）',
   `state` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布通道状态（0 = 禁用，1 = 启用）',
-  `sort` bigint(20) NOT NULL COMMENT '排序',
+  `sort` bigint NOT NULL COMMENT '排序',
   `remark` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最近修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最近修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最近修改时间',
   PRIMARY KEY (`publishpipe_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -1152,24 +1138,24 @@ INSERT INTO `cms_publishpipe` VALUES (390525691940933, 1630092239507464193, 'PC�
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_resource`;
 CREATE TABLE `cms_resource`  (
-  `resource_id` bigint(20) NOT NULL COMMENT 'id',
-  `site_id` bigint(20) NOT NULL COMMENT '站点id',
+  `resource_id` bigint NOT NULL COMMENT 'id',
+  `site_id` bigint NOT NULL COMMENT '站点id',
   `resource_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源类型',
   `storage_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '存储类型（本地=local，阿里SSO=sso）',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源名称',
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件保存相对路径',
   `file_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件名称',
   `suffix` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '后缀名，不带.',
-  `width` int(11) NULL DEFAULT NULL COMMENT '宽',
-  `height` int(11) NULL DEFAULT NULL COMMENT '高',
-  `file_size` bigint(20) NOT NULL COMMENT '文件大小',
+  `width` int NULL DEFAULT NULL COMMENT '宽',
+  `height` int NULL DEFAULT NULL COMMENT '高',
+  `file_size` bigint NOT NULL COMMENT '文件大小',
   `source_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '来源地址',
-  `status` int(11) NOT NULL COMMENT '状态',
+  `status` int NOT NULL COMMENT '状态',
   `usage_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '引用关系',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`resource_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1379,18 +1365,18 @@ INSERT INTO `cms_resource` VALUES (408152772935749, 1630092239507464193, 'audio'
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_site`;
 CREATE TABLE `cms_site`  (
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
-  `parent_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '父级站点ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
+  `parent_id` bigint NOT NULL DEFAULT 0 COMMENT '父级站点ID',
   `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '站点名称',
   `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '简介',
   `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '站点LOGO',
   `path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '站点目录',
   `resource_url` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '站点资源访问地址',
-  `catalog_max_code` int(11) NULL DEFAULT 0 COMMENT '顶级栏目编码最大值',
+  `catalog_max_code` int NULL DEFAULT 0 COMMENT '顶级栏目编码最大值',
   `dept_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属机构编码',
   `index_template` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '首页模板',
   `static_suffix` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '静态文件类型',
-  `sort_flag` bigint(20) NOT NULL COMMENT '排序标识',
+  `sort_flag` bigint NOT NULL COMMENT '排序标识',
   `publish_pipe_props` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '发布通道属性',
   `config_props` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '站点扩展属性',
   `seo_keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'SEO关键词',
@@ -1398,9 +1384,9 @@ CREATE TABLE `cms_site`  (
   `seo_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'SEO标题',
   `remark` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最近修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最近修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最近修改时间',
   PRIMARY KEY (`site_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -1414,15 +1400,15 @@ INSERT INTO `cms_site` VALUES (1630092239507464193, 0, '思威控', NULL, 'iurl:
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_site_property`;
 CREATE TABLE `cms_site_property`  (
-  `property_id` bigint(20) NOT NULL COMMENT '属性ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
+  `property_id` bigint NOT NULL COMMENT '属性ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
   `prop_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '属性名称',
   `prop_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '属性编码',
   `prop_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '属性值',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`property_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1432,20 +1418,20 @@ CREATE TABLE `cms_site_property`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_template`;
 CREATE TABLE `cms_template`  (
-  `template_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `site_id` bigint(20) NOT NULL COMMENT '站点ID',
+  `template_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
   `publish_pipe_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布通道编码',
   `path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模板路径',
   `content` longblob NOT NULL COMMENT '模板内容',
-  `filesize` int(11) NOT NULL COMMENT '模板文件大小',
-  `modify_time` bigint(20) NOT NULL COMMENT '模板文件更新时间戳',
+  `filesize` int NOT NULL COMMENT '模板文件大小',
+  `modify_time` bigint NOT NULL COMMENT '模板文件更新时间戳',
   `remark` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最近修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最近修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最近修改时间',
   PRIMARY KEY (`template_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '模板表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '模板表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cms_template
@@ -1470,26 +1456,26 @@ INSERT INTO `cms_template` VALUES (15, 1630092239507464193, 'pc', 'detail_video.
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_video`;
 CREATE TABLE `cms_video`  (
-  `video_id` bigint(20) NOT NULL,
-  `content_id` bigint(20) NOT NULL COMMENT '所属内容ID',
-  `site_id` bigint(20) NOT NULL COMMENT '所属站点ID',
+  `video_id` bigint NOT NULL,
+  `content_id` bigint NOT NULL COMMENT '所属内容ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '视频标题',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '简介',
   `type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '视频类型',
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '视频文件路径',
-  `file_size` bigint(20) NOT NULL COMMENT '文件大小',
+  `file_size` bigint NOT NULL COMMENT '文件大小',
   `format` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '视频格式',
-  `duration` bigint(20) NOT NULL COMMENT '视频时长',
+  `duration` bigint NOT NULL COMMENT '视频时长',
   `decoder` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '视频编码方式',
-  `width` int(11) NOT NULL COMMENT '视频宽度',
-  `height` int(11) NOT NULL COMMENT '视频高度',
-  `bit_rate` int(20) NOT NULL COMMENT '比特率',
-  `frame_rate` int(11) NOT NULL COMMENT '帧率',
-  `sort_flag` int(11) NOT NULL COMMENT '排序字段',
+  `width` int NOT NULL COMMENT '视频宽度',
+  `height` int NOT NULL COMMENT '视频高度',
+  `bit_rate` int NOT NULL COMMENT '比特率',
+  `frame_rate` int NOT NULL COMMENT '帧率',
+  `sort_flag` int NOT NULL COMMENT '排序字段',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`video_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1504,40 +1490,40 @@ INSERT INTO `cms_video` VALUES (399344001900613, 399145884594245, 16300922395074
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_video_backup`;
 CREATE TABLE `cms_video_backup`  (
-  `video_id` bigint(20) NOT NULL,
-  `content_id` bigint(20) NOT NULL,
-  `site_id` bigint(20) NOT NULL,
+  `video_id` bigint NOT NULL,
+  `content_id` bigint NOT NULL,
+  `site_id` bigint NOT NULL,
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `file_size` bigint(20) NOT NULL,
+  `file_size` bigint NOT NULL,
   `format` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `duration` bigint(20) NOT NULL,
+  `duration` bigint NOT NULL,
   `decoder` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `width` int(11) NOT NULL,
-  `height` int(11) NOT NULL,
-  `bit_rate` int(20) NOT NULL,
-  `frame_rate` int(11) NOT NULL,
-  `sort_flag` int(11) NOT NULL,
+  `width` int NOT NULL,
+  `height` int NOT NULL,
+  `bit_rate` int NOT NULL,
+  `frame_rate` int NOT NULL,
+  `sort_flag` int NOT NULL,
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `create_time` datetime(0) NOT NULL,
+  `create_time` datetime NOT NULL,
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `backup_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backup_id` bigint NOT NULL AUTO_INCREMENT,
   `backup_operator` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `backup_time` datetime(0) NOT NULL,
+  `backup_time` datetime NOT NULL,
   `backup_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`backup_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for gen_table
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table`;
 CREATE TABLE `gen_table`  (
-  `table_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `table_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
   `table_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '表名称',
   `table_comment` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '表描述',
   `sub_table_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联子表的表名',
@@ -1553,12 +1539,12 @@ CREATE TABLE `gen_table`  (
   `gen_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '/' COMMENT '生成路径（不填默认项目路径）',
   `options` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '其它生成选项',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`table_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of gen_table
@@ -1570,7 +1556,7 @@ INSERT INTO `gen_table` VALUES (1, 'sys_notice', '通知公告表', NULL, NULL, 
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table_column`;
 CREATE TABLE `gen_table_column`  (
-  `column_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `column_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
   `table_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '归属表编号',
   `column_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '列名称',
   `column_comment` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '列描述',
@@ -1587,13 +1573,13 @@ CREATE TABLE `gen_table_column`  (
   `query_type` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'EQ' COMMENT '查询方式（等于、不等于、大于、小于、范围）',
   `html_type` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '显示类型（文本框、文本域、下拉框、复选框、单选框、日期控件）',
   `dict_type` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '字典类型',
-  `sort` int(11) NULL DEFAULT NULL COMMENT '排序',
+  `sort` int NULL DEFAULT NULL COMMENT '排序',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`column_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成业务表字段' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of gen_table_column
@@ -1614,13 +1600,13 @@ INSERT INTO `gen_table_column` VALUES (10, '1', 'remark', '备注', 'varchar(255
 -- ----------------------------
 DROP TABLE IF EXISTS `search_dict_word`;
 CREATE TABLE `search_dict_word`  (
-  `word_id` bigint(20) NOT NULL,
+  `word_id` bigint NOT NULL,
   `word_type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型（WORD,STOP）',
   `word` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`word_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1636,13 +1622,13 @@ INSERT INTO `search_dict_word` VALUES (395899267354693, 'WORD', '陈港生', 'ad
 -- ----------------------------
 DROP TABLE IF EXISTS `search_index_model`;
 CREATE TABLE `search_index_model`  (
-  `model_id` bigint(20) NOT NULL COMMENT '模型主键ID',
+  `model_id` bigint NOT NULL COMMENT '模型主键ID',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模型名称',
   `code` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模型唯一标识编码，索引名',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`model_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1652,16 +1638,16 @@ CREATE TABLE `search_index_model`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `search_index_model_field`;
 CREATE TABLE `search_index_model_field`  (
-  `field_id` bigint(20) NOT NULL COMMENT '模型字段ID',
-  `model_id` bigint(20) NOT NULL COMMENT '所属模型ID',
+  `field_id` bigint NOT NULL COMMENT '模型字段ID',
+  `model_id` bigint NOT NULL COMMENT '所属模型ID',
   `field_label` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字段标签',
   `field_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字段名',
   `primary_key` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '是否主键',
   `field_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字段类型',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`field_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1671,14 +1657,14 @@ CREATE TABLE `search_index_model_field`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `search_log`;
 CREATE TABLE `search_log`  (
-  `log_id` bigint(20) NOT NULL,
+  `log_id` bigint NOT NULL,
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `user_agent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `referer` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `client_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `source` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `log_time` datetime(0) NOT NULL,
+  `log_time` datetime NOT NULL,
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -1692,13 +1678,13 @@ INSERT INTO `search_log` VALUES (1, '星耀帝国', NULL, NULL, NULL, NULL, NULL
 -- ----------------------------
 DROP TABLE IF EXISTS `search_word`;
 CREATE TABLE `search_word`  (
-  `word_id` bigint(20) NOT NULL,
+  `word_id` bigint NOT NULL,
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `search_total` bigint(20) NOT NULL,
+  `search_total` bigint NOT NULL,
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`word_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -1713,15 +1699,15 @@ INSERT INTO `search_word` VALUES (1496071507291832322, '测试', 1, 'admin', '20
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_config`;
 CREATE TABLE `sys_config`  (
-  `config_id` int(5) NOT NULL AUTO_INCREMENT COMMENT '参数主键',
+  `config_id` int NOT NULL AUTO_INCREMENT COMMENT '参数主键',
   `config_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '参数名称',
   `config_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '参数键名',
   `config_value` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '参数键值',
   `config_type` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'N' COMMENT '系统内置（Y是 N否）',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`config_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 186 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '参数配置表' ROW_FORMAT = Dynamic;
@@ -1746,22 +1732,22 @@ INSERT INTO `sys_config` VALUES (185, 'CMS文件上传类型限制', 'AllowUploa
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept`  (
-  `dept_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '部门id',
-  `parent_id` bigint(20) NULL DEFAULT 0 COMMENT '父部门id',
+  `dept_id` bigint NOT NULL AUTO_INCREMENT COMMENT '部门id',
+  `parent_id` bigint NULL DEFAULT 0 COMMENT '父部门id',
   `ancestors` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '祖级列表',
   `dept_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '部门名称',
-  `order_num` int(4) NULL DEFAULT 0 COMMENT '显示顺序',
+  `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
   `leader` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '负责人',
   `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   `status` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '状态',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dept_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dept
@@ -1775,8 +1761,8 @@ INSERT INTO `sys_dept` VALUES (102, 100, '0,100', '长沙分公司', 2, '若依'
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_data`;
 CREATE TABLE `sys_dict_data`  (
-  `dict_code` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典编码',
-  `dict_sort` int(4) NOT NULL DEFAULT 0 COMMENT '字典排序',
+  `dict_code` bigint NOT NULL AUTO_INCREMENT COMMENT '字典编码',
+  `dict_sort` int NOT NULL DEFAULT 0 COMMENT '字典排序',
   `dict_label` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字典标签',
   `dict_value` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字典键值',
   `dict_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字典类型',
@@ -1784,9 +1770,9 @@ CREATE TABLE `sys_dict_data`  (
   `list_class` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表格回显样式',
   `is_default` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'N' COMMENT '是否默认（Y是 N否）',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_code`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 353 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典数据表' ROW_FORMAT = Dynamic;
@@ -1883,17 +1869,17 @@ INSERT INTO `sys_dict_data` VALUES (352, 3, '输入', 'input', 'VoteSubjectType'
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_type`;
 CREATE TABLE `sys_dict_type`  (
-  `dict_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典主键',
+  `dict_id` bigint NOT NULL AUTO_INCREMENT COMMENT '字典主键',
   `dict_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字典名称',
   `dict_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字典类型',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_id`) USING BTREE,
   UNIQUE INDEX `dict_type`(`dict_type`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 168 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 167 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dict_type
@@ -1928,7 +1914,7 @@ INSERT INTO `sys_dict_type` VALUES (167, '调查投票状态', 'VoteViewType', '
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_i18n_dict`;
 CREATE TABLE `sys_i18n_dict`  (
-  `dict_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `dict_id` bigint NOT NULL AUTO_INCREMENT,
   `lang_tag` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '语言ID',
   `lang_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '国际化字符键',
   `lang_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '国际化字符值',
@@ -1938,11 +1924,6 @@ CREATE TABLE `sys_i18n_dict`  (
 -- ----------------------------
 -- Records of sys_i18n_dict
 -- ----------------------------
-INSERT INTO `sys_i18n_dict` VALUES (18, 'en', 'MENU.NAME.2000', 'HMI Management');
-INSERT INTO `sys_i18n_dict` VALUES (19, 'en', 'MENU.NAME.2001', 'Advertisement');
-INSERT INTO `sys_i18n_dict` VALUES (20, 'en', 'MENU.NAME.2002', 'CDKey');
-INSERT INTO `sys_i18n_dict` VALUES (91, 'en', 'MENU.NAME.2022', 'Content');
-INSERT INTO `sys_i18n_dict` VALUES (92, 'en', 'MENU.NAME.2023', 'Contents');
 INSERT INTO `sys_i18n_dict` VALUES (93, 'en', 'MENU.NAME.2024', 'Resources');
 INSERT INTO `sys_i18n_dict` VALUES (94, 'en', 'MENU.NAME.1', 'System');
 INSERT INTO `sys_i18n_dict` VALUES (95, 'en', 'MENU.NAME.100', 'User');
@@ -1953,15 +1934,10 @@ INSERT INTO `sys_i18n_dict` VALUES (99, 'en', 'MENU.NAME.104', 'Post');
 INSERT INTO `sys_i18n_dict` VALUES (100, 'en', 'MENU.NAME.105', 'Dictionary');
 INSERT INTO `sys_i18n_dict` VALUES (101, 'en', 'MENU.NAME.106', 'Config');
 INSERT INTO `sys_i18n_dict` VALUES (102, 'en', 'MENU.NAME.107', 'Notice');
-INSERT INTO `sys_i18n_dict` VALUES (103, 'en', 'MENU.NAME.108', 'Logs');
-INSERT INTO `sys_i18n_dict` VALUES (104, 'en', 'MENU.NAME.500', 'Operation Log');
-INSERT INTO `sys_i18n_dict` VALUES (105, 'en', 'MENU.NAME.501', 'Login Log');
-INSERT INTO `sys_i18n_dict` VALUES (106, 'en', 'MENU.NAME.2009', 'IP Rule');
 INSERT INTO `sys_i18n_dict` VALUES (107, 'en', 'MENU.NAME.2014', 'I18n');
 INSERT INTO `sys_i18n_dict` VALUES (108, 'en', 'MENU.NAME.2040', 'Security');
 INSERT INTO `sys_i18n_dict` VALUES (109, 'en', 'MENU.NAME.2', 'Monitor');
 INSERT INTO `sys_i18n_dict` VALUES (110, 'en', 'MENU.NAME.109', 'Online User');
-INSERT INTO `sys_i18n_dict` VALUES (111, 'en', 'MENU.NAME.110', 'Cron Job');
 INSERT INTO `sys_i18n_dict` VALUES (112, 'en', 'MENU.NAME.111', 'Database');
 INSERT INTO `sys_i18n_dict` VALUES (113, 'en', 'MENU.NAME.112', 'Server');
 INSERT INTO `sys_i18n_dict` VALUES (114, 'en', 'MENU.NAME.113', 'Redis');
@@ -1970,7 +1946,6 @@ INSERT INTO `sys_i18n_dict` VALUES (116, 'en', 'MENU.NAME.3', 'Tools');
 INSERT INTO `sys_i18n_dict` VALUES (117, 'en', 'MENU.NAME.115', 'Form Generator');
 INSERT INTO `sys_i18n_dict` VALUES (118, 'en', 'MENU.NAME.116', 'Code Generator');
 INSERT INTO `sys_i18n_dict` VALUES (119, 'en', 'MENU.NAME.2031', 'Icons');
-INSERT INTO `sys_i18n_dict` VALUES (120, 'en', 'MENU.NAME.2021', 'Statistics');
 INSERT INTO `sys_i18n_dict` VALUES (121, 'en', 'MENU.NAME.2035', 'Interactive');
 INSERT INTO `sys_i18n_dict` VALUES (122, 'en', 'MENU.NAME.2036', 'Friend Link');
 INSERT INTO `sys_i18n_dict` VALUES (123, 'en', 'MENU.NAME.2038', 'Advertise');
@@ -2055,27 +2030,13 @@ INSERT INTO `sys_i18n_dict` VALUES (221, 'zh-CN', 'MENU.NAME.2041', '异步任�
 INSERT INTO `sys_i18n_dict` VALUES (222, 'zh-CN', 'MENU.NAME.115', '表单构建');
 INSERT INTO `sys_i18n_dict` VALUES (223, 'zh-CN', 'MENU.NAME.116', '代码生成');
 INSERT INTO `sys_i18n_dict` VALUES (224, 'zh-CN', 'MENU.NAME.2031', 'ICONS预览');
-INSERT INTO `sys_i18n_dict` VALUES (225, 'zh-CN', 'DICT.MetaFieldType.short_text', 'VARCHAR(50)');
-INSERT INTO `sys_i18n_dict` VALUES (226, 'en', 'DICT.MetaFieldType.short_text', 'VARCHAR(50)');
-INSERT INTO `sys_i18n_dict` VALUES (227, 'zh-CN', 'DICT.MetaFieldType.medium_text', 'VARCHAR(200)');
-INSERT INTO `sys_i18n_dict` VALUES (228, 'en', 'DICT.MetaFieldType.medium_text', 'VARCHAR(200)');
-INSERT INTO `sys_i18n_dict` VALUES (229, 'zh-CN', 'DICT.MetaFieldType.large_text', 'VARCHAR(2000)');
-INSERT INTO `sys_i18n_dict` VALUES (230, 'en', 'DICT.MetaFieldType.large_text', 'VARCHAR(2000)');
-INSERT INTO `sys_i18n_dict` VALUES (231, 'zh-CN', 'DICT.MetaFieldType.clob_text', 'MEDIUMTEXT');
-INSERT INTO `sys_i18n_dict` VALUES (232, 'en', 'DICT.MetaFieldType.clob_text', 'MEDIUMTEXT');
-INSERT INTO `sys_i18n_dict` VALUES (233, 'zh-CN', 'DICT.MetaFieldType.long', 'LONG');
-INSERT INTO `sys_i18n_dict` VALUES (234, 'en', 'DICT.MetaFieldType.long', 'LONG');
-INSERT INTO `sys_i18n_dict` VALUES (235, 'zh-CN', 'DICT.MetaFieldType.double', 'DOUBLE');
-INSERT INTO `sys_i18n_dict` VALUES (236, 'en', 'DICT.MetaFieldType.double', 'DOUBLE');
-INSERT INTO `sys_i18n_dict` VALUES (237, 'zh-CN', 'DICT.MetaFieldType.datetime', 'DATETIME');
-INSERT INTO `sys_i18n_dict` VALUES (238, 'en', 'DICT.MetaFieldType.datetime', 'DATETIME');
 
 -- ----------------------------
 -- Table structure for sys_logininfor
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_logininfor`;
 CREATE TABLE `sys_logininfor`  (
-  `info_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '访问ID',
+  `info_id` bigint NOT NULL AUTO_INCREMENT COMMENT '访问ID',
   `user_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户类型',
   `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户ID',
   `user_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '用户账号',
@@ -2085,37 +2046,20 @@ CREATE TABLE `sys_logininfor`  (
   `os` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '操作系统',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '登录状态（0成功 1失败）',
   `msg` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '提示消息',
-  `login_time` datetime(0) NULL DEFAULT NULL COMMENT '访问时间',
+  `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   `log_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '日志类型（Login/Logou/Register）',
   PRIMARY KEY (`info_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of sys_logininfor
--- ----------------------------
-INSERT INTO `sys_logininfor` VALUES (24, 'sys_user', '1', 'admin', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 15:57:30', '1');
-INSERT INTO `sys_logininfor` VALUES (25, 'sys_user', NULL, 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '1', 'CAPTCHA_ERR', '2023-04-13 15:57:37', '0');
-INSERT INTO `sys_logininfor` VALUES (26, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 15:57:41', '0');
-INSERT INTO `sys_logininfor` VALUES (27, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 15:59:06', '1');
-INSERT INTO `sys_logininfor` VALUES (28, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 18:23:44', '0');
-INSERT INTO `sys_logininfor` VALUES (29, 'sys_user', NULL, 'admin', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '1', 'CAPTCHA_ERR', '2023-04-13 18:27:28', '0');
-INSERT INTO `sys_logininfor` VALUES (30, 'sys_user', '1', 'admin', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 18:27:32', '0');
-INSERT INTO `sys_logininfor` VALUES (31, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 23:48:47', '1');
-INSERT INTO `sys_logininfor` VALUES (32, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 23:48:52', '0');
-INSERT INTO `sys_logininfor` VALUES (33, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 23:56:18', '1');
-INSERT INTO `sys_logininfor` VALUES (34, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-13 23:56:51', '0');
-INSERT INTO `sys_logininfor` VALUES (35, 'sys_user', '2', 'test', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-15 14:53:48', '1');
-INSERT INTO `sys_logininfor` VALUES (36, 'sys_user', '1', 'admin', '127.0.0.1', '内网', 'Chrome 11', 'Windows 10', '0', '', '2023-04-15 14:54:03', '0');
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for sys_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
-  `menu_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
+  `menu_id` bigint NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
   `menu_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单名称',
-  `parent_id` bigint(20) NULL DEFAULT 0 COMMENT '父菜单ID',
-  `order_num` int(4) NULL DEFAULT 0 COMMENT '显示顺序',
+  `parent_id` bigint NULL DEFAULT 0 COMMENT '父菜单ID',
+  `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
   `path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '路由地址',
   `component` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '组件路径',
   `query` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '路由参数',
@@ -2127,9 +2071,9 @@ CREATE TABLE `sys_menu`  (
   `perms` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '权限标识',
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '#' COMMENT '菜单图标',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2081 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
@@ -2247,18 +2191,18 @@ INSERT INTO `sys_menu` VALUES (2080, '统计分析', 0, 38, 'statistics', 'stat/
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_notice`;
 CREATE TABLE `sys_notice`  (
-  `notice_id` int(4) NOT NULL AUTO_INCREMENT COMMENT '公告ID',
+  `notice_id` int NOT NULL AUTO_INCREMENT COMMENT '公告ID',
   `notice_title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公告标题',
   `notice_type` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公告类型（1通知 2公告）',
   `notice_content` longblob NULL COMMENT '公告内容',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '公告状态（0正常 1关闭）',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`notice_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_notice
@@ -2270,13 +2214,13 @@ INSERT INTO `sys_notice` VALUES (2, '测试', '1', 0x3C6F6C3E3C6C693E3C7374726F6
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_oper_log`;
 CREATE TABLE `sys_oper_log`  (
-  `oper_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '日志主键',
+  `oper_id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志主键',
   `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '模块标题',
   `business_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '业务类型',
   `method` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '方法名称',
   `request_method` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '请求方式',
   `operator_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '操作人类型',
-  `oper_uid` bigint(20) NULL DEFAULT NULL COMMENT '操作人员ID',
+  `oper_uid` bigint NULL DEFAULT NULL COMMENT '操作人员ID',
   `oper_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '操作人员',
   `dept_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '部门名称',
   `oper_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '请求URL',
@@ -2284,219 +2228,29 @@ CREATE TABLE `sys_oper_log`  (
   `oper_location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '操作地点',
   `request_args` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '请求参数',
   `response_result` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '响应结果',
-  `response_code` int(1) NULL DEFAULT 0 COMMENT '响应状态',
-  `oper_time` datetime(0) NULL DEFAULT NULL COMMENT '操作时间',
-  `cost` bigint(20) NULL DEFAULT NULL COMMENT '操作耗时',
+  `response_code` int NULL DEFAULT 0 COMMENT '响应状态',
+  `oper_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
+  `cost` bigint NULL DEFAULT NULL COMMENT '操作耗时',
   `user_agent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '请求头User-Agent信息',
   PRIMARY KEY (`oper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1360 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of sys_oper_log
--- ----------------------------
-INSERT INTO `sys_oper_log` VALUES (1174, '扩展配置2子栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.SiteController.addSave(SiteDTO)', 'POST', '0', NULL, '', '', '/cms/site', '127.0.0.1', '内网', '{\"dto\":{\"name\":\"测试\",\"path\":\"test\",\"resourceUrl\":\"\"}}', '站点目录冲突', 500, '2023-04-11 23:18:56', 537, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1175, '新增站点', 'INSERT', 'R com.ruoyi.contentcore.controller.SiteController.addSave(SiteDTO)', 'POST', '0', NULL, '', '', '/cms/site', '127.0.0.1', '内网', '{\"dto\":{\"name\":\"测试\",\"path\":\"test\",\"resourceUrl\":\"\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-11 23:19:27\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-11 23:19:27\",\"siteId\":\"405872499413061\",\"name\":\"测试\",\"path\":\"test\",\"resourceUrl\":\"\",\"sortFlag\":\"168122636800\",\"configProps\":{}}}', 200, '2023-04-11 23:19:28', 126, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1176, '切换站点', 'UPDATE', 'R com.ruoyi.contentcore.controller.SiteController.setCurrentSite(Long)', 'POST', '0', NULL, '', '', '/cms/site/setCurrentSite/405872499413061', '127.0.0.1', '内网', '{\"siteId\":\"405872499413061\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"siteName\":\"测试\",\"siteId\":\"405872499413061\"}}', 200, '2023-04-11 23:20:17', 9, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1177, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"405872499413061\",\"parentId\":\"0\",\"name\":\"测试1\",\"alias\":\"test1\",\"catalogType\":\"common\",\"path\":\"test1/\"}}', '\r\n### Error updating database.  Cause: java.sql.SQLException: Field \'create_time\' doesn\'t have a default value\r\n### The error may exist in com/ruoyi/system/mapper/SysPermissionMapper.java (best guess)\r\n### The error may involve com.ruoyi.system.mapper.SysPermissionMapper.insert-Inline\r\n### The error occurred while setting parameters\r\n### SQL: INSERT INTO sys_permission  ( owner_type, owner, permissions, create_by )  VALUES  ( ?, ?, ?, ? )\r\n### Cause: java.sql.SQLException: Field \'create_time\' doesn\'t have a default value\n; Field \'create_time\' doesn\'t have a default value', 500, '2023-04-11 23:20:34', 152, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1178, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"405872499413061\",\"parentId\":\"0\",\"name\":\"测试1\",\"alias\":\"test1\",\"catalogType\":\"common\",\"path\":\"test1\"}}', '栏目名称/别名/目录重复', 500, '2023-04-11 23:32:29', 51, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1179, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"405872499413061\",\"parentId\":\"405872769114181\",\"name\":\"测试2\",\"alias\":\"test2\",\"catalogType\":\"common\",\"path\":\"test2/\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-11 23:32:52\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-11 23:32:52\",\"catalogId\":\"405875797549125\",\"siteId\":\"405872499413061\",\"parentId\":\"405872769114181\",\"ancestors\":\"405872769114181:405875797549125\",\"name\":\"测试2\",\"alias\":\"test2\",\"catalogType\":\"common\",\"path\":\"test2/\",\"staticFlag\":\"Y\",\"visibleFlag\":\"Y\",\"sortFlag\":\"168122717300\",\"treeLevel\":2,\"childCount\":0,\"contentCount\":0,\"configProps\":{},\"visible\":true,\"staticize\":true,\"enable\":false}}', 200, '2023-04-11 23:32:53', 234, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1180, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"405872499413061\",\"parentId\":\"0\",\"name\":\"测试3\",\"alias\":\"test3\",\"catalogType\":\"common\",\"path\":\"test3/\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-11 23:33:04\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-11 23:33:04\",\"catalogId\":\"405875843448901\",\"siteId\":\"405872499413061\",\"parentId\":\"0\",\"ancestors\":\"405875843448901\",\"name\":\"测试3\",\"alias\":\"test3\",\"catalogType\":\"common\",\"path\":\"test3/\",\"staticFlag\":\"Y\",\"visibleFlag\":\"Y\",\"sortFlag\":\"168122718400\",\"treeLevel\":1,\"childCount\":0,\"contentCount\":0,\"configProps\":{},\"visible\":true,\"staticize\":true,\"enable\":false}}', 200, '2023-04-11 23:33:04', 94, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1181, '新增素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.addResource(MultipartFile,String,String)', 'POST', '0', NULL, '', '', '/cms/resource', '127.0.0.1', '内网', '{\"name\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"remark\":\"undefined\"}', 'Expected one result (or null) to be returned by selectOne(), but found: 2', 500, '2023-04-11 23:33:38', 8, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1182, '新增素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.addResource(MultipartFile,String,String)', 'POST', '0', NULL, '', '', '/cms/resource', '127.0.0.1', '内网', '{\"name\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"remark\":\"undefined\"}', 'jackson from error, json: com.ruoyi.contentcore.properties.FileStorageArgsProperty$FileStorageArgs@36c9c791, type: class com.ruoyi.contentcore.properties.FileStorageArgsProperty$FileStorageArgs', 500, '2023-04-11 23:35:56', 738, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1183, '新增素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.addResource(MultipartFile,String,String)', 'POST', '0', NULL, '', '', '/cms/resource', '127.0.0.1', '内网', '{\"name\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"remark\":\"undefined\"}', 'jackson from error, json: com.ruoyi.contentcore.properties.FileStorageArgsProperty$FileStorageArgs@35e75592, type: class com.ruoyi.contentcore.properties.FileStorageArgsProperty$FileStorageArgs', 500, '2023-04-11 23:36:28', 374287, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1184, '新增素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.addResource(MultipartFile,String,String)', 'POST', '0', NULL, '', '', '/cms/resource', '127.0.0.1', '内网', '{\"name\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"remark\":\"undefined\"}', 'Cannot invoke \"com.ruoyi.contentcore.properties.FileStorageArgsProperty$FileStorageArgs.getBucket()\" because \"fileStorageArgs\" is null', 500, '2023-04-11 23:56:47', 6853, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1185, '新增素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.addResource(MultipartFile,String,String)', 'POST', '0', NULL, '', '', '/cms/resource', '127.0.0.1', '内网', '{\"name\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"remark\":\"undefined\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-11 23:57:14\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-11 23:57:14\",\"remark\":\"undefined\",\"resourceId\":\"405881785946181\",\"siteId\":\"405872499413061\",\"resourceType\":\"image\",\"storageType\":\"Local\",\"name\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"path\":\"resources/image/2023/04/11/405881785946181.jpg\",\"fileName\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"suffix\":\"jpg\",\"width\":680,\"height\":374,\"fileSize\":\"45980\",\"status\":\"0\",\"internalUrl\":\"iurl://resources/image/2023/04/11/405881785946181.jpg?type=resource&id=405881785946181&st=Local&sid=405872499413061\",\"enable\":true}}', 200, '2023-04-11 23:57:15', 63, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1186, '新增内容', 'INSERT', 'R com.ruoyi.contentcore.controller.ContentController.addContent(String,HttpServletRequest)', 'POST', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"article\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"e70488c6-bc5e-4dc6-b139-431760dd401f\"}}', 200, '2023-04-11 23:57:28', 21, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1187, '新增内容', 'INSERT', 'R com.ruoyi.contentcore.controller.ContentController.addContent(String,HttpServletRequest)', 'POST', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"article\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"5e789f61-ce03-49f5-82f2-f30b29de923c\"}}', 200, '2023-04-11 23:57:36', 7, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1188, '新增内容', 'INSERT', 'R com.ruoyi.contentcore.controller.ContentController.addContent(String,HttpServletRequest)', 'POST', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"article\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"4170a410-6a97-400e-9979-00a5725e2cc3\"}}', 200, '2023-04-11 23:57:44', 5, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1189, '新增发布通道', 'INSERT', 'R com.ruoyi.contentcore.controller.PublishPipeController.addSave(CmsPublishPipe)', 'POST', '0', NULL, '', '', '/cms/publishpipe', '127.0.0.1', '内网', '{\"publishPipe\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-12 00:00:39\",\"publishpipeId\":\"405882623848517\",\"siteId\":\"405872499413061\",\"name\":\"PC\",\"code\":\"pc\",\"state\":\"0\",\"sort\":\"1\",\"enable\":true}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:00:39', 59, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1190, '新增模板', 'INSERT', 'R com.ruoyi.contentcore.controller.TemplateController.add(TemplateAddDTO)', 'POST', '0', NULL, '', '', '/cms/template', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"405872499413061\",\"publishPipeCode\":\"pc\",\"path\":\"index.template.html\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:01:04', 85, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1191, '编辑模板', 'UPDATE', 'R com.ruoyi.contentcore.controller.TemplateController.save(TemplateUpdateDTO)', 'PUT', '0', NULL, '', '', '/cms/template', '127.0.0.1', '内网', '{\"dto\":{\"templateId\":\"16\",\"content\":\"\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:02:35', 73, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1192, '新增友链分组', 'INSERT', 'R com.ruoyi.link.controller.LinkGroupController.add(LinkGroupDTO)', 'POST', 'sys_user', 1, 'admin', '', '/cms/link_group', '127.0.0.1', '内网', '{\"dto\":{\"name\":\"测试\",\"code\":\"test\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:03:09', 45, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1193, '新增友链', 'INSERT', 'R com.ruoyi.link.controller.LinkController.add(LinkDTO)', 'POST', 'sys_user', 1, 'admin', '', '/cms/link', '127.0.0.1', '内网', '{\"dto\":{\"groupId\":\"405883235225669\",\"name\":\"测试111\",\"url\":\"http://www.test11.com\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:03:21', 45, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1194, '新增页面组件', 'INSERT', 'R com.ruoyi.contentcore.controller.PageWidgetController.addPageWidget(PageWidgetAddDTO)', 'POST', '0', NULL, '', '', '/cms/pagewidget', '127.0.0.1', '内网', '{\"dto\":{\"type\":\"manual\",\"name\":\"test\",\"code\":\"test\",\"publishPipeCode\":\"pc\",\"path\":\"include/pagewidget/\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:04:54', 66, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1195, '新增页面组件', 'INSERT', 'R com.ruoyi.contentcore.controller.PageWidgetController.addPageWidget(PageWidgetAddDTO)', 'POST', '0', NULL, '', '', '/cms/pagewidget', '127.0.0.1', '内网', '{\"dto\":{\"type\":\"ads\",\"name\":\"测试ad\",\"code\":\"testad\",\"publishPipeCode\":\"pc\",\"path\":\"include/pagewidget/\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:05:09', 55, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1196, '新增广告', 'INSERT', 'R com.ruoyi.advertisement.controller.AdvertisementController.addAdvertisement(AdvertisementDTO)', 'POST', '0', NULL, '', '', '/cms/advertisement', '127.0.0.1', '内网', '{\"dto\":{\"adSpaceId\":\"405883728961605\",\"type\":\"image\",\"name\":\"testtest\",\"weight\":100,\"onlineDate\":\"2023-04-12 00:05:19\",\"offlineDate\":\"2023-04-29 00:00:00\",\"resourcePath\":\"iurl://resources/image/2023/04/11/405881785946181.jpg?type=resource&id=405881785946181&st=Local&sid=405872499413061\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-12 00:05:29', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1197, '删除站点', 'DELETE', 'R com.ruoyi.contentcore.controller.SiteController.remove(Long)', 'DELETE', '0', NULL, '', '', '/cms/site/405872499413061', '127.0.0.1', '内网', '{\"siteId\":\"405872499413061\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":\"DeleteSite_405872499413061\"}', 200, '2023-04-12 00:05:36', 9, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1198, '新增站点', 'INSERT', 'R com.ruoyi.contentcore.controller.SiteController.addSave(SiteDTO)', 'POST', '0', NULL, '', '', '/cms/site', '127.0.0.1', '内网', '{\"dto\":{\"name\":\"测试\",\"path\":\"test\"}}', '站点目录冲突', 500, '2023-04-12 00:10:56', 19, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1199, '新增站点', 'INSERT', 'R com.ruoyi.contentcore.controller.SiteController.addSave(SiteDTO)', 'POST', '0', NULL, '', '', '/cms/site', '127.0.0.1', '内网', '{\"dto\":{\"name\":\"测试\",\"path\":\"test11\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-12 00:10:59\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-12 00:10:59\",\"siteId\":\"405885161701445\",\"name\":\"测试\",\"path\":\"test11\",\"sortFlag\":\"168122945900\",\"configProps\":{}}}', 200, '2023-04-12 00:10:59', 111, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1200, '切换站点', 'UPDATE', 'R com.ruoyi.contentcore.controller.SiteController.setCurrentSite(Long)', 'POST', '0', NULL, '', '', '/cms/site/setCurrentSite/405885161701445', '127.0.0.1', '内网', '{\"siteId\":\"405885161701445\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"siteName\":\"测试\",\"siteId\":\"405885161701445\"}}', 200, '2023-04-12 00:11:07', 7, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1201, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"405885161701445\",\"parentId\":\"0\",\"name\":\"阿法士大夫\",\"alias\":\"asdfa\",\"catalogType\":\"common\",\"path\":\"asdasd/\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-12 00:11:17\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-12 00:11:17\",\"catalogId\":\"405885238427717\",\"siteId\":\"405885161701445\",\"parentId\":\"0\",\"ancestors\":\"405885238427717\",\"name\":\"阿法士大夫\",\"alias\":\"asdfa\",\"catalogType\":\"common\",\"path\":\"asdasd/\",\"staticFlag\":\"Y\",\"visibleFlag\":\"Y\",\"sortFlag\":\"168122947700\",\"treeLevel\":1,\"childCount\":0,\"contentCount\":0,\"configProps\":{},\"visible\":true,\"enable\":false,\"staticize\":true}}', 200, '2023-04-12 00:11:18', 94, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1202, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"405885161701445\",\"parentId\":\"405885238427717\",\"name\":\"驱蚊器\",\"alias\":\"qwe\",\"catalogType\":\"common\",\"path\":\"qwe/\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-12 00:11:25\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-12 00:11:25\",\"catalogId\":\"405885268967493\",\"siteId\":\"405885161701445\",\"parentId\":\"405885238427717\",\"ancestors\":\"405885238427717:405885268967493\",\"name\":\"驱蚊器\",\"alias\":\"qwe\",\"catalogType\":\"common\",\"path\":\"qwe/\",\"staticFlag\":\"Y\",\"visibleFlag\":\"Y\",\"sortFlag\":\"168122948500\",\"treeLevel\":2,\"childCount\":0,\"contentCount\":0,\"configProps\":{},\"visible\":true,\"enable\":false,\"staticize\":true}}', 200, '2023-04-12 00:11:25', 114, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1203, '新增内容', 'INSERT', 'R com.ruoyi.contentcore.controller.ContentController.addContent(String,HttpServletRequest)', 'POST', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"article\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"ea338e5f-3ad6-4d8c-9aa6-1224f938b699\"}}', 200, '2023-04-12 00:11:35', 16, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1204, '上传素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.uploadFile(MultipartFile)', 'POST', '0', NULL, '', '', '/cms/resource/upload', '127.0.0.1', '内网', '{}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-12 00:11:56\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-12 00:11:56\",\"resourceId\":\"405885396484165\",\"siteId\":\"405885161701445\",\"resourceType\":\"image\",\"storageType\":\"Local\",\"name\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"path\":\"resources/image/2023/04/12/405885396484165.jpg\",\"fileName\":\"5ca4adb6e358a7f3b22602973b689bee.jpg\",\"suffix\":\"jpg\",\"width\":680,\"height\":374,\"fileSize\":\"45980\",\"status\":\"0\",\"src\":\"http://localhost/dev-api/preview/test11/resources/image/2023/04/12/405885396484165.jpg\",\"internalUrl\":\"iurl://resources/image/2023/04/12/405885396484165.jpg?type=resource&id=405885396484165&st=Local&sid=405885161701445\",\"enable\":true}}', 200, '2023-04-12 00:11:56', 167, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1205, '新增内容', 'INSERT', 'R com.ruoyi.contentcore.controller.ContentController.addContent(String,HttpServletRequest)', 'POST', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"image\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"66cc7a21-28cf-43b2-b0b9-e0b4c6c70eee\"}}', 200, '2023-04-12 00:11:58', 11, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1206, '删除站点', 'DELETE', 'R com.ruoyi.contentcore.controller.SiteController.remove(Long)', 'DELETE', '0', NULL, '', '', '/cms/site/405885161701445', '127.0.0.1', '内网', '{\"siteId\":\"405885161701445\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":\"DeleteSite_405885161701445\"}', 200, '2023-04-12 00:12:28', 6, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1207, '新增站点', 'INSERT', 'R com.ruoyi.contentcore.controller.SiteController.addSave(SiteDTO)', 'POST', '0', NULL, '', '', '/cms/site', '127.0.0.1', '内网', '{\"dto\":{\"name\":\"阿士大夫撒地方\",\"path\":\"dfasdf\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-12 00:13:13\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-12 00:13:13\",\"siteId\":\"405885712339013\",\"name\":\"阿士大夫撒地方\",\"path\":\"dfasdf\",\"sortFlag\":\"168122959300\",\"configProps\":{}}}', 200, '2023-04-12 00:13:13', 98, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1208, '删除站点', 'DELETE', 'R com.ruoyi.contentcore.controller.SiteController.remove(Long)', 'DELETE', '0', NULL, '', '', '/cms/site/405885712339013', '127.0.0.1', '内网', '{\"siteId\":\"405885712339013\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":\"DeleteSite_405885712339013\"}', 200, '2023-04-12 00:13:18', 7, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1209, '新增站点', 'INSERT', 'R com.ruoyi.contentcore.controller.SiteController.addSave(SiteDTO)', 'POST', '0', NULL, '', '', '/cms/site', '127.0.0.1', '内网', '{\"dto\":{\"name\":\"阿斯达四大\",\"path\":\"qweqwe\"}}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-12 00:14:30\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-12 00:14:30\",\"siteId\":\"405886026604613\",\"name\":\"阿斯达四大\",\"path\":\"qweqwe\",\"sortFlag\":\"168122967000\",\"configProps\":{}}}', 200, '2023-04-12 00:14:30', 96, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1210, '删除站点', 'DELETE', 'R com.ruoyi.contentcore.controller.SiteController.remove(Long)', 'DELETE', '0', NULL, '', '', '/cms/site/405886026604613', '127.0.0.1', '内网', '{\"siteId\":\"405886026604613\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":\"DeleteSite_405886026604613\"}', 200, '2023-04-12 00:14:36', 9, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1211, '发布站点', 'OTHER', 'R com.ruoyi.contentcore.controller.SiteController.publishAll(PublishSiteDTO)', 'POST', '0', NULL, '', '', '/cms/site/publish', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"1630092239507464193\",\"publishIndex\":true}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 10:43:32', 2085, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1212, '权限设置', 'UPDATE', 'R com.ruoyi.system.controller.SysPermissionController.saveMenuPermission(SysPermissionDTO)', 'POST', '0', NULL, '', '', '/system/permission', '127.0.0.1', '内网', '{\"dto\":{\"ownerType\":\"Role\",\"owner\":\"2\",\"permType\":\"Menu\",\"permissions\":[\"cms:staticize:tag\",\"comment:mgr:audit\",\"cms:advertisement:list\",\"cms:search:log\",\"cms:file:list\",\"cms:exmodel:list\",\"member:list\",\"vote:mgr:edit\",\"cms:friendlink:edit\",\"comment:mgr:delete\",\"cms:exmodel:delete\",\"cms:publishpipe:list\",\"member:exp:config\",\"stat:view\",\"cms:resource:view\",\"cms:site:list\",\"cms:search:index\",\"operations:view\",\"cms:catalog:list\",\"cms:friendlink:add\",\"vote:mgr:list\",\"cms:exmodel:edit\",\"cms:exmodel:a', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 15:56:46', 70, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1213, '权限设置', 'UPDATE', 'R com.ruoyi.system.controller.SysPermissionController.saveMenuPermission(SysPermissionDTO)', 'POST', '0', NULL, '', '', '/system/permission', '127.0.0.1', '内网', '{\"dto\":{\"ownerType\":\"Role\",\"owner\":\"2\",\"permType\":\"Menu\",\"permissions\":[\"cms:staticize:tag\",\"comment:mgr:audit\",\"cms:advertisement:list\",\"cms:search:log\",\"cms:file:list\",\"cms:exmodel:list\",\"member:list\",\"vote:mgr:edit\",\"cms:friendlink:edit\",\"comment:mgr:delete\",\"cms:exmodel:delete\",\"cms:publishpipe:list\",\"member:exp:config\",\"stat:view\",\"cms:site:list\",\"cms:search:index\",\"operations:view\",\"cms:catalog:list\",\"cms:friendlink:add\",\"vote:mgr:list\",\"cms:exmodel:edit\",\"cms:exmodel:add\",\"vote:mgr:delete', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 15:57:23', 46, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1214, '权限设置', 'UPDATE', 'R com.ruoyi.system.controller.SysPermissionController.saveMenuPermission(SysPermissionDTO)', 'POST', '0', NULL, '', '', '/system/permission', '127.0.0.1', '内网', '{\"dto\":{\"ownerType\":\"Role\",\"owner\":\"2\",\"permType\":\"Menu\",\"permissions\":[\"cms:staticize:tag\",\"comment:mgr:audit\",\"cms:advertisement:list\",\"cms:search:log\",\"cms:file:list\",\"cms:exmodel:list\",\"member:list\",\"vote:mgr:edit\",\"cms:friendlink:edit\",\"comment:mgr:delete\",\"cms:exmodel:delete\",\"cms:publishpipe:list\",\"member:exp:config\",\"stat:view\",\"cms:resource:view\",\"cms:site:list\",\"cms:search:index\",\"operations:view\",\"cms:catalog:list\",\"cms:friendlink:add\",\"vote:mgr:list\",\"cms:exmodel:edit\",\"cms:exmodel:a', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:27:46', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1215, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:31:45\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2026\",\"menuName\":\"站点管理\",\"parentId\":\"2025\",\"orderNum\":1,\"path\":\"site\",\"component\":\"cms/contentcore/site\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:site:view\",\"icon\":\"cascader\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:37:57', 74, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1216, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:32:16\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2027\",\"menuName\":\"栏目管理\",\"parentId\":\"2025\",\"orderNum\":2,\"path\":\"catalog\",\"component\":\"cms/contentcore/catalog\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:catalog:view\",\"icon\":\"tree-table\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:38:03', 47, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1217, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:32:52\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2028\",\"menuName\":\"内容管理\",\"parentId\":\"2025\",\"orderNum\":3,\"path\":\"content\",\"component\":\"cms/contentcore/content\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:content:view\",\"icon\":\"list\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:38:09', 65, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1218, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:33:26\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-10 18:20:02\",\"remark\":\"\",\"menuId\":\"2029\",\"menuName\":\"发布通道\",\"parentId\":\"2025\",\"orderNum\":5,\"path\":\"publishpipe\",\"component\":\"cms/contentcore/publishPipe\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:publishpipe:view\",\"icon\":\"component\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:38:15', 37, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1219, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:33:58\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-10 18:20:06\",\"remark\":\"\",\"menuId\":\"2030\",\"menuName\":\"模板管理\",\"parentId\":\"2025\",\"orderNum\":6,\"path\":\"template\",\"component\":\"cms/contentcore/template\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:template:view\",\"icon\":\"code\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:38:23', 48, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1220, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:42:44\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-10 18:20:12\",\"remark\":\"\",\"menuId\":\"2033\",\"menuName\":\"文件管理\",\"parentId\":\"2025\",\"orderNum\":7,\"path\":\"file\",\"component\":\"cms/contentcore/file\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:file:view\",\"icon\":\"tree-table\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:38:31', 48, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1221, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:43:09\",\"updateBy\":\"admin\",\"updateTime\":\"2023-03-09 14:53:28\",\"remark\":\"\",\"menuId\":\"2034\",\"menuName\":\"模板指令\",\"parentId\":\"2025\",\"orderNum\":8,\"path\":\"staticize\",\"component\":\"cms/staticize/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:staticize:view\",\"icon\":\"code\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:38:41', 46, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1222, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:48:38\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-10 18:20:20\",\"remark\":\"\",\"menuId\":\"2037\",\"menuName\":\"扩展模型\",\"parentId\":\"2025\",\"orderNum\":9,\"path\":\"exmodel\",\"component\":\"cms/exmodel/model\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:exmodel:view\",\"icon\":\"form\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:38:47', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1223, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-13 17:32:02\",\"updateBy\":\"admin\",\"updateTime\":\"2023-03-28 18:46:15\",\"remark\":\"\",\"menuId\":\"2051\",\"menuName\":\"内容索引\",\"parentId\":\"2025\",\"orderNum\":11,\"path\":\"search/index\",\"component\":\"cms/search/indexList\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:contentindex:view\",\"icon\":\"documentation\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:39:07', 43, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1224, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:47:51\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2036\",\"menuName\":\"友链管理\",\"parentId\":\"2035\",\"orderNum\":1,\"path\":\"link\",\"component\":\"cms/link/linkGroup\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:friendlink:view\",\"icon\":\"link\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:41:43', 32, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1225, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:49:16\",\"updateBy\":\"admin\",\"updateTime\":\"2023-01-18 11:58:54\",\"remark\":\"\",\"menuId\":\"2038\",\"menuName\":\"广告管理\",\"parentId\":\"2035\",\"orderNum\":2,\"path\":\"advertisement\",\"component\":\"cms/ad/adSpace\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:advertisement:view\",\"icon\":\"button\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:41:50', 36, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1226, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:49:16\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:41:50\",\"remark\":\"\",\"menuId\":\"2038\",\"menuName\":\"广告管理\",\"parentId\":\"2035\",\"orderNum\":2,\"path\":\"advertisement\",\"component\":\"cms/ad/adSpace\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:advertisement:view\",\"icon\":\"button\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:43:04', 43, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1227, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-25 22:43:55\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2065\",\"menuName\":\"评论管理\",\"parentId\":\"2035\",\"orderNum\":3,\"path\":\"comment\",\"component\":\"comment/commentList\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"comment:view\",\"icon\":\"chat\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:45:14', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1228, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-28 18:42:56\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2069\",\"menuName\":\"审核\",\"parentId\":\"2065\",\"orderNum\":2,\"path\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"F\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"comment:audit\",\"icon\":\"#\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:45:23', 52, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1229, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-28 18:43:12\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2070\",\"menuName\":\"删除\",\"parentId\":\"2065\",\"orderNum\":3,\"path\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"F\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"comment:delete\",\"icon\":\"#\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:45:27', 37, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1230, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-27 16:42:30\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2066\",\"menuName\":\"调查投票\",\"parentId\":\"2035\",\"orderNum\":4,\"path\":\"vote\",\"component\":\"vote/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"vote:view\",\"icon\":\"radio\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:45:35', 48, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1231, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-28 18:43:35\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2071\",\"menuName\":\"新增\",\"parentId\":\"2066\",\"orderNum\":1,\"path\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"F\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"vote:add\",\"icon\":\"#\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:45:40', 78, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1232, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-28 18:43:55\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2072\",\"menuName\":\"编辑\",\"parentId\":\"2066\",\"orderNum\":2,\"path\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"F\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"vote:edit\",\"icon\":\"#\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:45:44', 47, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1233, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-28 18:44:07\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2073\",\"menuName\":\"删除\",\"parentId\":\"2066\",\"orderNum\":3,\"path\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"F\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"vote:delete\",\"icon\":\"#\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:45:48', 101, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1234, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-27 16:43:48\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2067\",\"menuName\":\"调查投票主题页\",\"parentId\":\"2035\",\"orderNum\":99,\"path\":\"vote/subjects\",\"component\":\"vote/subjectList\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"vote:view\",\"icon\":\"build\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:46:03', 30, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1235, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:35:56\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-04 09:36:41\",\"remark\":\"\",\"menuId\":\"2060\",\"menuName\":\"会员管理\",\"parentId\":\"0\",\"orderNum\":37,\"path\":\"member\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"M\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:mgr\",\"icon\":\"peoples\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:46:33', 35, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1236, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 19:00:00\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2063\",\"menuName\":\"会员列表\",\"parentId\":\"2060\",\"orderNum\":1,\"path\":\"list\",\"component\":\"member/memberList\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:list:view\",\"icon\":\"peoples\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:46:43', 33, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1237, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:44:07\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2062\",\"menuName\":\"等级配置\",\"parentId\":\"2060\",\"orderNum\":2,\"path\":\"levelConfig\",\"component\":\"member/levelConfig\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:level:view\",\"icon\":\"guide\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:47:00', 38, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1238, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:38:23\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"2061\",\"menuName\":\"经验配置\",\"parentId\":\"2060\",\"orderNum\":3,\"path\":\"expConfig\",\"component\":\"member/expConfig\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:exp:view\",\"icon\":\"button\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:47:06', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1239, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:44:07\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:47:00\",\"remark\":\"\",\"menuId\":\"2062\",\"menuName\":\"等级配置\",\"parentId\":\"2060\",\"orderNum\":2,\"path\":\"levelConfig\",\"component\":\"member/levelConfig\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:level\",\"icon\":\"guide\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:47:19', 37, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1240, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:38:23\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:47:06\",\"remark\":\"\",\"menuId\":\"2061\",\"menuName\":\"经验配置\",\"parentId\":\"2060\",\"orderNum\":3,\"path\":\"expConfig\",\"component\":\"member/expConfig\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:exp\",\"icon\":\"button\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:47:25', 28, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1241, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:44:07\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:47:20\",\"remark\":\"\",\"menuId\":\"2062\",\"menuName\":\"等级配置\",\"parentId\":\"2060\",\"orderNum\":2,\"path\":\"levelConfig\",\"component\":\"member/levelConfig\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:level:view\",\"icon\":\"guide\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:47:32', 34, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1242, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:38:23\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:47:25\",\"remark\":\"\",\"menuId\":\"2061\",\"menuName\":\"经验配置\",\"parentId\":\"2060\",\"orderNum\":3,\"path\":\"expConfig\",\"component\":\"member/expConfig\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member:exp:view\",\"icon\":\"button\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:47:38', 42, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1243, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-20 17:35:56\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:46:33\",\"remark\":\"\",\"menuId\":\"2060\",\"menuName\":\"会员管理\",\"parentId\":\"0\",\"orderNum\":37,\"path\":\"member\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"M\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"member\",\"icon\":\"peoples\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:47:46', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1244, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"用户管理菜单\",\"menuId\":\"100\",\"menuName\":\"用户管理\",\"parentId\":\"1\",\"orderNum\":1,\"path\":\"user\",\"component\":\"system/user/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:user:view\",\"icon\":\"user\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:11', 125, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1245, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"角色管理菜单\",\"menuId\":\"101\",\"menuName\":\"角色管理\",\"parentId\":\"1\",\"orderNum\":2,\"path\":\"role\",\"component\":\"system/role/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:role:view\",\"icon\":\"peoples\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:17', 39, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1246, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"菜单管理菜单\",\"menuId\":\"102\",\"menuName\":\"菜单管理\",\"parentId\":\"1\",\"orderNum\":3,\"path\":\"menu\",\"component\":\"system/menu/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:menu:view\",\"icon\":\"tree-table\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:21', 59, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1247, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"部门管理菜单\",\"menuId\":\"103\",\"menuName\":\"部门管理\",\"parentId\":\"1\",\"orderNum\":4,\"path\":\"dept\",\"component\":\"system/dept/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:dept:view\",\"icon\":\"tree\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:25', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1248, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"岗位管理菜单\",\"menuId\":\"104\",\"menuName\":\"岗位管理\",\"parentId\":\"1\",\"orderNum\":5,\"path\":\"post\",\"component\":\"system/post/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:post:view\",\"icon\":\"post\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:30', 43, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1249, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"字典管理菜单\",\"menuId\":\"105\",\"menuName\":\"字典管理\",\"parentId\":\"1\",\"orderNum\":6,\"path\":\"dict\",\"component\":\"system/dict/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:dict:view\",\"icon\":\"dict\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:35', 29, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1250, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"参数设置菜单\",\"menuId\":\"106\",\"menuName\":\"参数设置\",\"parentId\":\"1\",\"orderNum\":7,\"path\":\"config\",\"component\":\"system/config/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:config:view\",\"icon\":\"edit\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:41', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1251, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"通知公告菜单\",\"menuId\":\"107\",\"menuName\":\"通知公告\",\"parentId\":\"1\",\"orderNum\":8,\"path\":\"notice\",\"component\":\"system/notice/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:notice:view\",\"icon\":\"message\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:46', 62, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1252, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-10 16:13:48\",\"updateBy\":\"admin\",\"updateTime\":\"2023-01-10 16:14:24\",\"remark\":\"\",\"menuId\":\"2014\",\"menuName\":\"国际化管理\",\"parentId\":\"1\",\"orderNum\":11,\"path\":\"i18n/dict\",\"component\":\"system/i18n/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:i18ndict:view\",\"icon\":\"language\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:52', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1253, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:52:57\",\"updateBy\":\"admin\",\"updateTime\":\"2023-01-18 14:59:52\",\"remark\":\"\",\"menuId\":\"2040\",\"menuName\":\"安全配置\",\"parentId\":\"1\",\"orderNum\":12,\"path\":\"security/config\",\"component\":\"system/security/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"system:security:view\",\"icon\":\"shield-user-line\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:51:58', 39, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1254, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-02 11:29:24\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-02 11:30:11\",\"remark\":\"\",\"menuId\":\"2041\",\"menuName\":\"异步任务\",\"parentId\":\"2\",\"orderNum\":3,\"path\":\"async\",\"component\":\"monitor/async/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"monitor:async:view\",\"icon\":\"list\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:52:19', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1255, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"在线用户菜单\",\"menuId\":\"109\",\"menuName\":\"在线用户\",\"parentId\":\"2\",\"orderNum\":1,\"path\":\"online\",\"component\":\"monitor/online/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"monitor:online:view\",\"icon\":\"online\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:52:23', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1256, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-02 11:30:17\",\"remark\":\"数据监控菜单\",\"menuId\":\"111\",\"menuName\":\"数据监控\",\"parentId\":\"2\",\"orderNum\":4,\"path\":\"druid\",\"component\":\"monitor/druid/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"monitor:druid:view\",\"icon\":\"druid\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:52:28', 39, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1257, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-02 11:30:23\",\"remark\":\"服务监控菜单\",\"menuId\":\"112\",\"menuName\":\"服务监控\",\"parentId\":\"2\",\"orderNum\":5,\"path\":\"server\",\"component\":\"monitor/server/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"monitor:server:view\",\"icon\":\"server\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:52:34', 37, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1258, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-02 11:30:27\",\"remark\":\"缓存监控菜单\",\"menuId\":\"113\",\"menuName\":\"缓存监控\",\"parentId\":\"2\",\"orderNum\":6,\"path\":\"cache\",\"component\":\"monitor/cache/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"monitor:cache:view\",\"icon\":\"redis\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:52:38', 44, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1259, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-02 11:30:32\",\"remark\":\"缓存列表菜单\",\"menuId\":\"114\",\"menuName\":\"缓存列表\",\"parentId\":\"2\",\"orderNum\":7,\"path\":\"cacheList\",\"component\":\"monitor/cache/list\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"monitor:cache:view\",\"icon\":\"redis-list\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:52:42', 43, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1260, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-25 11:13:02\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-25 11:17:07\",\"remark\":\"\",\"menuId\":\"2043\",\"menuName\":\"系统日志\",\"parentId\":\"2\",\"orderNum\":8,\"path\":\"logs\",\"component\":\"monitor/logs/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"monitor:logs:view\",\"icon\":\"list\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:52:48', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1261, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"代码生成菜单\",\"menuId\":\"116\",\"menuName\":\"代码生成\",\"parentId\":\"3\",\"orderNum\":2,\"path\":\"gen\",\"component\":\"tool/gen/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"tool:gen:view\",\"icon\":\"code\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:55:28', 641, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1262, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"\",\"menuId\":\"1055\",\"menuName\":\"生成查询\",\"parentId\":\"116\",\"orderNum\":1,\"path\":\"#\",\"component\":\"\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"F\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"tool:gen:view\",\"icon\":\"#\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:55:48', 38, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1263, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1055', '127.0.0.1', '内网', '{\"menuId\":\"1055\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:56:24', 42, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1264, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"remark\":\"表单构建菜单\",\"menuId\":\"115\",\"menuName\":\"表单构建\",\"parentId\":\"3\",\"orderNum\":1,\"path\":\"build\",\"component\":\"tool/build/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"tool:build:view\",\"icon\":\"build\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:56:40', 38, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1265, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-25 13:16:16\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-04 09:37:58\",\"remark\":\"\",\"menuId\":\"2050\",\"menuName\":\"用户登录日志\",\"parentId\":\"2048\",\"orderNum\":2,\"path\":\"/monitor/logs/logininfo\",\"component\":\"monitor/logs/logininfo\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"\",\"icon\":\"logininfor\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:57:10', 54, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1266, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-25 13:13:55\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-04 09:37:53\",\"remark\":\"\",\"menuId\":\"2049\",\"menuName\":\"用户操作日志\",\"parentId\":\"2048\",\"orderNum\":3,\"path\":\"/monitor/logs/operation\",\"component\":\"monitor/logs/operation\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"\",\"icon\":\"button\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:57:15', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1267, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-27 16:43:48\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:46:03\",\"remark\":\"\",\"menuId\":\"2067\",\"menuName\":\"调查投票主题页\",\"parentId\":\"2035\",\"orderNum\":99,\"path\":\"vote/subjects\",\"component\":\"vote/subjectList\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"\",\"icon\":\"build\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:57:51', 50, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1268, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:50:46\",\"updateBy\":\"admin\",\"updateTime\":\"2023-03-31 22:01:53\",\"remark\":\"\",\"menuId\":\"2039\",\"menuName\":\"词汇管理\",\"parentId\":\"2025\",\"orderNum\":10,\"path\":\"word\",\"component\":\"word/word\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"cms:word:view\",\"icon\":\"input\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:58:20', 44, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1269, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-01-17 16:50:46\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:58:20\",\"remark\":\"\",\"menuId\":\"2039\",\"menuName\":\"词汇管理\",\"parentId\":\"2025\",\"orderNum\":10,\"path\":\"word\",\"component\":\"word/word\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"word:view\",\"icon\":\"input\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 18:58:55', 71, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1270, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/2077', '127.0.0.1', '内网', '{\"menuId\":\"2077\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:00:05', 35, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1271, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/2078', '127.0.0.1', '内网', '{\"menuId\":\"2078\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:00:09', 27, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1272, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/2079', '127.0.0.1', '内网', '{\"menuId\":\"2079\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:00:11', 27, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1273, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/2015', '127.0.0.1', '内网', '{\"menuId\":\"2015\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:01:52', 25, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1274, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1035', '127.0.0.1', '内网', '{\"menuId\":\"1035\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:01:59', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1275, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1030', '127.0.0.1', '内网', '{\"menuId\":\"1030\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:02:03', 32, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1276, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1025', '127.0.0.1', '内网', '{\"menuId\":\"1025\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:02:07', 24, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1277, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1020', '127.0.0.1', '内网', '{\"menuId\":\"1020\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:02:10', 47, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1278, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1016', '127.0.0.1', '内网', '{\"menuId\":\"1016\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:02:13', 35, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1279, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1012', '127.0.0.1', '内网', '{\"menuId\":\"1012\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:02:17', 40, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1280, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1007', '127.0.0.1', '内网', '{\"menuId\":\"1007\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:02:20', 29, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1281, '菜单管理', 'DELETE', 'R com.ruoyi.system.controller.SysMenuController.remove(Long)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/menu/1000', '127.0.0.1', '内网', '{\"menuId\":\"1000\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:02:24', 27, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1282, '权限设置', 'UPDATE', 'R com.ruoyi.system.controller.SysPermissionController.saveMenuPermission(SysPermissionDTO)', 'POST', '0', NULL, '', '', '/system/permission', '127.0.0.1', '内网', '{\"dto\":{\"ownerType\":\"Role\",\"owner\":\"2\",\"permType\":\"Menu\",\"permissions\":[\"system:user:resetPwd\",\"system:post:view\",\"tool:gen:edit\",\"monitor:druid:view\",\"system:dict:edit\",\"monitor:logs:view\",\"cms:friendlink:edit\",\"word:view\",\"cms:contentindex:view\",\"system:user:export\",\"system:role:remove\",\"system:menu:view\",\"monitor:online:view\",\"system:i18ndict:export\",\"cms:content:view\",\"cms:friendlink:add\",\"vote:add\",\"monitor:online:query\",\"system:notice:edit\",\"tool:gen:import\",\"cms:exmodel:view\",\"system:conf', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 19:11:55', 85, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41');
-INSERT INTO `sys_oper_log` VALUES (1283, '字典类型', 'DELETE', 'R com.ruoyi.system.controller.SysDictTypeController.remove(List)', 'DELETE', 'sys_user', 2, 'test', '', '/system/dict/type', '127.0.0.1', '内网', '{\"dictIds\":[\"164\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 23:44:36', 85, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1284, '权限设置', 'UPDATE', 'R com.ruoyi.system.controller.SysPermissionController.saveMenuPermission(SysPermissionDTO)', 'POST', '0', NULL, '', '', '/system/permission', '127.0.0.1', '内网', '{\"dto\":{\"ownerType\":\"Role\",\"owner\":\"2\",\"permType\":\"Menu\",\"permissions\":[\"system:user:resetPwd\",\"system:post:view\",\"tool:gen:edit\",\"monitor:druid:view\",\"system:dict:edit\",\"monitor:logs:view\",\"cms:friendlink:edit\",\"word:view\",\"cms:contentindex:view\",\"system:user:export\",\"system:role:remove\",\"system:menu:view\",\"monitor:online:view\",\"system:i18ndict:export\",\"cms:content:view\",\"cms:friendlink:add\",\"vote:add\",\"monitor:online:query\",\"system:notice:edit\",\"tool:gen:import\",\"cms:exmodel:view\",\"system:conf', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 23:48:26', 27, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1285, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 2, 'test', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-24 18:42:07\",\"updateBy\":\"test\",\"remark\":\"\",\"menuId\":\"2064\",\"menuName\":\"GroovyScript\",\"parentId\":\"3\",\"orderNum\":0,\"path\":\"groovy\",\"component\":\"system/groovy/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"tool:groovy:exec\",\"icon\":\"code\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-13 23:55:53', 603, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1286, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 2, 'test', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"test\",\"updateTime\":\"2023-04-13 18:56:40\",\"remark\":\"表单构建菜单\",\"menuId\":\"115\",\"menuName\":\"表单构建\",\"parentId\":\"3\",\"orderNum\":1,\"path\":\"build\",\"component\":\"tool/build/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"tool:build:view\",\"icon\":\"build\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 11:18:07', 72, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1287, '站点扩展', 'UPDATE', 'R com.ruoyi.contentcore.controller.SiteController.saveSiteExtends(Long,Map)', 'POST', '0', NULL, '', '', '/cms/site/extends/1630092239507464193', '127.0.0.1', '内网', '', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 17:40:34', 92, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1288, '站点扩展', 'UPDATE', 'R com.ruoyi.contentcore.controller.SiteController.saveSiteExtends(Long,Map)', 'POST', '0', NULL, '', '', '/cms/site/extends/1630092239507464193', '127.0.0.1', '内网', '', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 17:42:35', 31, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1289, '新增站点属性', 'INSERT', 'R com.ruoyi.contentcore.controller.SitePropertyController.addSiteProperty(CmsSiteProperty)', 'POST', '0', NULL, '', '', '/cms/site/prop', '127.0.0.1', '内网', '{\"siteProperty\":{\"createBy\":\"test\",\"createTime\":\"2023-04-14 17:43:05\",\"updateBy\":\"test\",\"updateTime\":\"2023-04-14 17:43:05\",\"remark\":\"11\",\"propertyId\":\"406851517427781\",\"siteId\":\"1630092239507464193\",\"propName\":\"阿萨水电费\",\"propCode\":\"xxxx\",\"propValue\":\"11\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 17:43:06', 38, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1290, '编辑站点属性', 'UPDATE', 'R com.ruoyi.contentcore.controller.SitePropertyController.editSiteProperty(CmsSiteProperty)', 'PUT', '0', NULL, '', '', '/cms/site/prop', '127.0.0.1', '内网', '{\"siteProperty\":{\"createBy\":\"test\",\"createTime\":\"2023-04-14 17:43:06\",\"updateBy\":\"test\",\"updateTime\":\"2023-04-14 17:43:17\",\"remark\":\"112\",\"propertyId\":\"406851517427781\",\"siteId\":\"1630092239507464193\",\"propName\":\"阿萨水电费\",\"propCode\":\"xxxx\",\"propValue\":\"11\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 17:43:18', 37, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1291, '删除站点属性', 'DELETE', 'R com.ruoyi.contentcore.controller.SitePropertyController.removeSiteProperties(Long[])', 'DELETE', '0', NULL, '', '', '/cms/site/prop', '127.0.0.1', '内网', '{\"propertyIds\":[\"406851517427781\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 17:43:20', 60, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1292, '栏目扩展', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.saveCatalogExtends(Long,Map)', 'PUT', '0', NULL, '', '', '/cms/catalog/extends/390567488348229', '127.0.0.1', '内网', '', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 18:39:10', 53, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1293, '栏目扩展', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.saveCatalogExtends(Long,Map)', 'PUT', '0', NULL, '', '', '/cms/catalog/extends/390567488348229', '127.0.0.1', '内网', '', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-14 18:42:55', 59, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1294, '显隐栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.changeVisible(ChangeCatalogVisibleDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog/visible', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390567488348229\",\"visible\":\"N\"}}', '无此权限：Catalog:ShowHide:390567488348229', 500, '2023-04-14 19:12:40', 3, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1295, '显隐栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.changeVisible(ChangeCatalogVisibleDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog/visible', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390570590720069\",\"visible\":\"N\"}}', '无此权限：Catalog:ShowHide:390570590720069', 500, '2023-04-15 14:53:39', 7, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1296, '显隐栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.changeVisible(ChangeCatalogVisibleDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog/visible', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390570590720069\",\"visible\":\"N\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 14:54:06', 28, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1297, '显隐栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.changeVisible(ChangeCatalogVisibleDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog/visible', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390570590720069\",\"visible\":\"Y\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 14:54:08', 56, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1298, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2023-03-24 18:42:07\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 23:55:53\",\"remark\":\"\",\"menuId\":\"2064\",\"menuName\":\"GroovyScript\",\"parentId\":\"3\",\"orderNum\":0,\"path\":\"groovy\",\"component\":\"system/groovy/index\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"Y\",\"status\":\"0\",\"perms\":\"tool:groovy:exec\",\"icon\":\"bug\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 14:54:41', 48, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1299, '显隐栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.changeVisible(ChangeCatalogVisibleDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog/visible', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390570590720069\",\"visible\":\"N\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 14:58:17', 60, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1300, '显隐栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.changeVisible(ChangeCatalogVisibleDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog/visible', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390570590720069\",\"visible\":\"Y\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 14:58:21', 51, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1301, '置顶', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.setTop(SetTopContentDTO)', 'POST', '0', NULL, '', '', '/cms/content/set_top', '127.0.0.1', '内网', '{\"dto\":{\"contentIds\":[\"391598214479941\"]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 17:47:40', 183, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1302, '取消置顶', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.cancelTop(List)', 'POST', '0', NULL, '', '', '/cms/content/cancel_top', '127.0.0.1', '内网', '{\"contentIds\":[\"391598214479941\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 17:47:46', 76, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1303, '内容排序', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.sort(SortContentDTO)', 'POST', '0', NULL, '', '', '/cms/content/sort', '127.0.0.1', '内网', '{\"dto\":{\"contentId\":\"391598214479941\",\"targetContentId\":\"391598214479941\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 17:49:20', 12, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1304, '编辑内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.saveContent(String,HttpServletRequest)', 'PUT', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"article\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"3bd43ed0-8b10-4903-8f9f-86d22fa9ea20\"}}', 200, '2023-04-15 18:11:58', 33, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1305, '编辑内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.saveContent(String,HttpServletRequest)', 'PUT', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"article\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"a4f329ed-1580-4bac-b0be-0d03d5882bea\"}}', 200, '2023-04-15 18:12:00', 9, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1306, '编辑内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.saveContent(String,HttpServletRequest)', 'PUT', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"article\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"07fc9b90-a36c-4ce3-82c0-31b55e2c2283\"}}', 200, '2023-04-15 18:12:02', 6, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1307, '发布内容', 'OTHER', 'R com.ruoyi.contentcore.controller.ContentController.publish(PublishContentDTO)', 'POST', '0', NULL, '', '', '/cms/content/publish', '127.0.0.1', '内网', '{\"publishContentDTO\":{\"contentIds\":[\"403672235671621\"]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 18:12:04', 351, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1308, '锁定内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.lock(Long)', 'POST', '0', NULL, '', '', '/cms/content/lock/403672235671621', '127.0.0.1', '内网', '{\"contentId\":\"403672235671621\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":\"admin\"}', 200, '2023-04-15 18:12:06', 25, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1309, '解锁内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.unLock(Long)', 'POST', '0', NULL, '', '', '/cms/content/unlock/403672235671621', '127.0.0.1', '内网', '{\"contentId\":\"403672235671621\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 18:12:09', 29, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1310, '锁定内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.lock(Long)', 'POST', '0', NULL, '', '', '/cms/content/lock/403672235671621', '127.0.0.1', '内网', '{\"contentId\":\"403672235671621\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":\"admin\"}', 200, '2023-04-15 18:12:14', 27, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1311, '解锁内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.unLock(Long)', 'POST', '0', NULL, '', '', '/cms/content/unlock/403672235671621', '127.0.0.1', '内网', '{\"contentId\":\"403672235671621\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 18:12:15', 32, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1312, '锁定内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.lock(Long)', 'POST', '0', NULL, '', '', '/cms/content/lock/403672235671621', '127.0.0.1', '内网', '{\"contentId\":\"403672235671621\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":\"admin\"}', 200, '2023-04-15 18:12:16', 33, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1313, '解锁内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.unLock(Long)', 'POST', '0', NULL, '', '', '/cms/content/unlock/403672235671621', '127.0.0.1', '内网', '{\"contentId\":\"403672235671621\"}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 18:12:17', 31, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1314, '新增页面组件', 'INSERT', 'R com.ruoyi.contentcore.controller.PageWidgetController.addPageWidget(PageWidgetAddDTO)', 'POST', '0', NULL, '', '', '/cms/pagewidget', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390567488348229\",\"type\":\"manual\",\"name\":\"XXX\",\"code\":\"XXX\",\"publishPipeCode\":\"pc\",\"path\":\"include/pagewidget/\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 21:50:39', 78, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1315, '删除页面组件', 'DELETE', 'R com.ruoyi.contentcore.controller.PageWidgetController.deletePageWidgets(List)', 'DELETE', '0', NULL, '', '', '/cms/pagewidget', '127.0.0.1', '内网', '{\"pageWidgetIds\":[\"407266252390469\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-15 21:51:08', 46, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1316, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"225\",\"langTag\":\"zh-CN\",\"langKey\":\"DICT.MetaFieldType.short_text\",\"langValue\":\"VARCHAR(50)\"},{\"dictId\":\"226\",\"langTag\":\"en\",\"langKey\":\"DICT.MetaFieldType.short_text\",\"langValue\":\"VARCHAR(50)\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:05', 125, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1317, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"227\",\"langTag\":\"zh-CN\",\"langKey\":\"DICT.MetaFieldType.medium_text\",\"langValue\":\"VARCHAR(200)\"},{\"dictId\":\"228\",\"langTag\":\"en\",\"langKey\":\"DICT.MetaFieldType.medium_text\",\"langValue\":\"VARCHAR(200)\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:11', 58, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1318, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"229\",\"langTag\":\"zh-CN\",\"langKey\":\"DICT.MetaFieldType.large_text\",\"langValue\":\"VARCHAR(2000)\"},{\"dictId\":\"230\",\"langTag\":\"en\",\"langKey\":\"DICT.MetaFieldType.large_text\",\"langValue\":\"VARCHAR(2000)\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:17', 88, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1319, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"231\",\"langTag\":\"zh-CN\",\"langKey\":\"DICT.MetaFieldType.clob_text\",\"langValue\":\"MEDIUMTEXT\"},{\"dictId\":\"232\",\"langTag\":\"en\",\"langKey\":\"DICT.MetaFieldType.clob_text\",\"langValue\":\"MEDIUMTEXT\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:22', 47, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1320, '字典数据', 'UPDATE', 'R com.ruoyi.system.controller.SysDictDataController.edit(SysDictData)', 'PUT', 'sys_user', 1, 'admin', '', '/system/dict/data', '127.0.0.1', '内网', '{\"dict\":{\"createBy\":\"_system\",\"createTime\":\"2023-02-24 18:59:20\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-24 18:59:20\",\"remark\":\"1\",\"dictCode\":\"322\",\"dictSort\":\"4\",\"dictLabel\":\"MEDIUMTEXT\",\"dictValue\":\"clob_text\",\"dictType\":\"MetaFieldType\",\"isDefault\":\"N\",\"default\":false}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:24', 77, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1321, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"233\",\"langTag\":\"zh-CN\",\"langKey\":\"DICT.MetaFieldType.long\",\"langValue\":\"LONG\"},{\"dictId\":\"234\",\"langTag\":\"en\",\"langKey\":\"DICT.MetaFieldType.long\",\"langValue\":\"LONG\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:30', 56, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1322, '字典数据', 'UPDATE', 'R com.ruoyi.system.controller.SysDictDataController.edit(SysDictData)', 'PUT', 'sys_user', 1, 'admin', '', '/system/dict/data', '127.0.0.1', '内网', '{\"dict\":{\"createBy\":\"_system\",\"createTime\":\"2023-02-24 18:59:20\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-24 18:59:20\",\"remark\":\"10\",\"dictCode\":\"323\",\"dictSort\":\"5\",\"dictLabel\":\"LONG\",\"dictValue\":\"long\",\"dictType\":\"MetaFieldType\",\"isDefault\":\"N\",\"default\":false}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:31', 30, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1323, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"235\",\"langTag\":\"zh-CN\",\"langKey\":\"DICT.MetaFieldType.double\",\"langValue\":\"DOUBLE\"},{\"dictId\":\"236\",\"langTag\":\"en\",\"langKey\":\"DICT.MetaFieldType.double\",\"langValue\":\"DOUBLE\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:36', 53, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1324, '字典数据', 'UPDATE', 'R com.ruoyi.system.controller.SysDictDataController.edit(SysDictData)', 'PUT', 'sys_user', 1, 'admin', '', '/system/dict/data', '127.0.0.1', '内网', '{\"dict\":{\"createBy\":\"_system\",\"createTime\":\"2023-02-24 18:59:20\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-24 18:59:20\",\"remark\":\"10\",\"dictCode\":\"324\",\"dictSort\":\"6\",\"dictLabel\":\"DOUBLE\",\"dictValue\":\"double\",\"dictType\":\"MetaFieldType\",\"isDefault\":\"N\",\"default\":false}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:38', 43, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1325, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.batchSave(List)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict/batch', '127.0.0.1', '内网', '{\"i18nDicts\":[{\"dictId\":\"237\",\"langTag\":\"zh-CN\",\"langKey\":\"DICT.MetaFieldType.datetime\",\"langValue\":\"DATETIME\"},{\"dictId\":\"238\",\"langTag\":\"en\",\"langKey\":\"DICT.MetaFieldType.datetime\",\"langValue\":\"DATETIME\"}]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:43', 46, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1326, '字典数据', 'UPDATE', 'R com.ruoyi.system.controller.SysDictDataController.edit(SysDictData)', 'PUT', 'sys_user', 1, 'admin', '', '/system/dict/data', '127.0.0.1', '内网', '{\"dict\":{\"createBy\":\"_system\",\"createTime\":\"2023-02-24 18:59:20\",\"updateBy\":\"admin\",\"updateTime\":\"2023-02-24 18:59:20\",\"remark\":\"10\",\"dictCode\":\"325\",\"dictSort\":\"7\",\"dictLabel\":\"DATETIME\",\"dictValue\":\"datetime\",\"dictType\":\"MetaFieldType\",\"isDefault\":\"N\",\"default\":false}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-16 18:27:44', 44, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1327, '上传素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.uploadFile(MultipartFile)', 'POST', '0', NULL, '', '', '/cms/resource/upload', '127.0.0.1', '内网', '{}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-16 18:41:00\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-16 18:41:00\",\"resourceId\":\"407573539811397\",\"siteId\":\"1630092239507464193\",\"resourceType\":\"audio\",\"storageType\":\"Local\",\"name\":\"test.mp3\",\"path\":\"resources/audio/2023/04/16/407573539811397.mp3\",\"fileName\":\"test.mp3\",\"suffix\":\"mp3\",\"fileSize\":\"184549\",\"status\":\"0\",\"src\":\"http://localhost/dev-api/preview/swikoon/resources/audio/2023/04/16/407573539811397.mp3\",\"internalUrl\":\"iurl://resources/audio/2023/04/16/407573539811397.mp3?type=resource&id=407573539811397&st=Local&sid=1630092239507464193\",\"enable\":true}}', 200, '2023-04-16 18:41:01', 71, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1328, '上传素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.uploadFile(MultipartFile)', 'POST', '0', NULL, '', '', '/cms/resource/upload', '127.0.0.1', '内网', '{}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-17 10:32:06\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-17 10:32:06\",\"resourceId\":\"407807279145029\",\"siteId\":\"1630092239507464193\",\"resourceType\":\"image\",\"storageType\":\"Local\",\"name\":\"119you.jpg\",\"path\":\"resources/image/2023/04/17/407807279145029.jpg\",\"fileName\":\"119you.jpg\",\"suffix\":\"jpg\",\"width\":299,\"height\":76,\"fileSize\":\"7343\",\"status\":\"0\",\"src\":\"http://localhost/dev-api/preview/swikoon/resources/image/2023/04/17/407807279145029.jpg\",\"internalUrl\":\"iurl://resources/image/2023/04/17/407807279145029.jpg?type=resource&id=407807279145029&st=Local&sid=1630092239507464193\",\"enable\":true}}', 200, '2023-04-17 10:32:06', 362, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1329, '编辑友链', 'UPDATE', 'R com.ruoyi.link.controller.LinkController.edit(LinkDTO)', 'PUT', 'sys_user', 1, 'admin', '', '/cms/link', '127.0.0.1', '内网', '{\"dto\":{\"linkId\":\"390876534640709\",\"siteId\":\"1630092239507464193\",\"groupId\":\"390876474650693\",\"name\":\"119手游网\",\"url\":\"https://www.119you.com/\",\"logo\":\"iurl://resources/image/2023/04/17/407807279145029.jpg?type=resource&id=407807279145029&st=Local&sid=1630092239507464193\",\"sortFlag\":\"167756524300\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-17 10:32:08', 33, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1330, '菜单管理', 'UPDATE', 'R com.ruoyi.system.controller.SysMenuController.edit(SysMenu)', 'PUT', 'sys_user', 1, 'admin', '', '/system/menu', '127.0.0.1', '内网', '{\"menu\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:22\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-13 18:52:28\",\"remark\":\"数据监控菜单\",\"menuId\":\"111\",\"menuName\":\"数据监控\",\"parentId\":\"2\",\"orderNum\":4,\"path\":\"druid\",\"component\":\"monitor/druid/index\",\"query\":\"\",\"isFrame\":\"N\",\"isCache\":\"Y\",\"menuType\":\"C\",\"visible\":\"N\",\"status\":\"0\",\"perms\":\"monitor:druid:view\",\"icon\":\"druid\",\"children\":[]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-17 15:18:09', 658, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1331, '上传素材', 'INSERT', 'R com.ruoyi.contentcore.controller.ResourceController.uploadFile(MultipartFile)', 'POST', '0', NULL, '', '', '/cms/resource/upload', '127.0.0.1', '内网', '{}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"createBy\":\"admin\",\"createTime\":\"2023-04-18 09:57:55\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-18 09:57:55\",\"resourceId\":\"408152772935749\",\"siteId\":\"1630092239507464193\",\"resourceType\":\"audio\",\"storageType\":\"Local\",\"name\":\"test.mp3\",\"path\":\"resources/audio/2023/04/18/408152772935749.mp3\",\"fileName\":\"test.mp3\",\"suffix\":\"mp3\",\"fileSize\":\"184549\",\"status\":\"0\",\"src\":\"http://localhost/dev-api/preview/swikoon/resources/audio/2023/04/18/408152772935749.mp3\",\"internalUrl\":\"iurl://resources/audio/2023/04/18/408152772935749.mp3?type=resource&id=408152772935749&st=Local&sid=1630092239507464193\",\"enable\":true}}', 200, '2023-04-18 09:57:55', 85, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1332, '新增内容', 'INSERT', 'R com.ruoyi.contentcore.controller.ContentController.addContent(String,HttpServletRequest)', 'POST', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"audio\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"b324c772-a2cf-4af6-be71-89e86583f002\"}}', 200, '2023-04-18 09:58:09', 69, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1333, '编辑内容', 'UPDATE', 'R com.ruoyi.contentcore.controller.ContentController.saveContent(String,HttpServletRequest)', 'PUT', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentType\":\"audio\"}', '{\"code\":200,\"msg\":\"SUCCESS\",\"data\":{\"taskId\":\"e03aeefa-5b62-406a-9961-cca9f3f0a436\"}}', 200, '2023-04-18 09:58:33', 10, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1334, '删除内容', 'DELETE', 'R com.ruoyi.contentcore.controller.ContentController.deleteContent(List)', 'DELETE', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentIds\":[\"408152713785413\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-18 11:33:20', 515, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1335, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogAddDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"1630092239507464193\"}}', 'Cannot invoke \"String.endsWith(String)\" because the return value of \"com.ruoyi.contentcore.domain.dto.CatalogAddDTO.getPath()\" is null', 500, '2023-04-18 15:12:51', 43, 'PostmanRuntime/7.29.2');
-INSERT INTO `sys_oper_log` VALUES (1336, '新增栏目', 'INSERT', 'R com.ruoyi.contentcore.controller.CatalogController.addSave(CatalogAddDTO)', 'POST', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"siteId\":\"1630092239507464193\"}}', 'Cannot invoke \"String.endsWith(String)\" because the return value of \"com.ruoyi.contentcore.domain.dto.CatalogAddDTO.getPath()\" is null', 500, '2023-04-18 15:14:25', 52, 'PostmanRuntime/7.29.2');
-INSERT INTO `sys_oper_log` VALUES (1337, '编辑栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.editSave(CatalogUpdateDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390567488348229\",\"name\":\"新闻中心\",\"logo\":\"iurl://resources/image/2023/03/17/396941061038149.png?type=resource&id=396941061038149&sid=1630092239507464193\",\"alias\":\"news\",\"catalogType\":\"common\",\"path\":\"news/\",\"publishPipeDatas\":[{\"pipeCode\":\"pc\",\"pipeName\":\"PC桌面\",\"props\":{\"detailTemplate_article\":\"\",\"detailTemplate_image\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_audio\":\"\",\"indexTemplate\":\"\",\"listTemplate\":\"\",\"detailTemplate_video\":\"\"}}]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-18 15:59:23', 121, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1338, '编辑栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.editSave(CatalogUpdateDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390567488348229\",\"name\":\"新闻中心\",\"logo\":\"iurl://resources/image/2023/03/17/396941061038149.png?type=resource&id=396941061038149&sid=1630092239507464193\",\"alias\":\"news\",\"description\":\"1\",\"catalogType\":\"common\",\"path\":\"news/\",\"publishPipeDatas\":[{\"pipeCode\":\"pc\",\"pipeName\":\"PC桌面\",\"props\":{\"detailTemplate_article\":\"\",\"detailTemplate_image\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_audio\":\"\",\"indexTemplate\":\"\",\"listTemplate\":\"\",\"detailTemplate_video\":\"\"}}]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-18 15:59:31', 48, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1339, '编辑栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.editSave(CatalogUpdateDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390567488348229\",\"name\":\"新闻中心\",\"logo\":\"iurl://resources/image/2023/03/17/396941061038149.png?type=resource&id=396941061038149&sid=1630092239507464193\",\"alias\":\"news\",\"description\":\"1\",\"catalogType\":\"common\",\"path\":\"news/\",\"publishPipeDatas\":[{\"pipeCode\":\"pc\",\"pipeName\":\"PC桌面\",\"props\":{\"detailTemplate_article\":\"\",\"detailTemplate_image\":\"\",\"staticSuffix\":\"shtml\",\"detailTemplate_audio\":\"\",\"indexTemplate\":\"\",\"listTemplate\":\"list.template.html\",\"detailTemplate_video\":\"\"}}]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-18 15:59:50', 49, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1340, '扩展配置2子栏目', 'UPDATE', 'R com.ruoyi.contentcore.controller.CatalogController.applyConfigPropsToChildren(CatalogApplyConfigPropsDTO)', 'PUT', '0', NULL, '', '', '/cms/catalog/apply_children/config_props', '127.0.0.1', '内网', '{\"dto\":{\"catalogId\":\"390567488348229\",\"allExtends\":true}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-18 16:06:44', 60, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1341, '参数管理', 'UPDATE', 'R com.ruoyi.system.controller.SysConfigController.edit(SysConfig)', 'PUT', 'sys_user', 1, 'admin', '', '/system/config', '127.0.0.1', '内网', '{\"config\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:24\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-19 09:17:04\",\"remark\":\"深色主题theme-dark，浅色主题theme-light\",\"configId\":\"3\",\"configName\":\"后台主题\",\"configKey\":\"sys.index.sideTheme\",\"configValue\":\"theme-dark\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:17:04', 576, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1342, '国际化管理', 'INSERT', 'R com.ruoyi.system.controller.SysI18nDictController.add(SysI18nDict)', 'POST', 'sys_user', 1, 'admin', '', '/system/i18n/dict', '127.0.0.1', '内网', '{\"config\":{\"dictId\":\"239\",\"langTag\":\"zh-CN\",\"langKey\":\"CONFIG.sys.index.skinName\",\"langValue\":\"后台界面主题\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:18:10', 31, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1343, '国际化管理', 'INSERT', 'R com.ruoyi.system.controller.SysI18nDictController.add(SysI18nDict)', 'POST', 'sys_user', 1, 'admin', '', '/system/i18n/dict', '127.0.0.1', '内网', '{\"config\":{\"dictId\":\"240\",\"langTag\":\"en\",\"langKey\":\"CONFIG.sys.index.skinName\",\"langValue\":\"System Skin\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:18:28', 36, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1344, '国际化管理', 'INSERT', 'R com.ruoyi.system.controller.SysI18nDictController.add(SysI18nDict)', 'POST', 'sys_user', 1, 'admin', '', '/system/i18n/dict', '127.0.0.1', '内网', '{\"config\":{\"dictId\":\"241\",\"langTag\":\"zh-CN\",\"langKey\":\"sys.index.sideTheme\",\"langValue\":\"主题配色\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:19:26', 36, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1345, '国际化管理', 'INSERT', 'R com.ruoyi.system.controller.SysI18nDictController.add(SysI18nDict)', 'POST', 'sys_user', 1, 'admin', '', '/system/i18n/dict', '127.0.0.1', '内网', '{\"config\":{\"dictId\":\"242\",\"langTag\":\"en\",\"langKey\":\"sys.index.sideTheme\",\"langValue\":\"Theme\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:19:54', 36, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1346, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.edit(SysI18nDict)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict', '127.0.0.1', '内网', '{\"dict\":{\"dictId\":\"242\",\"langTag\":\"en\",\"langKey\":\"CONFIG.sys.index.sideTheme\",\"langValue\":\"Theme\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:20:11', 41, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1347, '国际化管理', 'UPDATE', 'R com.ruoyi.system.controller.SysI18nDictController.edit(SysI18nDict)', 'PUT', 'sys_user', 1, 'admin', '', '/system/i18n/dict', '127.0.0.1', '内网', '{\"dict\":{\"dictId\":\"241\",\"langTag\":\"zh-CN\",\"langKey\":\"CONFIG.sys.index.sideTheme\",\"langValue\":\"主题配色\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:20:35', 43, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1348, '参数管理', 'UPDATE', 'R com.ruoyi.system.controller.SysConfigController.edit(SysConfig)', 'PUT', 'sys_user', 1, 'admin', '', '/system/config', '127.0.0.1', '内网', '{\"config\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:24\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-19 09:21:12\",\"remark\":\"深色主题theme-dark，浅色主题theme-light\",\"configId\":\"3\",\"configName\":\"Theme\",\"configKey\":\"sys.index.sideTheme\",\"configValue\":\"theme-light\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:21:12', 45, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1349, '参数管理', 'UPDATE', 'R com.ruoyi.system.controller.SysConfigController.edit(SysConfig)', 'PUT', 'sys_user', 1, 'admin', '', '/system/config', '127.0.0.1', '内网', '{\"config\":{\"createBy\":\"admin\",\"createTime\":\"2022-11-24 11:06:24\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-19 09:21:22\",\"remark\":\"深色主题theme-dark，浅色主题theme-light\",\"configId\":\"3\",\"configName\":\"Theme\",\"configKey\":\"sys.index.sideTheme\",\"configValue\":\"theme-dark\"}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:21:23', 39, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1350, '删除内容', 'DELETE', 'R com.ruoyi.contentcore.controller.ContentController.deleteContent(List)', 'DELETE', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentIds\":[\"403672235671621\",\"403658808410181\",\"403618412941381\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:28:07', 371, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1351, '发布内容', 'OTHER', 'R com.ruoyi.contentcore.controller.ContentController.publish(PublishContentDTO)', 'POST', '0', NULL, '', '', '/cms/content/publish', '127.0.0.1', '内网', '{\"publishContentDTO\":{\"contentIds\":[\"391610790780997\"]}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:28:11', 157, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1352, '删除回收站内容', 'DELETE', 'R com.ruoyi.contentcore.controller.RecycleContentController.deleteRecycleContents(List)', 'DELETE', '0', NULL, '', '', '/cms/content/recycle', '127.0.0.1', '内网', '{\"backupIds\":[\"11\",\"10\",\"9\",\"8\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:28:51', 179, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1353, '国际化管理', 'DELETE', 'R com.ruoyi.system.controller.SysI18nDictController.remove(List)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/i18n/dict', '127.0.0.1', '内网', '{\"i18nDictIds\":[\"239\",\"241\",\"240\",\"242\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:37:59', 127, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1354, '国际化管理', 'CLEAN', 'R com.ruoyi.system.controller.SysI18nDictController.refreshCache()', 'DELETE', 'sys_user', 1, 'admin', '', '/system/i18n/dict/refreshCache', '127.0.0.1', '内网', '{}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 09:38:01', 221, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1355, '参数管理', 'DELETE', 'R com.ruoyi.system.controller.SysConfigController.remove(List)', 'DELETE', 'sys_user', 1, 'admin', '', '/system/config', '127.0.0.1', '内网', '{\"configIds\":[\"183\"]}', '系统固定配置参数[AllowUploadFileType]不能删除', 500, '2023-04-19 09:50:32', 43, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1356, '删除内容', 'DELETE', 'R com.ruoyi.contentcore.controller.ContentController.deleteContent(List)', 'DELETE', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentIds\":[\"392231019274309\"]}', '', 500, '2023-04-19 16:53:59', 42812, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1357, '删除内容', 'DELETE', 'R com.ruoyi.contentcore.controller.ContentController.deleteContent(List)', 'DELETE', '0', NULL, '', '', '/cms/content', '127.0.0.1', '内网', '{\"contentIds\":[\"392231019274309\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 16:56:00', 141, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1358, '恢复回收站内容', 'INSERT', 'R com.ruoyi.contentcore.controller.RecycleContentController.recoverContent(List)', 'POST', '0', NULL, '', '', '/cms/content/recycle/recover', '127.0.0.1', '内网', '{\"backupIds\":[\"9\"]}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-19 16:56:11', 45, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
-INSERT INTO `sys_oper_log` VALUES (1359, '安全配置', 'UPDATE', 'R com.ruoyi.system.controller.SysSecurityController.saveConfig(SysSecurityConfig)', 'PUT', '0', NULL, '', '', '/system/security/config', '127.0.0.1', '内网', '{\"config\":{\"createBy\":\"admin\",\"createTime\":\"2023-02-03 23:14:08\",\"updateBy\":\"admin\",\"updateTime\":\"2023-04-20 00:02:11\",\"configId\":\"2\",\"status\":\"0\",\"passwordLenMin\":6,\"passwordLenMax\":24,\"passwordRule\":\"LETTER_NUMBER\",\"passwordSensitive\":[\"ACCOUNT\",\"PHONE_NUMBER\"],\"weakPasswords\":\"123456a\\n111111\\nqweqwe\",\"forceModifyPwdAfterAdd\":\"N\",\"forceModifyPwdAfterReset\":\"N\",\"passwordExpireSeconds\":0,\"passwordRetryLimit\":5,\"passwordRetryStrategy\":\"LOCK\",\"passwordRetryLockSeconds\":3600,\"enable\":true}}', '{\"code\":200,\"msg\":\"SUCCESS\"}', 200, '2023-04-20 00:02:12', 53, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36');
+) ENGINE = InnoDB AUTO_INCREMENT = 1367 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for sys_permission
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_permission`;
 CREATE TABLE `sys_permission`  (
-  `perm_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `perm_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
   `owner_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属对象类型',
   `owner` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所属对象唯一标识',
   `permissions` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '功能授权信息',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`perm_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_permission
@@ -2511,18 +2265,18 @@ INSERT INTO `sys_permission` VALUES (14, 'User', '1', '{\"Catalog\":\"{\\\"40587
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_post`;
 CREATE TABLE `sys_post`  (
-  `post_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '岗位ID',
+  `post_id` bigint NOT NULL AUTO_INCREMENT COMMENT '岗位ID',
   `post_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位编码',
   `post_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位名称',
-  `post_sort` int(4) NOT NULL COMMENT '显示顺序',
+  `post_sort` int NOT NULL COMMENT '显示顺序',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '状态（0正常 1停用）',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`post_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '岗位信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '岗位信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_post
@@ -2537,15 +2291,15 @@ INSERT INTO `sys_post` VALUES (4, 'user', '普通员工', 4, '0', 'admin', '2022
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
-  `role_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+  `role_id` bigint NOT NULL AUTO_INCREMENT COMMENT '角色ID',
   `role_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色名称',
   `role_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色权限字符串',
-  `role_sort` int(4) NOT NULL COMMENT '显示顺序',
+  `role_sort` int NOT NULL COMMENT '显示顺序',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色状态（0正常 1停用）',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`role_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
@@ -2562,26 +2316,26 @@ INSERT INTO `sys_role` VALUES (3, '测试员', 'test', 3, '0', 'admin', '2023-02
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_security_config`;
 CREATE TABLE `sys_security_config`  (
-  `config_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `config_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '是否启用，只有第一个启用状态的配置有效',
-  `password_len_min` int(11) NOT NULL COMMENT '密码最小长度',
-  `password_len_max` int(11) NOT NULL COMMENT '密码最大长度',
+  `password_len_min` int NOT NULL COMMENT '密码最小长度',
+  `password_len_max` int NOT NULL COMMENT '密码最大长度',
   `password_rule` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码校验规则',
   `password_sensitive` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码不可包含的敏感信息',
   `weak_passwords` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '弱密码集合',
   `force_modify_pwd_after_add` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '后台添加的用户首次登陆是否需要强制修改密码',
   `force_modify_pwd_after_reset` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '后台重置密码后首次登陆是否需要强制修改密码',
-  `password_expire_seconds` int(11) NOT NULL COMMENT '密码有效期（单位：秒）',
-  `password_retry_limit` int(11) NOT NULL COMMENT '密码错误次数阈值',
+  `password_expire_seconds` int NOT NULL COMMENT '密码有效期（单位：秒）',
+  `password_retry_limit` int NOT NULL COMMENT '密码错误次数阈值',
   `password_retry_strategy` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码错误次数阈值触发后的处理策略',
-  `password_retry_lock_seconds` int(11) NOT NULL COMMENT '密码错误阈值触发锁定账号时长，单位：秒',
+  `password_retry_lock_seconds` int NOT NULL COMMENT '密码错误阈值触发锁定账号时长，单位：秒',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_security_config
@@ -2594,7 +2348,7 @@ INSERT INTO `sys_security_config` VALUES (2, '0', 6, 24, 'LETTER_NUMBER', '[\"AC
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_storage_config`;
 CREATE TABLE `sys_storage_config`  (
-  `config_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `config_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '是否启用，只有第一个启用状态的配置有效',
   `storage_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '存储方式',
   `access_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
@@ -2604,12 +2358,12 @@ CREATE TABLE `sys_storage_config`  (
   `pipeline` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `domain` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_storage_config
@@ -2621,8 +2375,8 @@ INSERT INTO `sys_storage_config` VALUES (3, '0', 'Local', NULL, NULL, NULL, 'D:/
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
-  `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `dept_id` bigint(20) NULL DEFAULT NULL COMMENT '部门ID',
+  `user_id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `dept_id` bigint NULL DEFAULT NULL COMMENT '部门ID',
   `user_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户账号',
   `nick_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户昵称',
   `real_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '真实姓名',
@@ -2630,20 +2384,20 @@ CREATE TABLE `sys_user`  (
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '用户邮箱',
   `phonenumber` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '手机号码',
   `sex` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '用户性别（0男 1女 2未知）',
-  `birthday` datetime(0) NULL DEFAULT NULL COMMENT '出生日期',
+  `birthday` datetime NULL DEFAULT NULL COMMENT '出生日期',
   `avatar` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '头像地址',
   `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '密码',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
   `login_ip` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后登录IP',
-  `login_date` datetime(0) NULL DEFAULT NULL COMMENT '最后登录时间',
-  `password_modify_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改密码时间',
-  `lock_end_time` datetime(0) NULL DEFAULT NULL COMMENT '拒绝登录时间',
+  `login_date` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
+  `password_modify_time` datetime NULL DEFAULT NULL COMMENT '最后修改密码时间',
+  `lock_end_time` datetime NULL DEFAULT NULL COMMENT '拒绝登录时间',
   `force_modify_password` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '是否需要强制修改密码',
   `preferences` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户偏好设置',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`user_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
@@ -2651,7 +2405,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 100, 'admin', '超级管理员', NULL, '00', 'admin@163.com', '18888888888', '0', NULL, '/avatar/2023/02/18/1.png', '$2a$10$0TSw1jijm.ALdRoqNENKkekEruukvY.YsENl1o6ISFlydfFzViIxi', '0', '127.0.0.1', '2023-04-15 14:54:03', NULL, NULL, NULL, '{\"IncludeChildContent\":\"N\",\"StatIndex\":\"BdSiteTimeTrend\",\"Shortcut\":[\"2028\",\"2027\",\"2026\",\"2030\",\"2034\",\"2038\",\"109\",\"2041\"],\"ShowContentSubTitle\":\"N\",\"OpenContentEditorW\":\"N\"}', 'admin', '2022-11-24 11:06:22', 'admin', '2023-02-21 17:41:23', '管理员');
+INSERT INTO `sys_user` VALUES (1, 100, 'admin', '超级管理员', NULL, '00', 'admin@163.com', '18888888888', '0', NULL, '/avatar/2023/02/18/1.png', '$2a$10$0TSw1jijm.ALdRoqNENKkekEruukvY.YsENl1o6ISFlydfFzViIxi', '0', '127.0.0.1', '2023-04-15 14:54:03', NULL, NULL, NULL, '{\"IncludeChildContent\":\"N\",\"StatIndex\":\"BdSiteTimeTrend\",\"Shortcut\":[\"2028\",\"2027\",\"2026\",\"2030\",\"2034\",\"2038\",\"109\",\"2041\"],\"ShowContentSubTitle\":\"N\",\"OpenContentEditorW\":\"Y\"}', 'admin', '2022-11-24 11:06:22', 'admin', '2023-02-21 17:41:23', '管理员');
 INSERT INTO `sys_user` VALUES (2, 101, 'test', '测试员', NULL, '00', 'test@qq.com', '16666666666', '1', NULL, '/avatar/2023/02/10/2.png', '$2a$10$zOlLxLR83BtpwFBxde5kweagCP2MXmPY58vCi4Wi.ekHa8TrI9ad.', '0', '127.0.0.1', '2023-04-13 23:56:51', NULL, NULL, NULL, '{\"IncludeChildContent\":\"N\",\"StatIndex\":\"BdSiteTrendOverview\",\"Shortcut\":[\"2028\",\"2030\",\"2027\",\"2026\",\"2033\",\"2034\",\"2037\"],\"ShowContentSubTitle\":\"N\"}', 'admin', '2022-11-24 11:06:22', 'admin', '2023-04-10 11:15:18', '测试员');
 
 -- ----------------------------
@@ -2659,8 +2413,8 @@ INSERT INTO `sys_user` VALUES (2, 101, 'test', '测试员', NULL, '00', 'test@qq
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_post`;
 CREATE TABLE `sys_user_post`  (
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `post_id` bigint(20) NOT NULL COMMENT '岗位ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `post_id` bigint NOT NULL COMMENT '岗位ID',
   PRIMARY KEY (`user_id`, `post_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户与岗位关联表' ROW_FORMAT = Dynamic;
 
@@ -2675,7 +2429,7 @@ INSERT INTO `sys_user_post` VALUES (2, 2);
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_preference`;
 CREATE TABLE `sys_user_preference`  (
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
   `config_props` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '偏好配置详情',
   PRIMARY KEY (`user_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -2690,8 +2444,8 @@ INSERT INTO `sys_user_preference` VALUES (1, '{\"Shortcut\":[\"114\",\"2027\",\"
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `role_id` bigint NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`user_id`, `role_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = Dynamic;
 
@@ -2707,16 +2461,16 @@ INSERT INTO `sys_user_role` VALUES (2, 3);
 -- ----------------------------
 DROP TABLE IF EXISTS `x_model`;
 CREATE TABLE `x_model`  (
-  `model_id` bigint(20) NOT NULL COMMENT '模型ID',
+  `model_id` bigint NOT NULL COMMENT '模型ID',
   `owner_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模型分类',
   `owner_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模型分类ID',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模型名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识编码',
   `table_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模型数据保存表名',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`model_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -2734,8 +2488,8 @@ INSERT INTO `x_model` VALUES (1468785900060622849, 'site', '1456170297030254593'
 -- ----------------------------
 DROP TABLE IF EXISTS `x_model_data`;
 CREATE TABLE `x_model_data`  (
-  `data_id` bigint(20) NOT NULL COMMENT '数据主键ID',
-  `model_id` bigint(20) NOT NULL COMMENT '模型ID',
+  `data_id` bigint NOT NULL COMMENT '数据主键ID',
+  `model_id` bigint NOT NULL COMMENT '模型ID',
   `pk_value` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '关联数据唯一标识',
   `short_text1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `short_text2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
@@ -2792,36 +2546,36 @@ CREATE TABLE `x_model_data`  (
   `large_text3` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `large_text4` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `clob_text1` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
-  `long1` bigint(255) NULL DEFAULT NULL,
-  `long2` bigint(255) NULL DEFAULT NULL,
-  `long3` bigint(255) NULL DEFAULT NULL,
-  `long4` bigint(255) NULL DEFAULT NULL,
-  `long5` bigint(255) NULL DEFAULT NULL,
-  `long6` bigint(255) NULL DEFAULT NULL,
-  `long7` bigint(255) NULL DEFAULT NULL,
-  `long8` bigint(255) NULL DEFAULT NULL,
-  `long9` bigint(255) NULL DEFAULT NULL,
-  `long10` bigint(255) NULL DEFAULT NULL,
-  `double1` double(255, 0) NULL DEFAULT NULL,
-  `double2` double(255, 0) NULL DEFAULT NULL,
-  `double3` double(255, 0) NULL DEFAULT NULL,
-  `double4` double(255, 0) NULL DEFAULT NULL,
-  `double5` double(255, 0) NULL DEFAULT NULL,
-  `double6` double(255, 0) NULL DEFAULT NULL,
-  `double7` double(255, 0) NULL DEFAULT NULL,
-  `double8` double(255, 0) NULL DEFAULT NULL,
-  `double9` double(255, 0) NULL DEFAULT NULL,
-  `double10` double(255, 0) NULL DEFAULT NULL,
-  `date1` datetime(0) NULL DEFAULT NULL,
-  `date2` datetime(0) NULL DEFAULT NULL,
-  `date3` datetime(0) NULL DEFAULT NULL,
-  `date4` datetime(0) NULL DEFAULT NULL,
-  `date5` datetime(0) NULL DEFAULT NULL,
-  `date6` datetime(0) NULL DEFAULT NULL,
-  `date7` datetime(0) NULL DEFAULT NULL,
-  `date8` datetime(0) NULL DEFAULT NULL,
-  `date9` datetime(0) NULL DEFAULT NULL,
-  `date10` datetime(0) NULL DEFAULT NULL,
+  `long1` bigint NULL DEFAULT NULL,
+  `long2` bigint NULL DEFAULT NULL,
+  `long3` bigint NULL DEFAULT NULL,
+  `long4` bigint NULL DEFAULT NULL,
+  `long5` bigint NULL DEFAULT NULL,
+  `long6` bigint NULL DEFAULT NULL,
+  `long7` bigint NULL DEFAULT NULL,
+  `long8` bigint NULL DEFAULT NULL,
+  `long9` bigint NULL DEFAULT NULL,
+  `long10` bigint NULL DEFAULT NULL,
+  `double1` double NULL DEFAULT NULL,
+  `double2` double NULL DEFAULT NULL,
+  `double3` double NULL DEFAULT NULL,
+  `double4` double NULL DEFAULT NULL,
+  `double5` double NULL DEFAULT NULL,
+  `double6` double NULL DEFAULT NULL,
+  `double7` double NULL DEFAULT NULL,
+  `double8` double NULL DEFAULT NULL,
+  `double9` double NULL DEFAULT NULL,
+  `double10` double NULL DEFAULT NULL,
+  `date1` datetime NULL DEFAULT NULL,
+  `date2` datetime NULL DEFAULT NULL,
+  `date3` datetime NULL DEFAULT NULL,
+  `date4` datetime NULL DEFAULT NULL,
+  `date5` datetime NULL DEFAULT NULL,
+  `date6` datetime NULL DEFAULT NULL,
+  `date7` datetime NULL DEFAULT NULL,
+  `date8` datetime NULL DEFAULT NULL,
+  `date9` datetime NULL DEFAULT NULL,
+  `date10` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`data_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -2837,8 +2591,8 @@ INSERT INTO `x_model_data` VALUES (1468893497489014785, 1468785900060622849, '14
 -- ----------------------------
 DROP TABLE IF EXISTS `x_model_field`;
 CREATE TABLE `x_model_field`  (
-  `field_id` bigint(20) NOT NULL COMMENT '模型字段ID',
-  `model_id` bigint(20) NOT NULL COMMENT '所属模型ID',
+  `field_id` bigint NOT NULL COMMENT '模型字段ID',
+  `model_id` bigint NOT NULL COMMENT '所属模型ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字段名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字段唯一标识编码',
   `control_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '控件类型',
@@ -2848,9 +2602,9 @@ CREATE TABLE `x_model_field`  (
   `options` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '可选项配置',
   `default_value` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '默认值',
   `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最后修改人',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`field_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;

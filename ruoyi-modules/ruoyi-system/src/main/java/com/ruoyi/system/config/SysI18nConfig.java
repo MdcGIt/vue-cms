@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
@@ -38,6 +39,7 @@ public class SysI18nConfig {
 	private final ISysI18nDictService i18nDictService;
 	
 	@Bean("messageSource")
+	@DependsOn(value = { "flywayInitializer" })
 	public MessageSource messageSource() {
 		I18nMessageSource messageSource = new I18nMessageSource(this.redisCache, this.i18nDictService);
 		messageSource.setBasename(this.basename);

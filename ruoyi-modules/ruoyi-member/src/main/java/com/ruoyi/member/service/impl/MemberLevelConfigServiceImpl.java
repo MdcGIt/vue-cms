@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -19,13 +20,12 @@ import com.ruoyi.member.level.LevelManager;
 import com.ruoyi.member.mapper.MemberLevelConfigMapper;
 import com.ruoyi.member.service.IMemberLevelConfigService;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class MemberLevelConfigServiceImpl extends ServiceImpl<MemberLevelConfigMapper, MemberLevelConfig>
-		implements IMemberLevelConfigService {
+		implements IMemberLevelConfigService, CommandLineRunner {
 
 	private final Map<String, ILevelType> levelTypes;
 
@@ -82,11 +82,6 @@ public class MemberLevelConfigServiceImpl extends ServiceImpl<MemberLevelConfigM
 		}
 	}
 
-	@PostConstruct
-	public void init() {
-		levelTypes.values().forEach(levelType -> onLevelConfigChange(levelType));
-	}
-
 	public void onLevelConfigChange(ILevelType levelType) {
 		List<MemberLevelConfig> list = this.lambdaQuery().eq(MemberLevelConfig::getLevelType, levelType.getId())
 				.orderByAsc(MemberLevelConfig::getLevel).list();
@@ -123,5 +118,10 @@ public class MemberLevelConfigServiceImpl extends ServiceImpl<MemberLevelConfigM
 	@Override
 	public Map<String, ILevelType> getLevelTypes() {
 		return this.levelTypes;
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		levelTypes.values().forEach(levelType -> onLevelConfigChange(levelType));
 	}
 }

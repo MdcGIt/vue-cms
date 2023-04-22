@@ -63,7 +63,7 @@ services:
 ### 开发环境
 - JDK17
 - MAVEN3.8
-- MYSQL5.7+
+- MYSQL8.0
 
 ### 主要技术框架
 
@@ -72,12 +72,19 @@ services:
 | Spring Boot | 3.0.5 | 基础开发框架 |
 | Druid | 1.2.17 | 数据库连接池 |
 | Mybatis Plus | 3.5.3.1 | ORM |
+| Flyway | 9.16.3 | 数据库版本管理 |
 | Yitter | 1.0.6 | 雪花ID |
 | Redisson | 3.20.0 | 分布式锁 |
 | FreeMarker | 2.3.32 | 模板引擎 |
 | Sa-Token | 1.34.0 | 权限认证 |
 | Xxl-Job | 2.4.0 | 任务调度 |
 | Lombok | 1.18.20 | 你懂的 |
+
+### 相关文档
+
+
+- [Wiki-快速上手](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
+- [WiKi-常用配置](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E)
 
 ### 功能模块
 
