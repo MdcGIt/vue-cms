@@ -3,6 +3,7 @@ package com.ruoyi.system.validator;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.utils.IdUtils;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -13,7 +14,7 @@ public class LongIdValidator implements ConstraintValidator<LongId, Long> {
 	
 	@Override
 	public boolean isValid(Long valueId, ConstraintValidatorContext context) {
-		if (valueId > 0) {
+		if (IdUtils.validate(valueId)) {
 			return true;
 		}
 		context.disableDefaultConstraintViolation();
