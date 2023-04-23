@@ -183,7 +183,7 @@ export default {
       const data = {
         ownerType: this.ownerType,
         owner: this.owner,
-        siteId: this.siteId,
+        siteId: this.currentSiteId,
         perms: this.catalogPrivs
       };
       saveCatalogPermissions(data).then(response => {
