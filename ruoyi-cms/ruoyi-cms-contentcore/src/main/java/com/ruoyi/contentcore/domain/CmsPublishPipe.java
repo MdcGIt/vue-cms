@@ -39,7 +39,6 @@ public class CmsPublishPipe extends BaseEntity {
     /**
      * 站点ID
      */
-    @LongId
     private Long siteId;
 
     /**
