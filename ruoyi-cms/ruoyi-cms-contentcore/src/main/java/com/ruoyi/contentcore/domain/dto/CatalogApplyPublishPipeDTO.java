@@ -6,7 +6,6 @@ import com.ruoyi.common.security.domain.BaseDTO;
 import com.ruoyi.system.validator.LongId;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +27,6 @@ public class CatalogApplyPublishPipeDTO extends BaseDTO {
 	/*
 	 * 应用发布通道属性Key列表
 	 */
-	@NotNull
 	@NotEmpty
 	public List<String> publishPipePropKeys;
 }
