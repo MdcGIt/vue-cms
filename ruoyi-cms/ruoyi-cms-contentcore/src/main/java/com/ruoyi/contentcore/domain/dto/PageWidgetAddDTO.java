@@ -43,7 +43,6 @@ public class PageWidgetAddDTO {
 	/**
 	 * 模板
 	 */
-	@NotEmpty
 	private String template;
 
 	/**
