@@ -2,7 +2,7 @@
   <div class="app-container" style="padding: 0;">
     <el-dialog 
       class="resource-dialog"
-      :title="$t('CMS.Resourlce.SelectorTitle')"
+      :title="$t('CMS.Resource.SelectorTitle')"
       :visible.sync="visible"
       width="1010px"
       :close-on-click-modal="false"

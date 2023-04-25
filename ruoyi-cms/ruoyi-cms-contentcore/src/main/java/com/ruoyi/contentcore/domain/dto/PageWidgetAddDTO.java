@@ -48,7 +48,6 @@ public class PageWidgetAddDTO {
 	/**
 	 * 静态化目录
 	 */
-	@NotEmpty
 	private String path;
     
 	/**

@@ -237,13 +237,13 @@ export default {
           { required: true, message: this.$t('CMS.PageWidget.RuleTips.Name'), trigger: "blur" }
         ],
         code: [
-          { required: true, pattern: "^[A-Za-z0-9_]*$", message: this.$t('CMS.PageWidget.RuleTips.Code'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_]+$", message: this.$t('CMS.PageWidget.RuleTips.Code'), trigger: "blur" }
         ],
         publishPipeCode: [
           { required: true, message: this.$t('CMS.PageWidget.RuleTips.PublishPipe'), trigger: "blur" }
         ],
         path: [
-          { required: true, pattern: "^[A-Za-z0-9_\/]*$", message: this.$t('CMS.PageWidget.RuleTips.Path'), trigger: "blur" }
+          { required: true, pattern: "^[A-Za-z0-9_\/]+$", message: this.$t('CMS.PageWidget.RuleTips.Path'), trigger: "blur" }
         ]
       },
       openTemplateSelector: false,

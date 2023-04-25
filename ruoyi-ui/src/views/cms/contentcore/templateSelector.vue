@@ -11,21 +11,23 @@
         ref="queryForm"
         :inline="true"
         label-width="68px"
-        class="el-form-search">
-        <el-form-item :label="$t('CMS.Template.Name')" prop="filename">
-          <el-input v-model="queryParams.filename" size="small">
+        class="el-form-search mb12">
+        <el-form-item prop="filename">
+          <el-input v-model="queryParams.filename" :placeholder="$t('CMS.Template.Name')" size="small">
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button 
-            type="primary"
-            icon="el-icon-search"
-            size="small"
-            @click="handleQuery">{{ $t("Common.Search") }}</el-button>
-          <el-button 
-            icon="el-icon-refresh"
-            size="small"
-            @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+          <el-button-group>
+            <el-button 
+              type="primary"
+              icon="el-icon-search"
+              size="small"
+              @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+            <el-button 
+              icon="el-icon-refresh"
+              size="small"
+              @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
+          </el-button-group>
         </el-form-item>
       </el-form>
       <el-table 

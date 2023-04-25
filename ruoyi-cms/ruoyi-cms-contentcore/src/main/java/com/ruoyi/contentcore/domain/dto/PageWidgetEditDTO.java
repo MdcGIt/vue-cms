@@ -32,7 +32,6 @@ public class PageWidgetEditDTO {
     /**
      * 模板路径
      */
-    @NotEmpty
     private String template;
     
     /**
