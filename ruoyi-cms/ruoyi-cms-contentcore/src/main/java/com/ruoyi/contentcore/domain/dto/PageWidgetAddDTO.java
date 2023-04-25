@@ -43,13 +43,11 @@ public class PageWidgetAddDTO {
 	/**
 	 * 模板
 	 */
-	@NotEmpty
 	private String template;
 
 	/**
 	 * 静态化目录
 	 */
-	@NotEmpty
 	private String path;
     
 	/**
