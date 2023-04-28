@@ -12,8 +12,24 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.vo.RecycleContentVO;
+import com.ruoyi.contentcore.service.impl.SiteStatServiceImpl.SiteStatData;
 
 public interface CmsContentMapper extends BaseMapper<CmsContent> {
+	
+	/**
+	 * 按内容类型分组统计内容数量
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	@Select("""
+			<script>
+			SELECT content_type dataKey, COUNT(*) dataValue FROM cms_content
+			<if test=' siteId != null and siteId != 0 '> WHERE site_id = #{siteId}  </if>
+			GROUP BY content_type
+			</script>
+			""")
+	List<SiteStatData> countContentGroupByType(@Param("siteId") Long siteId);
 
 	@Select("""
 			<script>
@@ -66,7 +82,7 @@ public interface CmsContentMapper extends BaseMapper<CmsContent> {
 	public List<RecycleContentVO> selectRecycleContentBefore(IPage<RecycleContentVO> page, @Param("backupTime") LocalDateTime backupTime);
 	
 	/**
-	 * 删除指定站点下备份内容数据
+	 * 删除站点下备份内容数据
 	 * 
 	 * @param siteId
 	 * @return
@@ -74,9 +90,12 @@ public interface CmsContentMapper extends BaseMapper<CmsContent> {
 	@Delete("DELETE FROM cms_content_backup WHERE site_id = #{siteId} limit ${limit}")
 	public Long deleteRecycleContentsBySiteId(@Param("siteId") Long siteId, @Param("limit") Integer limit);
 	
+	/**
+	 * 查询站点备份内容
+	 * 
+	 * @param siteId
+	 * @return
+	 */
 	@Select("SELECT count(*) FROM cms_content_backup WHERE site_id = #{siteId}")
 	Long selectBackupCountBySiteId(@Param("siteId") Long siteId);
-	
-	@Delete("DELETE FROM cms_content_backup WHERE site_id = #{siteId} limit ${limit}")
-	Long deleteBackupBySiteId(@Param("siteId") Long siteId, @Param("limit") Integer limit);
 }

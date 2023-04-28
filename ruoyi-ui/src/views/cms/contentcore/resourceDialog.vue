@@ -68,9 +68,9 @@
         <el-tab-pane :label="$t('CMS.Resource.MaterialLibrary')" name="resources">
           <el-container style="height: 500px; border: 1px solid #eee">
             <el-aside width="200px">
-              <div>
+              <el-row>
                 <el-link icon="el-icon-user" @click="loadMyResources">{{ $t('CMS.Resource.MyMaterial') }}</el-link>
-              </div>
+              </el-row>
             </el-aside>
             <el-container>
               <el-header height="50px">
@@ -246,6 +246,7 @@ export default {
         this.filterQuery.beginTime = this.dateRange[0];
         this.filterQuery.endTime = this.dateRange[1];
       }
+      this.filterQuery.resourceType = this.rtype || ''
       getResrouceList(this.filterQuery).then(response => {
         this.resourceList = response.data.rows;
         this.resourceList.forEach(r => this.$set(r,'selected',false));

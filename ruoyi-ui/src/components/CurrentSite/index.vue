@@ -5,7 +5,7 @@
       icon="el-icon-s-home" 
       @click="handleOpenSiteList" 
       plain>{{ currentSiteName }}</el-button>
-    <el-dialog title="切换当前站点"
+    <el-dialog :title="$t('CMS.Site.CurrentSelectorTitle')"
                :visible.sync="open"
                :modal-append-to-body='false'
                width="800px">
@@ -15,7 +15,7 @@
                label-width="68px"
                class="el-form-search">
         <el-form-item prop="siteName">
-          <el-input placeholder="站点名称" v-model="queryParams.siteName" size="mini"></el-input>
+          <el-input :placeholder="$t('CMS.Site.Name')" v-model="queryParams.siteName" size="mini"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary"
@@ -33,12 +33,8 @@
                 highlight-current-row
                 @current-change="handleSelectionChange"
                 style="width:100%;line-height: normal;">
-        <el-table-column type="index"
-                        label="序号"
-                        width="50" />
-        <el-table-column label="名称"
-                        align="center"
-                        prop="name">
+        <el-table-column type="index" :label="$t('Common.RowNo')" width="50" />
+        <el-table-column :label="$t('CMS.Site.Name')" align="center" prop="name">
           <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag v-if="scope.row.siteId==currentSite" size="medium">{{ scope.row.name }}</el-tag>
@@ -46,18 +42,15 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="URL"
-                        align="center"
-                        width="300"
-                        prop="url" />
+        <el-table-column label="URL" align="center" width="300" prop="url" />
       </el-table>
-      <pagination v-show="total>0"
-                :total="total"
-                :page.sync="queryParams.pageNum"
-                :limit.sync="queryParams.pageSize"
-                @pagination="loadSiteList" />
-      <div slot="footer"
-            class="dialog-footer">
+      <pagination 
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="loadSiteList" />
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleChangeCurrentSite">{{ $t("Common.Confirm") }}</el-button>
         <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
@@ -135,11 +128,11 @@ export default {
     },
     handleChangeCurrentSite() {
       if (this.selectedRow == undefined) {
-        this.$modal.msgError("请先选择一个站点！");
+        this.$modal.msgError(this.$t('Common.SelectFirst'));
         return;
       }
       if (this.currentSite == this.selectedRow.siteId) {
-        this.$modal.msgError("请选择非当前站点！");
+        this.$modal.msgError(this.$t('CMS.Site.AlreayCurrentSite'));
         return;
       }
       this.currentSite = this.selectedRow.siteId;

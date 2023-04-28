@@ -132,8 +132,9 @@ public class InternalUrlUtils {
 					String actualUrl = getActualUrl(internalUrl, publishPipeCode, isPreview);
 					tagStr = StringUtils.replaceEx(tagStr, iurl, actualUrl);
 					if(isPreview) {
+						String end = tagStr.endsWith("/>") ? "/>" : ">";
 						// 预览模式添加iurl属性
-						tagStr = StringUtils.substringBeforeLast(tagStr, ">") + " iurl=\"" + iurl + "\">";
+						tagStr = StringUtils.substringBeforeLast(tagStr, end) + " iurl=\"" + iurl + "\"" + end;
 					}
 				}
 			} catch (Exception e) {

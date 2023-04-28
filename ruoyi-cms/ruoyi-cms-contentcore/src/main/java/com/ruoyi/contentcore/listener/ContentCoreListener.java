@@ -94,7 +94,7 @@ public class ContentCoreListener {
 			long total = this.contentMapper.selectBackupCountBySiteId(site.getSiteId());
 			for (int i = 0; i * pageSize < total; i++) {
 				AsyncTaskManager.setTaskProgressInfo((int)  (i * pageSize * 100 / total), "正在删除内容备份数据：" + (i * pageSize) + "/" + total);
-				this.contentMapper.deleteBackupBySiteId(site.getSiteId(), pageSize);
+				this.contentMapper.deleteRecycleContentsBySiteId(site.getSiteId(), pageSize);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

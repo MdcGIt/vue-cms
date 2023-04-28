@@ -246,4 +246,23 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		Assert.notNull(fileStorageType, () -> StorageErrorCode.UNSUPPORTED_STORAGE_TYPE.exception(type));
 		return fileStorageType;
 	}
+	
+	/**
+	 * TODO 统计资源引用
+	 */
+	public void statResourlceUsage() {
+		// 站点Logo，栏目Logo，内容Logo
+		
+		// 页面部件区块Logo
+		
+		// 页面部件广告图
+
+		// 文章内容
+		
+		// 图集内容
+		
+		// 音频内容
+		
+		// 视频内容
+	}
 }

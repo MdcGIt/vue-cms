@@ -43,7 +43,9 @@ public class CmsArticleTag extends AbstractTag {
 	public static final String TemplateVariable_ArticleContent = "ArticleContent";
 
 	// CKEditor5: <div class="page-break" style="page-break-after:always;"><span style="display:none;">&nbsp;</span></div>
-	private static final String PAGE_BREAK_SPLITER = "<div[^>]+class=['\"]page-break['\"].*?</div>";
+//	private static final String PAGE_BREAK_SPLITER = "<div[^>]+class=['\"]page-break['\"].*?</div>";
+	private static final String PAGE_BREAK_SPLITER = "__XY_UEDITOR_PAGE_BREAK__";
+
 	
 	private final CmsContentMapper contentMapper;
 

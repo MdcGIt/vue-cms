@@ -761,6 +761,30 @@ export default {
         EditAdv: "Advertising",
       }
     },
+    UEditor: {
+      InsertResource: "Insert Resource",
+      ResourceType: {
+        Image: "Image",
+        Audio: "Audio",
+        Video: "Video",
+        File: "File"
+      },
+      ThirdVideo: {
+        DialogTitle: "Insert third-party sharing video",
+        Code: "Video Sharing Code",
+        CodeTip: "Please use the `<iframe>` sharing code.",
+        Width: "Width",
+        Height: "Height",
+        Align: "Alignment",
+        AlignCenter: "Center",
+        AlignLeft: "Left",
+        AlignRight: "Right",
+        RuleTips: {
+          Code: "Cannot be empty.",
+          IframeSrc: "The video code <iframe>  attribtue `src` is missing!"
+        }
+      }
+    },
     Site: {
       SiteId: "Site ID",
       Name: "Site Name",
@@ -783,6 +807,8 @@ export default {
       NoPublishPipeTip: "Preivew or publish need add publish pipe first.",
       GoAddPublishPipe: "Add",
       ExModelCardTitle: "Ex-Model Configuration",
+      CurrentSelectorTitle: "Change Current Site",
+      AlreayCurrentSite: "Please select a non current site.",
       Tab: {
         Basic: "Basic Information",
         Extend: "Extend Config",
