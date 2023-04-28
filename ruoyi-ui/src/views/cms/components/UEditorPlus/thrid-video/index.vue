@@ -13,19 +13,19 @@
             <el-form-item :label="$t('CMS.UEditor.ThirdVideo.Code')" prop="code">
               <el-input v-model="formData.code" type="textarea" :rows="12" @change="handleCodeChange"></el-input>
               <div style="color: #909399;font-size:12px;line-height: 30px;">
-                <i class="el-icon-info mr5"></i>{{ $t('CMS.UEditor.ThirdVideo.CodeTip') }}
+                <i class="el-icon-info mr5"></i><span v-html="$t('CMS.UEditor.ThirdVideo.CodeTip')"></span>
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('CMS.UEditor.ThirdVideo.Width')" prop="width">
-              <el-input-number v-model="formData.width" :min="100" :max="1000"></el-input-number>
+              <el-input-number v-model="formData.width" :min="100" :max="1000" style="width:180px"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('CMS.UEditor.ThirdVideo.Height')" prop="height">
-              <el-input-number v-model="formData.height" :min="100" :max="1000"></el-input-number>
+              <el-input-number v-model="formData.height" :min="100" :max="1000" style="width:180px"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('CMS.UEditor.ThirdVideo.Align')" prop="align">
-              <el-select v-model="formData.align">
+              <el-select v-model="formData.align" style="width:180px">
                 <el-option
                   v-for="item in alignOptions"
                   :key="item.value"
