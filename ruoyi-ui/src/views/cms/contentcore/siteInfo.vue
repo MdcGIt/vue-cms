@@ -267,7 +267,7 @@ export default {
     },
     handleGoPublishPipe () {
       this.$router.push({
-        path: "/cms/publishpipe"
+        path: "/configs/publishpipe"
       });
     },
     handlePreview () {

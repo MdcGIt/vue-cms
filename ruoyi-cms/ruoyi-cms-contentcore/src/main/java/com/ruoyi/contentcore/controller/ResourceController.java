@@ -70,6 +70,7 @@ public class ResourceController extends BaseRestController {
 	@GetMapping
 	public R<?> listData(@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "resourceType", required = false) String resourceType,
+			@RequestParam(value = "owner", required = false, defaultValue = "false") boolean owner,
 			@RequestParam(value = "beginTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date beginTime,
 			@RequestParam(value = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endTime) {
 		PageRequest pr = this.getPageRequest();
@@ -78,6 +79,7 @@ public class ResourceController extends BaseRestController {
 				.eq(CmsResource::getSiteId, site.getSiteId())
 				.like(StringUtils.isNotEmpty(name), CmsResource::getFileName, name)
 				.eq(StringUtils.isNotEmpty(resourceType), CmsResource::getResourceType, resourceType)
+				.eq(owner, CmsResource::getCreateBy, StpAdminUtil.getLoginUser().getUsername())
 				.ge(beginTime != null, CmsResource::getCreateTime, beginTime)
 				.le(endTime != null, CmsResource::getCreateTime, endTime).orderByDesc(CmsResource::getResourceId);
 		Page<CmsResource> page = resourceService.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true), q);

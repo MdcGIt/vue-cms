@@ -93,7 +93,7 @@
               </el-card>
               <el-card shadow="always" class="card-editor">
                 <div class="content bg-purple-white">
-                  <ckeditor v-model="form.contentHtml" :disabled="false"></ckeditor>
+                  <ueditor v-model="form.contentHtml" :height="800"></ueditor>
                 </div>
               </el-card>
             </el-col>
@@ -226,7 +226,8 @@
 <script>
 import { getInitContentEditorData, addContent, saveContent, publishContent, lockContent, unLockContent, moveContent } from "@/api/contentcore/content";
 import Sticky from '@/components/Sticky'
-import CKEditor5 from '@/components/CKEditor5';
+// import CKEditor5 from '@/components/CKEditor5';
+import UEditor from '@/views/cms/components/UEditorPlus'
 import CMSProgress from '@/views/components/Progress';
 import CMSImageEditor from '@/views/cms/imageAlbum/editor';
 import CMSAudioEditor from '@/views/cms/media/audioEditor';
@@ -248,6 +249,7 @@ export default {
   components: {
     Treeselect, 
     Sticky,
+    'ueditor': UEditor,
     'cms-template-selector': CMSTemplateSelector,
     'cms-progress': CMSProgress,
     "cms-image-editor": CMSImageEditor,
@@ -259,7 +261,7 @@ export default {
     'cms-content-selector': CMSContentSelector,
     "cms-exmodel-editor": CMSEXModelEditor,
     "cms-tag-editor": CMSTagEditor,
-    "ckeditor": CKEditor5
+    // "ckeditor": CKEditor5
   },
   computed: {
     isLock () {

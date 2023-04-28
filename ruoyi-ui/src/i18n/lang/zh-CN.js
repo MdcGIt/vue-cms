@@ -761,6 +761,30 @@ export default {
         EditAdv: "编辑广告",
       }
     },
+    UEditor: {
+      InsertResource: "插入素材",
+      ResourceType: {
+        Image: "图片",
+        Audio: "音频",
+        Video: "视频",
+        File: "文件"
+      },
+      ThirdVideo: {
+        DialogTitle: "插入第三方视频分享",
+        Code: "第三方视频分享代码",
+        CodeTip: "请使用第三方视频网站分享的`&lt;iframe&gt;`嵌入代码",
+        Width: "宽度",
+        Height: "高度",
+        Align: "对齐方式",
+        AlignCenter: "居中对齐",
+        AlignLeft: "左对齐",
+        AlignRight: "右对齐",
+        RuleTips: {
+          Code: "不能为空",
+          IframeSrc: "嵌入代码的<iframe>标签缺少src属性！"
+        }
+      }
+    },
     Site: {
       SiteId: "站点ID",
       Name: "站点名称",
@@ -783,6 +807,8 @@ export default {
       NoPublishPipeTip: "预览/发布需要先添加发布通道",
       GoAddPublishPipe: "去添加",
       ExModelCardTitle: "扩展模型属性",
+      CurrentSelectorTitle: "切换当前站点",
+      AlreayCurrentSite: "请选择非当前站点",
       Tab: {
         Basic: "基础信息",
         Extend: "扩展配置",
