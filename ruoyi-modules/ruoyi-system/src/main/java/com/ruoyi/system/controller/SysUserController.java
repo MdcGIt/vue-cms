@@ -201,7 +201,7 @@ public class SysUserController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysUserResetPwd)
 	@Log(title = "用户管理", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/resetPwd")
-	public R<?> resetPwd(@Validated @RequestBody SysUser user) {
+	public R<?> resetPwd(@RequestBody SysUser user) {
 		userService.resetPwd(user);
 		return R.ok();
 	}
