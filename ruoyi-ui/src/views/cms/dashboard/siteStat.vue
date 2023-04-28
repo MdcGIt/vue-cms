@@ -1,7 +1,7 @@
 <template>
   <div class="bdsite-container mt10">
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="12">
+    <el-row :gutter="15" class="mt10">
+      <el-col :span="12" style="padding-left: 10px; padding-right: 10px;">
         <el-row :gutter="10" class="mb8">
             <el-card v-loading="loading" shadow="hover">
               <div slot="header" class="clearfix">
@@ -44,29 +44,75 @@
         </el-row>
       </el-col>
       <el-col :span="12">
-        <el-card shadow="hover">
-          <div slot="header" class="clearfix">
-            <span>{{ $t("Stat.Site.VisitLocation") }}</span>
-          </div>
-          <el-table v-loading="loadingDistrict" :data="districtList" height="370" size="mini">
-            <el-table-column 
-              :label="$t('Stat.Site.Location')"
-              align="center"
-              prop="name" />
-            <el-table-column 
-              label="PV"
-              align="center"
-              prop="pv_count" />
-            <el-table-column 
-              :label="$t('Stat.Site.Ratio')"
-              align="center"
-              prop="ratio">
-              <template slot-scope="scope">
-                {{ scope.row.ratio }} %
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-card shadow="hover" v-loading="siteStatLoading">
+              <el-row>
+                <el-col :span="8">
+                  <svg-icon icon-class="tree-table" class-name="cc-card-panel-icon" />
+                </el-col>
+                <el-col :span="16">
+                  <el-statistic title="栏目">
+                    <template slot="formatter"> {{ siteStat.catalogCount }} </template>
+                  </el-statistic>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover" v-loading="siteStatLoading">
+              <el-row>
+                <el-col :span="8">
+                  <svg-icon icon-class="documentation" class-name="cc-card-panel-icon" />
+                </el-col>
+                <el-col :span="16">
+                  <el-statistic title="内容">
+                    <template slot="formatter"> {{ siteStat.contentCount }} </template>
+                  </el-statistic>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover" v-loading="siteStatLoading">
+              <el-row>
+                <el-col :span="8">
+                  <svg-icon icon-class="example" class-name="cc-card-panel-icon" />
+                </el-col>
+                <el-col :span="16">
+                  <el-statistic title="资源">
+                    <template slot="formatter"> {{ siteStat.resourceCount }} </template>
+                  </el-statistic>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-row class="mt10">
+          <el-card shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>{{ $t("Stat.Site.VisitLocation") }}</span>
+            </div>
+            <el-table v-loading="loadingDistrict" :data="districtList" height="274" size="mini">
+              <el-table-column 
+                :label="$t('Stat.Site.Location')"
+                align="center"
+                prop="name" />
+              <el-table-column 
+                label="PV"
+                align="center"
+                prop="pv_count" />
+              <el-table-column 
+                :label="$t('Stat.Site.Ratio')"
+                align="center"
+                prop="ratio">
+                <template slot-scope="scope">
+                  {{ scope.row.ratio }} %
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </el-row>
       </el-col>
     </el-row>
   </div>
@@ -74,6 +120,7 @@
 <style scoped>
 </style>
 <script>
+import { getSiteStatData } from "@/api/contentcore/stat";
 import * as baiduTongjiApi from "@/api/stat/baidu";
 import LineChart from '@/views/dashboard/LineChart'
 
@@ -131,14 +178,28 @@ export default {
       },
       loadingDistrict: false,
       districtList: [],
-      top10LandingPage: []
+      top10LandingPage: [],
+      siteStatLoading: false,
+      siteStat: {
+        catalogCount: 0,
+        contentCount: 0,
+        resourceCount: 0
+      }
     };
   },
   created() {
     this.resetQuery();
+    this.loadSiteStatData();
     this.loadSiteList();
   },
   methods: {
+    loadSiteStatData() {
+      this.siteStatLoading = true;
+      getSiteStatData().then(response => {
+        this.siteStatLoading = false
+        this.siteStat = response.data
+      })
+    },
     loadSiteList() {
       baiduTongjiApi.getSiteList().then(response => {
         this.siteOptions = response.data;
@@ -220,6 +281,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.cc-card-panel-icon {
+  font-size: 48px;
+}
 .panel-group {
   margin-top: 18px;
 
