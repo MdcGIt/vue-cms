@@ -22,7 +22,6 @@ public class SiteDefaultTemplateDTO extends BaseDTO {
 	/*
 	 * 已用到指定栏目IDs
 	 */
-	@NotEmpty
 	public List<Long> toCatalogIds;
 
 	/*
