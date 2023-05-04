@@ -32,6 +32,7 @@ import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
@@ -332,6 +333,8 @@ public class SiteController extends BaseRestController {
 	@Log(title = "应用默认模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/apply_default_template")
 	public R<?> applyDefaultTemplateToCatalog(@RequestBody @Validated SiteDefaultTemplateDTO dto) {
+		Assert.isTrue(IdUtils.validate(dto.getToCatalogIds()), () -> CommonErrorCode.INVALID_REQUEST_ARG.exception("toCatalogIds"));
+
 		CmsSite site = this.siteService.getSite(dto.getSiteId());
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
 		CmsPrivUtils.checkSitePermission(site.getSiteId(), SitePrivItem.Edit, StpAdminUtil.getLoginUser());
