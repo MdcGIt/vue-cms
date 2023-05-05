@@ -17,6 +17,7 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.contentcore.config.CMSConfig;
 import com.ruoyi.contentcore.domain.CmsPageWidget;
 import com.ruoyi.contentcore.service.IPageWidgetService;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
@@ -36,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class AdvertisementServiceImpl extends ServiceImpl<CmsAdvertisementMapper, CmsAdvertisement>
 		implements IAdvertisementService {
 
-	private static final String CACHE_KEY_ADV_IDS = "cms:adv-ids";
+	private static final String CACHE_KEY_ADV_IDS = CMSConfig.CachePrefix + "adv-ids";
 
 	private final RedisCache redisCache;
 

@@ -19,4 +19,9 @@ public class CMSProperties {
 	 * 缓存名统一前缀
 	 */
 	private String cacheName = "cms:";
+	
+	/**
+	 * 系统启动时是否清空cacheName前缀的所有缓存
+	 */
+	private Boolean resetCache = true;
 }
