@@ -134,7 +134,7 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
 
 		String newPath = FileExUtils.normalizePath(dto.getPath());
-		if (!dto.getPath().equals(newPath)) {
+		if (!template.getPath().equals(newPath)) {
 			CmsSite site = this.siteService.getSite(template.getSiteId());
 			String siteRoot = SiteUtils.getSiteRoot(site, template.getPublishPipeCode());
 			File file = new File(siteRoot + ContentCoreConsts.TemplateDirectory + template.getPath());
