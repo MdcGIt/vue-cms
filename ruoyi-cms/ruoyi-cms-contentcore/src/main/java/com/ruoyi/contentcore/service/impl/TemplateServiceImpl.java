@@ -86,7 +86,8 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 			for (File file : templateFiles) {
 				String path = StringUtils.substringAfterLast(FileExUtils.normalizePath(file.getAbsolutePath()),
 						ContentCoreConsts.TemplateDirectory);
-				this.lambdaQuery().eq(CmsTemplate::getSiteId, site.getSiteId()).eq(CmsTemplate::getPath, path).oneOpt()
+				this.lambdaQuery().eq(CmsTemplate::getSiteId, site.getSiteId())
+						.eq(CmsTemplate::getPublishPipeCode, pp.getCode()).eq(CmsTemplate::getPath, path).oneOpt()
 						.ifPresentOrElse(t -> {
 							if (t.getModifyTime() != file.lastModified()) {
 								try {
