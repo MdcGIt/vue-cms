@@ -2,6 +2,7 @@ package com.ruoyi.contentcore.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
@@ -17,6 +19,7 @@ import com.ruoyi.contentcore.config.properties.CMSProperties;
 import com.ruoyi.contentcore.fixed.config.BackendContext;
 
 import freemarker.cache.FileTemplateLoader;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,11 +27,17 @@ import lombok.extern.slf4j.Slf4j;
 @EnableConfigurationProperties(CMSProperties.class)
 public class CMSConfig implements WebMvcConfigurer {
 
+	public static String CachePrefix = "cms:";
+
 	private static String CACHE_PREFIX;
 
 	private static String RESOURCE_ROOT;
 	
-	public CMSConfig(CMSProperties properties) {
+	private final RedisCache redisCache;
+	
+	private final CMSProperties properties;
+	
+	public CMSConfig(CMSProperties properties, RedisCache redisCache) {
 		// CMS缓存前缀
 		CACHE_PREFIX = properties.getCacheName();
 		// 站点资源存放根目录
@@ -43,6 +52,10 @@ public class CMSConfig implements WebMvcConfigurer {
 		FileExUtils.mkdirs(RESOURCE_ROOT);
 		properties.setResourceRoot(RESOURCE_ROOT);
 		log.info("ResourceRoot: " + RESOURCE_ROOT);
+		CachePrefix = properties.getCacheName();
+		
+		this.properties = properties;
+		this.redisCache = redisCache;
 	}
 	
 	@Bean
@@ -73,5 +86,14 @@ public class CMSConfig implements WebMvcConfigurer {
 		/** 本地文件上传路径 */
 		registry.addResourceHandler(ContentCoreConsts.RESOURCE_PREVIEW_PREFIX + "**")
 				.addResourceLocations("file:" + getResourceRoot());
+	}
+	
+	@PostConstruct
+	public void resetCache() {
+		if (this.properties.getResetCache()) {
+			Collection<String> keys = this.redisCache.keys(this.properties.getCacheName() + "*");
+			this.redisCache.deleteObject(keys);
+			log.info("Clear redis caches with prefix `{}`", this.properties.getCacheName());
+		}
 	}
 }

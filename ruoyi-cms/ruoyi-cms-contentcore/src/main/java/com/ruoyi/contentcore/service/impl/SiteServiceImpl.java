@@ -24,6 +24,7 @@ import com.ruoyi.common.utils.SortUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
+import com.ruoyi.contentcore.config.CMSConfig;
 import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
@@ -53,7 +54,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	/**
 	 * 缓存key前缀
 	 */
-	private static final String CACHE_PREFIX = "cms:site:";
+	private static final String CACHE_PREFIX = CMSConfig.CachePrefix + "site:";
 
 	private final ApplicationContext applicationContext;
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 
 import org.apache.commons.codec.binary.Hex;
@@ -195,8 +196,10 @@ public class FileExUtils {
 			}
 		} else {
 			File[] listFiles = file.listFiles();
-			for (File child : listFiles) {
-				loopFiles(child, fileFilter, filterFiles);
+			if (Objects.nonNull(listFiles)) {
+				for (File child : listFiles) {
+					loopFiles(child, fileFilter, filterFiles);
+				}
 			}
 		}
 	}

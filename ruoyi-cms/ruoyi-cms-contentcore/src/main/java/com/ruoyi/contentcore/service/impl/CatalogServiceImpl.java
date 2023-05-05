@@ -27,6 +27,7 @@ import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.SortUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
+import com.ruoyi.contentcore.config.CMSConfig;
 import com.ruoyi.contentcore.core.IInternalDataType;
 import com.ruoyi.contentcore.core.IProperty;
 import com.ruoyi.contentcore.core.impl.CatalogType_Link;
@@ -67,9 +68,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog> implements ICatalogService {
 
-	public static final String CACHE_PREFIX_ID = "cms:catalog:id:";
+	public static final String CACHE_PREFIX_ID = CMSConfig.CachePrefix + "catalog:id:";
 
-	public static final String CACHE_PREFIX_ALIAS = "cms:catalog:alias:";
+	public static final String CACHE_PREFIX_ALIAS = CMSConfig.CachePrefix + "catalog:alias:";
 
 	private final ApplicationContext applicationContext;
 

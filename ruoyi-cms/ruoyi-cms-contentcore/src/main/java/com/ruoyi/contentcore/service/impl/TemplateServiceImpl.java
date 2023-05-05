@@ -18,6 +18,7 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
+import com.ruoyi.contentcore.config.CMSConfig;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.CmsTemplate;
 import com.ruoyi.contentcore.domain.dto.TemplateAddDTO;
@@ -39,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTemplate> implements ITemplateService {
 
-	private final static String TEMPLATE_STATIC_CONTENT_CACHE_KEY_PREFIX = "cms:template:";
+	private final static String TEMPLATE_STATIC_CONTENT_CACHE_KEY_PREFIX = CMSConfig.CachePrefix + "template:";
 
 	private final Map<String, ITemplateType> templateTypes;
 

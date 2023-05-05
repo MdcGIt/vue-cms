@@ -202,7 +202,7 @@ export default {
     },
     loadSiteList() {
       baiduTongjiApi.getSiteList().then(response => {
-        this.siteOptions = response.data;
+        this.siteOptions = response.data || [];
         if (this.siteOptions.length > 0) {
           this.queryParams.bdSiteId = this.siteOptions[0].site_id;
           this.loadSiteTrendOverviewDatas();
