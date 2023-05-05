@@ -310,7 +310,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete (row) {
-      const templateIds = row ? [ row.templateId ] : this.selectedIds
+      const templateIds = row.templateId ? [ row.templateId ] : this.selectedIds
       this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
         return delTemplate(templateIds);
       }).then(() => {

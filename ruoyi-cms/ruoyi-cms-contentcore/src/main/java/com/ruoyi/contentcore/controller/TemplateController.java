@@ -28,6 +28,7 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
@@ -194,7 +195,7 @@ public class TemplateController extends BaseRestController {
 	@Log(title = "删除模板", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> delete(@RequestBody @NotEmpty List<Long> templateIds) throws IOException {
-		Assert.notEmpty(templateIds, () -> CommonErrorCode.NOT_EMPTY.exception());
+		Assert.isTrue(IdUtils.validate(templateIds), () -> CommonErrorCode.INVALID_REQUEST_ARG.exception("templateIds"));
 		this.templateService.deleteTemplates(templateIds);
 		return R.ok();
 	}
