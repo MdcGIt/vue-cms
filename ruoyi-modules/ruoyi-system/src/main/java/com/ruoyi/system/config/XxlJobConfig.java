@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.config.properties.XxlJobProperties;
@@ -39,4 +40,17 @@ public class XxlJobConfig {
 		xxlJobSpringExecutor.setLogRetentionDays(this.xxlJobProperties.getExecutor().getLogRetentionDays());
 		return xxlJobSpringExecutor;
 	}
+	
+	/**
+	 * 本地轻量级定时任务支持
+	 */
+	@Bean
+	public ThreadPoolTaskScheduler threadPoolTaskScheduler(){
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(10);
+        threadPoolTaskScheduler.setThreadNamePrefix("xyTaskScheduler-");
+        threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
+        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
+        return threadPoolTaskScheduler;
+    }
 }

@@ -641,6 +641,26 @@ export default {
         CronExpression: "Cron expression cannot be empty."
       }
     },
+    ScheduledTask: {
+      Type: "Type",
+      Status: "Status",
+      ReadyTime: "Ready Time",
+      ExecOnce: "Execute Once",
+      Logs: "Logs",
+      TriggerType: "Trigger",
+      CronExpression: "CRON Expression",
+      TriggerTypePeriodic: "Periodic",
+      FixedRate: "Fixed Rate",
+      FixedRateTipY: "Yes: The specified time interval between two task start times.",
+      FixedRateTipN: "No: Specify the duration between the end time of the previous task and the start time of the next task.",
+      PeriodicSeconds: "Period (s)",
+      PeriodicDelaySeconds: "Initial Delay (s)",
+      ExecResult: "Result",
+      ErrMsg: "Error",
+      AddTtitle: "Add Scheduled Task",
+      EditTitle: "Edit Scheduled Task",
+      LogDialogTitle: "Scheduled Task Logs"
+    },
     Logs: {
       LogId: "ID",
       LogName: "Name"

@@ -152,7 +152,27 @@ public enum SysErrorCode implements ErrorCode {
 	/**
 	 * 不支持的权限类型：{0}
 	 */
-	UNSUPPORTED_PERMISSION_TYPE;
+	UNSUPPORTED_PERMISSION_TYPE, 
+	
+	/**
+	 * 启用状态的定时任务不可修改
+	 */
+	SCHEDULED_TASK_UPDATE_ERR,
+	
+	/**
+	 * 不能删除启用状态的任务
+	 */
+	SCHEDULED_TASK_REMOVE_ERR,
+	
+	/**
+	 * 定时任务已存在
+	 */
+	SCHEDULED_TASK_EXISTS,
+	
+	/**
+	 * 只能手动执行停用状态任务
+	 */
+	SCHEDULED_TASK_EXEC_ERR;
 	
 	@Override
 	public String value() {

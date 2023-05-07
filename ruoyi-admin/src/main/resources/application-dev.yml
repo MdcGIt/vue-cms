@@ -203,7 +203,7 @@ xss:
 
 xxl:
   job:
-    enable: true
+    enable: false
     accessToken: default_token
     adminAddresses: http://127.0.0.1:18080/xxl-job-admin
     executor:

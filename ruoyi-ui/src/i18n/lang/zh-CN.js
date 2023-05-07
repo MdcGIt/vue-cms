@@ -641,6 +641,26 @@ export default {
         CronExpression: "cron执行表达式不能为空"
       }
     },
+    ScheduledTask: {
+      Type: "类型",
+      Status: "状态",
+      ReadyTime: "准备就绪时间",
+      ExecOnce: "执行一次",
+      Logs: "日志",
+      TriggerType: "触发方式",
+      CronExpression: "CRON表达式",
+      TriggerTypePeriodic: "定期执行",
+      FixedRate: "固定间隔",
+      FixedRateTipY: "是：两次任务开始时间之间间隔指定时长",
+      FixedRateTipN: "否：上一次任务的结束时间与下一次任务开始时间间隔指定时长",
+      PeriodicSeconds: "间隔时间（秒）",
+      PeriodicDelaySeconds: "首次执行延时（秒）",
+      ExecResult: "执行结果",
+      ErrMsg: "错误信息",
+      AddTtitle: "添加任务",
+      EditTitle: "编辑任务信息",
+      LogDialogTitle: "任务执行记录"
+    },
     Logs: {
       LogId: "日志分类ID",
       LogName: "日志分类名称"
