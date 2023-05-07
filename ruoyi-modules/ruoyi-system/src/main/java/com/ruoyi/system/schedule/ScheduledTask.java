@@ -1,17 +1,17 @@
-package com.ruoyi.common.async;
+package com.ruoyi.system.schedule;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import com.ruoyi.common.async.enums.TaskStatus;
 import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.system.service.ISysScheduledTaskService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,12 +19,12 @@ import lombok.extern.slf4j.Slf4j;
  * 异步任务构造器
  */
 @Slf4j
-public abstract class AsyncTask implements Runnable {
+public abstract class ScheduledTask implements Runnable {
 
 	/**
 	 * 任务ID
 	 */
-	private String taskId;
+	private Long taskId;
 
 	/**
 	 * 任务类型
@@ -34,7 +34,7 @@ public abstract class AsyncTask implements Runnable {
 	/**
 	 * 任务状态
 	 */
-	private TaskStatus status;
+	private ScheduledTaskStatus status;
 
 	/**
 	 * 任务准备执行时间，进入线程池队列的时间
@@ -72,28 +72,30 @@ public abstract class AsyncTask implements Runnable {
 	private List<String> errMessages;
 
 	/**
-	 * 任务执行成功后的回调
-	 */
-	private CompletableFuture<AsyncTask> callback;
-
-	/**
 	 * 中断标识
 	 */
 	private boolean interrupt = false;
+	
+	private ScheduledFuture<?> future;
+	
+	private ISysScheduledTaskService taskService;
+	
+	public ScheduledTask(ISysScheduledTaskService taskService) {
+		this.taskService = taskService;
+	}
 
 	@Override
 	public void run() {
 		try {
-			AsyncTaskManager.setCurrent(this);
 			this.checkInterrupt();
 			this.start();
 			this.run0();
 			this.completed();
 		} catch (Exception e) {
 			if (e instanceof InterruptedException) {
-				this.setStatus(TaskStatus.INTERRUPTED);
+				this.setStatus(ScheduledTaskStatus.INTERRUPTED);
 			} else {
-				this.setStatus(TaskStatus.FAILED);
+				this.setStatus(ScheduledTaskStatus.FAILED);
 				String err = e.getMessage();
 				if (e instanceof GlobalException ge && ge.getErrorCode() != null) {
 					err = I18nUtils.get(ge.getErrorCode().value(), LocaleContextHolder.getLocale(), ge.getErrArgs());
@@ -102,19 +104,19 @@ public abstract class AsyncTask implements Runnable {
 			}
 			this.setPercent(100);
 			e.printStackTrace();
-		} finally {
-			AsyncTaskManager.removeCurrent();
 		}
+		this.taskService.addTaskLog(this);
 	}
+	
 
 	public abstract void run0() throws Exception;
 
 	/**
 	 * 提交到线程池时执行
 	 */
-	void ready() {
-		log.debug("[{}]Task ready: {}", Thread.currentThread().getName(), this.getTaskId());
-		this.status = TaskStatus.READY;
+	public void ready() {
+		log.debug("[{}]ScheduledTask ready: {}", Thread.currentThread().getName(), this.getTaskId());
+		this.status = ScheduledTaskStatus.READY;
 		this.readyTime = LocalDateTime.now();
 	}
 
@@ -122,8 +124,8 @@ public abstract class AsyncTask implements Runnable {
 	 * 任务开始执行
 	 */
 	void start() {
-		log.debug("[{}]Task start: {}", Thread.currentThread().getName(), this.getTaskId());
-		this.status = TaskStatus.RUNNING;
+		log.debug("[{}]ScheduledTask start: {}", Thread.currentThread().getName(), this.getTaskId());
+		this.status = ScheduledTaskStatus.RUNNING;
 		this.startTime = LocalDateTime.now();
 	}
 
@@ -131,23 +133,20 @@ public abstract class AsyncTask implements Runnable {
 	 * 任务完成
 	 */
 	void completed() {
-		if (this.getStatus() == TaskStatus.INTERRUPTED) {
+		if (this.getStatus() == ScheduledTaskStatus.INTERRUPTED) {
 			return;
 		}
-		log.debug("[{}]Task completed: {}", Thread.currentThread().getName(), this.getTaskId());
-		this.setStatus(TaskStatus.SUCCESS);
+		log.debug("[{}]ScheduledTask completed: {}", Thread.currentThread().getName(), this.getTaskId());
+		this.setStatus(ScheduledTaskStatus.SUCCESS);
 		this.setEndTime(LocalDateTime.now());
 		this.setPercent(100);
-		if (this.getCallback() != null) {
-			this.getCallback().complete(this);
-		}
 	}
 
 	/**
 	 * 执行中断，设置中断标识
 	 */
 	public void interrupt() {
-		log.debug("[{}]Task interrupted: {}", Thread.currentThread().getName(), this.getTaskId());
+		log.debug("[{}]ScheduledTask interrupted: {}", Thread.currentThread().getName(), this.getTaskId());
 		if (this.interrupt) {
 			return;
 		}
@@ -161,14 +160,14 @@ public abstract class AsyncTask implements Runnable {
 	 * @throws InterruptedException
 	 */
 	public void checkInterrupt() throws InterruptedException {
-		Assert.isFalse(this.interrupt, () -> new InterruptedException("The task is interrupted: " + this.taskId));
+		Assert.isFalse(this.interrupt, () -> new InterruptedException("The scheduled task is interrupted: " + this.taskId));
 	}
 
-	public String getTaskId() {
+	public Long getTaskId() {
 		return taskId;
 	}
 
-	public void setTaskId(String taskId) {
+	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
 
@@ -180,11 +179,11 @@ public abstract class AsyncTask implements Runnable {
 		this.type = type;
 	}
 
-	public TaskStatus getStatus() {
+	public ScheduledTaskStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(TaskStatus status) {
+	public void setStatus(ScheduledTaskStatus status) {
 		this.status = status;
 	}
 
@@ -216,8 +215,8 @@ public abstract class AsyncTask implements Runnable {
 	}
 
 	public boolean isEnd() {
-		return this.status == TaskStatus.SUCCESS || this.status == TaskStatus.FAILED
-				|| this.status == TaskStatus.INTERRUPTED;
+		return this.status == ScheduledTaskStatus.SUCCESS || this.status == ScheduledTaskStatus.FAILED
+				|| this.status == ScheduledTaskStatus.INTERRUPTED;
 	}
 
 	public String getProgressMessage() {
@@ -244,7 +243,7 @@ public abstract class AsyncTask implements Runnable {
 	}
 
 	public boolean isAlive() {
-		return this.getStatus() == TaskStatus.READY || this.getStatus() == TaskStatus.RUNNING;
+		return this.getStatus() == ScheduledTaskStatus.READY || this.getStatus() == ScheduledTaskStatus.RUNNING;
 	}
 
 	public LocalDateTime getReadyTime() {
@@ -259,19 +258,19 @@ public abstract class AsyncTask implements Runnable {
 		this.errMessages = errMessages;
 	}
 
-	public CompletableFuture<AsyncTask> getCallback() {
-		return callback;
-	}
-
-	public void setCallback(CompletableFuture<AsyncTask> callback) {
-		this.callback = callback;
-	}
-
 	public LocalDateTime getInterruptTime() {
 		return interruptTime;
 	}
 
 	public void setInterruptTime(LocalDateTime interruptTime) {
 		this.interruptTime = interruptTime;
+	}
+
+	public ScheduledFuture<?> getFuture() {
+		return future;
+	}
+
+	public void setFuture(ScheduledFuture<?> future) {
+		this.future = future;
 	}
 }

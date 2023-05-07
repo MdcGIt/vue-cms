@@ -23,6 +23,7 @@ import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.fixed.FixedConfigUtils;
@@ -132,7 +133,7 @@ public class SysConfigController extends BaseRestController {
 	@Log(title = "参数管理", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> remove(@RequestBody @NotEmpty List<Long> configIds) {
-		Assert.notEmpty(configIds, () -> CommonErrorCode.INVALID_REQUEST_ARG.exception());
+		Assert.isTrue(IdUtils.validate(configIds), () -> CommonErrorCode.INVALID_REQUEST_ARG.exception());
 		configService.deleteConfigByIds(configIds);
 		return R.ok();
 	}
