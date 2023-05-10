@@ -76,6 +76,7 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 		this.publishPipeService.getPublishPipes(site.getSiteId()).forEach(pp -> {
 			String siteRoot = SiteUtils.getSiteRoot(site, pp.getCode());
 			String templateDirectory = siteRoot + ContentCoreConsts.TemplateDirectory;
+			// 处理变更模板
 			List<File> templateFiles = FileExUtils.loopFiles(templateDirectory, new FileFilter() {
 
 				@Override
@@ -116,6 +117,19 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 							}
 						});
 			}
+			// 处理删除掉的模板
+			List<String> templatePaths = templateFiles.stream().map(f -> {
+				return StringUtils.substringAfterLast(FileExUtils.normalizePath(f.getAbsolutePath()),
+						ContentCoreConsts.TemplateDirectory);
+			}).toList();
+			List<CmsTemplate> list = this.lambdaQuery().eq(CmsTemplate::getSiteId, site.getSiteId())
+					.eq(CmsTemplate::getPublishPipeCode, pp.getCode()).list();
+			for (CmsTemplate template : list) {
+				if (!templatePaths.contains(template.getPath())) {
+					this.removeById(template);
+				}
+			}
+
 		});
 	}
 
