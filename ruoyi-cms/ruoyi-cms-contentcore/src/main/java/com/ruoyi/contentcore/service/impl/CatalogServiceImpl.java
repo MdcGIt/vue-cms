@@ -21,6 +21,7 @@ import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.TreeNode;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.redis.RedisCache;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -226,9 +227,9 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public CmsCatalog deleteCatalog(long catalogId) {
+	public CmsCatalog deleteCatalog(long catalogId, LoginUser operator) {
 		CmsCatalog catalog = this.getById(catalogId);
-		applicationContext.publishEvent(new BeforeCatalogDeleteEvent(this, catalog));
+		applicationContext.publishEvent(new BeforeCatalogDeleteEvent(this, catalog, operator));
 
 		AsyncTaskManager.setTaskMessage("正在删除栏目数据");
 		long childCount = lambdaQuery().eq(CmsCatalog::getParentId, catalog.getCatalogId()).count();

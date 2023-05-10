@@ -24,6 +24,7 @@ import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -169,11 +170,12 @@ public class CatalogController extends BaseRestController {
 	public R<String> remove(@PathVariable("catalogId") @LongId Long catalogId) {
 		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.Delete, StpAdminUtil.getLoginUser());
 
+		LoginUser operator = StpAdminUtil.getLoginUser();
 		AsyncTask task = new AsyncTask() {
 
 			@Override
 			public void run0() throws Exception {
-				catalogService.deleteCatalog(catalogId);
+				catalogService.deleteCatalog(catalogId, operator);
 			}
 		};
 		task.setTaskId("DeleteCatalog_" + catalogId);

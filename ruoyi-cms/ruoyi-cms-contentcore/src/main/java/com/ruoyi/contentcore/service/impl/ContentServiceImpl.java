@@ -115,7 +115,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	}
 
 	@Override
-	public boolean deleteContentsByCatalog(CmsCatalog catalog) {
+	public boolean deleteContentsByCatalog(CmsCatalog catalog, LoginUser operator) {
 		int pageSize = 100;
 		long total = this.lambdaQuery().likeRight(CmsContent::getCatalogAncestors, catalog.getAncestors()).count();
 
@@ -126,6 +126,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 					.page(new Page<>(i, pageSize, false)).getRecords().forEach(content -> {
 						IContentType contentType = ContentCoreUtils.getContentType(content.getContentType());
 						IContent<?> icontent = contentType.loadContent(content);
+						icontent.setOperator(operator);
 						icontent.delete();
 					});
 		}
