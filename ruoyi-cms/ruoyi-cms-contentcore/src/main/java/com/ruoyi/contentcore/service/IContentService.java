@@ -58,7 +58,7 @@ public interface IContentService extends IBackupService<CmsContent> {
 	 * @param catalog
 	 * @return
 	 */
-	public boolean deleteContentsByCatalog(CmsCatalog catalog);
+	public boolean deleteContentsByCatalog(CmsCatalog catalog, LoginUser operator);
 
 	/**
 	 * 获取内容链接

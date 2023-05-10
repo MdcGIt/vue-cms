@@ -7,6 +7,7 @@ import java.util.Map;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.domain.TreeNode;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.dto.CatalogAddDTO;
@@ -77,7 +78,7 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * @param catalogId
 	 * @return
 	 */
-	public CmsCatalog deleteCatalog(long catalogId);
+	public CmsCatalog deleteCatalog(long catalogId, LoginUser operator);
 
 	/**
 	 * 获取栏目链接

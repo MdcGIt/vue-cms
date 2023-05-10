@@ -2,6 +2,7 @@ package com.ruoyi.contentcore.listener.event;
 
 import org.springframework.context.ApplicationEvent;
 
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 
 import lombok.Getter;
@@ -13,8 +14,11 @@ public class BeforeCatalogDeleteEvent extends ApplicationEvent {
 
 	private CmsCatalog catalog;
 	
-	public BeforeCatalogDeleteEvent(Object source, CmsCatalog catalog) {
+	private LoginUser operator;
+	
+	public BeforeCatalogDeleteEvent(Object source, CmsCatalog catalog, LoginUser operator) {
 		super(source);
 		this.catalog = catalog;
+		this.operator = operator;
 	}
 }
