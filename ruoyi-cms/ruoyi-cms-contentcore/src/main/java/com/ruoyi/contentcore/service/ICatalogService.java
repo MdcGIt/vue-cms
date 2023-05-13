@@ -90,6 +90,8 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 */
 	String getCatalogLink(CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview);
 
+	String getCatalogListLink(CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview);
+
 	/**
 	 * 栏目扩展配置应用到指定栏目或子栏目
 	 * 

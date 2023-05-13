@@ -59,7 +59,7 @@ public class CatalogUtils {
 	 */
 	public static String getCatalogLink(CmsSite site, CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview) {
 		if (catalog.getCatalogType().equals(CatalogType_Link.ID)) {
-			return InternalUrlUtils.getActualUrl(catalog.getLink(), publishPipeCode, isPreview);
+			return InternalUrlUtils.getActualUrl(catalog.getRedirectUrl(), publishPipeCode, isPreview);
 		}
 		if (isPreview) {
 			String catalogPath = IInternalDataType.getPreviewPath(InternalDataType_Catalog.ID, catalog.getCatalogId(),
@@ -72,6 +72,28 @@ public class CatalogUtils {
 			String catalogPath = IInternalDataType.getViewPath(InternalDataType_Catalog.ID, catalog.getCatalogId(),
 					publishPipeCode, pageIndex);
 			return BackendContext.getValue() + catalogPath;
+		}
+	}
+
+	public static String getCatalogListLink(CmsSite site, CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview) {
+		if (catalog.getCatalogType().equals(CatalogType_Link.ID)) {
+			return InternalUrlUtils.getActualUrl(catalog.getRedirectUrl(), publishPipeCode, isPreview);
+		}
+		if (isPreview) {
+			String catalogPath = IInternalDataType.getPreviewPath(InternalDataType_Catalog.ID, catalog.getCatalogId(),
+					publishPipeCode, pageIndex);
+			return BackendContext.getValue() + catalogPath + "&list=Y";
+		}
+		if (catalog.isStaticize()) {
+			String link = site.getUrl(publishPipeCode) + catalog.getPath();
+			if (StringUtils.isNotEmpty(catalog.getIndexTemplate(publishPipeCode))) {
+				link = link + (pageIndex > 1 ? "list_" + pageIndex : "list") + StringUtils.DOT + site.getStaticSuffix(publishPipeCode);
+			}
+			return link;
+		} else {
+			String catalogPath = IInternalDataType.getViewPath(InternalDataType_Catalog.ID, catalog.getCatalogId(),
+					publishPipeCode, pageIndex);
+			return BackendContext.getValue() + catalogPath + "&list=Y";
 		}
 	}
 }

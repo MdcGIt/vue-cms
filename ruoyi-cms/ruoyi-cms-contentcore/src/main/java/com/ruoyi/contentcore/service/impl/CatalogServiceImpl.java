@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.ruoyi.contentcore.fixed.dict.StaticSuffix;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -250,22 +251,14 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 
 	@Override
 	public String getCatalogLink(CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview) {
-		if (catalog.getCatalogType().equals(CatalogType_Link.ID)) {
-			return InternalUrlUtils.getActualUrl(catalog.getRedirectUrl(), publishPipeCode, isPreview);
-		}
-		if (isPreview) {
-			String catalogPath = IInternalDataType.getPreviewPath(InternalDataType_Catalog.ID, catalog.getCatalogId(),
-					publishPipeCode, pageIndex);
-			return BackendContext.getValue() + catalogPath;
-		}
-		if (catalog.isStaticize()) {
-			CmsSite site = this.siteService.getSite(catalog.getSiteId());
-			return site.getUrl(publishPipeCode) + catalog.getPath();
-		} else {
-			String catalogPath = IInternalDataType.getViewPath(InternalDataType_Catalog.ID, catalog.getCatalogId(),
-					publishPipeCode, pageIndex);
-			return BackendContext.getValue() + catalogPath;
-		}
+		CmsSite site = this.siteService.getSite(catalog.getSiteId());
+		return CatalogUtils.getCatalogLink(site, catalog, pageIndex, publishPipeCode, isPreview);
+	}
+
+	@Override
+	public String getCatalogListLink(CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview) {
+		CmsSite site = this.siteService.getSite(catalog.getSiteId());
+		return CatalogUtils.getCatalogListLink(site, catalog, pageIndex, publishPipeCode, isPreview);
 	}
 
 	@Override
