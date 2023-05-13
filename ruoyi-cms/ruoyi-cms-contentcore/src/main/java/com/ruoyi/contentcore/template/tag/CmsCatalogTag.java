@@ -84,6 +84,7 @@ public class CmsCatalogTag extends AbstractListTag {
 		Page<CmsCatalog> pageResult = this.catalogService.page(new Page<>(pageIndex, size, page), q);
 		pageResult.getRecords().forEach(c -> {
 			c.setLink(catalogService.getCatalogLink(c, 1, context.getPublishPipeCode(), context.isPreview()));
+			c.setListLink(catalogService.getCatalogListLink(c, 1, context.getPublishPipeCode(), context.isPreview()));
 			c.setLogoSrc(InternalUrlUtils.getActualUrl(c.getLogo(), context.getPublishPipeCode(), context.isPreview()));
 		});
 		return TagPageData.of(pageResult.getRecords(), pageResult.getTotal());

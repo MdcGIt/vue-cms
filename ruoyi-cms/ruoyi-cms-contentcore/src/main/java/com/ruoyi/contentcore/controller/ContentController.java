@@ -91,6 +91,7 @@ public class ContentController extends BaseRestController {
 	@GetMapping("/list")
 	public R<?> listData(@RequestParam(name = "catalogId", required = false) Long catalogId,
 			@RequestParam(name = "title", required = false, defaultValue = "") String title,
+		 	@RequestParam(name = "contentType", required = false, defaultValue = "") String contentType,
 			@RequestParam(name = "status", required = false) String status) {
 		if (!IdUtils.validate(catalogId)
 				|| !CmsPrivUtils.hasCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser())) {
@@ -102,6 +103,7 @@ public class ContentController extends BaseRestController {
 
 		LambdaQueryChainWrapper<CmsContent> q = this.contentService.lambdaQuery()
 				.eq(CmsContent::getSiteId, site.getSiteId())
+				.eq(StringUtils.isNotEmpty(contentType), CmsContent::getContentType, contentType)
 				.like(StringUtils.isNotEmpty(title), CmsContent::getTitle, title)
 				.eq(StringUtils.isNotEmpty(status), CmsContent::getStatus, status);
 		if (includeChild) {

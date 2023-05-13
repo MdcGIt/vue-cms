@@ -32,6 +32,7 @@
                 :data="siteList"
                 highlight-current-row
                 @current-change="handleSelectionChange"
+                @row-dblclick="handleRowDblclick"
                 style="width:100%;line-height: normal;">
         <el-table-column type="index" :label="$t('Common.RowNo')" width="50" />
         <el-table-column :label="$t('CMS.Site.Name')" align="center" prop="name">
@@ -159,6 +160,10 @@ export default {
     // 选中数据
     handleSelectionChange (currentRow) {
       this.selectedRow = currentRow;
+    },
+    handleRowDblclick(row) {
+      this.selectedRow = row
+      this.handleChangeCurrentSite()
     },
     handleOpenSiteList() {
       this.open = true;

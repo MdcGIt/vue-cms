@@ -104,6 +104,8 @@ public class TemplateUtils {
 		// 栏目链接
 		String catalogLink = CatalogUtils.getCatalogLink(site, catalog, 1, context.getPublishPipeCode(), context.isPreview());
 		mapCatalog.put(TemplateVariable_OBJ_Link, catalogLink);
+		String catalogListLink = CatalogUtils.getCatalogListLink(site, catalog, 1, context.getPublishPipeCode(), context.isPreview());
+		mapCatalog.put("listLink", catalogListLink);
 		context.getVariables().put(TemplateVariable_Catalog, mapCatalog);
 	}
 

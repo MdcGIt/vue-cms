@@ -180,7 +180,13 @@ public class CmsCatalog extends BaseEntity {
 	 */
 	@TableField(exist = false)
 	private String link;
-
+	
+	/**
+	 * 列表页链接（无首页模板时与link一致）
+	 */
+	@TableField(exist = false)
+	private String listLink;
+	
 	/**
 	 * 发布通道配置
 	 */
