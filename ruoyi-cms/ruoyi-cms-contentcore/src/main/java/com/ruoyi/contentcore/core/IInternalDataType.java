@@ -1,10 +1,16 @@
 package com.ruoyi.contentcore.core;
 
 import java.io.IOException;
+import java.util.Map;
 
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 
 import freemarker.template.TemplateException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 内部数据类型
@@ -14,7 +20,7 @@ public interface IInternalDataType {
 	/**
 	 * Bean名称前缀
 	 */
-	public static final String BEAN_NAME_PREFIX = "InternalDataType_";
+	String BEAN_NAME_PREFIX = "InternalDataType_";
 	
 	/**
 	 * 获取内部数据预览地址
@@ -27,7 +33,7 @@ public interface IInternalDataType {
 	 * @param pageIndex
 	 * @return
 	 */
-	public static String getPreviewPath(String type, Long id, String publishPipeCode, int pageIndex) {
+	static String getPreviewPath(String type, Long id, String publishPipeCode, int pageIndex) {
 		String path = "cms/preview/" + type + "/" + id + "?pp=" + publishPipeCode;
 		if (pageIndex > 1) {
 			path += "&pi=" + pageIndex;
@@ -35,7 +41,7 @@ public interface IInternalDataType {
 		return path;
 	}
 
-	public static String getPreviewPath(String type, Long id, String publishPipeCode) {
+	static String getPreviewPath(String type, Long id, String publishPipeCode) {
 		return getPreviewPath(type, id, publishPipeCode, 1);
 	}
 
@@ -50,7 +56,7 @@ public interface IInternalDataType {
 	 * @param pageIndex
 	 * @return
 	 */
-	public static String getViewPath(String type, Long id, String publishPipeCode, int pageIndex) {
+	static String getViewPath(String type, Long id, String publishPipeCode, int pageIndex) {
 		String path = "cms/preview/" + type + "/" + id + "?pp=" + publishPipeCode;
 		if (pageIndex > 1) {
 			path += "&pi=" + pageIndex;
@@ -58,7 +64,7 @@ public interface IInternalDataType {
 		return path;
 	}
 
-	public static String getViewPath(String type, Long id, String publishPipeCode) {
+	static String getViewPath(String type, Long id, String publishPipeCode) {
 		return getViewPath(type, id, publishPipeCode, 1);
 	}
 	
@@ -70,28 +76,63 @@ public interface IInternalDataType {
 	/**
 	 * 获取模板解析页面内容
 	 * 
-	 * @param dataId
-	 * @param pageIndex
-	 * @param publishPipeCode
-	 * @param preview
+	 * @param requestData
 	 * @return
 	 * @throws IOException
 	 * @throws TemplateException
 	 */
-	default public String getPageData(Long dataId, int pageIndex, String publishPipeCode, boolean preview) throws IOException, TemplateException {
+	default String getPageData(RequestData requestData) throws IOException, TemplateException {
 		return StringUtils.EMPTY;
 	}
 	
 	/**
 	 * 访问链接
 	 * 
-	 * @param dataId
+	 * @param internalUrl
 	 * @param pageIndex
 	 * @param publishPipeCode
 	 * @param preview
 	 * @return
 	 */
-	default public String getLink(InternalURL internalUrl, int pageIndex, String publishPipeCode, boolean preview) {
+	default String getLink(InternalURL internalUrl, int pageIndex, String publishPipeCode, boolean preview) {
 		return StringUtils.EMPTY;
+	}
+
+	@Getter
+	@Setter
+	class RequestData {
+
+		/**
+		 * 数据ID
+		 */
+		Long dataId;
+
+		/**
+		 * 分页标识
+		 */
+		int pageIndex;
+
+		/**
+		 * 发布通道编码
+		 */
+		String publishPipeCode;
+
+		/**
+		 * 是否预览模式
+		 */
+		boolean preview;
+
+		/**
+		 * 其他扩展参数
+		 */
+		Map<String, String> params;
+
+		public RequestData(Long dataId, Integer pageIndex, String publishPipeCode, boolean preview, Map<String, String> params) {
+			this.dataId = dataId;
+			this.pageIndex = pageIndex;
+			this.publishPipeCode = publishPipeCode;
+			this.preview = preview;
+			this.params = params;
+		}
 	}
 }

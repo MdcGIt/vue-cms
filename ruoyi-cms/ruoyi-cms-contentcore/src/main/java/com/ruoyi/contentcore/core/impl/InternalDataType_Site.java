@@ -30,9 +30,9 @@ public class InternalDataType_Site implements IInternalDataType {
 	}
 
 	@Override
-	public String getPageData(Long dataId, int pageIndex, String publishPipeCode, boolean isPreview) throws IOException, TemplateException {
-		CmsSite site = siteService.getSite(dataId);
-		return this.publishService.getSitePageData(site, publishPipeCode, isPreview);
+	public String getPageData(RequestData requestData) throws IOException, TemplateException {
+		CmsSite site = siteService.getSite(requestData.getDataId());
+		return this.publishService.getSitePageData(site, requestData.getPublishPipeCode(), requestData.isPreview());
 	}
 
 	@Override

@@ -61,7 +61,8 @@ public class CoreController extends BaseRestController {
 	@GetMapping("/cms/preview/{dataType}/{dataId}")
 	public void preview(@PathVariable("dataType") String dataType, @PathVariable("dataId") Long dataId,
 			@RequestParam(value = "pp") String publishPipe,
-			@RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex)
+			@RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex,
+			@RequestParam(value = "list", required = false, defaultValue = "N") String listFlag)
 			throws IOException, TemplateException {
 		HttpServletResponse response = ServletUtils.getResponse();
 		response.setCharacterEncoding(Charset.defaultCharset().displayName());
@@ -69,7 +70,9 @@ public class CoreController extends BaseRestController {
 		IInternalDataType internalDataType = ContentCoreUtils.getInternalDataType(dataType);
 		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORT_INTERNAL_DATA_TYPE.exception(dataType));
 
-		String pageData = internalDataType.getPageData(dataId, pageIndex, publishPipe, true);
+		IInternalDataType.RequestData data = new IInternalDataType.RequestData(dataId, pageIndex, publishPipe,
+				true, ServletUtils.getParamMap(ServletUtils.getRequest()));
+		String pageData = internalDataType.getPageData(data);
 		response.getWriter().write(pageData);
 	}
 
@@ -95,7 +98,9 @@ public class CoreController extends BaseRestController {
 		IInternalDataType internalDataType = ContentCoreUtils.getInternalDataType(dataType);
 		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORT_INTERNAL_DATA_TYPE.exception(dataType));
 
-		String pageData = internalDataType.getPageData(dataId, pageIndex, publishPipe, false);
+		IInternalDataType.RequestData data = new IInternalDataType.RequestData(dataId, pageIndex, publishPipe,
+				false, ServletUtils.getParamMap(ServletUtils.getRequest()));
+		String pageData = internalDataType.getPageData(data);
 		response.getWriter().write(pageData);
 	}
 

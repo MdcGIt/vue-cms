@@ -30,10 +30,10 @@ public class InternalDataType_PageWidget implements IInternalDataType {
 	}
 
 	@Override
-	public String getPageData(Long dataId, int pageIndex, String publishPipeCode, boolean isPreview) throws IOException, TemplateException {
-		CmsPageWidget pageWidget = pageWidgetService.getById(dataId);
-		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pageWidgetId", dataId));
+	public String getPageData(RequestData data) throws IOException, TemplateException {
+		CmsPageWidget pageWidget = pageWidgetService.getById(data.getDataId());
+		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pageWidgetId", data.getDataId()));
 		
-		return this.publishService.getPageWidgetPageData(pageWidget, isPreview);
+		return this.publishService.getPageWidgetPageData(pageWidget, data.isPreview());
 	}
 }
