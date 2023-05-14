@@ -44,7 +44,6 @@ public interface IPublishService {
 	 * 此方法仅做静态化逻辑，提供发布内容/栏目调用支持，支持异步任务
 	 * 
 	 * @param site
-	 * @param task
 	 */
 	void siteStaticize(CmsSite site);
 
@@ -64,14 +63,14 @@ public interface IPublishService {
 	 * 获取栏目模板页面内容
 	 * 
 	 * @param catalog
+	 * @param listFlag
 	 * @param publishPipeCode
-	 * @param writer
-	 * @param preview
+	 * @param isPreview
 	 * @return
 	 * @throws IOException 
 	 * @throws TemplateException 
 	 */
-	String getCatalogPageData(CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview)
+	String getCatalogPageData(CmsCatalog catalog, int pageIndex, boolean listFlag, String publishPipeCode, boolean isPreview)
 			throws IOException, TemplateException;
 
 	/**
@@ -80,7 +79,6 @@ public interface IPublishService {
 	 * 
 	 * @param catalog
 	 * @param pageMax 
-	 * @param task 
 	 */
 	void catalogStaticize(CmsCatalog catalog, int pageMax);
 	
@@ -125,7 +123,6 @@ public interface IPublishService {
 	 * 创建异步任务关联静态化内容相关的映射内容、级联栏目及站点页面。
 	 * 
 	 * @param content
-	 * @param task
 	 */
 	void contentStaticize(IContent<?> content);
 	
@@ -134,7 +131,6 @@ public interface IPublishService {
 	 * 供栏目发布及站点发布调用
 	 * 
 	 * @param cmsContent
-	 * @param task
 	 */
 	void contentStaticize(CmsContent cmsContent);
 
@@ -147,7 +143,7 @@ public interface IPublishService {
 	 * @throws IOException
 	 * @throws TemplateException
 	 */
-	public String getPageWidgetPageData(CmsPageWidget pageWidget, boolean isPreview) throws IOException, TemplateException;
+	String getPageWidgetPageData(CmsPageWidget pageWidget, boolean isPreview) throws IOException, TemplateException;
 	
 	/**
 	 * 页面部件静态化
@@ -156,5 +152,5 @@ public interface IPublishService {
 	 * @throws TemplateException
 	 * @throws IOException
 	 */
-	public void pageWidgetStaticize(IPageWidget pageWidget) throws TemplateException, IOException;
+	void pageWidgetStaticize(IPageWidget pageWidget) throws TemplateException, IOException;
 }

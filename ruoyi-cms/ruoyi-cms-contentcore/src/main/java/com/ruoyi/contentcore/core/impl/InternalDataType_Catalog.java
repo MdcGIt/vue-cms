@@ -3,6 +3,7 @@ package com.ruoyi.contentcore.core.impl;
 import java.io.IOException;
 
 import com.ruoyi.contentcore.util.CatalogUtils;
+import com.ruoyi.system.fixed.dict.YesOrNo;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.contentcore.core.IInternalDataType;
@@ -30,9 +31,10 @@ public class InternalDataType_Catalog implements IInternalDataType {
 	}
 	
 	@Override
-	public String getPageData(Long dataId, int pageIndex, String publishPipeCode, boolean isPreview) throws IOException, TemplateException {
-		CmsCatalog catalog = catalogService.getCatalog(dataId);
-		return this.publishService.getCatalogPageData(catalog, pageIndex, publishPipeCode, isPreview);
+	public String getPageData(RequestData requestData) throws IOException, TemplateException {
+		CmsCatalog catalog = catalogService.getCatalog(requestData.getDataId());
+		boolean listFlag = YesOrNo.isYes(requestData.getParams().get("list"));
+		return this.publishService.getCatalogPageData(catalog, requestData.getPageIndex(), listFlag, requestData.getPublishPipeCode(), requestData.isPreview());
 	}
 
 	@Override

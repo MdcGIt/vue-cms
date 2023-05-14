@@ -203,15 +203,18 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 	}
 
 	@Override
-	public String getCatalogPageData(CmsCatalog catalog, int pageIndex, String publishPipeCode, boolean isPreview)
+	public String getCatalogPageData(CmsCatalog catalog, int pageIndex, boolean listFlag, String publishPipeCode, boolean isPreview)
 			throws IOException, TemplateException {
 		if (!catalog.isStaticize() || CatalogType_Link.ID.equals(catalog.getCatalogType())) {
 			throw new RuntimeException("栏目设置不静态化或未链接类型栏目：" + catalog.getName());
 		}
 		String templateFilename = catalog.getListTemplate(publishPipeCode);
-		String indexTemplate = catalog.getIndexTemplate(publishPipeCode);
-		if (pageIndex == 1 && StringUtils.isNotEmpty(indexTemplate)) {
-			templateFilename = indexTemplate;
+		if (!listFlag && pageIndex == 1) {
+			// 获取首页模板
+			String indexTemplate = catalog.getIndexTemplate(publishPipeCode);
+			if (StringUtils.isNotEmpty(indexTemplate)) {
+				templateFilename = indexTemplate;
+			}
 		}
 		CmsSite site = this.siteService.getById(catalog.getSiteId());
 		if (StringUtils.isEmpty(templateFilename)) {

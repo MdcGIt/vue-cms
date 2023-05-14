@@ -19,30 +19,30 @@ import lombok.RequiredArgsConstructor;
 @Component(IInternalDataType.BEAN_NAME_PREFIX + InternalDataType_Content.ID)
 public class InternalDataType_Content implements IInternalDataType {
 
-	public final static String ID = "content";
-	
-	private final IContentService contentService;
-	
-	private final IPublishService publishService;
+    public final static String ID = "content";
 
-	@Override
-	public String getId() {
-		return ID;
-	}
+    private final IContentService contentService;
 
-	@Override
-	public String getPageData(Long dataId, int pageIndex, String publishPipeCode, boolean isPreview) throws IOException, TemplateException {
-		CmsContent content = contentService.getById(dataId);
-		Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", dataId));
-		
-		return this.publishService.getContentPageData(content, pageIndex, publishPipeCode, isPreview);
-	}
+    private final IPublishService publishService;
 
-	@Override
-	public String getLink(InternalURL internalUrl, int pageIndex, String publishPipeCode, boolean isPreview) {
-		CmsContent content = contentService.getById(internalUrl.getId());
-		Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", internalUrl.getId()));
-		
-		return this.contentService.getContentLink(content, 1, publishPipeCode, isPreview);
-	}
+    @Override
+    public String getId() {
+        return ID;
+    }
+
+    @Override
+    public String getPageData(RequestData requestData) throws IOException, TemplateException {
+        CmsContent content = contentService.getById(requestData.getDataId());
+        Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", requestData.getDataId()));
+
+        return this.publishService.getContentPageData(content, requestData.getPageIndex(), requestData.getPublishPipeCode(), requestData.isPreview());
+    }
+
+    @Override
+    public String getLink(InternalURL internalUrl, int pageIndex, String publishPipeCode, boolean isPreview) {
+        CmsContent content = contentService.getById(internalUrl.getId());
+        Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", internalUrl.getId()));
+
+        return this.contentService.getContentLink(content, 1, publishPipeCode, isPreview);
+    }
 }
