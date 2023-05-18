@@ -175,7 +175,7 @@
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item :label="$t('CMS.Content.StaticPath')">
-                    <el-input v-model="form.staticPath" placeholder="请输入相对站点路径..." />
+                    <el-input v-model="form.staticPath" />
                   </el-form-item>
                   <el-form-item :label="$t('CMS.Content.Template')">
                     <el-switch v-model="showTemplate" @change="handleShowTemplateChange" />
@@ -190,9 +190,10 @@
                     </el-input>
                   </el-form-item>
                 </el-tab-pane>
-                <el-tab-pane label="扩展配置" name="extend">
+                <el-tab-pane :label="$t('CMS.Content.ExtendConfig')" name="extend">
+                  <el-divider content-position="left">{{ $t('CMS.Content.ExtendTemplate') }}</el-divider>
                   <el-form-item v-for="pp in publishPipeProps" 
-                                :label="'[' + pp.pipeCode + ']扩展模板'" 
+                                :label="pp.pipeName" 
                                 :key="pp.pipeCode + '_ex'" 
                                 :prop="'contentExTemplate_' + pp.value">
                     <el-input v-model="pp.props.contentExTemplate">

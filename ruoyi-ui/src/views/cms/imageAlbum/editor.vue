@@ -11,8 +11,8 @@
                       fit="scale-down"></el-image>
             <div class="r-name">{{ item.title }}</div>
             <div class="r-info">
-              [ 大小：{{ item.fileSizeName }} ]
-              <span :v-if="item.resourceType=='image'"> [ 宽高：{{ item.width }} x {{ item.height }} ] </span>
+              [ {{ $t('CMS.Image.FileSize') }}: {{ item.fileSizeName }} ]
+              <span :v-if="item.resourceType=='image'"> [ {{ $t('CMS.Image.WidthHeight') }}: {{ item.width }} x {{ item.height }} ] </span>
             </div>
           </el-aside>
           <el-container>
