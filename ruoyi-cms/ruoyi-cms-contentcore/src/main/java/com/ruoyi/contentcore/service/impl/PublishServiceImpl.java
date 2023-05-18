@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.ruoyi.contentcore.core.impl.*;
+import com.ruoyi.contentcore.util.*;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +34,6 @@ import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.core.IContentType;
 import com.ruoyi.contentcore.core.IPageWidget;
 import com.ruoyi.contentcore.core.IPublishPipeProp;
-import com.ruoyi.contentcore.core.impl.CatalogType_Link;
-import com.ruoyi.contentcore.core.impl.PublishPipeProp_ContentTemplate;
-import com.ruoyi.contentcore.core.impl.PublishPipeProp_DefaultListTemplate;
-import com.ruoyi.contentcore.core.impl.PublishPipeProp_IndexTemplate;
-import com.ruoyi.contentcore.core.impl.PublishPipeProp_ListTemplate;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsPageWidget;
@@ -56,10 +53,6 @@ import com.ruoyi.contentcore.template.ITemplateType;
 import com.ruoyi.contentcore.template.impl.CatalogTemplateType;
 import com.ruoyi.contentcore.template.impl.ContentTemplateType;
 import com.ruoyi.contentcore.template.impl.SiteTemplateType;
-import com.ruoyi.contentcore.util.ContentCoreUtils;
-import com.ruoyi.contentcore.util.PageWidgetUtils;
-import com.ruoyi.contentcore.util.SiteUtils;
-import com.ruoyi.contentcore.util.TemplateUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 
 import freemarker.template.TemplateException;
@@ -418,6 +411,16 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		return detailTemplate;
 	}
 
+	private String getContentExTemplate(CmsSite site, CmsCatalog catalog, CmsContent content, String publishPipeCode) {
+		String exTemplate = PublishPipeProp_ContentExTemplate.getValue(publishPipeCode,
+				content.getPublishPipeProps());
+		if (StringUtils.isEmpty(exTemplate)) {
+			// 无内容独立扩展模板取栏目配置
+			exTemplate = PublishPipeProp_ContentExTemplate.getValue(publishPipeCode, catalog.getPublishPipeProps());
+		}
+		return exTemplate;
+	}
+
 	@Override
 	public String getContentPageData(CmsContent content, int pageIndex, String publishPipeCode, boolean isPreview)
 			throws IOException, TemplateException {
@@ -543,6 +546,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		// 发布内容
 		for (CmsPublishPipe pp : publishPipes) {
 			doContentStaticize(cmsContent, pp.getCode());
+			// 内容扩展模板静态化
+			doContentExStaticize(cmsContent, pp.getCode());
 		}
 	}
 
@@ -600,9 +605,86 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		} else {
 			context.setDirectory(siteRoot + catalog.getPath());
 			String suffix = site.getStaticSuffix(context.getPublishPipeCode());
-			context.setFirstFileName(String.valueOf(content.getContentId()) + StringUtils.DOT + suffix);
+			context.setFirstFileName(content.getContentId() + StringUtils.DOT + suffix);
 			context.setOtherFileName(
 					content.getContentId() + "_" + TemplateContext.PlaceHolder_PageNo + StringUtils.DOT + suffix);
+		}
+	}
+
+	@Override
+	public String getContentExPageData(CmsContent content, String publishPipeCode, boolean isPreview)
+			throws IOException, TemplateException {
+		CmsSite site = this.siteService.getById(content.getSiteId());
+		CmsCatalog catalog = this.catalogService.getCatalog(content.getCatalogId());
+		if (!catalog.isStaticize() ) {
+			throw new RuntimeException("栏目设置不静态化：" + content.getTitle());
+		}
+		if (content.isLinkContent()) {
+			throw new RuntimeException("标题内容：" + content.getTitle() + "，跳转链接：" + content.getRedirectUrl());
+		}
+		String exTemplate = ContentUtils.getContentExTemplate(content, catalog, publishPipeCode);
+		// 查找模板
+		File templateFile = this.templateService.findTemplateFile(site, exTemplate, publishPipeCode);
+		Assert.notNull(templateFile,
+				() -> ContentCoreErrorCode.TEMPLATE_EMPTY.exception(publishPipeCode, exTemplate));
+
+		long s = System.currentTimeMillis();
+		// 生成静态页面
+		try (StringWriter writer = new StringWriter()) {
+			IContentType contentType = ContentCoreUtils.getContentType(content.getContentType());
+			// 模板ID = 通道:站点目录:模板文件名
+			String templateId = SiteUtils.getTemplateName(site, publishPipeCode, exTemplate);
+			TemplateContext templateContext = new TemplateContext(templateId, isPreview, publishPipeCode);
+			// init template data mode
+			TemplateUtils.initGlobalVariables(site, templateContext);
+			// init templateType data to data mode
+			ITemplateType templateType = this.templateService.getTemplateType(ContentTemplateType.TypeId);
+			templateType.initTemplateData(content.getContentId(), templateContext);
+			// staticize
+			this.staticizeService.process(templateContext, writer);
+			logger.debug("[{}][{}]内容扩展模板解析：{}，耗时：{}", publishPipeCode, contentType.getName(), content.getTitle(),
+					System.currentTimeMillis() - s);
+			return writer.toString();
+		}
+	}
+
+	private void doContentExStaticize(CmsContent content, String publishPipeCode) {
+		CmsSite site = this.siteService.getSite(content.getSiteId());
+		CmsCatalog catalog = this.catalogService.getCatalog(content.getCatalogId());
+		if (!catalog.isStaticize()) {
+			logger.warn("【{}】栏目设置不静态化：{} - {}", publishPipeCode, catalog.getName(), content.getTitle());
+			return; // 不静态化直接跳过
+		}
+		if (content.isLinkContent()) {
+			return; // 标题内容不需要静态化
+		}
+		String exTemplate = ContentUtils.getContentExTemplate(content, catalog, publishPipeCode);
+		File templateFile = this.templateService.findTemplateFile(site, exTemplate, publishPipeCode);
+		if (templateFile == null) {
+			logger.warn(AsyncTaskManager.addErrMessage(
+					StringUtils.messageFormat("[{0}]栏目[{1}]详情页扩展模板未设置或文件不存在", publishPipeCode, catalog.getName())));
+			return;
+		}
+		try {
+			// 自定义模板上下文
+			String template = SiteUtils.getTemplateName(site, publishPipeCode, exTemplate);
+			TemplateContext templateContext = new TemplateContext(template, false, publishPipeCode);
+			// init template datamode
+			TemplateUtils.initGlobalVariables(site, templateContext);
+			// init templateType data to datamode
+			ITemplateType templateType = this.templateService.getTemplateType(ContentTemplateType.TypeId);
+			templateType.initTemplateData(content.getContentId(), templateContext);
+			// 静态化文件地址
+			String siteRoot = SiteUtils.getSiteRoot(site, publishPipeCode);
+			templateContext.setDirectory(siteRoot + catalog.getPath());
+			String fileName = ContentUtils.getContextExFileName(content.getContentId(), site.getStaticSuffix(publishPipeCode));
+			templateContext.setFirstFileName(fileName);
+			// 静态化
+			this.staticizeService.process(templateContext);
+		} catch (TemplateException | IOException e) {
+			logger.warn(AsyncTaskManager.addErrMessage(StringUtils.messageFormat("[{0}]内容扩展模板解析失败：[{1}]{2}",
+					publishPipeCode, catalog.getName(), content.getTitle())));
+			e.printStackTrace();
 		}
 	}
 

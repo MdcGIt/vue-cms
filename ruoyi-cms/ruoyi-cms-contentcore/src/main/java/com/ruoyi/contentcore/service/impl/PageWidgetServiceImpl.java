@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.ruoyi.common.redis.RedisCache;
+import com.ruoyi.contentcore.config.CMSConfig;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,89 +33,103 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsPageWidget>
-		implements IPageWidgetService {
+        implements IPageWidgetService {
 
-	private final Map<String, IPageWidgetType> pageWidgetTypes;
+    private static final String CACHE_KEY = CMSConfig.CachePrefix + "pagewidget:";
 
-	@Override
-	public IPageWidgetType getPageWidgetType(String type) {
-		IPageWidgetType pwt = this.pageWidgetTypes.get(IPageWidgetType.BEAN_NAME_PREFIX + type);
-		Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORT_PAGE_WIDGET_TYPE.exception());
-		return pwt;
-	}
+    private final Map<String, IPageWidgetType> pageWidgetTypes;
 
-	@Override
-	public List<IPageWidgetType> getPageWidgetTypes() {
-		return this.pageWidgetTypes.values().stream().collect(Collectors.toList());
-	}
+    private final RedisCache redisCache;
 
-	@Override
-	public boolean checkCodeUnique(Long siteId, String code, Long pageWidgetId) {
-		LambdaQueryWrapper<CmsPageWidget> q = new LambdaQueryWrapper<CmsPageWidget>().eq(CmsPageWidget::getCode, code)
-				.eq(CmsPageWidget::getSiteId, siteId)
-				.ne(pageWidgetId != null && pageWidgetId > 0, CmsPageWidget::getPageWidgetId, pageWidgetId)
-				.last("limit 1");
-		return this.count(q) == 0;
-	}
+    @Override
+    public CmsPageWidget getPageWidget(Long siteId, String code) {
+        return this.redisCache.getCacheObject(CACHE_KEY + code,
+                () -> this.lambdaQuery().eq(CmsPageWidget::getSiteId, siteId).eq(CmsPageWidget::getCode, code).one());
+    }
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void addPageWidget(IPageWidget pw) {
-		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
-				pw.getPageWidgetEntity().getCode(), null);
-		Assert.isTrue(checkCodeUnique,
-				() -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
+    @Override
+    public IPageWidgetType getPageWidgetType(String type) {
+        IPageWidgetType pwt = this.pageWidgetTypes.get(IPageWidgetType.BEAN_NAME_PREFIX + type);
+        Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORT_PAGE_WIDGET_TYPE.exception());
+        return pwt;
+    }
 
-		pw.add();
-	}
+    @Override
+    public List<IPageWidgetType> getPageWidgetTypes() {
+        return this.pageWidgetTypes.values().stream().collect(Collectors.toList());
+    }
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void savePageWidget(IPageWidget pw) {
-		CmsPageWidget pageWidget = this.getById(pw.getPageWidgetEntity().getPageWidgetId());
-		Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId",
-				pw.getPageWidgetEntity().getPageWidgetId()));
-		CmsPrivUtils.checkPageWidgetPermission(pageWidget.getPageWidgetId(), PageWidgetPrivItem.Edit, pw.getOperator());
+    @Override
+    public boolean checkCodeUnique(Long siteId, String code, Long pageWidgetId) {
+        LambdaQueryWrapper<CmsPageWidget> q = new LambdaQueryWrapper<CmsPageWidget>().eq(CmsPageWidget::getCode, code)
+                .eq(CmsPageWidget::getSiteId, siteId)
+                .ne(pageWidgetId != null && pageWidgetId > 0, CmsPageWidget::getPageWidgetId, pageWidgetId)
+                .last("limit 1");
+        return this.count(q) == 0;
+    }
 
-		boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
-				pw.getPageWidgetEntity().getCode(), pw.getPageWidgetEntity().getPageWidgetId());
-		Assert.isTrue(checkCodeUnique,
-				() -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addPageWidget(IPageWidget pw) {
+        boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
+                pw.getPageWidgetEntity().getCode(), null);
+        Assert.isTrue(checkCodeUnique,
+                () -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
 
-		pw.save();
-	}
+        pw.add();
+    }
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deletePageWidgets(List<Long> pageWidgetIds) {
-		List<CmsPageWidget> pageWidgets = this.listByIds(pageWidgetIds);
-		for (CmsPageWidget pageWidget : pageWidgets) {
-			IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
-			IPageWidget pw = pwt.loadPageWidget(pageWidget);
-			pw.delete();
-		}
-	}
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void savePageWidget(IPageWidget pw) {
+        CmsPageWidget pageWidget = this.getById(pw.getPageWidgetEntity().getPageWidgetId());
+        Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId",
+                pw.getPageWidgetEntity().getPageWidgetId()));
+        CmsPrivUtils.checkPageWidgetPermission(pageWidget.getPageWidgetId(), PageWidgetPrivItem.Edit, pw.getOperator());
 
-	@Override
-	public void deletePageWidgetsByCatalog(CmsCatalog catalog) {
-		List<CmsPageWidget> list = this.lambdaQuery().likeRight(CmsPageWidget::getCatalogAncestors, catalog.getAncestors()).list();
-		for (int i = 0; i < list.size(); i++) {
-			CmsPageWidget pageWidget = list.get(i);
-			AsyncTaskManager.setTaskProgressInfo((i * 100) / list.size(), "正在删除页面部件：" + i + " / " + list.size());
-			IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
-			IPageWidget pw = pwt.loadPageWidget(pageWidget);
-			pw.delete();
-		}
-	}
+        boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
+                pw.getPageWidgetEntity().getCode(), pw.getPageWidgetEntity().getPageWidgetId());
+        Assert.isTrue(checkCodeUnique,
+                () -> CommonErrorCode.DATA_CONFLICT.exception("code: " + pw.getPageWidgetEntity().getCode()));
 
-	@Override
-	public void publishPageWidgets(List<Long> pageWidgetIds) throws TemplateException, IOException {
-		List<CmsPageWidget> pageWidgets = this.listByIds(pageWidgetIds);
-		for (CmsPageWidget pageWidget : pageWidgets) {
-			IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
-			IPageWidget pw = pwt.loadPageWidget(pageWidget);
-			pw.setOperator(StpAdminUtil.getLoginUser());
-			pw.publish();
-		}
-	}
+        pw.save();
+
+        this.redisCache.deleteObject(CACHE_KEY + pageWidget.getCode());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deletePageWidgets(List<Long> pageWidgetIds) {
+        List<CmsPageWidget> pageWidgets = this.listByIds(pageWidgetIds);
+        for (CmsPageWidget pageWidget : pageWidgets) {
+            IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
+            IPageWidget pw = pwt.loadPageWidget(pageWidget);
+            pw.delete();
+            this.redisCache.deleteObject(CACHE_KEY + pageWidget.getCode());
+        }
+    }
+
+    @Override
+    public void deletePageWidgetsByCatalog(CmsCatalog catalog) {
+        List<CmsPageWidget> list = this.lambdaQuery().likeRight(CmsPageWidget::getCatalogAncestors, catalog.getAncestors()).list();
+        for (int i = 0; i < list.size(); i++) {
+            CmsPageWidget pageWidget = list.get(i);
+            AsyncTaskManager.setTaskProgressInfo((i * 100) / list.size(), "正在删除页面部件：" + i + " / " + list.size());
+            IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
+            IPageWidget pw = pwt.loadPageWidget(pageWidget);
+            pw.delete();
+            this.redisCache.deleteObject(CACHE_KEY + pageWidget.getCode());
+        }
+    }
+
+    @Override
+    public void publishPageWidgets(List<Long> pageWidgetIds) throws TemplateException, IOException {
+        List<CmsPageWidget> pageWidgets = this.listByIds(pageWidgetIds);
+        for (CmsPageWidget pageWidget : pageWidgets) {
+            IPageWidgetType pwt = this.getPageWidgetType(pageWidget.getType());
+            IPageWidget pw = pwt.loadPageWidget(pageWidget);
+            pw.setOperator(StpAdminUtil.getLoginUser());
+            pw.publish();
+        }
+    }
 }

@@ -63,6 +63,15 @@
             inactive-value="N">
           </el-switch>
         </el-form-item>
+        <el-form-item :label="$t('CMS.Site.Extend.EnableSSI')" prop="SSIEnabled">
+          <el-switch
+            v-model="form_extend.SSIEnabled"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
+            active-value="Y"
+            inactive-value="N">
+          </el-switch>
+        </el-form-item>
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">

@@ -163,7 +163,7 @@ public class ContentDTO {
 	/**
 	 * 发布通道配置
 	 */
-	private List<PublishPipeProp> publishPipeTemplates;
+	private List<PublishPipeProp> publishPipeProps;
 	
 	/**
 	 * 栏目扩展配置

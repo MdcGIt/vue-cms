@@ -8,19 +8,33 @@
       @before-init="handleBeforeInit"
       @ready="handleReady"
       :style="styles" />
-
+    <!-- 素材库 -->
     <cms-resource-dialog 
       :open.sync="openResourceDialog"
       :upload-limit="100" 
       :rtype="resourceType"
       @ok="handleResourceDialogOk">
     </cms-resource-dialog>
+    <!-- 栏目选择组件 -->
+    <cms-catalog-selector
+      :open="openCatalogSelector"
+      @ok="handleCatalogSelectorOk"
+      @close="handleCatalogSelectorClose"></cms-catalog-selector>
+    <!-- 内容选择组件 -->
+    <cms-content-selector
+      :open="openContentSelector"
+      :contentType="contentType"
+      @ok="handleContentSelectorOk"
+      @close="handleContentSelectorClose"></cms-content-selector>
+    <!-- 第三方视频 -->
     <cms-third-video :open.sync="openThirdVideoDialog" @ok="handleThirdVideoDialogOk"></cms-third-video>
   </div>
 </template>
 
 <script>
 import VueUEditorWrap from '@/components/UEditorWrap';
+import CMSCatalogSelector from "@/views/cms/contentcore/catalogSelector";
+import CMSContentSelector from "@/views/cms/contentcore/contentSelector";
 import CMSResourceDialog from "@/views/cms/contentcore/resourceDialog";
 import CMSUeditorThirdVideo from "./thrid-video";
 
@@ -42,6 +56,8 @@ export default {
   },
   components: {
     "vue-ueditor-wrap": VueUEditorWrap,
+    'cms-catalog-selector': CMSCatalogSelector,
+    'cms-content-selector': CMSContentSelector,
     "cms-resource-dialog": CMSResourceDialog,
     "cms-third-video": CMSUeditorThirdVideo
   },
@@ -87,6 +103,9 @@ export default {
         enablePasteUpload: false,
         imagePopup: true,
         pageBreakTag: '__XY_UEDITOR_PAGE_BREAK__',
+        iframeCssUrlsAddition: [
+          UE_HOME + 'themes/placeholder.css'
+        ],
         lang: this.$i18n.locale ? this.$i18n.locale.toLowerCase() : 'zh-cn',
         langPath: UE_HOME + "lang/",
         iframeUrlMap: {
@@ -170,6 +189,7 @@ export default {
             "emotion",             // 表情
             // "scrawl",              // 涂鸦
             'xy-resource',
+            'xy-content',
             "xy-third-video",         // 视频
             // "insertframe",         // 插入Iframe
             "insertcode",          // 插入代码
@@ -206,6 +226,9 @@ export default {
       openResourceDialog: false,
       resourceType: 'image',
       openThirdVideoDialog: false,
+      openCatalogSelector: false,
+      openContentSelector: false,
+      contentType: ''
     };
   },
   methods: {
@@ -213,11 +236,99 @@ export default {
     },
     handleBeforeInit(editorId) {
       console.log('ueditor-plus.before-init', editorId)
+      this.addXyContentButton(editorId)
       this.addXyResourceButton(editorId)
       this.addThirdVideoButton(editorId)
     },
     handleReady(editorInstance) {
       console.log('ueditor-plus.ready: ' + editorInstance.key, editorInstance)
+    },
+    addXyContentButton(eidtorId) {
+      const that = this
+      window.UE.registerUI('xy-content', function (editor, uiName) {
+        editor.registerCommand(uiName,{
+          execCommand:function(cmdName,value){
+            that.handleXyContentButtonClick(cmdName, value);
+          }
+        });
+        const _onMenuClick = function() {
+            editor.execCommand(uiName, this.value);
+          }
+        const items = [
+          {
+            label: "栏目链接",
+            value: "catalog",
+            theme: editor.options.theme,
+            onclick: _onMenuClick
+          },
+          {
+            label: "内容链接",
+            value: "content",
+            theme: editor.options.theme,
+            onclick: _onMenuClick
+          },
+          {
+            label: "组图",
+            value: "img_group",
+            theme: editor.options.theme,
+            onclick: _onMenuClick
+          }
+        ];
+        const ui = new UE.ui.MenuButton({
+          editor: editor,
+          className: "edui-for-" + uiName,
+          title: "插入内容",
+          items: items,
+          onbuttonclick: function() {
+            editor.execCommand(uiName, that.contentType);
+          }
+        });
+        return ui;
+      });
+    },
+    handleXyContentButtonClick(cmd, value) {
+      if (value == 'catalog') {
+        this.openCatalogSelector = true
+      } else {
+        if (value == 'img_group') {
+          this.contentType = "image"
+        }
+        this.openContentSelector = true
+      }
+    },
+    handleCatalogSelectorOk(catalogs) {
+      if (catalogs && catalogs.length > 0) {
+        console.log(catalogs)
+        var editor = window.UE.getEditor('ueditor')
+        editor.execCommand("insertHTML", '<a href="' + catalogs[0].props.internalUrl + '">' + catalogs[0].name + '</a>');
+        this.openCatalogSelector = false;
+      } else {
+        this.$modal.msgWarning(this.$t('Common.SelectFirst'));
+      }
+    },
+    handleCatalogSelectorClose() {
+      this.openCatalogSelector = false;
+    },
+    handleContentSelectorOk(contents) {
+      if (contents && contents.length > 0) {
+        console.log(contents)
+        var editor = window.UE.getEditor('ueditor')
+        if (this.contentType == 'image') {
+          // 插入组图
+          const html = '<p class="text-align:center;"><img src="/UEditorPlus/themes/default/images/spacer.gif" ex_cid="'
+            + contents[0].contentId + '" title="' + contents[0].title + '" class="img_group_placeholder" /></p>'
+          editor.execCommand("insertHTML", html);
+        } else {
+          editor.execCommand("insertHTML", '<a href="' + contents[0].internalUrl + '">' + contents[0].title + '</a>');
+        }
+        this.openContentSelector = false;
+      } else {
+        this.$modal.msgWarning(this.$t('Common.SelectFirst'));
+      }
+    },
+    handleContentSelectorClose() {
+      this.openContentSelector = false;
+      this.contentType = ''
     },
     addXyResourceButton(editorId) {
       const that = this
@@ -326,5 +437,8 @@ export default {
 }
 .edui-for-xy-third-video .edui-button-body .edui-icon {
   background-image: url('./images/video.png') !important;
+}
+.edui-for-xy-content .edui-menubutton-body .edui-icon {
+  background-image: url('./images/content.png') !important;
 }
 </style>

@@ -2,6 +2,7 @@ package com.ruoyi.article.service;
 
 import com.ruoyi.article.domain.CmsArticleDetail;
 import com.ruoyi.common.mybatisplus.IBackupService;
+import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
 
 /**
@@ -26,10 +27,9 @@ public interface IArticleService extends IBackupService<CmsArticleDetail> {
 	 * 下载远程图片
 	 * 
 	 * @param content
-	 * @param siteId
+	 * @param site
 	 * @param operator
 	 * @return
 	 */
 	String downloadRemoteImages(String content, CmsSite site, String operator);
-
 }

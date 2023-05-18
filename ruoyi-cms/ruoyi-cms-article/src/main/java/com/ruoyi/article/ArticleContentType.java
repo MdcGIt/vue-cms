@@ -1,7 +1,9 @@
 package com.ruoyi.article;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -39,19 +41,19 @@ import lombok.RequiredArgsConstructor;
 public class ArticleContentType implements IContentType {
 
     public final static String ID = "article";
-    
+
     private final static String NAME = "{CMS.CONTENTCORE.CONTENT_TYPE." + ID + "}";
-    
+
     private final CmsContentMapper contentMapper;
 
     private final CmsArticleDetailMapper articleMapper;
-    
+
     private final ICatalogService catalogService;
-    
+
     private final IArticleService articleService;
-    
+
     private final IPublishPipeService publishPipeService;
-    
+
     @Override
     public String getId() {
         return ID;
@@ -67,88 +69,99 @@ public class ArticleContentType implements IContentType {
         return "cms/article/editor";
     }
 
-	@Override
-	public IContent<?> loadContent(CmsContent xContent) {
-		ArticleContent articleContent = new ArticleContent();
-		articleContent.setContentEntity(xContent);
-		CmsArticleDetail articleDetail = this.articleMapper.selectById(xContent.getContentId());
-		articleContent.setExtendEntity(articleDetail);
-		return articleContent;
-	}
+    @Override
+    public IContent<?> loadContent(CmsContent xContent) {
+        ArticleContent articleContent = new ArticleContent();
+        articleContent.setContentEntity(xContent);
+        CmsArticleDetail articleDetail = this.articleMapper.selectById(xContent.getContentId());
+        articleContent.setExtendEntity(articleDetail);
+        return articleContent;
+    }
 
-	@Override
-	public IContent<?> readRequest(HttpServletRequest request) throws IOException {
-		ArticleDTO dto = JacksonUtils.from(request.getInputStream(), ArticleDTO.class);
+    @Override
+    public IContent<?> readRequest(HttpServletRequest request) throws IOException {
+        ArticleDTO dto = JacksonUtils.from(request.getInputStream(), ArticleDTO.class);
 
-		CmsContent contentEntity;
-		if (dto.getOpType() == ContentOpType.UPDATE) {
-			contentEntity = this.contentMapper.selectById(dto.getContentId());
-			Assert.notNull(contentEntity,
-					() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", dto.getContentId()));
-		} else {
-			contentEntity = new CmsContent();
-		}
-		BeanUtils.copyProperties(dto, contentEntity);
-		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
-		contentEntity.setSiteId(catalog.getSiteId());
-		contentEntity.setAttributes(ContentAttribute.convertInt(dto.getAttributes()));
+        CmsContent contentEntity;
+        if (dto.getOpType() == ContentOpType.UPDATE) {
+            contentEntity = this.contentMapper.selectById(dto.getContentId());
+            Assert.notNull(contentEntity,
+                    () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", dto.getContentId()));
+        } else {
+            contentEntity = new CmsContent();
+        }
+        BeanUtils.copyProperties(dto, contentEntity);
+        CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
+        contentEntity.setSiteId(catalog.getSiteId());
+        contentEntity.setAttributes(ContentAttribute.convertInt(dto.getAttributes()));
+        // 发布通道配置
+        Map<String, Map<String, Object>> publishPipProps = new HashMap<>();
+        dto.getPublishPipeProps().forEach(prop -> {
+            publishPipProps.put(prop.getPipeCode(), prop.getProps());
+        });
+        contentEntity.setPublishPipeProps(publishPipProps);
 
-		CmsArticleDetail extendEntity = new CmsArticleDetail();
-		BeanUtils.copyProperties(dto, extendEntity);
-		
-		ArticleContent content = new ArticleContent();
-		content.setContentEntity(contentEntity);
-		content.setExtendEntity(extendEntity);
-		content.setParams(dto.getParams());
-		if (content.hasExtendEntity() && StringUtils.isEmpty(extendEntity.getContentHtml())) {
-			throw CommonErrorCode.NOT_EMPTY.exception("contentHtml");
-		}
-		return content;
-	}
+        CmsArticleDetail extendEntity = new CmsArticleDetail();
+        BeanUtils.copyProperties(dto, extendEntity);
 
-	@Override
-	public ContentVO initEditor(Long catalogId, Long contentId) {
-		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
-		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
-		List<CmsPublishPipe> publishPipes = this.publishPipeService.getPublishPipes(catalog.getSiteId());
-		ArticleVO vo;
-		if (IdUtils.validate(contentId)) {
-			CmsContent contentEntity = this.contentMapper.selectById(contentId);
-			Assert.notNull(contentEntity, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
+        ArticleContent content = new ArticleContent();
+        content.setContentEntity(contentEntity);
+        content.setExtendEntity(extendEntity);
+        content.setParams(dto.getParams());
+        if (content.hasExtendEntity() && StringUtils.isEmpty(extendEntity.getContentHtml())) {
+            throw CommonErrorCode.NOT_EMPTY.exception("contentHtml");
+        }
+        return content;
+    }
 
-			CmsArticleDetail extendEntity = this.articleMapper.selectById(contentId);
-			vo = ArticleVO.newInstance(contentEntity, extendEntity);
-			if (StringUtils.isNotEmpty(vo.getLogo())) {
-				vo.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(vo.getLogo()));
-			}
-		} else {
-			vo = new ArticleVO();
-			vo.setContentId(IdUtils.getSnowflakeId());
-			vo.setCatalogId(catalog.getCatalogId());
-			vo.setContentType(ID);
-			// 发布通道初始数据
-			vo.setPublishPipe(publishPipes.stream().map(CmsPublishPipe::getCode).toArray(String[]::new));
-		}
-		vo.setCatalogName(catalog.getName());
-		// 发布通道模板数据
-		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(), PublishPipePropUseType.Content, vo.getPublishPipeProps());
-		vo.setPublishPipeTemplates(publishPipeProps);
-		return vo;
-	}
-	
-	@Override
-	public void recover(Long contentId) {
-		Long backupId = this.articleMapper.selectBackupIdByContentId(contentId);
-		if (IdUtils.validate(backupId)) {
-			this.articleService.recover(backupId, CmsArticleDetail.class);
-		}
-	}
-	
-	@Override
-	public void deleteBackups(Long contentId) {
-		Long backupId = this.articleMapper.selectBackupIdByContentId(contentId);
-		if (IdUtils.validate(backupId)) {
-			this.articleService.deleteBackups(List.of(backupId), CmsArticleDetail.class);
-		}
-	}
+    @Override
+    public ContentVO initEditor(Long catalogId, Long contentId) {
+        CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
+        Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
+        List<CmsPublishPipe> publishPipes = this.publishPipeService.getPublishPipes(catalog.getSiteId());
+        ArticleVO vo;
+        if (IdUtils.validate(contentId)) {
+            CmsContent contentEntity = this.contentMapper.selectById(contentId);
+            Assert.notNull(contentEntity, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
+
+            CmsArticleDetail extendEntity = this.articleMapper.selectById(contentId);
+            vo = ArticleVO.newInstance(contentEntity, extendEntity);
+            if (StringUtils.isNotEmpty(vo.getLogo())) {
+                vo.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(vo.getLogo()));
+            }
+            // 发布通道模板数据
+            List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(),
+                    PublishPipePropUseType.Content, contentEntity.getPublishPipeProps());
+            vo.setPublishPipeProps(publishPipeProps);
+        } else {
+            vo = new ArticleVO();
+            vo.setContentId(IdUtils.getSnowflakeId());
+            vo.setCatalogId(catalog.getCatalogId());
+            vo.setContentType(ID);
+            // 发布通道初始数据
+            vo.setPublishPipe(publishPipes.stream().map(CmsPublishPipe::getCode).toArray(String[]::new));
+            // 发布通道模板数据
+            List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(),
+                    PublishPipePropUseType.Content, null);
+            vo.setPublishPipeProps(publishPipeProps);
+        }
+        vo.setCatalogName(catalog.getName());
+        return vo;
+    }
+
+    @Override
+    public void recover(Long contentId) {
+        Long backupId = this.articleMapper.selectBackupIdByContentId(contentId);
+        if (IdUtils.validate(backupId)) {
+            this.articleService.recover(backupId, CmsArticleDetail.class);
+        }
+    }
+
+    @Override
+    public void deleteBackups(Long contentId) {
+        Long backupId = this.articleMapper.selectBackupIdByContentId(contentId);
+        if (IdUtils.validate(backupId)) {
+            this.articleService.deleteBackups(List.of(backupId), CmsArticleDetail.class);
+        }
+    }
 }

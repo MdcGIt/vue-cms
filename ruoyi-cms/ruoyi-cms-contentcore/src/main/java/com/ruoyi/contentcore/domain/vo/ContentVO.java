@@ -187,9 +187,9 @@ public class ContentVO {
     private String[] publishPipe;
     
     /**
-     * 独立模板
+     * 发布通道配置
      */
-    private Map<String, Map<String, Object>> publishPipeProps;
+    private List<PublishPipeProp> publishPipeProps;
     
     /**
      * 备注
@@ -200,11 +200,6 @@ public class ContentVO {
 	 * 创建时间
 	 */
 	private LocalDateTime createTime;
-	
-	/**
-	 * 发布通道配置
-	 */
-	private List<PublishPipeProp> publishPipeTemplates;
 	
 	/**
 	 * 栏目扩展配置

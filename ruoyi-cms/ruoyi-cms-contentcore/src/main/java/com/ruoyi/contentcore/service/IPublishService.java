@@ -135,6 +135,19 @@ public interface IPublishService {
 	void contentStaticize(CmsContent cmsContent);
 
 	/**
+	 * 获取内容扩展模板解析内容
+	 *
+	 * @param content
+	 * @param publishPipeCode
+	 * @param isPreview
+	 * @return
+	 * @throws IOException
+	 * @throws TemplateException
+	 */
+    String getContentExPageData(CmsContent content, String publishPipeCode, boolean isPreview)
+            throws IOException, TemplateException;
+
+    /**
 	 * 获取页面部件模板解析内容
 	 * 
 	 * @param pageWidget
