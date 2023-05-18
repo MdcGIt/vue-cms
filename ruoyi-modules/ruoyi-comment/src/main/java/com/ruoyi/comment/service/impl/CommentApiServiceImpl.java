@@ -78,6 +78,11 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		lock.lock();
 		try {
 			if (increase) {
+				Long count = this.commentLikeMapper.selectCount(new LambdaQueryWrapper<CommentLike>()
+						.eq(CommentLike::getCommentId, comment.getCommentId()).eq(CommentLike::getUid, uid));
+				if (count > 0) {
+					return;
+				}
 				this.commentMapper.incrCommentLikeCount(comment.getCommentId());
 				CommentLike commentLike = new CommentLike();
 				commentLike.setCommentId(comment.getCommentId());
