@@ -82,9 +82,17 @@ export default {
       type: Boolean,
       default: false,
       required: true
+    },
+    contentType: {
+      type: String,
+      default: '',
+      required: false
     }
   },
   watch: {
+    contentType (newVal) {
+      this.queryParams.contentType = newVal
+    },
     open () {
       this.visible = this.open;
     },
@@ -108,6 +116,7 @@ export default {
         pageSize: 10,
         status: 30,
         catalogId: '',
+        contentType: '',
         query: ''
       }
     };
@@ -148,6 +157,7 @@ export default {
     handleClose () {
       this.$emit("close");
       this.resetForm("queryForm");
+      this.queryParams.contentType = ''
       this.selectedContents = [];
       this.contentList = [];
     },

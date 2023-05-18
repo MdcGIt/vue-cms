@@ -69,7 +69,6 @@ public class RequestEvent {
 	 * 提取request请求信息到RequestEvent
 	 * 
 	 * @param request
-	 * @param evt
 	 */
 	public void fill(HttpServletRequest request) {
 		this.setHost(request.getRemoteHost());

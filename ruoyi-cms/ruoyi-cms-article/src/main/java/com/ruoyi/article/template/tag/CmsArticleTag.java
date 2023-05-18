@@ -1,14 +1,5 @@
 package com.ruoyi.article.template.tag;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.stereotype.Component;
-
 import com.ruoyi.article.domain.CmsArticleDetail;
 import com.ruoyi.article.mapper.CmsArticleDetailMapper;
 import com.ruoyi.common.staticize.FreeMarkerUtils;
@@ -21,12 +12,18 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.enums.ContentCopyType;
 import com.ruoyi.contentcore.mapper.CmsContentMapper;
-import com.ruoyi.contentcore.util.InternalUrlUtils;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
@@ -46,7 +43,7 @@ public class CmsArticleTag extends AbstractTag {
 //	private static final String PAGE_BREAK_SPLITER = "<div[^>]+class=['\"]page-break['\"].*?</div>";
 	private static final String PAGE_BREAK_SPLITER = "__XY_UEDITOR_PAGE_BREAK__";
 
-	
+
 	private final CmsContentMapper contentMapper;
 
 	private final CmsArticleDetailMapper articleMapper;
@@ -98,8 +95,6 @@ public class CmsArticleTag extends AbstractTag {
 					this.wrap(env, context.getPageTotal()));
 			contentHtml = pageContents[context.getPageIndex() - 1];
 		}
-		// 处理正文内部链接
-		contentHtml = InternalUrlUtils.dealInternalUrl(contentHtml, context.getPublishPipeCode(), context.isPreview());
 		return Map.of(TemplateVariable_ArticleContent, this.wrap(env, contentHtml));
 	}
 

@@ -171,7 +171,7 @@
                   </el-form-item>
                   <el-form-item :label="$t('CMS.Content.PublishPipe')" prop="publishPipe">
                     <el-checkbox-group v-model="form.publishPipe">
-                      <el-checkbox v-for="pp in publishPipeTemplates" :label="pp.pipeCode" :key="pp.pipeCode">{{ pp.pipeName }}</el-checkbox>
+                      <el-checkbox v-for="pp in publishPipeProps" :label="pp.pipeCode" :key="pp.pipeCode">{{ pp.pipeName }}</el-checkbox>
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item :label="$t('CMS.Content.StaticPath')">
@@ -181,7 +181,7 @@
                     <el-switch v-model="showTemplate" @change="handleShowTemplateChange" />
                   </el-form-item>
                   <el-form-item v-show="showTemplate" 
-                                v-for="pp in publishPipeTemplates" 
+                                v-for="pp in publishPipeProps" 
                                 :label="pp.pipeName" 
                                 :key="pp.pipeCode" 
                                 :prop="'template_' + pp.value">
@@ -190,8 +190,16 @@
                     </el-input>
                   </el-form-item>
                 </el-tab-pane>
-                <!-- <el-tab-pane label="扩展配置" name="extend">
-                </el-tab-pane> -->
+                <el-tab-pane label="扩展配置" name="extend">
+                  <el-form-item v-for="pp in publishPipeProps" 
+                                :label="'[' + pp.pipeCode + ']扩展模板'" 
+                                :key="pp.pipeCode + '_ex'" 
+                                :prop="'contentExTemplate_' + pp.value">
+                    <el-input v-model="pp.props.contentExTemplate">
+                      <el-button slot="append" icon="el-icon-folder-opened" @click="handleSelectTemplate(pp, true)"></el-button>
+                    </el-input>
+                  </el-form-item>
+                </el-tab-pane>
               </el-tabs>
             </el-card>
           </div>
@@ -304,7 +312,7 @@ export default {
         keywords:[]
       },
       initDataStr: undefined, // 初始化数据jsonString
-      publishPipeTemplates: [],
+      publishPipeProps: [],
       rules: {
         title: [{ required: true, message: this.$t('CMS.Content.RuleTips.Title'), trigger: "blur" }]
       },
@@ -312,6 +320,7 @@ export default {
       summaryInputSize: { minRows: 3, maxRows: 6 },
       openTemplateSelector: false, // 模板选择弹窗
       publishPipeActiveName: "",
+      selectExTemplate: false
     };
   },
   created() {
@@ -345,11 +354,11 @@ export default {
         this.catalogId = this.form.catalogId;
         this.contentId = this.form.contentId;
         this.contentType = this.form.contentType;
-        this.publishPipeTemplates = this.form.publishPipeTemplates;
+        this.publishPipeProps = this.form.publishPipeProps;
         this.showOtherTitle = 'Y' === this.form.showSubTitle || (this.form.shortTitle && this.form.shortTitle.length > 0) 
           || (this.form.subTitle && this.form.subTitle.length > 0);
-        this.publishPipeTemplates.forEach(pp => {
-          if (pp.props.template != null && pp.props.template != "") {
+        this.publishPipeProps.forEach(pp => {
+          if (pp.props.template && pp.props.template.length > 0) {
             this.showTemplate = true;
           }
         });
@@ -398,21 +407,26 @@ export default {
     },
     handleShowTemplateChange() {
       if (!this.showTemplate) {
-        this.publishPipeTemplates.forEach((pp, i) => {
+        this.publishPipeProps.forEach((pp, i) => {
           pp.props.template = "";
         });
       }
     },
-    handleSelectTemplate(publishPipe) {
+    handleSelectTemplate(publishPipe, extend = false) {
       this.publishPipeActiveName = publishPipe.pipeCode;
+      this.selectExTemplate = extend
       this.$nextTick(() => {
         this.openTemplateSelector = true;
       })
     },
     handleTemplateSelected (template) {
-      this.publishPipeTemplates.map(pp => {
+      this.publishPipeProps.map(pp => {
         if (pp.pipeCode == this.publishPipeActiveName) {
-          pp.props.template = template;
+          if (this.selectExTemplate) {
+            pp.props.contentExTemplate = template;
+          } else {
+            pp.props.template = template;
+          }
         }
       });
       this.openTemplateSelector = false;
@@ -438,7 +452,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.template = {};
-          this.publishPipeTemplates.map(item => {
+          this.publishPipeProps.map(item => {
             this.form.template[item.pipeCode] = item.props.template;
           });
           if (this.xmodelVisible) {

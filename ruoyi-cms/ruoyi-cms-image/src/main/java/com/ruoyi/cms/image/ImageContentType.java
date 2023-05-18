@@ -1,7 +1,9 @@
 package com.ruoyi.cms.image;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
@@ -97,6 +99,12 @@ public class ImageContentType implements IContentType {
 		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
 		contentEntity.setSiteId(catalog.getSiteId());
 		contentEntity.setAttributes(ContentAttribute.convertInt(dto.getAttributes()));
+		// 发布通道配置
+		Map<String, Map<String, Object>> publishPipProps = new HashMap<>();
+		dto.getPublishPipeProps().forEach(prop -> {
+			publishPipProps.put(prop.getPipeCode(), prop.getProps());
+		});
+		contentEntity.setPublishPipeProps(publishPipProps);
 
 		List<CmsImage> imageList = dto.getImageList();
 
@@ -128,6 +136,10 @@ public class ImageContentType implements IContentType {
 			if (StringUtils.isNotEmpty(vo.getLogo())) {
 				vo.setLogoSrc(InternalUrlUtils.getActualPreviewUrl(vo.getLogo()));
 			}
+			// 发布通道模板数据
+			List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(),
+					PublishPipePropUseType.Content, contentEntity.getPublishPipeProps());
+			vo.setPublishPipeProps(publishPipeProps);
 		} else {
 			vo = new ImageAlbumVO();
 			vo.setContentId(IdUtils.getSnowflakeId());
@@ -135,12 +147,12 @@ public class ImageContentType implements IContentType {
 			vo.setContentType(ID);
 			// 发布通道初始数据
 			vo.setPublishPipe(publishPipes.stream().map(CmsPublishPipe::getCode).toArray(String[]::new));
+			// 发布通道模板数据
+			List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(),
+					PublishPipePropUseType.Content, null);
+			vo.setPublishPipeProps(publishPipeProps);
 		}
 		vo.setCatalogName(catalog.getName());
-		// 发布通道模板数据
-		List<PublishPipeProp> publishPipeProps = this.publishPipeService.getPublishPipeProps(catalog.getSiteId(),
-				PublishPipePropUseType.Content, vo.getPublishPipeProps());
-		vo.setPublishPipeTemplates(publishPipeProps);
 		return vo;
 	}
 

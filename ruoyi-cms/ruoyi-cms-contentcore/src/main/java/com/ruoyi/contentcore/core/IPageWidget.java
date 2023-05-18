@@ -29,7 +29,7 @@ public interface IPageWidget {
 	/**
 	 * 操作人
 	 * 
-	 * @param userdata
+	 * @param loginUser
 	 */
 	public void setOperator(LoginUser loginUser);
 

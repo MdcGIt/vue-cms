@@ -4,6 +4,15 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.ruoyi.contentcore.core.IInternalDataType;
+import com.ruoyi.contentcore.core.impl.InternalDataType_PageWidget;
+import com.ruoyi.contentcore.domain.*;
+import com.ruoyi.contentcore.properties.EnableSSI;
+import com.ruoyi.contentcore.service.*;
+import com.ruoyi.contentcore.template.tag.CmsIncludeTag;
+import com.ruoyi.contentcore.util.ContentCoreUtils;
+import com.ruoyi.contentcore.util.ContentUtils;
+import com.ruoyi.contentcore.util.PageWidgetUtils;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,9 +22,6 @@ import com.ruoyi.article.service.IArticleService;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.contentcore.domain.CmsResource;
-import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.service.IResourceService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ArticleServiceImpl extends ServiceImpl<CmsArticleDetailMapper, CmsArticleDetail>
 		implements IArticleService {
-	
+
 	/**
 	 * 带src属性的图片标签匹配
 	 */
@@ -38,17 +44,25 @@ public class ArticleServiceImpl extends ServiceImpl<CmsArticleDetailMapper, CmsA
      */
 	private static final Pattern IUrlTagPattern = Pattern.compile("<[^>]+iurl\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>",
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
-	
+
 	private static final Pattern TagAttrSrcPattern = Pattern.compile("src\\s*=\\s*['\"]([^'\"]+)['\"]",
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
-	
+
 	private static final Pattern TagAttrHrefPattern = Pattern.compile("href\\s*=\\s*['\"]([^'\"]+)['\"]",
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
-	
+
 	private static final Pattern TagAttrIUrlPattern = Pattern.compile("iurl\\s*=\\s*['\"]([^'\"]+)['\"]",
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
 
 	private final IResourceService resourceService;
+
+	private final IPageWidgetService pageWidgetService;
+
+	private final ISiteService siteService;
+
+	private final ICatalogService catalogService;
+
+	private final IContentService contentService;
 
 	@Override
 	public String saveInternalUrl(String content) {
@@ -61,7 +75,7 @@ public class ArticleServiceImpl extends ServiceImpl<CmsArticleDetailMapper, CmsA
 		while (matcher.find(lastEndIndex)) {
 			int s = matcher.start();
 			sb.append(content.substring(lastEndIndex, s));
-			
+
 			String tagStr = matcher.group();
 			String iurl = matcher.group(1);
 			// begin
@@ -119,10 +133,10 @@ public class ArticleServiceImpl extends ServiceImpl<CmsArticleDetailMapper, CmsA
 					}
 				} else if (!InternalUrlUtils.isInternalUrl(src) && ServletUtils.isHttpUrl(src)) {
 					// 非iurl的http链接则下载图片
-						CmsResource resource = resourceService.downloadImageFromUrl(src, site.getSiteId(), operator);
-						if (Objects.nonNull(resource)) {
-							imgTag = StringUtils.replaceEx(imgTag, src, resource.getInternalUrl());
-						}
+					CmsResource resource = resourceService.downloadImageFromUrl(src, site.getSiteId(), operator);
+					if (Objects.nonNull(resource)) {
+						imgTag = StringUtils.replaceEx(imgTag, src, resource.getInternalUrl());
+					}
 				}
 			} catch (Exception e1) {
 				String imgSrc = (src.startsWith("data:image/") ? src.substring(0, 20) : src);

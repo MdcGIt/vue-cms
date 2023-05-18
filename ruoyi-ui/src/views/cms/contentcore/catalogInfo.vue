@@ -202,6 +202,21 @@
                 @click="handleApplyToChildren(`detailTemplate_${ct.id}`)"
               >{{ $t('CMS.Catalog.ApplyToChildren') }}</el-button>
             </el-form-item>
+            <el-form-item :label="$t('CMS.Catalog.ContentExTemplate')" prop="contentExTemplate">
+              <el-input v-model="pp.props.contentExTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('contentExTemplate')"
+                >{{ $t("Common.Select") }}</el-button>
+              </el-input>
+              <el-button 
+                plain 
+                class="ml5"
+                icon="el-icon-bottom-right" 
+                type="primary" 
+                @click="handleApplyToChildren('contentExTemplate')">{{ $t('CMS.Catalog.ApplyToChildren') }}</el-button>
+            </el-form-item>
           </el-tab-pane>
         </el-tabs>
       </el-card>

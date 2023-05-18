@@ -81,4 +81,12 @@ public interface IPageWidgetService extends IService<CmsPageWidget> {
 	 * @return
 	 */
 	boolean checkCodeUnique(Long siteId, String code, Long pageWidgetId);
+
+	/**
+	 * 获取页面部件缓存数据
+	 *
+	 * @param code
+	 * @return
+	 */
+    CmsPageWidget getPageWidget(Long siteId, String code);
 }
