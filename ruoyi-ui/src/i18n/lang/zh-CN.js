@@ -1015,7 +1015,9 @@ export default {
       SaveProgressTitle: "保存内容中",
       SortDialogTitle: "内容排序",
       SortDialogTip: "内容将会排在下方列表选中的内容之前，选中内容置顶则排序内容也会添加置顶状态，反之则会取消置顶状态。",
-      CloseContentEditorTip: "关闭页面会导致未保存的内容丢失，确认关闭吗？"
+      CloseContentEditorTip: "关闭页面会导致未保存的内容丢失，确认关闭吗？",
+      ExtendConfig: "扩展配置",
+      ExtendTemplate: "扩展模板",
     },
     Image: {
       Title: "标题",
@@ -1025,6 +1027,8 @@ export default {
       MoveDown: "下移",
       SetLogo: "设为LOGO",
       Add: "添加图片",
+      WidthHeight: "宽高",
+      FileSize: "大小"
     },
     Audio: {
       Parameter: "参数",

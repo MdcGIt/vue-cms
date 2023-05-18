@@ -1015,7 +1015,9 @@ export default {
       SaveProgressTitle: "Content Saving",
       SortDialogTitle: "Content Sort",
       SortDialogTip: "The content will be sort before the selected content in this list. If the selected content is at the top, the sorting content will also be added to the top status, and if not, the top status will be cancelled.",
-      CloseContentEditorTip: "Closing the page will lose unsaved content. Are you sure to close?"
+      CloseContentEditorTip: "Closing the page will lose unsaved content. Are you sure to close?",
+      ExtendConfig: "Extend",
+      ExtendTemplate: "Extend Template",
     },
     Image: {
       Title: "Title",
@@ -1025,6 +1027,8 @@ export default {
       MoveDown: "Down",
       SetLogo: "Set LOGO",
       Add: "Add Image",
+      WidthHeight: "Width&Height",
+      FileSize: "Size"
     },
     Audio: {
       Parameter: "Parameter",
