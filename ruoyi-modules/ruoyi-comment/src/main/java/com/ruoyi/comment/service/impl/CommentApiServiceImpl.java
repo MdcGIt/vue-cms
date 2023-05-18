@@ -78,15 +78,15 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		lock.lock();
 		try {
 			if (increase) {
-				this.commentLikeMapper.delete(new LambdaQueryWrapper<CommentLike>()
-						.eq(CommentLike::getCommentId, comment.getCommentId()).eq(CommentLike::getUid, uid));
 				this.commentMapper.incrCommentLikeCount(comment.getCommentId());
-			} else {
 				CommentLike commentLike = new CommentLike();
 				commentLike.setCommentId(comment.getCommentId());
 				commentLike.setUid(uid);
 				commentLike.setLikeTime(LocalDateTime.now());
 				this.commentLikeMapper.insert(commentLike);
+			} else {
+				this.commentLikeMapper.delete(new LambdaQueryWrapper<CommentLike>()
+						.eq(CommentLike::getCommentId, comment.getCommentId()).eq(CommentLike::getUid, uid));
 				this.commentMapper.decrCommentLikeCount(comment.getCommentId());
 			}
 		} finally {
