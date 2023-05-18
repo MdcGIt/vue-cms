@@ -191,8 +191,7 @@
                   </el-form-item>
                 </el-tab-pane>
                 <el-tab-pane label="扩展配置" name="extend">
-                  <el-form-item v-show="form.contentType=='image'" 
-                                v-for="pp in publishPipeProps" 
+                  <el-form-item v-for="pp in publishPipeProps" 
                                 :label="'[' + pp.pipeCode + ']扩展模板'" 
                                 :key="pp.pipeCode + '_ex'" 
                                 :prop="'contentExTemplate_' + pp.value">
