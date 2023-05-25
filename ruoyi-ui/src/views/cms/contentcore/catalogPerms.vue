@@ -187,12 +187,32 @@ export default {
       }
     },
     handleRowSelectAll(checked, row) {
-      if (!(row.children && row.children.length > 0)) {
-        this.selectRowAll(this.catalogPrivs, checked, row.catalogId)
-      } else {
-        this.selectCatalogPrivs(row.children, checked)
-      }
-      this.handleRowsSelect(checked, row)
+      this.$nextTick(() => {
+        if (!(row.children && row.children.length > 0)) {
+          if (checked) {
+            // 如果是选中状态，则选中所有子权限
+            this.selectRowAll(this.catalogPrivs, checked, row.catalogId)
+          } else {
+            // 如果是取消，要判断所有子项是否都是取消状态
+            let childrenChecked = false
+            Object.keys(row.perms).forEach(key => {
+              if (key !== 'View' && row.perms[key]) {
+                childrenChecked = true
+              }
+            })
+            if (childrenChecked) {
+              // 权限如果还有选择，取消所有选择，仅保留 View 权限
+              Object.keys(row.perms).forEach(key => {
+                row.perms[key] = false;
+              })
+              row.perms['View'] = true;
+            }
+          }
+        } else {
+          this.selectCatalogPrivs(row.children, checked)
+        }
+        this.handleRowsSelect(checked, row)
+      })
     },
     selectRowAll(arr, value, catalogId) {
       arr.some(row => {
@@ -231,19 +251,6 @@ export default {
       if (checked) {
         row.perms['View'] = true;
         this.handleRowsSelect(checked, row)
-      } else {
-        // 如果是取消，要判断所有子项是否都是取消状态
-        let childrenChecked = false
-        Object.keys(row.perms).forEach(key => {
-          if (key !== 'View' && row.perms[key]) {
-            childrenChecked = true
-          }
-        })
-        if (!childrenChecked) {
-          // 全部取消，则设定取消，否则选中保持
-          row.perms['View'] = false;
-          this.handleRowsSelect(checked, row)
-        }
       }
     },
     handleSave() {
