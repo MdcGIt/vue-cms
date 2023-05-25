@@ -20,7 +20,7 @@
     </el-row>
     <el-row>
       <el-col>
-        <el-table 
+        <el-table
           v-loading="loading"
           :data="catalogPrivs"
           :height="tableHeight"
@@ -28,18 +28,18 @@
           row-key="catalogId"
           default-expand-all
           style="width:100%;line-height: normal;">
-          <el-table-column :label="$t('CMS.Catalog.Name')" width="200">
+          <el-table-column :label="$t('CMS.Catalog.Name')" width="220">
             <template slot-scope="scope">
-                <el-checkbox @change="handleRowSelectAll($event, scope.row.catalogId)" v-model="scope.row.perms['View']">{{ scope.row.name }}</el-checkbox>
+                <el-checkbox @change="handleRowSelectAll($event, scope.row)" v-model="scope.row.perms['View']">{{ scope.row.name }}</el-checkbox>
             </template>
           </el-table-column>
           <template v-for="(item, index) in catalogPrivItems">
-            <el-table-column :key="index" :label="item.name" v-if="item.id!='View'" width="100">
+            <el-table-column :key="index" :label="item.name" v-if="item.id!='View'">
               <template slot="header">
                 <el-checkbox @change="handleColumnSelectAll(item.id)">{{ item.name }}</el-checkbox>
               </template>
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.perms[item.id]" @change="handleRowColumnChange($event, scope.row)"></el-checkbox>
+                <el-checkbox v-if="!(scope.row.children && scope.row.children.length > 0)" v-model="scope.row.perms[item.id]" @change="handleRowColumnChange($event, scope.row)"></el-checkbox>
               </template>
             </el-table-column>
           </template>
@@ -96,7 +96,7 @@ export default {
       currentSiteId: "",
       siteOptions: []
     };
-  }, 
+  },
   created () {
     this.changeTableHeight();
     this.loadData();
@@ -138,8 +138,61 @@ export default {
         }
       });
     },
-    handleRowSelectAll(value, catalogId) {
-      this.selectRowAll(this.catalogPrivs, value, catalogId)
+    handleRowsSelect(checked, row) {
+      let {parentId, catalogId} = row;
+      // 子节点被选中，自动处理父节点
+      if (parentId !== "0") {
+        // 如果是一级栏目，就不用寻找父级点，可直接处理
+        // 是否找到路径
+        let _findEd = false
+
+        const _setCheck = (item) => {
+          const {children} = item
+          // 如果找到路径，则进行选择处理
+          if (checked) {
+            // 如果是选择，则无条件选择即可
+            item.perms['View'] = checked
+          } else {
+            // 如果是取消，要判断所有子项是否都是取消状态
+            let childrenChecked = false
+            for (let i = 0, l = children.length; i < l; i++) {
+              if (children[i].perms['View']) {
+                childrenChecked = true
+                break
+              }
+            }
+            if (!childrenChecked) {
+              // 全部取消，则设定取消，否则选中保持
+              item.perms['View'] = false
+            }
+          }
+        }
+        const _findPrivs = (arr) => {
+          for (let i = 0, l = arr.length; i < l; i++) {
+            const {catalogId: id, children} = arr[i]
+            if (parentId === id) {
+              // 如果当前 item 的 catalogId 就是选中项的 parentId，说明找到了选中项的直接父级，选中项在其 children 中
+              // 找到路径
+              _findEd = true
+            } else if (children && children.length > 0) {
+              _findPrivs(children)
+            }
+            if (_findEd) {
+              _setCheck(arr[i])
+              break
+            }
+          }
+        }
+        _findPrivs(this.catalogPrivs)
+      }
+    },
+    handleRowSelectAll(checked, row) {
+      if (!(row.children && row.children.length > 0)) {
+        this.selectRowAll(this.catalogPrivs, checked, row.catalogId)
+      } else {
+        this.selectCatalogPrivs(row.children, checked)
+      }
+      this.handleRowsSelect(checked, row)
     },
     selectRowAll(arr, value, catalogId) {
       arr.some(row => {
@@ -174,9 +227,23 @@ export default {
         }
       })
     },
-    handleRowColumnChange(value, row) {
-      if (value) {
+    handleRowColumnChange(checked, row) {
+      if (checked) {
         row.perms['View'] = true;
+        this.handleRowsSelect(checked, row)
+      } else {
+        // 如果是取消，要判断所有子项是否都是取消状态
+        let childrenChecked = false
+        Object.keys(row.perms).forEach(key => {
+          if (key !== 'View' && row.perms[key]) {
+            childrenChecked = true
+          }
+        })
+        if (!childrenChecked) {
+          // 全部取消，则设定取消，否则选中保持
+          row.perms['View'] = false;
+          this.handleRowsSelect(checked, row)
+        }
       }
     },
     handleSave() {
