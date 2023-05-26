@@ -59,7 +59,7 @@ public class AsyncController extends BaseRestController {
 	 * @param taskId 任务ID
 	 * @return
 	 */
-	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.AsyncTaskList)
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/task/{taskId}")
 	public R<?> getAsyncTaskInfo(@PathVariable("taskId") String taskId) {
 		AsyncTask task = this.asyncTaskManager.getTask(taskId);
