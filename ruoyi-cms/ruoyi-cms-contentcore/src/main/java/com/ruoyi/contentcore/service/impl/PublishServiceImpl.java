@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.core.impl.*;
 import com.ruoyi.contentcore.util.*;
 import org.apache.commons.io.FileUtils;
@@ -467,11 +468,12 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 	 * 内容发布
 	 */
 	@Override
-	public void publishContent(List<Long> contentIds) throws IOException, TemplateException {
+	public void publishContent(List<Long> contentIds, LoginUser operator) throws IOException, TemplateException {
 		List<CmsContent> list = this.contentService.listByIds(contentIds);
 		for (CmsContent cmsContent : list) {
 			IContentType contentType = ContentCoreUtils.getContentType(cmsContent.getContentType());
 			IContent<?> content = contentType.loadContent(cmsContent);
+			content.setOperator(operator);
 			if (content.publish()) {
 				this.applicationContext.publishEvent(new AfterContentPublishEvent(contentType, content));
 			}

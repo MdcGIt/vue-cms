@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.ruoyi.common.async.AsyncTask;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.core.IPageWidget;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -114,7 +115,7 @@ public interface IPublishService {
 	 * @throws IOException
 	 * @throws TemplateException
 	 */
-	void publishContent(List<Long> contentIds) throws IOException, TemplateException;
+	void publishContent(List<Long> contentIds, LoginUser operator) throws IOException, TemplateException;
 
 	/**
 	 * 内容静态化<br/>

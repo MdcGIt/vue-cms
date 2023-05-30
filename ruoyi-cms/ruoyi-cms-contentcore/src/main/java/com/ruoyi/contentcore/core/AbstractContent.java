@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.BeanUtils;
 
@@ -187,7 +188,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		catalog.setContentCount(catalog.getContentCount() - 1);
 		this.getCatalogService().updateById(catalog);
 	}
-	
+
 	@Override
 	public void backup() {
 		this.getContentService().backup(this.getContentEntity(), this.getOperator().getUsername());
@@ -298,7 +299,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 	public void cancelTop() {
 		content.setTopFlag(0L);
 		content.setTopDate(null);
-		content.updateBy(this.getOperator().getUsername());
+		content.updateBy(Objects.nonNull(this.getOperator()) ? this.getOperator().getUsername(): "__System");
 		this.getContentService().updateById(content);
 		// 重新发布内容
 		if (ContentStatus.isPublished(this.getContentEntity().getStatus())) {
@@ -351,7 +352,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 	public void archive() {
 		// TODO 归档
 	}
-	
+
 	@Override
 	public String getFullText() {
 		return this.content.getTitle() + " " + this.content.getSubTitle() + " " + this.content.getShortTitle();
