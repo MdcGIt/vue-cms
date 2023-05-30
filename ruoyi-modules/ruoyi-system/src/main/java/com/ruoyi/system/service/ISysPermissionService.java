@@ -1,12 +1,12 @@
 package com.ruoyi.system.service;
 
-import java.util.Map;
-import java.util.Set;
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.domain.dto.SysPermissionDTO;
+import jakarta.annotation.Nullable;
+
+import java.util.Set;
 
 /**
  * 通用权限 业务层
@@ -16,12 +16,8 @@ import com.ruoyi.system.domain.dto.SysPermissionDTO;
  */
 public interface ISysPermissionService extends IService<SysPermission> {
 
-	public String CACHE_KEY = "sys:perms:";
-	
 	/** 所有权限标识 */
-	public static final String ALL_PERMISSION = "*";
-
-	public static final String DELIMETER = ",";
+	String ALL_PERMISSION = "*";
 
 	/**
 	 * 获取权限信息
@@ -30,33 +26,26 @@ public interface ISysPermissionService extends IService<SysPermission> {
 	 * @param owner
 	 * @return
 	 */
-	public SysPermission getPermissions(String ownerType, String owner);
+	SysPermission getPermissions(String ownerType, String owner);
 
-	/**
-	 * 获取用户菜单权限集合
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	public Set<String> getMenuPermissionsByUser(Long userId);
-	
 	/**
 	 * 保存菜单权限信息
 	 * 
 	 * @param dto
 	 */
-	public void saveMenuPermissions(SysPermissionDTO dto);
+	void saveMenuPermissions(SysPermissionDTO dto);
 
 	/**
 	 * 获取用户权限列表
 	 * 
 	 * @param userId
+	 * @param permissionType 指定权限类型
 	 * @return
 	 */
-	public Map<String, String> getUserPermissions(Long userId);
+	Set<String> getUserPermissions(Long userId, @Nullable String permissionType);
 
 	/**
 	 * 重置登录用户权限信息
 	 */
-	public void resetLoginUserPermissions(LoginUser loginUser);
+	void resetLoginUserPermissions(LoginUser loginUser);
 }

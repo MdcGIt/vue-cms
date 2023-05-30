@@ -1,8 +1,9 @@
 package com.ruoyi.system.permission;
 
-import java.util.List;
-
 import cn.dev33.satoken.annotation.SaMode;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 权限类型
@@ -54,6 +55,19 @@ public interface IPermissionType<T> {
 	 * @return
 	 */
 	public String merge(List<String> permissionJsonList);
+
+	/**
+	 * 将数据库存储的权限数据转换成权限唯一标识的集合。
+	 *
+	 * 实现此方法的权限项集合会加入SA-TOKEN的权限列表中。
+	 * @see com.ruoyi.system.security.AdminUserType#getPermissionList
+	 *
+	 * @param json
+	 * @return
+	 */
+	default Set<String> convert(String json) {
+		return Set.of();
+	}
 	
 	/**
 	 * 是否有权限

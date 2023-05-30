@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.ruoyi.contentcore.properties.EnableSSI;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
@@ -83,7 +85,6 @@ public class CmsPageWidgetTag extends AbstractTag {
 
 		String code = attrs.get(TagAttr_Code);
 		Assert.notEmpty(code, () -> new TemplateException("参数[code]不能为空", env));
-		boolean ssi = Boolean.valueOf(attrs.get(TagAttr_SSI));
 
 		long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
 		CmsPageWidget pw = this.pageWidgetService.lambdaQuery().eq(CmsPageWidget::getSiteId, siteId)
@@ -97,6 +98,7 @@ public class CmsPageWidgetTag extends AbstractTag {
 		File templateFile = this.templateService.findTemplateFile(site, pw.getTemplate(), context.getPublishPipeCode());
 		Assert.notNull(templateFile, () -> new TemplateException(StringUtils.messageFormat("页面部件[{0}]指定模板[{1}]不存在", code, pw.getTemplate()), env));
 
+		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
 		String templateName = SiteUtils.getTemplateName(site, pw.getPublishPipeCode(), pw.getTemplate());
 		if (context.isPreview()) {
 			env.getOut().write(this.processTemplate(env, context, templateName));

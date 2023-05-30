@@ -141,18 +141,39 @@ export default {
     handleRowSelectAll(value, catalogId) {
       this.selectRowAll(this.catalogPrivs, value, catalogId)
     },
-    selectRowAll(arr, value, catalogId) {
-      arr.some(row => {
-        if (row.catalogId == catalogId) {
-          Object.keys(row.perms).forEach(key => {
-            row.perms[key] = value;
-          })
-          return true;
-        }
-        if (row.children && row.children.length > 0) {
-          this.selectRowAll(row.children, value, catalogId)
-        }
-        return false
+    selectRowAll(arr, checked, catalogId) {
+      this.$nextTick(() => {
+        arr.some(row => {
+          if (row.catalogId == catalogId) {
+            const permItems = Object.keys(row.perms)
+            if (checked) {
+              permItems.forEach(key => {
+                row.perms[key] = checked;
+              })
+            } else {
+              let hasCheckedPerm = false;
+              for (let i = 0; i < permItems.length; i++) {
+                if (permItems[i] != 'View' && row.perms[permItems[i]]) {
+                  hasCheckedPerm = true;
+                  break;
+                }
+              }
+              if (hasCheckedPerm) {
+                permItems.forEach(key => {
+                  if (key != 'View') {
+                    row.perms[key] = checked;
+                  }
+                })
+                row.perms['View'] = hasCheckedPerm
+              }
+            }
+            return true;
+          }
+          if (row.children && row.children.length > 0) {
+            this.selectRowAll(row.children, checked, catalogId)
+          }
+          return false
+        })
       })
     },
     handleColumnSelectAll(column) {

@@ -1,19 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.domain.TreeNode;
@@ -34,8 +20,12 @@ import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysPermissionService;
 import com.ruoyi.system.validator.LongId;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 菜单信息
@@ -98,8 +88,7 @@ public class SysMenuController extends BaseRestController {
 		List<SysMenu> menus = this.menuService.lambdaQuery().ne(SysMenu::getMenuType, MenuType.Button.value())
 				.orderByAsc(SysMenu::getOrderNum).list();
 
-		Set<String> menuPerms = this.permissionService
-				.getMenuPermissionsByUser(StpAdminUtil.getLoginUser().getUserId());
+		List<String> menuPerms = StpAdminUtil.getLoginUser().getPermissions();
 		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());

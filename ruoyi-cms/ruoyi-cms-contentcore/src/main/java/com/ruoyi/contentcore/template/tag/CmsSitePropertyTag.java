@@ -55,9 +55,7 @@ public class CmsSitePropertyTag extends AbstractListTag {
 
 		LambdaQueryWrapper<CmsSiteProperty> q = new LambdaQueryWrapper<CmsSiteProperty>()
 				.eq(StringUtils.isNotEmpty(code), CmsSiteProperty::getPropCode, code);
-		if (StringUtils.isNotEmpty(condition)) {
-			q.last(" " + condition);
-		}
+		q.apply(StringUtils.isNotEmpty(condition), condition);
 		Page<CmsSiteProperty> pageResult = this.sitePropertyService.page(new Page<>(pageIndex, size, page), q);
 		if (pageIndex > 1 & pageResult.getRecords().size() == 0) {
 			throw new TemplateException("站点自定义属性数据列表页码超出上限：" + pageIndex, env);

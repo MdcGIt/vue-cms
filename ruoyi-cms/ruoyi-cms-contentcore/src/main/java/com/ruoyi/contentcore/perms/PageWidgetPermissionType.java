@@ -1,8 +1,6 @@
 package com.ruoyi.contentcore.perms;
 
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.stereotype.Component;
 
@@ -50,7 +48,21 @@ public class PageWidgetPermissionType implements IPermissionType<Map<String, Bit
 	public String merge(List<String> permissionJsonList) {
 		return CmsPrivUtils.mergeBitSetPermissions(permissionJsonList);
 	}
-	
+
+	@Override
+	public Set<String> convert(String json) {
+		Set<String> set = new HashSet<>();
+		PageWidgetPrivItem[] values = PageWidgetPrivItem.values();
+		CmsPrivUtils.deserializeBitSetPermission(json).forEach((pageWidgetId, bitSet) -> {
+			for (PageWidgetPrivItem item : values) {
+				if (bitSet.get(item.bitIndex())) {
+					set.add("PageWidget" + Spliter + item.name() + Spliter + pageWidgetId);
+				}
+			}
+		});
+		return set;
+	}
+
 	@Override
 	public boolean hasPermission(List<String> permissionKeys, String json, SaMode mode) {
 		Map<String,BitSet> bitSetMap = deserialize(json);

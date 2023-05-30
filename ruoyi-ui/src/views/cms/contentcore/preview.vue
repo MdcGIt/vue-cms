@@ -30,7 +30,7 @@
         <el-scrollbar style="width:100%;height:100%;">
           <iframe id="iframePreview" :src="previewUrl" 
               frameborder="0" 
-              style="width:100%;min-height:900px"></iframe>
+              style="width:100%;height:calc(100vh - 59px);"></iframe>
         </el-scrollbar>
       </el-main>
     </el-container>

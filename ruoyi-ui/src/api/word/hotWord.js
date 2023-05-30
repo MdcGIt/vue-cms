@@ -56,7 +56,7 @@ export function addHotWordGroup(data) {
 
 export function editHotWordGroup(data) {
   return request({
-    url: '/cms/hotword/group',
+    url: '/word/hotword/group',
     method: 'put',
     data: data
   })
@@ -64,7 +64,7 @@ export function editHotWordGroup(data) {
 
 export function deleteHotWordGroup(data) {
   return request({
-    url: '/cms/hotword/group',
+    url: '/word/hotword/group',
     method: 'delete',
     data: data
   })
