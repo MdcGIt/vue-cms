@@ -1,26 +1,5 @@
 package com.ruoyi.contentcore.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -30,6 +9,7 @@ import com.ruoyi.common.extend.annotation.XssIgnore;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -40,11 +20,7 @@ import com.ruoyi.contentcore.core.impl.InternalDataType_Content;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.domain.dto.CopyContentDTO;
-import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
-import com.ruoyi.contentcore.domain.dto.PublishContentDTO;
-import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
-import com.ruoyi.contentcore.domain.dto.SortContentDTO;
+import com.ruoyi.contentcore.domain.dto.*;
 import com.ruoyi.contentcore.domain.vo.ContentVO;
 import com.ruoyi.contentcore.domain.vo.ListContentVO;
 import com.ruoyi.contentcore.fixed.dict.ContentAttribute;
@@ -57,17 +33,28 @@ import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.user.preference.IncludeChildContentPreference;
 import com.ruoyi.contentcore.user.preference.ShowContentSubTitlePreference;
-import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
+import com.ruoyi.system.permission.PermissionUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
-
 import freemarker.template.TemplateException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
 @RequiredArgsConstructor
@@ -93,8 +80,9 @@ public class ContentController extends BaseRestController {
 			@RequestParam(name = "title", required = false, defaultValue = "") String title,
 		 	@RequestParam(name = "contentType", required = false, defaultValue = "") String contentType,
 			@RequestParam(name = "status", required = false) String status) {
+		LoginUser loginUser = StpAdminUtil.getLoginUser();
 		if (!IdUtils.validate(catalogId)
-				|| !CmsPrivUtils.hasCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser())) {
+				|| !loginUser.hasPermission(CatalogPrivItem.View.getPermissionKey(catalogId))) {
 			return this.bindDataTable(List.of());
 		}
 		PageRequest pr = getPageRequest();
@@ -138,10 +126,10 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 内容编辑数据初始化
 	 */
+	@Priv(type = AdminUserType.TYPE, value = "Catalog:View:${#catalogId}")
 	@GetMapping("/init/{catalogId}/{contentType}/{contentId}")
 	public R<ContentVO> initContentEditor(@PathVariable("catalogId") @LongId Long catalogId,
 			@PathVariable("contentType") String contentType, @PathVariable("contentId") Long contentId) {
-		CmsPrivUtils.checkCatalogPermission(catalogId, CatalogPrivItem.View, StpAdminUtil.getLoginUser());
 		IContentType ct = ContentCoreUtils.getContentType(contentType);
 		// 获取初始化数据
 		ContentVO vo = ct.initEditor(catalogId, contentId);
@@ -160,8 +148,9 @@ public class ContentController extends BaseRestController {
 
 		IContent<?> content = ct.readRequest(request);
 		content.setOperator(StpAdminUtil.getLoginUser());
-		CmsPrivUtils.checkCatalogPermission(content.getCatalogId(), CatalogPrivItem.AddContent, content.getOperator());
-		
+		PermissionUtils.checkPermission(CatalogPrivItem.AddContent.getPermissionKey(content.getCatalogId()),
+				content.getOperator());
+
 		AsyncTask task = this.contentService.addContent(content);
 		return R.ok(Map.of("taskId", task.getTaskId()));
 	}
@@ -175,8 +164,9 @@ public class ContentController extends BaseRestController {
 
 		IContent<?> content = ct.readRequest(request);
 		content.setOperator(StpAdminUtil.getLoginUser());
-		CmsPrivUtils.checkCatalogPermission(content.getCatalogId(), CatalogPrivItem.EditContent, content.getOperator());
-		
+		PermissionUtils.checkPermission(CatalogPrivItem.EditContent.getPermissionKey(content.getCatalogId()),
+				content.getOperator());
+
 		AsyncTask task = this.contentService.saveContent(content);
 		return R.ok(Map.of("taskId", task.getTaskId()));
 	}

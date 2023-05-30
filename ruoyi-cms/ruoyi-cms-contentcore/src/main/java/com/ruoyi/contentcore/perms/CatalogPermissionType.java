@@ -1,8 +1,6 @@
 package com.ruoyi.contentcore.perms;
 
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.stereotype.Component;
 
@@ -50,7 +48,23 @@ public class CatalogPermissionType implements IPermissionType<Map<String, BitSet
 	public String merge(List<String> permissionJsonList) {
 		return CmsPrivUtils.mergeBitSetPermissions(permissionJsonList);
 	}
-	
+
+
+
+	@Override
+	public Set<String> convert(String json) {
+		Set<String> set = new HashSet<>();
+		CatalogPrivItem[] values = CatalogPrivItem.values();
+		CmsPrivUtils.deserializeBitSetPermission(json).forEach((catalogId, bitSet) -> {
+			for (CatalogPrivItem item : values) {
+				if (bitSet.get(item.bitIndex())) {
+					set.add("Catalog" + Spliter + item.name() + Spliter + catalogId);
+				}
+			}
+		});
+		return set;
+	}
+
 	@Override
 	public boolean hasPermission(List<String> permissionKeys, String json, SaMode mode) {
 		Map<String,BitSet> parse = deserialize(json);

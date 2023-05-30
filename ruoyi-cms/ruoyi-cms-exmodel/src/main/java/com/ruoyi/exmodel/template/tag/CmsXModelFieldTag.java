@@ -56,9 +56,7 @@ public class CmsXModelFieldTag extends AbstractListTag {
 		LambdaQueryWrapper<XModelField> q = new LambdaQueryWrapper<>();
 		q.eq(XModelField::getModelId, modelId);
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
-		if (StringUtils.isNotEmpty(condition)) {
-			q.apply(condition, new Object[0]);
-		}
+		q.apply(StringUtils.isNotEmpty(condition), condition);
 		Page<XModelField> pageResult = this.modelFieldService.page(new Page<>(pageIndex, size, page), q);
 		if (pageIndex > 1 & pageResult.getRecords().size() == 0) {
 			throw new TemplateException("内容列表页码超出上限：" + pageIndex, env);

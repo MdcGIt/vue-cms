@@ -1,19 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -35,14 +21,16 @@ import com.ruoyi.system.domain.vo.UserProfileVO;
 import com.ruoyi.system.enums.MenuType;
 import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
-import com.ruoyi.system.service.ISecurityConfigService;
-import com.ruoyi.system.service.ISysDeptService;
-import com.ruoyi.system.service.ISysMenuService;
-import com.ruoyi.system.service.ISysPermissionService;
-import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.*;
 import com.ruoyi.system.user.preference.ShortcutUserPreference;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 个人信息 业务处理
@@ -169,7 +157,7 @@ public class SysProfileController extends BaseRestController {
 		List<SysMenu> menus = this.menuService.lambdaQuery().eq(SysMenu::getMenuType, MenuType.Menu.value())
 				.in(menuIds.size() > 0, SysMenu::getMenuId, menuIds).last("limit 8").list();
 
-		Set<String> menuPerms = this.permissionService.getMenuPermissionsByUser(StpAdminUtil.getLoginUser().getUserId());
+		List<String> menuPerms = StpAdminUtil.getLoginUser().getPermissions();
 		if (!menuPerms.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || menuPerms.contains(m.getPerms());
@@ -177,7 +165,7 @@ public class SysProfileController extends BaseRestController {
 		}
 		I18nUtils.replaceI18nFields(menus, LocaleContextHolder.getLocale());
 		List<ShortcutVO> result = menus.stream()
-				.sorted((m1, m2) -> menuIds.indexOf(m1.getMenuId()) - menuIds.indexOf(m2.getMenuId()))
+				.sorted(Comparator.comparingInt(m -> menuIds.indexOf(m.getMenuId())))
 				.map(m -> new ShortcutVO(m.getMenuName(), m.getIcon(), StringUtils.capitalize(m.getPath()))).toList();
 		return R.ok(result);
 	}

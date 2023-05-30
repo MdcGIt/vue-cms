@@ -1,21 +1,12 @@
 package com.ruoyi.contentcore.service.impl;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.ruoyi.common.redis.RedisCache;
-import com.ruoyi.contentcore.config.CMSConfig;
-import jakarta.validation.constraints.NotEmpty;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.contentcore.config.CMSConfig;
 import com.ruoyi.contentcore.core.IPageWidget;
 import com.ruoyi.contentcore.core.IPageWidgetType;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -24,11 +15,17 @@ import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.mapper.CmsPageWidgetMapper;
 import com.ruoyi.contentcore.perms.PageWidgetPermissionType.PageWidgetPrivItem;
 import com.ruoyi.contentcore.service.IPageWidgetService;
-import com.ruoyi.contentcore.util.CmsPrivUtils;
+import com.ruoyi.system.permission.PermissionUtils;
 import com.ruoyi.system.security.StpAdminUtil;
-
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,7 +82,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
         CmsPageWidget pageWidget = this.getById(pw.getPageWidgetEntity().getPageWidgetId());
         Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId",
                 pw.getPageWidgetEntity().getPageWidgetId()));
-        CmsPrivUtils.checkPageWidgetPermission(pageWidget.getPageWidgetId(), PageWidgetPrivItem.Edit, pw.getOperator());
+        PermissionUtils.checkPermission(PageWidgetPrivItem.Edit.getPermissionKey(pageWidget.getPageWidgetId()), pw.getOperator());
 
         boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
                 pw.getPageWidgetEntity().getCode(), pw.getPageWidgetEntity().getPageWidgetId());

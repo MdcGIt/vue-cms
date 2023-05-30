@@ -1,15 +1,13 @@
 package com.ruoyi.system.permission;
 
+import cn.dev33.satoken.annotation.SaMode;
+import com.ruoyi.common.utils.JacksonUtils;
+import com.ruoyi.common.utils.StringUtils;
+import org.springframework.stereotype.Component;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.stereotype.Component;
-
-import com.ruoyi.common.utils.JacksonUtils;
-import com.ruoyi.common.utils.StringUtils;
-
-import cn.dev33.satoken.annotation.SaMode;
 
 @Component(IPermissionType.BEAN_PREFIX + MenuPermissionType.ID)
 public class MenuPermissionType implements IPermissionType<List<String>> {
@@ -47,7 +45,15 @@ public class MenuPermissionType implements IPermissionType<List<String>> {
 		});
 		return serialize(set.stream().toList());
 	}
-	
+
+	@Override
+	public Set<String> convert(String json) {
+		if (StringUtils.isEmpty(json)) {
+			return Set.of();
+		}
+		return JacksonUtils.fromSet(json, String.class);
+	}
+
 	@Override
 	public boolean hasPermission(List<String> permissionKeys, String json, SaMode mode) {
 		List<String> perms = deserialize(json);

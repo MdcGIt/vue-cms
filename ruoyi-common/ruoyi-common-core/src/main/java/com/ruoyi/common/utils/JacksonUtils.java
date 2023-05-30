@@ -12,11 +12,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.compress.utils.Sets;
 import org.apache.commons.lang3.BooleanUtils;
@@ -280,6 +276,18 @@ public class JacksonUtils {
         }
         try {
             CollectionType collectionType = mapper.getTypeFactory().constructCollectionType(ArrayList.class, type);
+            return mapper.readValue(json, collectionType);
+        } catch (IOException e) {
+            throw new JacksonException(StringUtils.messageFormat("jackson from error, json: {0}, type: {1}", json, type), e);
+        }
+    }
+
+    public static <V> Set<V> fromSet(String json, Class<V> type) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        try {
+            CollectionType collectionType = mapper.getTypeFactory().constructCollectionType(HashSet.class, type);
             return mapper.readValue(json, collectionType);
         } catch (IOException e) {
             throw new JacksonException(StringUtils.messageFormat("jackson from error, json: {0}, type: {1}", json, type), e);

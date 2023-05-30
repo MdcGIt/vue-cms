@@ -1,12 +1,6 @@
 package com.ruoyi.system.security;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.stereotype.Component;
-
+import cn.dev33.satoken.session.SaSession;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.security.SecurityUtils;
@@ -23,15 +17,15 @@ import com.ruoyi.system.fixed.config.SysCaptchaEnable;
 import com.ruoyi.system.fixed.dict.LoginLogType;
 import com.ruoyi.system.fixed.dict.SuccessOrFail;
 import com.ruoyi.system.fixed.dict.UserStatus;
-import com.ruoyi.system.service.ISecurityConfigService;
-import com.ruoyi.system.service.ISysDeptService;
-import com.ruoyi.system.service.ISysLogininforService;
-import com.ruoyi.system.service.ISysPermissionService;
-import com.ruoyi.system.service.ISysUserService;
-
-import cn.dev33.satoken.session.SaSession;
+import com.ruoyi.system.service.*;
 import eu.bitwalker.useragentutils.UserAgent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * 登录校验方法
@@ -123,9 +117,9 @@ public class SysLoginService {
 		loginUser.setOs(ua.getOperatingSystem().name());
 		loginUser.setBrowser(ua.getBrowser() + "/" + ua.getBrowserVersion());
 		loginUser.setUser(user);
-		
-		Map<String, String> permissions = this.permissionService.getUserPermissions(user.getUserId());
-		loginUser.setPermissions(permissions);
+
+		Set<String> permissions = this.permissionService.getUserPermissions(user.getUserId(), null);
+		loginUser.setPermissions(permissions.stream().toList());
 		return loginUser;
 	}
 

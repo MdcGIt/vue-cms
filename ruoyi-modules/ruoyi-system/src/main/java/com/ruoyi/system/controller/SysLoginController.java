@@ -1,16 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.i18n.I18nUtils;
@@ -30,8 +19,16 @@ import com.ruoyi.system.service.ISysLogininforService;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysPermissionService;
 import com.ruoyi.system.service.ISysRoleService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 登录验证
@@ -91,12 +88,13 @@ public class SysLoginController extends BaseRestController {
 	@SaAdminCheckLogin
 	@GetMapping("getInfo")
 	public R<?> getInfo() {
-		SysUser user = (SysUser) StpAdminUtil.getLoginUser().getUser();
+		LoginUser loginUser = StpAdminUtil.getLoginUser();
+		SysUser user = (SysUser) loginUser.getUser();
 		user.setAvatarSrc(SystemConfig.getResourcePrefix() + user.getAvatar());
 		// 角色集合
 		List<String> roles = this.roleService.selectRoleKeysByUserId(user.getUserId());
-		// 菜单权限集合
-		Set<String> permissions = this.permissionService.getMenuPermissionsByUser(user.getUserId());
+		// 权限集合
+		List<String> permissions = loginUser.getPermissions();
 		return R.ok(Map.of("user", user, "roles", roles, "permissions", permissions));
 	}
 
@@ -110,7 +108,7 @@ public class SysLoginController extends BaseRestController {
 	public R<?> getRouters() {
 		List<SysMenu> menus = this.menuService.lambdaQuery().orderByAsc(SysMenu::getOrderNum).list();
 
-		Set<String> permissions = this.permissionService.getMenuPermissionsByUser(StpAdminUtil.getLoginUser().getUserId());
+		List<String> permissions = StpAdminUtil.getLoginUser().getPermissions();
 		if (!permissions.contains(ISysPermissionService.ALL_PERMISSION)) {
 			menus = menus.stream().filter(m -> {
 				return StringUtils.isEmpty(m.getPerms()) || permissions.contains(m.getPerms());

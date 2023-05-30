@@ -1,12 +1,11 @@
 package com.ruoyi.common.security.domain;
 
-import java.io.Serializable;
-import java.util.Map;
-
 import com.ruoyi.common.security.SecurityUtils;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 登录用户身份权限
@@ -75,7 +74,7 @@ public class LoginUser implements Serializable {
 	/**
 	 * 权限列表
 	 */
-	private Map<String, String> permissions;
+	private List<String> permissions;
 
 	/**
 	 * 用户信息
@@ -84,5 +83,9 @@ public class LoginUser implements Serializable {
 	
 	public boolean isSuperAdministrator() {
 		return SecurityUtils.isSuperAdmin(userId);
+	}
+
+	public boolean hasPermission(String perm) {
+		return isSuperAdministrator() || this.permissions == null || this.permissions.contains(perm);
 	}
 }

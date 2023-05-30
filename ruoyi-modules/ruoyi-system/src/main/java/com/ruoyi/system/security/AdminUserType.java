@@ -2,6 +2,8 @@ package com.ruoyi.system.security;
 
 import java.util.List;
 
+import cn.dev33.satoken.session.SaSession;
+import com.ruoyi.common.security.domain.LoginUser;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.i18n.I18nUtils;
@@ -38,7 +40,8 @@ public class AdminUserType implements IUserType {
 
 	@Override
 	public List<String> getPermissionList(Long loginUid) {
-		return this.permissionService.getMenuPermissionsByUser(loginUid).stream().toList();
+		SaSession tokenSession = StpAdminUtil.getTokenSessionByToken(StpAdminUtil.getTokenValueByLoginId(loginUid));
+		return tokenSession.getModel(SaSession.USER, LoginUser.class).getPermissions();
 	}
 
 	@Override
