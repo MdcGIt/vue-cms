@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.ruoyi.contentcore.properties.EnableSSI;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
@@ -94,11 +96,12 @@ public class CmsIncludeTag extends AbstractTag {
 
 		String file = attrs.get(TagAttr_FILE);
 		Assert.notEmpty(file, () -> new TemplateException("参数[file]不能为空", env));
-		boolean ssi = Boolean.valueOf(attrs.get(TagAttr_SSI));
-		boolean virtual = Boolean.valueOf(attrs.get(TagAttr_VIRTUAL));
 
 		long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
 		CmsSite site = this.siteService.getSite(siteId);
+
+		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
+		boolean virtual = Boolean.valueOf(attrs.get(TagAttr_VIRTUAL));
 
 		String includeTemplateName = SiteUtils.getTemplateName(site, context.getPublishPipeCode(), file);
 		if (context.isPreview()) {
