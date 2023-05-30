@@ -420,6 +420,8 @@ export default {
       publishContent(contentIds).then(response => {
         this.$modal.closeLoading();
         this.loadContentList();
+      }).catch(() => {
+        this.$modal.closeLoading();
       });
     },
     handlePreview (row) {
