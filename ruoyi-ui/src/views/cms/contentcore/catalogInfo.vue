@@ -1,6 +1,6 @@
 <template>
   <div class="catalog-info-container">
-    <el-row :gutter="10" class="mb12">
+    <el-row :gutter="10" class="mb12 btn-row">
       <el-col :span="1.5">
         <el-button 
           plain
@@ -8,6 +8,7 @@
           icon="el-icon-edit"
           size="mini"
           :disabled="!this.catalogId"
+          v-hasPermi="[ $p('Catalog:Edit:{0}', [ catalogId ]) ]"
           @click="handleUpdate">{{ $t("Common.Save") }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -26,10 +27,11 @@
             type="primary"
             icon="el-icon-s-promotion"
             :disabled="!this.catalogId"
+            v-hasPermi="[ $p('Catalog:Publish:{0}', [ catalogId ]) ]"
             @click="handlePublish(-1)">
             {{ $t('CMS.ContentCore.Publish') }}<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu slot="dropdown" :key="'btn-publish2-' + catalogId" v-hasPermi="[ $p('Catalog:Publish:{0}', [ catalogId ]) ]">
             <el-dropdown-item 
               v-for="dict in dict.type.CMSContentStatus" 
               :key="dict.value" 
@@ -46,6 +48,7 @@
           :icon="catalogVisible?'el-icon-circle-close':'el-icon-circle-check'"
           size="mini"
           :disabled="!this.catalogId"
+          v-hasPermi="[ $p('Catalog:ShowHide:{0}', [ catalogId ]) ]"
           @click="handleChangeVisible">{{ catalogVisible ? $t("Common.Hide") : $t("Common.Show") }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -55,12 +58,14 @@
           size="mini"
           plain
           :disabled="!this.catalogId"
+          v-hasPermi="[ $p('Catalog:Move:{0}', [ catalogId ]) ]"
           @click="handleMoveCatalog">{{ $t('Common.Move') }}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-popover
           width="226"
           :disabled="!this.catalogId"
+          v-hasPermi="[ $p('Catalog:Sort:{0}', [ catalogId ]) ]"
           v-model="showSortPop">
           <el-input-number v-model="sortValue" size="small" style="width:200px;" />
           <div style="color: #909399;font-size:12px;line-height: 30px;">
@@ -87,6 +92,7 @@
               size="mini"
               plain
               :disabled="!this.catalogId"
+              v-hasPermi="[ $p('Catalog:Delete:{0}', [ catalogId ]) ]"
               slot="reference">{{ $t("Common.Delete") }}</el-button>
           </el-popconfirm>
       </el-col>

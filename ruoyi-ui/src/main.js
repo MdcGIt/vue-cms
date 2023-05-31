@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import Cookies from 'js-cookie'
 import i18n from './i18n';
+import { parsePermi } from './utils/permission';
 
 import Element from 'element-ui'
 import './assets/styles/element-variables.scss'
@@ -56,6 +57,7 @@ Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 Vue.prototype.transferDuration = transferDuration
+Vue.prototype.$p = parsePermi
 
 // 全局组件挂载
 Vue.component('DictTag', DictTag)

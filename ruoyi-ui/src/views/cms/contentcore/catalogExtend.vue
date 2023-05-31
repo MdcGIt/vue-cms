@@ -7,6 +7,7 @@
         icon="el-icon-edit"
         size="mini"
         :disabled="!this.catalogId"
+        v-hasPermi="[ $p('Catalog:Edit:{0}', [ catalogId ]) ]"
         @click="handleSaveExtends">{{ $t("Common.Save") }}</el-button>
       <el-button 
         plain 
@@ -14,6 +15,7 @@
         icon="el-icon-bottom-right" 
         size="mini"
         :disabled="!this.catalogId"
+        v-hasPermi="[ $p('Catalog:Edit:{0}', [ catalogId ]) ]"
         @click="handleApplyAllToCatalog()">{{ $t('CMS.Catalog.ApplyToChildren') }}</el-button>
     </el-row>
     <el-form 

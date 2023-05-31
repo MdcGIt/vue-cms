@@ -26,7 +26,7 @@ public interface ISiteService extends IService<CmsSite> {
     /**
      * 获取当前站点，保存在token中
      */
-    public CmsSite getCurrentSite(HttpServletRequest request, LoginUser loginUser);
+    public CmsSite getCurrentSite(HttpServletRequest request);
 
 	/**
 	 * 获取站点数据

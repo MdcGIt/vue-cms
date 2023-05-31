@@ -81,7 +81,7 @@ public class SiteController extends BaseRestController {
     @SaAdminCheckLogin
     @GetMapping("/getCurrentSite")
     public R<Map<String, Object>> getCurrentSite() {
-        CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest(), StpAdminUtil.getLoginUser());
+        CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
         return R.ok(Map.of("siteId", site.getSiteId(), "siteName", site.getName()));
     }
 

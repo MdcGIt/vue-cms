@@ -78,7 +78,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	}
 
 	@Override
-	public CmsSite getCurrentSite(HttpServletRequest request, LoginUser loginUser) {
+	public CmsSite getCurrentSite(HttpServletRequest request) {
 		CmsSite site = null;
 		String siteId = ServletUtils.getHeader(request, ContentCoreConsts.Header_CurrentSite);
 		if (NumberUtils.isDigits(siteId)) {
@@ -87,6 +87,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 			} catch (Exception e) {
 			}
 		}
+		LoginUser loginUser = StpAdminUtil.getLoginUser();
 		// 无当前站点或当前站点无权限则取数据库查找一条有权限的站点数据作为当前站点
 		if (Objects.isNull(site) || !loginUser.hasPermission(SitePrivItem.View.getPermissionKey(site.getSiteId()))) {
 			site = this.lambdaQuery().last("limit 1").one();

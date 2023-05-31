@@ -8,6 +8,7 @@
             type="primary"
             icon="el-icon-plus"
             size="mini"
+            v-hasPermi="[ $p('Site:Edit:{0}', [ site ]) ]"
             @click="handleAdd">{{ $t("Common.Add") }}</el-button>
           <el-button 
             plain
@@ -15,6 +16,7 @@
             icon="el-icon-delete"
             size="mini"
             :disabled="multiple"
+            v-hasPermi="[ $p('Site:Edit:{0}', [ site ]) ]"
             @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
         </el-row>
       </el-col>
@@ -58,12 +60,14 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-hasPermi="[ $p('Site:Edit:{0}', [ scope.row.siteId ]) ]"
             @click="handleEdit(scope.row)"
           >{{ $t("Common.Edit") }}</el-button>
           <el-button 
             size="mini"
             type="text"
             icon="el-icon-delete"
+            v-hasPermi="[ $p('Site:Edit:{0}', [ scope.row.siteId ]) ]"
             @click="handleDelete(scope.row)"
           >{{ $t("Common.Delete") }}</el-button>
         </template>
