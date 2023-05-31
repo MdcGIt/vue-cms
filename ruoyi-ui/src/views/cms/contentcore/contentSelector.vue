@@ -19,9 +19,13 @@
               ref="queryForm"
               :inline="true"
               size="small"
+              @submit.native.prevent
               class="el-form-search mb12">
-            <el-form-item label="" prop="query">
-              <el-input v-model="queryParams.query" :placeholder="$t('CMS.Content.Placeholder.Title')">
+            <el-form-item label="" prop="title">
+              <el-input 
+                v-model="queryParams.title" 
+                :placeholder="$t('CMS.Content.Placeholder.Title')"
+                @keyup.enter.native="handleQuery">
               </el-input>
             </el-form-item>
             <el-form-item>
@@ -117,7 +121,7 @@ export default {
         status: 30,
         catalogId: '',
         contentType: '',
-        query: ''
+        title: ''
       }
     };
   },
