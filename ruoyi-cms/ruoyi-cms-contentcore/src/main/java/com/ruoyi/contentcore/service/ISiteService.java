@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.SiteDTO;
 import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
@@ -25,7 +26,7 @@ public interface ISiteService extends IService<CmsSite> {
     /**
      * 获取当前站点，保存在token中
      */
-    public CmsSite getCurrentSite(HttpServletRequest request);
+    public CmsSite getCurrentSite(HttpServletRequest request, LoginUser loginUser);
 
 	/**
 	 * 获取站点数据

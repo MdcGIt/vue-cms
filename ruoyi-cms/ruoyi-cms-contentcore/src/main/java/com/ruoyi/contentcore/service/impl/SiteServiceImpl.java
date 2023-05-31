@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ruoyi.common.security.domain.LoginUser;
+import com.ruoyi.system.permission.PermissionUtils;
+import com.ruoyi.system.security.StpAdminUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -74,7 +78,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 	}
 
 	@Override
-	public CmsSite getCurrentSite(HttpServletRequest request) {
+	public CmsSite getCurrentSite(HttpServletRequest request, LoginUser loginUser) {
 		CmsSite site = null;
 		String siteId = ServletUtils.getHeader(request, ContentCoreConsts.Header_CurrentSite);
 		if (NumberUtils.isDigits(siteId)) {
@@ -83,8 +87,14 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 			} catch (Exception e) {
 			}
 		}
-		if (Objects.isNull(site)) {
+		// 无当前站点或当前站点无权限则取数据库查找一条有权限的站点数据作为当前站点
+		if (Objects.isNull(site) || !loginUser.hasPermission(SitePrivItem.View.getPermissionKey(site.getSiteId()))) {
 			site = this.lambdaQuery().last("limit 1").one();
+			Optional<CmsSite> opt = this.lambdaQuery().list().stream().filter(s ->
+					loginUser.hasPermission(SitePrivItem.View.getPermissionKey(s.getSiteId()))).findFirst();
+			if (opt.isPresent()) {
+				site = opt.get();
+			}
 		}
 		Assert.notNull(site, ContentCoreErrorCode.NO_SITE::exception);
 		return site;
@@ -160,7 +170,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 		Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 
 		applicationContext.publishEvent(new BeforeSiteDeleteEvent(this, site));
-		
+
 		AsyncTaskManager.setTaskMessage("正在删除站点数据");
 		this.removeById(site.getSiteId());
 		this.clearCache(site.getSiteId());
@@ -170,7 +180,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 
 	/**
 	 * 校验站点名称/目录是否唯一
-	 * 
+	 *
 	 * @param siteName 站点名称
 	 * @param sitePath 站点目录
 	 * @param siteId   站点ID
