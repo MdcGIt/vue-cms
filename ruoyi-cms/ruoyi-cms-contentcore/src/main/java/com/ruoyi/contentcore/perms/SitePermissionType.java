@@ -56,7 +56,7 @@ public class SitePermissionType implements IPermissionType<Map<String, BitSet>> 
 		CmsPrivUtils.deserializeBitSetPermission(json).forEach((siteId, bitSet) -> {
 			for (SitePrivItem item : values) {
 				if (bitSet.get(item.bitIndex())) {
-					set.add("Site" + Spliter + item.name() + Spliter + siteId);
+					set.add(item.getPermissionKey(Long.valueOf(siteId)));
 				}
 			}
 		});

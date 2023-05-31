@@ -56,7 +56,7 @@ public class PageWidgetPermissionType implements IPermissionType<Map<String, Bit
 		CmsPrivUtils.deserializeBitSetPermission(json).forEach((pageWidgetId, bitSet) -> {
 			for (PageWidgetPrivItem item : values) {
 				if (bitSet.get(item.bitIndex())) {
-					set.add("PageWidget" + Spliter + item.name() + Spliter + pageWidgetId);
+					set.add("Site" + Spliter + item.name() + Spliter + pageWidgetId);
 				}
 			}
 		});

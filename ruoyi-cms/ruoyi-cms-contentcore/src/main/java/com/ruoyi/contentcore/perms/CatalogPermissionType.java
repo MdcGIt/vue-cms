@@ -58,7 +58,7 @@ public class CatalogPermissionType implements IPermissionType<Map<String, BitSet
 		CmsPrivUtils.deserializeBitSetPermission(json).forEach((catalogId, bitSet) -> {
 			for (CatalogPrivItem item : values) {
 				if (bitSet.get(item.bitIndex())) {
-					set.add("Catalog" + Spliter + item.name() + Spliter + catalogId);
+					set.add(item.getPermissionKey(Long.valueOf(catalogId)));
 				}
 			}
 		});
