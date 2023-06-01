@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import com.ruoyi.common.async.AsyncTaskManager;
 import org.springframework.beans.BeanUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -187,7 +189,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		catalog.setContentCount(catalog.getContentCount() - 1);
 		this.getCatalogService().updateById(catalog);
 	}
-	
+
 	@Override
 	public void backup() {
 		this.getContentService().backup(this.getContentEntity(), this.getOperator().getUsername());
@@ -298,7 +300,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 	public void cancelTop() {
 		content.setTopFlag(0L);
 		content.setTopDate(null);
-		content.updateBy(this.getOperator().getUsername());
+		content.updateBy(Objects.nonNull(this.getOperator()) ? this.getOperator().getUsername(): "__System");
 		this.getContentService().updateById(content);
 		// 重新发布内容
 		if (ContentStatus.isPublished(this.getContentEntity().getStatus())) {
@@ -334,24 +336,33 @@ public abstract class AbstractContent<T> implements IContent<T> {
 
 	@Override
 	public void offline() {
-		// 已发布内容删除静态页面
-		if (ContentStatus.isPublished(this.getContentEntity().getStatus())) {
+		String status = this.getContentEntity().getStatus();
+		this.getContentEntity().setStatus(ContentStatus.OFFLINE);
+		this.getContentEntity().updateBy(this.getOperator().getUsername());
+		this.getContentService().updateById(this.getContentEntity());
+
+		if (ContentStatus.isPublished(status)) {
 			try {
+				// 已发布内容删除静态页面
 				this.getContentService().deleteStaticFiles(this.getContentEntity());
+				// 重新发布内容所在栏目和父级栏目
+				String[] catalogIds = this.getContentEntity().getCatalogAncestors()
+						.split(CatalogUtils.ANCESTORS_SPLITER);
+				for (String catalogId : catalogIds) {
+					this.getPublishService().publishCatalog(this.getCatalogService().getCatalog(Long.valueOf(catalogId)),
+							false, false, null);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		this.getContentEntity().setStatus(ContentStatus.OFFLINE);
-		this.getContentEntity().updateBy(this.getOperator().getUsername());
-		this.getContentService().updateById(this.getContentEntity());
 	}
 
 	@Override
 	public void archive() {
 		// TODO 归档
 	}
-	
+
 	@Override
 	public String getFullText() {
 		return this.content.getTitle() + " " + this.content.getSubTitle() + " " + this.content.getShortTitle();

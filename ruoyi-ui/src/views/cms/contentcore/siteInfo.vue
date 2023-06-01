@@ -8,6 +8,7 @@
           icon="el-icon-edit"
           size="mini"
           :disabled="!this.siteId"
+          v-hasPermi="[ $p('Site:Edit:{0}', [ siteId ]) ]"
           @click="handleUpdate">{{ $t("Common.Save") }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -27,6 +28,7 @@
           icon="el-icon-s-promotion"
           size="mini"
           :disabled="!this.siteId"
+          v-hasPermi="[ $p('Site:Publish:{0}', [ siteId ]) ]"
           @click="handlePublish">{{ $t("CMS.Site.PublishHome") }}</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -37,6 +39,7 @@
             size="mini" 
             type="primary"
             icon="el-icon-s-promotion"
+            v-hasPermi="[ $p('Site:Publish:{0}', [ siteId ]) ]"
             :disabled="!this.siteId">
             {{ $t("CMS.Site.PublishAll") }}<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>

@@ -54,7 +54,7 @@ const user = {
           const avatar = (user.avatarSrc == "" || user.avatarSrc == null) ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatarSrc;
           if (res.data.roles && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.data.roles)
-            commit('SET_PERMISSIONS', ['*'])//res.data.permissions
+            commit('SET_PERMISSIONS', res.data.permissions)//
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }

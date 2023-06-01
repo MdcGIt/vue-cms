@@ -15,12 +15,13 @@ public class CatalogUtils {
 	/**
 	 * 栏目父级ID分隔符
 	 */
-	public static final char ANCESTORS_SPLITER = ':';
+	public static final String ANCESTORS_SPLITER = ":";
 	
 	/**
 	 * 生成指定栏目的子栏目用的祖级字符串
 	 * 
-	 * @param catalog
+	 * @param parentAncestors
+	 * @param catalogId
 	 * @return
 	 */
 	public static String getCatalogAncestors(String parentAncestors, Long catalogId) {

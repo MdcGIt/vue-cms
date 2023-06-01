@@ -93,7 +93,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 				if (permission != null) {
 					this.permissionTypes.values().forEach(pt -> {
 						if (StringUtils.isEmpty(permissionType) || pt.getId().equals(permissionType)) {
-							String json = userPermission.getPermissions().get(pt.getId());
+							String json = permission.getPermissions().get(pt.getId());
 							if (StringUtils.isNotEmpty(json)) {
 								permissions.addAll(pt.convert(json));
 							}

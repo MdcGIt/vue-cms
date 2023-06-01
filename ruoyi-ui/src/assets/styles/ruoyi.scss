@@ -46,6 +46,9 @@
 .mt20 {
 	margin-top: 20px;
 }
+.mr10 {
+	margin-right: 10px;
+}
 .mr20 {
 	margin-right: 20px;
 }
@@ -281,4 +284,8 @@
 .top-right-btn {
 	position: relative;
 	float: right;
+}
+
+.el-row {
+  min-height: 30px;
 }

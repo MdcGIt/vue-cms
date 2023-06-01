@@ -15,10 +15,14 @@
         ref="queryForm"
         :inline="true"
         size="small"
+        @submit.native.prevent
         class="el-form-search mt10 mb10"
         style="text-align:left">
-        <el-form-item label="" prop="query">
-          <el-input v-model="queryParams.query" :placeholder="$t('CMS.Content.Placeholder.Title')">
+        <el-form-item label="" prop="title">
+          <el-input 
+            v-model="queryParams.title" 
+            :placeholder="$t('CMS.Content.Placeholder.Title')" 
+            @keyup.enter.native="handleQuery">
           </el-input>
         </el-form-item>
         <el-form-item>
@@ -113,7 +117,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         catalogId: this.cid,
-        query: undefined
+        title: undefined
       }
     };
   },

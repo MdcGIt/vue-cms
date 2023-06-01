@@ -5,24 +5,45 @@
  
 import store from '@/store'
 
-export default {
-  inserted(el, binding, vnode) {
-    const { value } = binding
-    const all_permission = "*";
-    const permissions = store.getters && store.getters.permissions
+function fn (el, binding) {
+  const { value } = binding
+  const all_permission = "*";
+  const permissions = store.getters && store.getters.permissions
 
-    if (value && value instanceof Array && value.length > 0) {
-      const permissionFlag = value
+  if (value && value instanceof Array && value.length > 0) {
+    const permissionFlag = value
 
-      const hasPermissions = permissions.some(permission => {
-        return all_permission === permission || permissionFlag.includes(permission)
-      })
+    const hasPermissions = permissions.some(permission => {
+      return all_permission === permission || permissionFlag.includes(permission)
+    })
 
-      if (!hasPermissions) {
-        el.parentNode && el.parentNode.removeChild(el)
+    if (!hasPermissions) {
+      el.parentNode && el.parentNode.removeChild(el)
+      if (el.cacheParentElement != null) {
+        el.cacheParentElement.style.display = 'none'; 
       }
     } else {
-      throw new Error(`请设置操作权限标签值`)
+      el.cacheParentElement && el.cacheParentElement.appendChild(el.cacheElement)
+      if (el.cacheParentElement != null) {
+        el.cacheParentElement.style.display = 'block'; 
+      }
+      // 有权限则追加之前缓存的 dom 元素
+      // el.cacheParentElement && el.cacheParentElement.appendChild(el.cacheElement)
     }
+  } else {
+    throw new Error(`请设置操作权限标签值`)
   }
 }
+
+const hasPermi = {
+  inserted: function (el, binding, vnode) {
+    el.cacheElement = el // 缓存本节点
+    el.cacheParentElement = el.parentNode // 缓存父节点
+    fn(el, binding)
+  },
+  update: function (el, binding) {
+    fn(el, binding)
+  }
+}
+
+export default hasPermi

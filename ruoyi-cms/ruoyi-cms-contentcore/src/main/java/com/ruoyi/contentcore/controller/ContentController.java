@@ -184,7 +184,7 @@ public class ContentController extends BaseRestController {
 	@Log(title = "发布内容", businessType = BusinessType.OTHER)
 	@PostMapping("/publish")
 	public R<String> publish(@RequestBody @Validated PublishContentDTO publishContentDTO) throws TemplateException, IOException {
-		this.publishService.publishContent(publishContentDTO.getContentIds());
+		this.publishService.publishContent(publishContentDTO.getContentIds(), StpAdminUtil.getLoginUser());
 		return R.ok();
 	}
 

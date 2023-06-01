@@ -375,7 +375,10 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 		for (CmsPublishPipe publishPipe : publishPipes) {
 			String siteRoot = SiteUtils.getSiteRoot(site, publishPipe.getCode());
 			String filePath = siteRoot + path + site.getStaticSuffix(publishPipe.getCode());
-			FileUtils.delete(new File(filePath));
+			File file = new File(filePath);
+			if (file.exists()) {
+				FileUtils.delete(file);
+			}
 			logger.debug("删除内容静态文件：" + filePath);
 		}
 	}

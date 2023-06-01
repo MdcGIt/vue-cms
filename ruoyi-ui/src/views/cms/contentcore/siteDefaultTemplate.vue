@@ -7,6 +7,7 @@
         icon="el-icon-edit"
         size="mini"
         :disabled="!this.siteId"
+        v-hasPermi="[ $p('Site:Edit:{0}', [ siteId ]) ]"
         @click="handleSave">{{ $t("Common.Save") }}</el-button>
     </el-row>
     <el-form 

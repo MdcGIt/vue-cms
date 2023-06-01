@@ -1,25 +1,5 @@
 package com.ruoyi.contentcore.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.ruoyi.system.security.SaAdminCheckLogin;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.io.Files;
@@ -50,17 +30,26 @@ import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.AdminUserType;
+import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
-
 import freemarker.template.TemplateException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 站点管理
@@ -68,7 +57,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email liweiyimwz@126.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
 @RestController
 @RequestMapping("/cms/site")
 @RequiredArgsConstructor
@@ -90,6 +78,7 @@ public class SiteController extends BaseRestController {
      * @return
      * @apiNote 读取request.header['CurrentSite']中的siteId，如果无header或无站点则取数据库第一条站点数据
      */
+    @SaAdminCheckLogin
     @GetMapping("/getCurrentSite")
     public R<Map<String, Object>> getCurrentSite() {
         CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -102,6 +91,7 @@ public class SiteController extends BaseRestController {
      * @param siteId 站点ID
      * @return
      */
+    @Priv(type = AdminUserType.TYPE, value = "Site:View:${#siteId}")
     @Log(title = "切换站点", businessType = BusinessType.UPDATE)
     @PostMapping("/setCurrentSite/{siteId}")
     public R<Map<String, Object>> setCurrentSite(@PathVariable("siteId") @LongId Long siteId) {
@@ -115,6 +105,7 @@ public class SiteController extends BaseRestController {
      * @param siteName 站点名称
      * @return
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
     @GetMapping("/list")
     public R<?> list(@RequestParam(value = "siteName", required = false) String siteName) {
         PageRequest pr = this.getPageRequest();
@@ -156,6 +147,7 @@ public class SiteController extends BaseRestController {
         return R.ok(dto);
     }
 
+    @SaAdminCheckLogin
     @GetMapping("/options")
     public R<?> getSiteOptions() {
         LoginUser loginUser = StpAdminUtil.getLoginUser();
@@ -178,6 +170,7 @@ public class SiteController extends BaseRestController {
      * @return
      * @throws IOException
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
     @Log(title = "新增站点", businessType = BusinessType.INSERT)
     @PostMapping
     public R<?> addSave(@RequestBody @Validated SiteDTO dto) throws IOException {

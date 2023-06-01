@@ -2,7 +2,7 @@
   <div class="ueditor">
     <vue-ueditor-wrap 
       v-model="contentHtml"
-      editor-id="ueditor"
+      :editor-id="editorId"
       :config="editorConfig"
       :editorDependencies="editorDependencies"
       @before-init="handleBeforeInit"
@@ -53,6 +53,10 @@ export default {
       type: Number,
       default: 500,
     },
+    editorId: {
+      type: String,
+      default: "ueditor"
+    }
   },
   components: {
     "vue-ueditor-wrap": VueUEditorWrap,
@@ -299,7 +303,7 @@ export default {
     handleCatalogSelectorOk(catalogs) {
       if (catalogs && catalogs.length > 0) {
         console.log(catalogs)
-        var editor = window.UE.getEditor('ueditor')
+        var editor = window.UE.getEditor(this.editorId)
         editor.execCommand("insertHTML", '<a href="' + catalogs[0].props.internalUrl + '">' + catalogs[0].name + '</a>');
         this.openCatalogSelector = false;
       } else {
@@ -312,7 +316,7 @@ export default {
     handleContentSelectorOk(contents) {
       if (contents && contents.length > 0) {
         console.log(contents)
-        var editor = window.UE.getEditor('ueditor')
+        var editor = window.UE.getEditor(this.editorId)
         if (this.contentType == 'image') {
           // 插入组图
           const html = '<p class="text-align:center;"><img src="/UEditorPlus/themes/default/images/spacer.gif" ex_cid="'
@@ -393,7 +397,7 @@ export default {
           html = '<a href="' + r.src + '" iurl="' + r.path + '" target="_blank">' + r.name + '</a>'
         }
         if (html && html.length > 0) {
-          var editor = window.UE.getEditor('ueditor')
+          var editor = window.UE.getEditor(this.editorId)
           editor.execCommand("insertHTML",html);
         }
       }
@@ -423,7 +427,7 @@ export default {
     },
     handleThirdVideoDialogOk (result) {
       if (result && result.length > 0) {
-        var editor = window.UE.getEditor('ueditor')
+        var editor = window.UE.getEditor(this.editorId)
         editor.execCommand("insertHTML", result);
       }
     },
