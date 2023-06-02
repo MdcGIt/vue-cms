@@ -14,7 +14,7 @@ import com.ruoyi.contentcore.core.AbstractPageWidget;
  */
 public class AdSpacePageWidget extends AbstractPageWidget {
 
-	private IAdvertisementService advertisementService;
+	private final IAdvertisementService advertisementService = SpringUtils.getBean(IAdvertisementService.class);
 
 	@Override
 	public void delete() {
@@ -23,12 +23,5 @@ public class AdSpacePageWidget extends AbstractPageWidget {
 		this.advertisementService.remove(new LambdaQueryWrapper<CmsAdvertisement>()
 				.eq(CmsAdvertisement::getAdSpaceId, this.getPageWidgetEntity().getPageWidgetId()));
 		// TODO 删除广告统计数据
-	}
-	
-	public IAdvertisementService getAdvertisementService() {
-		if (this.advertisementService == null) {
-			this.advertisementService = SpringUtils.getBean(IAdvertisementService.class);
-		}
-		return this.advertisementService;
 	}
 }
