@@ -789,6 +789,7 @@ export default {
         Video: "视频",
         File: "文件"
       },
+      InsertThirdVideo: "插入第三方视频分享",
       ThirdVideo: {
         DialogTitle: "插入第三方视频分享",
         Code: "第三方视频分享代码",

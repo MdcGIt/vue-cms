@@ -789,6 +789,7 @@ export default {
         Video: "Video",
         File: "File"
       },
+      InsertThirdVideo: "Insert third-party sharing video",
       ThirdVideo: {
         DialogTitle: "Insert third-party sharing video",
         Code: "Video Sharing Code",

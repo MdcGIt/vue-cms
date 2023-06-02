@@ -394,7 +394,7 @@ export default {
       if (this.openEditorW) {
         let routeData = this.$router.resolve({
           path: "/cms/content/editorW",
-          query: { type: contentType, catalogId: catalogId, id: contentId, w: this.openEditorW },
+          query: { type: contentType, catalogId: catalogId, id: contentId },
         });
         window.open(routeData.href, '_blank');
       } else {
