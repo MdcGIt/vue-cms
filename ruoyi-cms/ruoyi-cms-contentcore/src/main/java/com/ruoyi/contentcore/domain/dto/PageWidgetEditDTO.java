@@ -24,6 +24,12 @@ public class PageWidgetEditDTO {
     private String name;
 
     /**
+     * 编码
+     */
+    @NotBlank
+    private String code;
+
+    /**
      * 发布通道编码
      */
     @NotEmpty
