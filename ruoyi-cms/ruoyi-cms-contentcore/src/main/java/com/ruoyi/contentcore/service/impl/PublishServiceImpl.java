@@ -249,8 +249,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		List<CmsPublishPipe> publishPipes = publishPipeService.getPublishPipes(catalog.getSiteId());
 		Assert.isTrue(!publishPipes.isEmpty(), ContentCoreErrorCode.NO_PUBLISHPIPE::exception);
 
-		if (!publishChild && (!catalog.isStaticize() || !catalog.isVisible())
-				|| catalog.getCatalogType().equals(CatalogType_Link.ID)) {
+		if (!publishChild && !publishDetail && (!catalog.isStaticize() || !catalog.isVisible()
+				|| catalog.getCatalogType().equals(CatalogType_Link.ID))) {
 			throw ContentCoreErrorCode.CATALOG_CANNOT_PUBLISH.exception();
 		}
 		String taskId = "publish_catalog_" + catalog.getCatalogId();
@@ -274,7 +274,7 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 					int pageSize = 50;
 					LambdaQueryWrapper<CmsContent> q2 = new LambdaQueryWrapper<CmsContent>()
 							.eq(CmsContent::getCatalogId, catalog.getCatalogId())
-							.eq(CmsContent::getStatus, publishStatus).eq(CmsContent::getLinkFlag, YesOrNo.NO); // 非标题内容
+							.eq(CmsContent::getStatus, publishStatus).ne(CmsContent::getLinkFlag, YesOrNo.YES); // 非标题内容
 					long total = contentService.count(q2);
 					int count = 1;
 					for (int i = 0; i * pageSize < total; i++) {
@@ -483,7 +483,7 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 	@Override
 	public void contentStaticize(IContent<?> content) {
 		CmsCatalog catalog = this.catalogService.getCatalog(content.getCatalogId());
-		if (!catalog.isStaticize() || !catalog.isVisible() || catalog.getCatalogType().equals(CatalogType_Link.ID)) {
+		if (!catalog.isStaticize()) {
 			return;
 		}
 		List<CmsPublishPipe> publishPipeCodes = this.publishPipeService.getPublishPipes(content.getSiteId());
