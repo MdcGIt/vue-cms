@@ -228,7 +228,7 @@ export default {
     handleAddDialogOk () {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.catalogId = this.catalogId;
+          this.form.catalogId = (this.catalogId && this.catalogId.length > 0) ? this.catalogId : 0;
           addPageWidget(this.form).then(response => {
             this.$modal.msgSuccess(response.msg);
             this.loadPageWidgetList();

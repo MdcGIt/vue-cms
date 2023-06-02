@@ -2,7 +2,9 @@ package com.ruoyi.contentcore.domain.dto;
 
 import com.ruoyi.system.validator.LongId;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +15,8 @@ public class PageWidgetAddDTO {
 	/**
 	 * 栏目ID
 	 */
-	@LongId
+	@NotNull
+	@Min(0)
 	private Long catalogId;
 
 	/**
