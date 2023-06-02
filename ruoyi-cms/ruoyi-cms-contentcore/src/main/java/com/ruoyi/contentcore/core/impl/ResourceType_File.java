@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.core.impl;
 
+import com.ruoyi.contentcore.fixed.config.AllowUploadFileType;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.contentcore.core.IResourceType;
@@ -14,7 +15,7 @@ public class ResourceType_File implements IResourceType {
 	
 	public static final  String NAME = "{CMS.CONTENTCORE.RESOURCE_TYPE." + ID + "}";
 	
-	private final static String[] SuffixArray = { ".zip", "" };
+	private final static String[] SuffixArray = AllowUploadFileType.ALLOWED_UPLOAD_EXTENSION.toArray(String[]::new);
 	
 	@Override
 	public String getId() {

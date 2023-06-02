@@ -63,7 +63,11 @@ public class ResourceController extends BaseRestController {
 	@GetMapping("/types")
 	public R<?> getResourceTypes() {
 		List<Map<String, String>> list = ContentCoreUtils.getResourceTypes().stream()
-				.map(rt -> Map.of("id", rt.getId(), "name", I18nUtils.get(rt.getName()))).toList();
+				.map(rt -> Map.of(
+						"id", rt.getId(),
+						"name", I18nUtils.get(rt.getName()),
+						"accepts", StringUtils.join(rt.getUsableSuffix(), ","))
+				).toList();
 		return R.ok(list);
 	}
 

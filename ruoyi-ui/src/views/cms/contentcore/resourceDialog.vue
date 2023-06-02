@@ -137,7 +137,7 @@
 </template>
 <script>
 import { getToken } from "@/utils/auth";
-import { getResrouceList } from "@/api/contentcore/resource";
+import { getResrouceList, getResourceTypes } from "@/api/contentcore/resource";
 export default {
   name: "CMSResourceDialog",
   props: {
@@ -148,7 +148,8 @@ export default {
     },
     rtype: {
       type: String,
-      required: false
+      required: false,
+      default: "file"
     },
     uploadLimit: {
       type: Number,
@@ -170,7 +171,7 @@ export default {
       // 上传参数
       upload: {
         isUploading: false, // 上传按钮loading
-        accept: ".jpg,.png,.mp3,.mp4,.flv", // 文件类型限制
+        accept: ".jpg,.png,.mp3,.mp4,.flv,.pdf", // 文件类型限制
         acceptSize: "20m",
         limit: this.uploadLimit, // 文件数限制
         headers: { Authorization: "Bearer " + getToken(), CurrentSite: this.$cache.local.get("CurrentSite") },
@@ -210,7 +211,13 @@ export default {
     visible (newVal) {
       if (!newVal) {
         this.noticeClose();
+      } else {
+        this.upload.isUploading = false;
+        this.uploadedCount = 0;
       }
+    },
+    rtype (newVal) {
+      this.loadResourceTypes();
     }
   },
   methods: {
@@ -235,6 +242,17 @@ export default {
       }
       this.tagInputVisible = false;
       this.tagInputValue = '';
+    },
+    loadResourceTypes() {
+      getResourceTypes().then(response => {
+        response.data.some((item) => {
+          if (item.id == this.rtype) {
+            this.upload.accept = "." + item.accepts.replaceAll(",", ",.")
+            return true;
+          }
+          return false;
+        })
+      });
     },
     loadMyResources () {
       this.filterQuery.owner = true;
@@ -279,11 +297,11 @@ export default {
       this.onFileUploaded(response.code == 200, fileList, response.code == 200 ? response.data : response.msg);
     },
     handleFileUploadError (err, file, fileList) {
-      this.onFileUploaded(false, fileList);
+      this.onFileUploaded(false, fileList, "Upload failed.");
     },
     onFileUploaded(isSuccess, fileList, result) {
-      this.uploadedCount++;
       if (isSuccess) {
+        this.uploadedCount++;
         this.results.push({ 
           path: result.internalUrl, 
           name: result.name, 
@@ -298,8 +316,8 @@ export default {
         this.$modal.msgError(result);
       }
       if (this.uploadedCount == fileList.length) {
-        this.upload.isUploading = false;
         this.noticeOk();
+        this.upload.isUploading = false;
       }
     },
     handleOk () {

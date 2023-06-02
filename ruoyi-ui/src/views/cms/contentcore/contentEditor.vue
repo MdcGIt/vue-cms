@@ -8,7 +8,7 @@
           <el-button plain type="primary" size="mini" @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>{{ $t('CMS.ContentCore.Preview') }}</el-button>
           <el-button plain type="warning" v-if="isLock" size="mini" icon="el-icon-unlock" @click="handleChangeLockState">{{ $t('CMS.Content.Unlock') }}</el-button>
           <el-button plain type="primary" v-else size="mini" icon="el-icon-lock" @click="handleChangeLockState">{{ $t('CMS.Content.Lock') }}</el-button>
-          <el-button v-if="openEditorW=='true'" plain type="warning" size="mini" icon="el-icon-close" @click="handleClose">{{ $t('Common.Close') }}</el-button>
+          <el-button v-if="openEditorW" plain type="warning" size="mini" icon="el-icon-close" @click="handleClose">{{ $t('Common.Close') }}</el-button>
           <el-button v-else plain type="warning" size="mini" icon="el-icon-back" @click="handleGoBack">{{ $t('CMS.Content.BackToList') }}</el-button>
         </div>
       </el-col>
@@ -294,7 +294,7 @@ export default {
       activeName: "basic",
       catalogId: this.$route.query.catalogId || '0',
       contentId: this.$route.query.id || '0',
-      openEditorW: this.$route.query.w,
+      openEditorW: this.$route.path == '/cms/content/editorW',
       contentType: this.$route.query.type,
       opType: !this.$route.query.id || this.$route.query.id == '0' ? 'ADD' : 'UPDATE',
       openCatalogSelector: false,
@@ -486,8 +486,12 @@ export default {
     handleProgressClose (result) {
       if (result.status == 'SUCCESS') {
         if (this.opType == 'ADD') {
-          if (this.openEditorW == 'true') {
-            this.$router.push({ path: "/cms/content/editorW", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
+          if (this.openEditorW) {
+            let routeData = this.$router.resolve({
+              path: this.$route.path,
+              query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId },
+            });
+            window.open(routeData.href, '_self');
           } else {
             this.$router.push({ path: "/cms/content/editor", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
           }

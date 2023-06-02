@@ -10,6 +10,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.contentcore.util.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
@@ -98,8 +99,8 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	public CmsResource addResource(ResourceUploadDTO dto)
 			throws IOException {
 		String suffix = FileExUtils.getExtension(dto.getFile().getOriginalFilename());
-		IResourceType resourceType = ContentCoreUtils.getResourceTypes().stream().filter(rt -> rt.check(suffix))
-				.findFirst().orElseThrow(() -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
+		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();
 		resource.setResourceId(IdUtils.getSnowflakeId());
@@ -131,8 +132,8 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		}
 		String suffix = base64Data.substring(11, base64Data.indexOf(";"));
 
-		IResourceType resourceType = ContentCoreUtils.getResourceTypes().stream().filter(rt -> rt.check(suffix))
-				.findFirst().orElseThrow(() -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
+		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();
 		resource.setResourceId(IdUtils.getSnowflakeId());
