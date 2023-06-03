@@ -327,7 +327,7 @@ export default {
       this.showOtherTitle = !this.showOtherTitle;
     },
     onEditorReady( editor )  {
-      console.log("ckeditor", "onready");
+      // console.log("ckeditor", "onready");
       // 设置下编辑器最小高度
       editor.editing.view.change(writer => {
         writer.setStyle('min-height', '800px', editor.editing.view.document.getRoot());

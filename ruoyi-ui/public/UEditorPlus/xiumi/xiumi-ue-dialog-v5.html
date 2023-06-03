@@ -29,9 +29,9 @@
   <script>
     var xiumi = document.getElementById('xiumi');
     var xiumi_url = window.location.protocol + '//xiumi.us'; // 必须使用https才能正常回调秀米内容到UE中
-    console.log("xiumi_url is %o", xiumi_url);
+    // console.log("xiumi_url is %o", xiumi_url);
     xiumi.onload = function () {
-      console.log("postMessage to %o", xiumi_url);
+      // console.log("postMessage to %o", xiumi_url);
       // "XIUMI:3rdEditor:Connect" 是特定标识符，不能修改，大小写敏感
       xiumi.contentWindow.postMessage('XIUMI:3rdEditor:Connect', xiumi_url);
     };
@@ -40,11 +40,11 @@
       event.stopPropagation();
     });
     window.addEventListener('message', (event) => {
-      console.log("Received message from xiumi, origin: %o %o", event.origin, xiumi_url);
+      // console.log("Received message from xiumi, origin: %o %o", event.origin, xiumi_url);
       if (event.origin == xiumi_url) {
-        console.log("Inserting html");
+        // console.log("Inserting html");
         editor.execCommand('insertHtml', event.data);
-        console.log("Xiumi dialog is closing");
+        // console.log("Xiumi dialog is closing");
         dialog.close();
       }
     }, false);

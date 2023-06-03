@@ -159,7 +159,7 @@ export default {
             this.editor.setContent(this.value);
           }
         }
-        console.log('ueditor-wrap', this.mode)
+        // console.log('ueditor-wrap', this.mode)
         if (this.mode === 'observer' && window.MutationObserver) {
           this._observerChangeListener();
         } else {
@@ -280,7 +280,7 @@ export default {
       });
     },
     _contentChangeHandler () {
-      console.log('contentChange')
+      // console.log('contentChange')
       this.innerValue = this.editor.getContent();
       this.$emit('input', this.innerValue);
     },

@@ -62,7 +62,6 @@ export default {
       });
     },
     handlePublishPipeChange () {
-      console.log("selectedPublishPipe", this.selectedPublishPipe)
       this.previewUrl = process.env.VUE_APP_BASE_API + "/cms/preview/" + this.type + "/" + this.dataId + "?pp=" + this.selectedPublishPipe;
     },
     handleRefresh () {

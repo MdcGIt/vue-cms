@@ -37,7 +37,6 @@ export default {
       })
     },
     handleShortcutRedirect(router) {
-      console.log(router)
       this.$router.push({ name: router })
     }
   }
