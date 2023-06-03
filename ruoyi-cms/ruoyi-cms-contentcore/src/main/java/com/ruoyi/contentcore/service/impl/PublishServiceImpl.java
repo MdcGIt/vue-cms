@@ -249,10 +249,6 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		List<CmsPublishPipe> publishPipes = publishPipeService.getPublishPipes(catalog.getSiteId());
 		Assert.isTrue(!publishPipes.isEmpty(), ContentCoreErrorCode.NO_PUBLISHPIPE::exception);
 
-		if (!publishChild && !publishDetail && (!catalog.isStaticize() || !catalog.isVisible()
-				|| catalog.getCatalogType().equals(CatalogType_Link.ID))) {
-			throw ContentCoreErrorCode.CATALOG_CANNOT_PUBLISH.exception();
-		}
 		String taskId = "publish_catalog_" + catalog.getCatalogId();
 		AsyncTask asyncTask = new AsyncTask() {
 
