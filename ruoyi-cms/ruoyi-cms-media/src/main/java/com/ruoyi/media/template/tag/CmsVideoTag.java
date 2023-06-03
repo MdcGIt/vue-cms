@@ -54,6 +54,7 @@ public class CmsVideoTag extends AbstractListTag {
 			contentId = c.getCopyId();
 		}
 		Page<CmsVideo> pageResult = this.videoService.lambdaQuery().eq(CmsVideo::getContentId, contentId)
+				.orderByAsc(CmsVideo::getSortFlag)
 				.page(new Page<>(pageIndex, size, page));
 		if (pageIndex > 1 & pageResult.getRecords().size() == 0) {
 			throw new TemplateException("内容列表页码超出上限：" + pageIndex, env);
