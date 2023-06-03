@@ -23,8 +23,8 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 	@Override
 	public Long add() {
 		super.add();
-		this.getContentService().save(this.getContentEntity());
 		if (!this.hasExtendEntity()) {
+			this.getContentService().save(this.getContentEntity());
 			return this.getContentEntity().getContentId();
 		}
 		CmsArticleDetail articleDetail = this.getExtendEntity();
@@ -39,22 +39,22 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 					this.getOperator().getUsername());
 			articleDetail.setContentHtml(contentHtml);
 		}
-		this.getArticleService().save(articleDetail);
-
+		// 正文首图作为logo
 		if (StringUtils.isEmpty(this.getContentEntity().getLogo())
 				&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
-			// 正文首图作为logo
 			this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
 		}
+		this.getContentService().save(this.getContentEntity());
+		this.getArticleService().save(articleDetail);
 		return this.getContentEntity().getContentId();
 	}
 
 	@Override
 	public Long save() {
 		super.save();
-		this.getContentService().updateById(this.getContentEntity());
 		// 非映射内容或标题内容修改文章详情
 		if (!this.hasExtendEntity()) {
+			this.getContentService().updateById(this.getContentEntity());
 			return this.getContentEntity().getContentId();
 		}
 		CmsArticleDetail articleDetail = this.getExtendEntity();
@@ -67,13 +67,13 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 					this.getOperator().getUsername());
 		}
 		articleDetail.setContentHtml(contentHtml);
-		this.getArticleService().updateById(articleDetail);
-
+		// 正文首图作为logo
 		if (StringUtils.isEmpty(this.getContentEntity().getLogo())
 				&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
-			// 正文首图作为logo
 			this.getContentEntity().setLogo(this.getFirstImage(articleDetail.getContentHtml()));
 		}
+		this.getContentService().updateById(this.getContentEntity());
+		this.getArticleService().updateById(articleDetail);
 		return this.getContentEntity().getContentId();
 	}
 

@@ -20,6 +20,7 @@ import com.ruoyi.contentcore.core.ICatalogType;
 import com.ruoyi.contentcore.core.IContentType;
 import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.core.IPublishPipeProp.PublishPipePropUseType;
+import com.ruoyi.contentcore.core.impl.CatalogType_Link;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.*;
@@ -232,6 +233,10 @@ public class CatalogController extends BaseRestController {
 		CmsCatalog catalog = this.catalogService.getCatalog(dto.getCatalogId());
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
 
+		if (!dto.getPublishChild() && !dto.getPublishDetail() && (!catalog.isStaticize() || !catalog.isVisible()
+				|| catalog.getCatalogType().equals(CatalogType_Link.ID))) {
+			throw ContentCoreErrorCode.CATALOG_CANNOT_PUBLISH.exception();
+		}
 		AsyncTask task = this.publishService.publishCatalog(catalog, dto.getPublishChild(), dto.getPublishDetail(),
 				dto.getPublishStatus());
 		return R.ok(task.getTaskId());

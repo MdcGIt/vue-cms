@@ -1063,7 +1063,10 @@ export default {
       Desc: "Summary",
       MoveUp: "Up",
       MoveDown: "Down",
-      Add: "Add Video"
+      Add: "Add Video",
+      AddThirdVideo: "Add Third Party Video",
+      ThirdVideoTitle: "The third party video",
+      ThirdVideoCode: "Video Code"
     },
     PageWidget: {
       Type: "Type",

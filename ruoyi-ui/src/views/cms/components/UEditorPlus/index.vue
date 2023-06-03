@@ -105,7 +105,7 @@ export default {
         autoSaveEnable: false, // 自动保存
         enableDragUpload: false,
         enablePasteUpload: false,
-        imagePopup: true,
+        imagePopup: false, // 关闭默认图片选择快捷工具栏
         pageBreakTag: '__XY_UEDITOR_PAGE_BREAK__',
         iframeCssUrlsAddition: [
           UE_HOME + 'themes/placeholder.css'
@@ -117,7 +117,7 @@ export default {
           link: UE_HOME + "dialogs/link/link.html?20220503",
           spechars: UE_HOME + "dialogs/spechars/spechars.html?20220503",
           searchreplace: UE_HOME + "dialogs/searchreplace/searchreplace.html?20220503",
-          insertvideo: UE_HOME + "dialogs/video/video.html?20220503",
+          // insertvideo: UE_HOME + "dialogs/video/video.html?20220503",
           help: UE_HOME + "dialogs/help/help.html?20220503",
           preview: UE_HOME + "dialogs/preview/preview.html?20220503",
           emotion: UE_HOME + "dialogs/emotion/emotion.html?20220503",
@@ -239,13 +239,218 @@ export default {
     init() {
     },
     handleBeforeInit(editorId) {
-      console.log('ueditor-plus.before-init', editorId)
+      // console.log('ueditor-plus.before-init', editorId)
       this.addXyContentButton(editorId)
       this.addXyResourceButton(editorId)
       this.addThirdVideoButton(editorId)
     },
     handleReady(editorInstance) {
-      console.log('ueditor-plus.ready: ' + editorInstance.key, editorInstance)
+      // console.log('ueditor-plus.ready: ' + editorInstance.key, editorInstance)
+      this.addPopup(editorInstance)
+    },
+    addPopup(editor) {
+      console.log(editor)
+      var domUtils = baidu.editor.dom.domUtils;
+      var popup = new baidu.editor.ui.Popup({
+        editor: editor,
+        content: "",
+        className: "edui-bubble",
+        _onEditButtonClick: function () {
+          this.hide();
+          editor.ui._dialogs.linkDialog.open();
+        },
+        _onImgEditButtonClick: function (name) {
+          this.hide();
+          if (name == "xy-resource") {
+            editor.execCommand("xy-resource", 'image');
+          } else {
+            editor.ui._dialogs[name] && editor.ui._dialogs[name].open();
+          }
+        },
+        _onImgSetFloat: function (value) {
+          this.hide();
+          editor.execCommand("imagefloat", value);
+        },
+        _setIframeAlign: function (value) {
+          var frame = popup.anchorEl;
+          var newFrame = frame.cloneNode(true);
+          switch (value) {
+            case -2:
+              newFrame.setAttribute("align", "");
+              break;
+            case -1:
+              newFrame.setAttribute("align", "left");
+              break;
+            case 1:
+              newFrame.setAttribute("align", "right");
+              break;
+          }
+          frame.parentNode.insertBefore(newFrame, frame);
+          domUtils.remove(frame);
+          popup.anchorEl = newFrame;
+          popup.showAnchor(popup.anchorEl);
+        },
+        _updateIframe: function () {
+          var frame = (editor._iframe = popup.anchorEl);
+          if (domUtils.hasClass(frame, "ueditor_baidumap")) {
+            editor.selection.getRange().selectNode(frame).select();
+            editor.ui._dialogs.mapDialog.open();
+            popup.hide();
+          } else {
+            editor.ui._dialogs.insertframeDialog.open();
+            popup.hide();
+          }
+        },
+        _onRemoveButtonClick: function (cmdName) {
+          editor.execCommand(cmdName);
+          this.hide();
+        },
+        queryAutoHide: function (el) {
+          if (el && el.ownerDocument == editor.document) {
+            if (
+              el.tagName.toLowerCase() == "img" ||
+              domUtils.findParentByTagName(el, "a", true)
+            ) {
+              return el !== popup.anchorEl;
+            }
+          }
+          return baidu.editor.ui.Popup.prototype.queryAutoHide.call(this, el);
+        }
+      });
+      popup.render();
+      editor.addListener("mouseover", function (t, evt) {
+        evt = evt || window.event;
+        var el = evt.target || evt.srcElement;
+        if (
+          editor.ui._dialogs.insertframeDialog &&
+          /iframe/gi.test(el.tagName)
+        ) {
+          var html = popup.formatHtml(
+            "<nobr>" +
+            '<span onclick=$$._setIframeAlign(-2) class="edui-clickable">' +
+            editor.getLang("default") +
+            '</span>&nbsp;&nbsp;<span onclick=$$._setIframeAlign(-1) class="edui-clickable">' +
+            editor.getLang("justifyleft") +
+            '</span>&nbsp;&nbsp;<span onclick=$$._setIframeAlign(1) class="edui-clickable">' +
+            editor.getLang("justifyright") +
+            "</span>&nbsp;&nbsp;" +
+            ' <span onclick="$$._updateIframe( this);" class="edui-clickable">' +
+            editor.getLang("modify") +
+            "</span></nobr>"
+          );
+          if (html) {
+            popup.getDom("content").innerHTML = html;
+            popup.anchorEl = el;
+            popup.showAnchor(popup.anchorEl);
+          } else {
+            popup.hide();
+          }
+        }
+      });
+      editor.addListener("selectionchange", function (t, causeByUi) {
+        if (!causeByUi) return;
+        var html = "",
+          str = "",
+          img = editor.selection.getRange().getClosedNode(),
+          dialogs = editor.ui._dialogs;
+        if (img && img.tagName == "IMG") {
+          var dialogName = "xy-resource";
+          if (img.getAttribute("anchorname")) {
+            dialogName = "anchorDialog";
+            html = popup.formatHtml(
+              "<nobr>" +
+              '<span onclick=$$._onImgEditButtonClick("anchorDialog") class="edui-clickable">' +
+              editor.getLang("modify") +
+              "</span>&nbsp;&nbsp;" +
+              "<span onclick=$$._onRemoveButtonClick('anchor') class=\"edui-clickable\">" +
+              editor.getLang("delete") +
+              "</span></nobr>"
+            );
+          }
+          if (
+            domUtils.hasClass(img, "loadingclass") ||
+            domUtils.hasClass(img, "loaderrorclass")
+          ) {
+            dialogName = "";
+          }
+          if (dialogName == "") {
+            return;
+          }
+
+          var actions = [];
+          actions.push('<nobr />');
+          actions.push('<span onclick=$$._onImgSetFloat("none") class="edui-clickable edui-popup-action-item">' +
+            editor.getLang("default") +
+            "</span>");
+          actions.push('<span onclick=$$._onImgSetFloat("left") class="edui-clickable edui-popup-action-item">' +
+            editor.getLang("justifyleft") +
+            "</span>");
+          actions.push('<span onclick=$$._onImgSetFloat("right") class="edui-clickable edui-popup-action-item">' +
+            editor.getLang("justifyright") +
+            "</span>");
+          actions.push('<span onclick=$$._onImgSetFloat("center") class="edui-clickable edui-popup-action-item">' +
+            editor.getLang("justifycenter") +
+            "</span>");
+          if (img.getAttribute('data-formula-image') !== null) {
+            actions.push("<span onclick=\"$$._onImgEditButtonClick('formulaDialog');\" class='edui-clickable edui-popup-action-item'>" +
+                editor.getLang("formulaedit") + "</span>");
+          }
+          if (img.getAttribute("data-word-image")) {
+            actions.push("<span onclick=\"$$._onImgEditButtonClick('wordimageDialog');\" class='edui-clickable edui-popup-action-item'>" +
+              editor.getLang("save") +
+              "</span>");
+          } else {
+            actions.push("<span onclick=\"$$._onImgEditButtonClick('" + dialogName + '\');" class="edui-clickable edui-popup-action-item">' +
+              editor.getLang("modify") +
+              "</span>");
+          }
+          actions.push("</nobr>");
+
+          !html && (html = popup.formatHtml(actions.join("")));
+        }
+        if (editor.ui._dialogs.linkDialog) {
+          var link = editor.queryCommandValue("link");
+          var url;
+          if (
+            link &&
+            (url = link.getAttribute("_href") || link.getAttribute("href", 2))
+          ) {
+            var txt = url;
+            if (url.length > 30) {
+              txt = url.substring(0, 20) + "...";
+            }
+            if (html) {
+              html += '<div style="height:5px;"></div>';
+            }
+            html += popup.formatHtml(
+              "<nobr>" +
+              editor.getLang("anchorMsg") +
+              ': <a target="_blank" href="' +
+              url +
+              '" title="' +
+              url +
+              '" >' +
+              txt +
+              "</a>" +
+              ' <span class="edui-clickable" onclick="$$._onEditButtonClick();">' +
+              editor.getLang("modify") +
+              "</span>" +
+              ' <span class="edui-clickable" onclick="$$._onRemoveButtonClick(\'unlink\');"> ' +
+              editor.getLang("clear") +
+              "</span></nobr>"
+            );
+            popup.showAnchor(link);
+          }
+        }
+
+        if (html) {
+          popup.getDom("content").innerHTML = html;
+          popup.anchorEl = img || link;
+          popup.showAnchor(popup.anchorEl);
+        } else {
+          popup.hide();
+        }
+      });
     },
     addXyContentButton(eidtorId) {
       const that = this
@@ -302,7 +507,6 @@ export default {
     },
     handleCatalogSelectorOk(catalogs) {
       if (catalogs && catalogs.length > 0) {
-        console.log(catalogs)
         var editor = window.UE.getEditor(this.editorId)
         editor.execCommand("insertHTML", '<a href="' + catalogs[0].props.internalUrl + '">' + catalogs[0].name + '</a>');
         this.openCatalogSelector = false;
@@ -315,7 +519,6 @@ export default {
     },
     handleContentSelectorOk(contents) {
       if (contents && contents.length > 0) {
-        console.log(contents)
         var editor = window.UE.getEditor(this.editorId)
         if (this.contentType == 'image') {
           // 插入组图

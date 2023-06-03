@@ -207,12 +207,6 @@
         </el-col>
       </el-form>
     </el-row>
-    <!-- 素材选择组件 -->
-    <cms-resource-dialog 
-      :open.sync="openResourceDialog"
-      :upload-limit="1"
-      @ok="handleResourceDialogOk">
-    </cms-resource-dialog>
     <!-- 模板选择组件 -->
     <cms-template-selector :open="openTemplateSelector" 
                        :publishPipeCode="publishPipeActiveName"
@@ -317,7 +311,6 @@ export default {
       rules: {
         title: [{ required: true, message: this.$t('CMS.Content.RuleTips.Title'), trigger: "blur" }]
       },
-      openResourceDialog: false,
       summaryInputSize: { minRows: 3, maxRows: 6 },
       openTemplateSelector: false, // 模板选择弹窗
       publishPipeActiveName: "",
@@ -438,15 +431,6 @@ export default {
     handleSetLogo(path, src) {
       this.$set(this.form, "logoSrc", src);
       this.form.logo = path;
-    },
-    handleLogoClick() {
-      this.openResourceDialog = true;
-    },
-    handleResourceDialogOk (results) {
-      if (results && results.length == 1) {
-        this.form.logo = results[0].path;
-        this.form.logoSrc = results[0].src;
-      }
     },
     /** 提交 */
     handleSave: function() {

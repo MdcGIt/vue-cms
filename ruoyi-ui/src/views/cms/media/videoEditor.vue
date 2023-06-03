@@ -5,102 +5,138 @@
               v-for="(item, index) in itemList"
               :key="item.videoId?item.videoId:item.path"
               class="r-card mt10">
-        <el-container class="r-container">
-          <el-aside width="280px" class="r-left">
-            <video-player
-              class="video-player vjs-custom-skin"
-              :options="{
-                playbackRates: [0.5, 1.0, 1.5, 2.0, 3.0], //播放速度
-                currentTime: '00:00',
-                autoplay: false,
-                muted: false, // 默认情况下将会消除任何音频。
-                loop: false,
-                preload: 'none',
-                language: 'zh-CN',
-                aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如'16:9'或'4:3'）
-                fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器
-                sources: [
-                  {
-                    src: item.src,//视频地址
+        <el-row :gutter="24" class="r-container">
+          <el-col :span="6" class="r-left">
+            <div v-if="item.type==ThirdVideoType" v-html="item.path"></div>
+            <div v-else>
+              <video-player
+                class="video-player vjs-custom-skin"
+                :options="{
+                  playbackRates: [0.5, 1.0, 1.5, 2.0, 3.0], //播放速度
+                  currentTime: '00:00',
+                  autoplay: false,
+                  muted: false, // 默认情况下将会消除任何音频。
+                  loop: false,
+                  preload: 'none',
+                  language: 'zh-CN',
+                  aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如'16:9'或'4:3'）
+                  fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器
+                  sources: [
+                    {
+                      src: item.src,//视频地址
+                    },
+                  ],
+                  controlBar: {
+                    timeDivider: false,
+                    durationDisplay: false,
+                    remainingTimeDisplay: false,
+                    fullscreenToggle: true, //全屏按钮
                   },
-                ],
-                controlBar: {
-                  timeDivider: false,
-                  durationDisplay: false,
-                  remainingTimeDisplay: false,
-                  fullscreenToggle: true, //全屏按钮
-                },
-              }"
-            ></video-player>
-          </el-aside>
-          <el-container>
-            <el-main>
-              <el-row>
-                <el-form-item :label="$t('CMS.Video.Parameter')">
-                  <div style="font-size:12px;color:#777;">
-                    [ {{ $t('CMS.Video.Type') }}: {{ item.type }} ]
-                    [ {{ $t('CMS.Video.FileSize') }}: {{ item.fileSizeName }} ]
-                    [ {{ $t('CMS.Video.Duration') }}: {{ transferDuration(item.duration) }} ]
-                    [ {{ $t('CMS.Video.WidthHeight') }}: {{ item.width }}x{{ item.height }} ]
-                    <el-tooltip placement="top" effect="light">
-                      <div slot="content">
-                        <p>{{ $t('CMS.Video.Format') }}：[ {{ item.format ? item.format : '-' }} ]</p>
-                        <p>{{ $t('CMS.Video.Decoder') }}：[ {{ item.decoder ? item.decoder : '-'  }} ]</p>
-                        <p>{{ $t('CMS.Video.BitRate') }}：[ {{ item.bitRate }} ]</p>
-                        <p>{{ $t('CMS.Video.FrameRate') }}：[ {{ item.frameRate }} ]</p>
-                      </div>
-                      <el-link type="primary" :underline="false">{{$t('CMS.Video.Details') }}</el-link>
-                    </el-tooltip>
-                  </div>
-                </el-form-item>
-              </el-row>
-              <el-row>
-                <el-form-item :label="$t('CMS.Video.Title')">
-                  <el-input v-model="item.title"></el-input>
-                </el-form-item>
-              </el-row>
-              <el-row>
-                <el-form-item :label="$t('CMS.Video.Desc')">
-                  <el-input type="textarea" :rows="2" v-model="item.desc"></el-input>
-                </el-form-item>
-              </el-row>
-              <el-row class="r-opr-row">
-                <el-link 
-                  icon="el-icon-top"
-                  :underline="false"
-                  v-if="index > 0" 
-                  @click="moveUp(index)">{{ $t('CMS.Video.MoveUp') }}</el-link>
-                <el-link
-                  icon="el-icon-bottom"
-                  :underline="false"
-                  v-if="itemList.length > 1 && index < itemList.length - 1" 
-                  @click="moveDown(index)">{{ $t('CMS.Video.MoveDown') }}</el-link>
-                <el-link 
-                  icon="el-icon-edit"
-                  :underline="false"
-                  @click="editItem(index)">{{ $t('Common.Edit') }}</el-link>
-                <el-link 
-                  icon="el-icon-delete"
-                  :underline="false"
-                  @click="deleteImage(index)">{{ $t('Common.Delete') }}</el-link>
-              </el-row>
-            </el-main>
-          </el-container>
-        </el-container>
+                }"
+              ></video-player>
+            </div>
+          </el-col>
+          <el-col :span="18" class="r-right">
+            <el-row v-if="item.type==ThirdVideoType">
+              <el-form-item :label="$t('CMS.Video.Parameter')" style="margin-bottom:0;">
+                <div style="font-size:12px;color:#777;">
+                  [ {{ $t('CMS.Video.Type') }}: {{ item.type }} ]
+                </div>
+              </el-form-item>
+            </el-row>
+            <el-row v-else>
+              <el-form-item :label="$t('CMS.Video.Parameter')" style="margin-bottom:0;">
+                <div style="font-size:12px;color:#777;">
+                  [ {{ $t('CMS.Video.Type') }}: {{ item.type }} ]
+                  [ {{ $t('CMS.Video.FileSize') }}: {{ item.fileSizeName }} ]
+                  [ {{ $t('CMS.Video.Duration') }}: {{ transferDuration(item.duration) }} ]
+                  [ {{ $t('CMS.Video.WidthHeight') }}: {{ item.width }}x{{ item.height }} ]
+                  <el-tooltip placement="top" effect="light">
+                    <div slot="content">
+                      <p>{{ $t('CMS.Video.Format') }}：[ {{ item.format ? item.format : '-' }} ]</p>
+                      <p>{{ $t('CMS.Video.Decoder') }}：[ {{ item.decoder ? item.decoder : '-'  }} ]</p>
+                      <p>{{ $t('CMS.Video.BitRate') }}：[ {{ item.bitRate }} ]</p>
+                      <p>{{ $t('CMS.Video.FrameRate') }}：[ {{ item.frameRate }} ]</p>
+                    </div>
+                    <el-link type="primary" :underline="false">{{$t('CMS.Video.Details') }}</el-link>
+                  </el-tooltip>
+                </div>
+              </el-form-item>
+            </el-row>
+            <el-row>
+              <el-form-item :label="$t('CMS.Video.Title')">
+                <el-input v-model="item.title"></el-input>
+              </el-form-item>
+            </el-row>
+            <el-row>
+              <el-form-item :label="$t('CMS.Video.Desc')">
+                <el-input type="textarea" :rows="2" v-model="item.desc"></el-input>
+              </el-form-item>
+            </el-row>
+            <el-row class="r-opr-row">
+              <el-link 
+                icon="el-icon-top"
+                :underline="false"
+                v-if="index > 0" 
+                @click="moveUp(index)">{{ $t('CMS.Video.MoveUp') }}</el-link>
+              <el-link
+                icon="el-icon-bottom"
+                :underline="false"
+                v-if="itemList.length > 1 && index < itemList.length - 1" 
+                @click="moveDown(index)">{{ $t('CMS.Video.MoveDown') }}</el-link>
+              <el-link 
+                icon="el-icon-edit"
+                :underline="false"
+                @click="editItem(index)">{{ $t('Common.Edit') }}</el-link>
+              <el-link 
+                icon="el-icon-delete"
+                :underline="false"
+                @click="deleteImage(index)">{{ $t('Common.Delete') }}</el-link>
+            </el-row>
+          </el-col>
+        </el-row>
       </el-card>
     </transition-group>
-    <el-card shadow="always" class="mt10">
-        <div class="btn-add bg-purple-white" @click="addItem">
-          <svg-icon icon-class="video" style="width:60px;height:60px;"></svg-icon>
-          <div>{{ $t('CMS.Video.Add') }}</div>
-        </div>
-    </el-card>
+      <el-row :gutter="10" class="mt10">
+        <el-col :span="12">
+          <el-card shadow="always">
+            <div class="btn-add bg-purple-white" @click="addItem">
+              <svg-icon icon-class="video" style="width:60px;height:60px;"></svg-icon>
+              <div>{{ $t('CMS.Video.Add') }}</div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card shadow="always">
+            <div class="btn-add bg-purple-white" @click="handleThirdVideo(-1)">
+              <svg-icon icon-class="video2" style="width:60px;height:60px;"></svg-icon>
+              <div>{{ $t('CMS.Video.AddThirdVideo') }}</div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
     <cms-resource-dialog 
       :open.sync="openResourceDialog"
       :upload-limit="uploadLimit"
       rtype="video"
       @ok="handleResourceDialogOk">
     </cms-resource-dialog>
+    <!-- 添加/修改第三方视频对话框 -->
+    <el-dialog 
+      :title="$t('CMS.Video.ThirdVideoTitle')"
+      :visible.sync="openThirdVideoDialog"
+      width="600px"
+      append-to-body>
+      <el-form ref="form" label-position="top">
+        <el-form-item :label="$t('CMS.Video.ThirdVideoCode')">
+          <el-input v-model="thirdVideoCode" :rows="8" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleThirdVideoOk">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -124,9 +160,12 @@ export default {
   },
   data () {
     return {
+      ThirdVideoType: "SHARE",
       openResourceDialog: false,
       uploadLimit: 10,
-      editIndex: -1
+      editIndex: -1,
+      openThirdVideoDialog: false,
+      thirdVideoCode: ""
     };
   },
   watch: {
@@ -162,15 +201,60 @@ export default {
         });
       }
     },
+    handleThirdVideo(index) {
+      this.editIndex = index;
+      this.thirdVideoCode = ""
+      this.openThirdVideoDialog = true
+      if (index > -1) {
+        this.thirdVideoCode = this.itemList[index].path
+      }
+    },
+    handleThirdVideoOk() {
+      this.openThirdVideoDialog = false
+      if (this.thirdVideoCode && this.thirdVideoCode.length > 0) {
+        if (this.editIndex > -1) {
+          this.itemList[this.editIndex] = { 
+              type: this.ThirdVideoType,
+              path: this.thirdVideoCode, 
+              src: "", 
+              title: "", 
+              fileName: "", 
+              fileSize: 0,
+              fileSizeName: "",
+              resourceType: ""
+            };
+          this.editIndex = -1;
+        } else {
+          this.itemList.push({ 
+            type: this.ThirdVideoType,
+            path: this.thirdVideoCode, 
+            src: "", 
+            title: "", 
+            fileName: "", 
+            fileSize: 0,
+            fileSizeName: "",
+            resourceType: ""
+          });
+        }
+      }
+    },
+    cancel() {
+      this.openThirdVideoDialog = false
+    },
     addItem () {
       this.editIndex = -1;
       this.uploadLimit = 10;
       this.openResourceDialog = true;
     },
     editItem (index) {
-      this.uploadLimit = 1;
-      this.editIndex = index;
-      this.openResourceDialog = true;
+      let item = this.itemList[index]
+      if (item.type == this.ThirdVideoType) {
+        this.handleThirdVideo(index)
+      } else {
+        this.uploadLimit = 1;
+        this.editIndex = index;
+        this.openResourceDialog = true;
+      }
     },
     deleteImage (index) {
       this.itemList.splice(index, 1);
@@ -235,17 +319,13 @@ export default {
   font-size: 12px;
   color: #777;
 }
-.cms-video-editor .r-container .el-main {
-  padding: 0px;
+.cms-video-editor .r-container .el-form-item {
+  margin-bottom: 15px;
 }
-.cms-video-editor .r-container .el-main .el-form-item {
-  margin-bottom: 12px;
-}
-.cms-video-editor .r-container .el-main .el-link {
+.cms-video-editor .r-container .el-link {
   margin-left: 20px;
 }
 .cms-video-editor .r-container .r-opr-row {
   text-align: right;
-  margin-top: 10px;
 }
 </style>

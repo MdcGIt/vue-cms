@@ -1063,7 +1063,10 @@ export default {
       Desc: "简介",
       MoveUp: "上移",
       MoveDown: "下移",
-      Add: "添加视频"
+      Add: "添加视频",
+      AddThirdVideo: "添加第三方视频",
+      ThirdVideoTitle: "第三方视频分享",
+      ThirdVideoCode: "视频嵌入代码"
     },
     PageWidget: {
       Type: "类型",

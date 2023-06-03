@@ -449,7 +449,7 @@ export default {
     },
     handleCreateIndex(row) {
       createIndexes(row.contentId).then(response => {
-        this.$modal.msgSuccess($t('Common.OpSuccess'));
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
       });
     },
     handleCopy(row) {
@@ -466,7 +466,7 @@ export default {
         copyType: copyType
       };
       copyContent(data).then(response => {
-        this.$modal.msgSuccess($t('Common.OpSuccess'));
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         this.openCatalogSelector = false;
       });
     },
@@ -483,7 +483,7 @@ export default {
         catalogId: catalogs[0].id
       };
       moveContent(data).then(response => {
-        this.$modal.msgSuccess($t('Common.OpSuccess'));
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         this.openCatalogSelector = false;
         this.loadContentList();
       });

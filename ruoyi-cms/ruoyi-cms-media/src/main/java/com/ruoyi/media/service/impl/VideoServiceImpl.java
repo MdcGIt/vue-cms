@@ -25,7 +25,7 @@ public class VideoServiceImpl extends ServiceImpl<CmsVideoMapper, CmsVideo> impl
 	/**
 	 * 处理视频信息
 	 * 
-	 * @param audio
+	 * @param video
 	 */
 	@Override
 	public void progressVideoInfo(CmsVideo video) {
