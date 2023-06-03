@@ -61,6 +61,7 @@
     </el-card>
     <cms-resource-dialog 
       :open.sync="openResourceDialog"
+      rtype="image"
       :upload-limit="uploadLimit"
       @ok="handleResourceDialogOk">
     </cms-resource-dialog>

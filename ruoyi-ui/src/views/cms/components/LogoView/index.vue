@@ -31,6 +31,7 @@
     </div>
     <cms-resource-dialog 
       :open.sync="openResourceDialog"
+      rtype="image"
       :upload-limit="1" 
       @ok="handleResourceDialogOk">
     </cms-resource-dialog>
