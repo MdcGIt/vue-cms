@@ -292,7 +292,6 @@ export default {
       this.handleQuery();
     },
     handleFileBeforeUpload (file) {
-      console.log('handleFileBeforeUpload', file.szie, this.upload.acceptSize)
       if (this.upload.acceptSize > 0 && file.size > this.upload.acceptSize) {
         this.$message.error(this.$t('CMS.Resource.UploadFileSizeLimit', [ this.fileSizeName ]));
         return false;

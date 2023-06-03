@@ -249,7 +249,6 @@ export default {
       this.addPopup(editorInstance)
     },
     addPopup(editor) {
-      console.log(editor)
       var domUtils = baidu.editor.dom.domUtils;
       var popup = new baidu.editor.ui.Popup({
         editor: editor,
