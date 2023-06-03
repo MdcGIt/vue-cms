@@ -548,7 +548,7 @@ export default {
         }
       } else if(this.catalogSelectorFor === 'linkflag') {
         if (catalogs && catalogs.length > 0) {
-          this.form.redirectUrl = catalogs[0].internalUrl;
+          this.form.redirectUrl = catalogs[0].props.internalUrl;
         }
       }
       this.openCatalogSelector = false;

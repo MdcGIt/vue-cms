@@ -527,7 +527,7 @@ export default {
         })
       } else {
         if (catalogs && catalogs.length > 0) {
-          this.form_info.redirectUrl = catalogs[0].internalUrl;
+          this.form_info.redirectUrl = catalogs[0].props.internalUrl;
         }
       }
       this.openCatalogSelector = false;

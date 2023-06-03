@@ -31,13 +31,14 @@
                 :headers="upload.headers"
                 :data="upload.data"
                 :file-list="upload.fileList"
+                :before-upload="handleFileBeforeUpload"
                 :on-progress="handleFileUploadProgress"
                 :on-success="handleFileUploadSuccess"
                 :on-error="handleFileUploadError"
                 :on-exceed="handleFileUloadExceed"
                 :auto-upload="false">
                 <i class="el-icon-plus"></i>
-                <div slot="tip" class="el-upload__tip">{{ $t('CMS.Resource.UPloadTip', [ upload.accept, upload.acceptSize ]) }}</div>
+                <div slot="tip" class="el-upload__tip">{{ $t('CMS.Resource.UPloadTip', [ upload.accept, fileSizeName ]) }}</div>
               </el-upload>
             </el-form-item>
             <el-form-item v-show="showNet" :label="$t('CMS.Resource.RemoteLink')" prop="path">
@@ -172,7 +173,7 @@ export default {
       upload: {
         isUploading: false, // 上传按钮loading
         accept: ".jpg,.png,.mp3,.mp4,.flv,.pdf", // 文件类型限制
-        acceptSize: "20m",
+        acceptSize: 20 * 1024 * 1024,
         limit: this.uploadLimit, // 文件数限制
         headers: { Authorization: "Bearer " + getToken(), CurrentSite: this.$cache.local.get("CurrentSite") },
         url: process.env.VUE_APP_BASE_API + "/cms/resource/upload", // 上传的地址
@@ -202,6 +203,9 @@ export default {
     },
     showNet () {
       return this.form_upload.source=='net'
+    },
+    fileSizeName() {
+      return this.upload.acceptSize / 1024 / 1024 + " MB"
     }
   },
   watch: {
@@ -286,6 +290,14 @@ export default {
       this.dateRange = [];
       this.filterQuery.owner = false;
       this.handleQuery();
+    },
+    handleFileBeforeUpload (file) {
+      console.log('handleFileBeforeUpload', file.szie, this.upload.acceptSize)
+      if (this.upload.acceptSize > 0 && file.size > this.upload.acceptSize) {
+        this.$message.error(this.$t('CMS.Resource.UploadFileSizeLimit', [ this.fileSizeName ]));
+        return false;
+      }
+      return true;
     },
     handleFileUloadExceed (files, fileList) {
       this.$modal.msgWarning(this.$t('CMS.Resource.UploadLimit', [ this.upload.limit ]));

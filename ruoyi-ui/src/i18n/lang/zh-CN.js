@@ -1141,12 +1141,13 @@ export default {
       RemoteLink: "网络链接",
       Source: "来源",
       Upload: "上传",
-      UPloadTip: "只能上传{0}文件，且不超过{1}",
+      UPloadTip: "只能上传 {0} 文件，且不超过 {1}",
       Tag: "标签",
       MaterialLibrary: "素材库",
       MyMaterial: "我的素材",
       Cut: "裁剪",
       UploadLimit: "上传文件数量不能超过：{0}",
+      UploadFileSizeLimit: "上传文件大小不能超过：{0}",
       RemoteLinkErr: "资源外链不能为空且必须是http://或https://开头的网络地址"
     },
     PublishPipe: {

@@ -1147,6 +1147,7 @@ export default {
       MyMaterial: "My Materials",
       Cut: "Cut",
       UploadLimit: "The files cannot exceed: {0}",
+      UploadFileSizeLimit: "The file size exceed: {0}",
       RemoteLinkErr: "The link cannot be empty and must start with http(s)://"
     },
     PublishPipe: {
