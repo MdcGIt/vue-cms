@@ -61,7 +61,8 @@ public class LinkController extends BaseRestController {
 			@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
 		Page<CmsLink> page = this.linkService.lambdaQuery().eq(CmsLink::getGroupId, groupId)
-				.like(StringUtils.isNotEmpty(query), CmsLink::getName, query).orderByDesc(CmsLink::getLinkId)
+				.like(StringUtils.isNotEmpty(query), CmsLink::getName, query)
+				.orderByAsc(CmsLink::getSortFlag)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 		if (page.getRecords().size() > 0) {
 			page.getRecords().forEach(link -> {
@@ -94,7 +95,7 @@ public class LinkController extends BaseRestController {
 	@PutMapping
 	public R<String> edit(@RequestBody  @Validated LinkDTO dto) {
 		CmsLink link = new CmsLink();
-		BeanUtils.copyProperties(dto, link, "siteId", "groupId", "sortFlag");
+		BeanUtils.copyProperties(dto, link, "siteId", "groupId");
 		link.updateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.linkService.updateById(link);
 		return R.ok();
