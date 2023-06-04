@@ -1,6 +1,6 @@
 export default {
   APP: {
-    TITLE: 'CMS'
+    TITLE: 'RuoYi-Vue-CMS'
   },
   Common: {
     Search: 'Search',
