@@ -1,6 +1,6 @@
 export default {
   APP: {
-    TITLE: 'RuoYi-Vue-CMS'
+    TITLE: 'CMS'
   },
   Common: {
     Search: 'Search',
@@ -336,7 +336,6 @@ export default {
       IsExternalLinkTips: "Router must start whith `http(s):// for external link.",
       RouterLink: "Router",
       RouterLinkTips: "Router visit path, eg: `user`, Router must start whith `http(s):// for external link. ",
-      Perms: "Permission Key",
       PermsTips: "Permission Key is used for controller, eg: @PreAuthorize(`@ss.hasPermi('system:user:list')`)",
       RouterParams: "Router Params",
       RouterParamsTips: 'Router default parameters, eg: `{"id": 1, "name": "ry"}`',
@@ -567,23 +566,20 @@ export default {
       PasswordLength: "Password Length",
       PasswordRule: "Password Rule",
       PasswordExpireSeconds: "Password Expiration Seconds",
-      PasswordRetryLimit: "Password Retry Limit",
+      PasswordRetryLimit: "Password Retry Day Limit",
       Status: "Status",
       PasswordConfig: "Password Configuration",
       PasswordMinLength: "Pwd Min Length",
       PasswordMaxLength: "Pwd Max Length",
-      PasswordRule: "Password Rule",
       PasswordSensitive: "Pwd Sensitive Char",
       WeakPasswords: "Weak Password",
       WeakPasswordsPlaceholder: "One weak password per line.",
-      PasswordExpireSeconds: "Pwd Expiration Seconds",
       PasswordExpireSecondsTip: "0 means never expires, with a maximum of 100 days.",
       ForceModifyPwdAfterAdd: "Modify Pwd For First Login",
       ForceModifyPwdAfterAddTip: "Only applicable to adding users in the backend.",
       ForceModifyPwdAfterReset: "Modify Pwd For Reset",
       ForceModifyPwdAfterResetTip: "Only applicable to reset in the backend.",
       LoginConfig: "Login Configuration",
-      PasswordRetryLimit: "Pwd Retry Day Limit",
       PasswordRetryLimitTip: "0 means unlimited.",
       PasswordRetryStrategy: "Pwd Retry Strategy",
       PasswordRetryLockSeconds: "Lock User Seconds",
@@ -789,6 +785,7 @@ export default {
         Video: "Video",
         File: "File"
       },
+      InsertThirdVideo: "Insert third-party sharing video",
       ThirdVideo: {
         DialogTitle: "Insert third-party sharing video",
         Code: "Video Sharing Code",
@@ -854,7 +851,7 @@ export default {
         EnableEditPublished: "Edit Published Content",
         EnableSSI: "Enable SSI",
         ContentConfCardTitle: "Content",
-        AutoArticleLogo: "Auto Article Logo",
+        AutoArticleLogo: "Auto Article Cover",
         RecycleKeepDays: "Recycle expire days",
         RecycleKeepDaysTip: "Keep forever with 0",
         ResourceConfCardTitle: "Resource Storage",
@@ -994,7 +991,7 @@ export default {
       DownloadImageTip: "Download the remote image in article body.",
       Basic: "Basic",
       Catalog: "Catalog",
-      Logo: "LOGO",
+      Logo: "Cover",
       Author: "Author",
       Editor: "Editor",
       Original: "Original",
@@ -1025,7 +1022,7 @@ export default {
       RedirectUrl: "Link",
       MoveUp: "Up",
       MoveDown: "Down",
-      SetLogo: "Set LOGO",
+      SetLogo: "Set Cover",
       Add: "Add Image",
       WidthHeight: "Width&Height",
       FileSize: "Size"
@@ -1062,7 +1059,10 @@ export default {
       Desc: "Summary",
       MoveUp: "Up",
       MoveDown: "Down",
-      Add: "Add Video"
+      Add: "Add Video",
+      AddThirdVideo: "Add Third Party Video",
+      ThirdVideoTitle: "The third party video",
+      ThirdVideoCode: "Video Code"
     },
     PageWidget: {
       Type: "Type",
@@ -1146,6 +1146,7 @@ export default {
       MyMaterial: "My Materials",
       Cut: "Cut",
       UploadLimit: "The files cannot exceed: {0}",
+      UploadFileSizeLimit: "The file size exceed: {0}",
       RemoteLinkErr: "The link cannot be empty and must start with http(s)://"
     },
     PublishPipe: {
@@ -1261,6 +1262,7 @@ export default {
       GoBack: "Go Back",
       LinkName: "Name",
       LinkUrl: "URL",
+      SortFlag: "Sort",
       AddLinkTitle: "Add friend-link",
       EditLinkTitle: "Edit friend-link",
       RouteLinkList: "Friend-Links",
