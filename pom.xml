@@ -4,14 +4,14 @@
 
 	<groupId>com.ruoyi</groupId>
 	<artifactId>ruoyi</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<packaging>pom</packaging>
 
 	<name>RuoYi-Vue-CMS</name>
 	<description>RuoYi-Vue-CMS内容管理系统</description>
 
 	<properties>
-		<ruoyi.version>1.2.0</ruoyi.version>
+		<ruoyi.version>1.2.1</ruoyi.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
@@ -46,6 +46,7 @@
 		<jasypt.version>3.0.5</jasypt.version>
 		<xxl-job-core.version>2.4.0</xxl-job-core.version>
 		<flyway.version>9.16.3</flyway.version>
+		<ali-opensearch.version>1.0.2</ali-opensearch.version>
 	</properties>
 
 	<!-- 依赖声明 -->
@@ -117,11 +118,16 @@
 			    <version>${flyway.version}</version>
 			</dependency>
 
-
 			<!-- SaToken -->
 			<dependency>
 				<groupId>cn.dev33</groupId>
 				<artifactId>sa-token-spring-boot3-starter</artifactId>
+				<version>${sa-token.verison}</version>
+			</dependency>
+			<!-- Sa-Token 整合 SpringAOP 实现注解鉴权 -->
+			<dependency>
+				<groupId>cn.dev33</groupId>
+				<artifactId>sa-token-spring-aop</artifactId>
 				<version>${sa-token.verison}</version>
 			</dependency>
 
@@ -254,6 +260,12 @@
 				<groupId>com.aliyun.oss</groupId>
 				<artifactId>aliyun-sdk-oss</artifactId>
 				<version>${aliyun.oss.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.aliyun</groupId>
+				<artifactId>searchengine20211025</artifactId>
+				<version>${ali-opensearch.version}</version>
 			</dependency>
 
 			<!-- QCloudCOS -->
