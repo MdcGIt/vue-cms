@@ -186,8 +186,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 				() -> ContentCoreErrorCode.TEMPLATE_EMPTY.exception(publishPipeCode, indexTemplate));
 
 		// 模板ID = 通道:站点目录:模板文件名
-		String template = SiteUtils.getTemplateName(site, publishPipeCode, indexTemplate);
-		TemplateContext templateContext = new TemplateContext(template, isPreview, publishPipeCode);
+		String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, indexTemplate);
+		TemplateContext templateContext = new TemplateContext(templateKey, isPreview, publishPipeCode);
 		// init template datamode
 		TemplateUtils.initGlobalVariables(site, templateContext);
 		// init templateType data to datamode
@@ -222,8 +222,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 
 		long s = System.currentTimeMillis();
 		// 生成静态页面
-		String templateId = SiteUtils.getTemplateName(site, publishPipeCode, template);
-		TemplateContext templateContext = new TemplateContext(templateId, isPreview, publishPipeCode);
+		String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, template);
+		TemplateContext templateContext = new TemplateContext(templateKey, isPreview, publishPipeCode);
 		templateContext.setPageIndex(pageIndex);
 		// init template variables
 		TemplateUtils.initGlobalVariables(site, templateContext);
@@ -347,8 +347,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		// 发布栏目首页
 		if (Objects.nonNull(indexTemplateFile)) {
 			try {
-				String template = SiteUtils.getTemplateName(site, publishPipeCode, indexTemplate);
-				TemplateContext templateContext = new TemplateContext(template, false, publishPipeCode);
+				String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, indexTemplate);
+				TemplateContext templateContext = new TemplateContext(templateKey, false, publishPipeCode);
 				templateContext.setDirectory(dirPath);
 				templateContext.setFirstFileName("index" + StringUtils.DOT + staticSuffix);
 				// init template variables
@@ -367,8 +367,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		// 发布栏目列表页
 		if (Objects.nonNull(listTemplateFile)) {
 			try {
-				String template = SiteUtils.getTemplateName(site, publishPipeCode, listTemplate);
-				TemplateContext templateContext = new TemplateContext(template, false, publishPipeCode);
+				String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, listTemplate);
+				TemplateContext templateContext = new TemplateContext(templateKey, false, publishPipeCode);
 				templateContext.setMaxPageNo(pageMax);
 				templateContext.setDirectory(dirPath);
 				String name = Objects.nonNull(indexTemplateFile) ? "list" : "index";
@@ -440,8 +440,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		try (StringWriter writer = new StringWriter()) {
 			IContentType contentType = ContentCoreUtils.getContentType(content.getContentType());
 			// 模板ID = 通道:站点目录:模板文件名
-			String templateId = SiteUtils.getTemplateName(site, publishPipeCode, detailTemplate);
-			TemplateContext templateContext = new TemplateContext(templateId, isPreview, publishPipeCode);
+			String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, detailTemplate);
+			TemplateContext templateContext = new TemplateContext(templateKey, isPreview, publishPipeCode);
 			templateContext.setPageIndex(pageIndex);
 			// init template datamode
 			TemplateUtils.initGlobalVariables(site, templateContext);
@@ -568,8 +568,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		}
 		try {
 			// 自定义模板上下文
-			String template = SiteUtils.getTemplateName(site, publishPipeCode, detailTemplate);
-			TemplateContext templateContext = new TemplateContext(template, false, publishPipeCode);
+			String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, detailTemplate);
+			TemplateContext templateContext = new TemplateContext(templateKey, false, publishPipeCode);
 			// init template datamode
 			TemplateUtils.initGlobalVariables(site, templateContext);
 			// init templateType data to datamode
@@ -631,8 +631,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		try (StringWriter writer = new StringWriter()) {
 			IContentType contentType = ContentCoreUtils.getContentType(content.getContentType());
 			// 模板ID = 通道:站点目录:模板文件名
-			String templateId = SiteUtils.getTemplateName(site, publishPipeCode, exTemplate);
-			TemplateContext templateContext = new TemplateContext(templateId, isPreview, publishPipeCode);
+			String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, exTemplate);
+			TemplateContext templateContext = new TemplateContext(templateKey, isPreview, publishPipeCode);
 			// init template data mode
 			TemplateUtils.initGlobalVariables(site, templateContext);
 			// init templateType data to data mode
@@ -665,8 +665,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		}
 		try {
 			// 自定义模板上下文
-			String template = SiteUtils.getTemplateName(site, publishPipeCode, exTemplate);
-			TemplateContext templateContext = new TemplateContext(template, false, publishPipeCode);
+			String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, exTemplate);
+			TemplateContext templateContext = new TemplateContext(templateKey, false, publishPipeCode);
 			// init template datamode
 			TemplateUtils.initGlobalVariables(site, templateContext);
 			// init templateType data to datamode
@@ -699,9 +699,9 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		try (StringWriter writer = new StringWriter()) {
 			long s = System.currentTimeMillis();
 			// 模板ID = 通道:站点目录:模板文件名
-			String templateId = SiteUtils.getTemplateName(site, pageWidget.getPublishPipeCode(),
+			String templateKey = SiteUtils.getTemplateKey(site, pageWidget.getPublishPipeCode(),
 					pageWidget.getTemplate());
-			TemplateContext templateContext = new TemplateContext(templateId, isPreview,
+			TemplateContext templateContext = new TemplateContext(templateKey, isPreview,
 					pageWidget.getPublishPipeCode());
 			// init template global variables
 			TemplateUtils.initGlobalVariables(site, templateContext);
@@ -729,8 +729,8 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		String dirPath = SiteUtils.getSiteRoot(site, pw.getPublishPipeCode()) + pw.getPath();
 		FileExUtils.mkdirs(dirPath);
 		// 自定义模板上下文
-		String template = SiteUtils.getTemplateName(site, pw.getPublishPipeCode(), pw.getTemplate());
-		TemplateContext templateContext = new TemplateContext(template, false, pw.getPublishPipeCode());
+		String templateKey = SiteUtils.getTemplateKey(site, pw.getPublishPipeCode(), pw.getTemplate());
+		TemplateContext templateContext = new TemplateContext(templateKey, false, pw.getPublishPipeCode());
 		templateContext.setDirectory(dirPath);
 		String staticFileName = PageWidgetUtils.getStaticFileName(pw, site.getStaticSuffix(pw.getPublishPipeCode()));
 		templateContext.setFirstFileName(staticFileName);

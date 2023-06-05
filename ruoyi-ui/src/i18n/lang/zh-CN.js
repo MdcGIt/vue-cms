@@ -1188,6 +1188,7 @@ export default {
       RuleTips: {
         Name: "只能使用字母、数字和下划线，且后缀必须为：{0}"
       },
+      ClearIncludeCache: "清理区块缓存",
       AddTitle: "添加模板文件",
       EditTitle: "编辑模板文件名",
       SelectorTitle: "选择模板"

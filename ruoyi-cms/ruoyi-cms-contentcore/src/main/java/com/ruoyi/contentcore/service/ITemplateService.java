@@ -15,6 +15,8 @@ import com.ruoyi.contentcore.template.ITemplateType;
 
 public interface ITemplateService extends IService<CmsTemplate> {
 
+	void clearTemplateStaticContentCache(String templateId);
+
 	/**
 	 * 获取模板类型
 	 * 
@@ -34,7 +36,7 @@ public interface ITemplateService extends IService<CmsTemplate> {
 	/**
 	 * 缓存模板静态化内容
 	 * 
-	 * @param cacheKey
+	 * @param templateId 相对resourceRoot路径
 	 * @param staticContent
 	 */
 	void setTemplateStaticContentCache(String templateId, String staticContent);
@@ -56,9 +58,7 @@ public interface ITemplateService extends IService<CmsTemplate> {
 	/**
 	 * 模板文件重命名
 	 * 
-	 * @param templateId
-	 * @param newPath
-	 * @param operator
+	 * @param dto
 	 * @throws IOException
 	 */
 	void renameTemplate(TemplateRenameDTO dto) throws IOException;

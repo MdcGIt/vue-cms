@@ -1188,6 +1188,7 @@ export default {
       RuleTips: {
         Name: "Cannot be empty and only [A-Za-z0-9_]+ and the suffix must be '{0}'"
       },
+      ClearIncludeCache: "Clear Cache",
       AddTitle: "Add template file",
       EditTitle: "Rename template file",
       SelectorTitle: "Select template"

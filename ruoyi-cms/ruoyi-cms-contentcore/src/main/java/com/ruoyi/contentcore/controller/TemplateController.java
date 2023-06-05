@@ -1,22 +1,5 @@
 package com.ruoyi.contentcore.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -26,11 +9,7 @@ import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.CmsTemplate;
@@ -43,11 +22,19 @@ import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
+import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
-
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 模板管理
@@ -69,14 +56,14 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 模板数据集合
-	 * 
+	 *
 	 * @param publishPipeCode 发布通道编码
 	 * @param filename        文件名
 	 * @return
 	 */
 	@GetMapping
 	public R<?> getTemplateList(@RequestParam(value = "publishPipeCode", required = false) String publishPipeCode,
-			@RequestParam(value = "filename", required = false) String filename) {
+								@RequestParam(value = "filename", required = false) String filename) {
 		PageRequest pr = this.getPageRequest();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		this.templateService.scanTemplates(site);
@@ -100,9 +87,8 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 获取模板详情
-	 * 
-	 * @param publishPipeCode 发布通道编码
-	 * @param filename        文件名
+	 *
+	 * @param templateId
 	 * @return
 	 * @throws IOException
 	 */
@@ -119,8 +105,8 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 新增模板文件
-	 * 
-	 * @param cmsTemplateDto
+	 *
+	 * @param dto
 	 * @return
 	 * @throws IOException
 	 */
@@ -138,7 +124,7 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 重命名模板文件
-	 * 
+	 *
 	 * @param dto
 	 * @return
 	 * @throws IOException
@@ -151,7 +137,7 @@ public class TemplateController extends BaseRestController {
 		this.templateService.renameTemplate(dto);
 		return R.ok();
 	}
-	
+
 	private static boolean validTemplateName(String fileName) {
 		String suffix = TemplateSuffix.getValue();
 		if (StringUtils.isEmpty(fileName) || !fileName.endsWith(suffix)) {
@@ -171,8 +157,8 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 修改模板文件内容
-	 * 
-	 * @param cmsTemplateDto
+	 *
+	 * @param dto
 	 * @return
 	 * @throws IOException
 	 */
@@ -187,8 +173,8 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 删除模板文件
-	 * 
-	 * @param cmsTemplateDtoList
+	 *
+	 * @param templateIds
 	 * @return
 	 * @throws IOException
 	 */
@@ -204,6 +190,17 @@ public class TemplateController extends BaseRestController {
 	@PostMapping("/clearTemplateCache")
 	public R<?> clearTemplateCache() {
 		this.staticizeService.clearTemplateCache();
+		return R.ok();
+	}
+
+	@Log(title = "清理区块缓存", businessType = BusinessType.OTHER)
+	@DeleteMapping("/clearIncludeCache")
+	public R<?> clearIncludeCache(@RequestBody @NotEmpty List<Long> templateIds) {
+		this.templateService.listByIds(templateIds).forEach(template -> {
+			CmsSite site = this.siteService.getSite(template.getSiteId());
+			String templateKey = SiteUtils.getTemplateKey(site, template.getPublishPipeCode(), template.getPath());
+			this.templateService.clearTemplateStaticContentCache(templateKey);
+		});
 		return R.ok();
 	}
 }

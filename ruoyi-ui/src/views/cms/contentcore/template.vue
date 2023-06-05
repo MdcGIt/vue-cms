@@ -29,6 +29,15 @@
               :disabled="multiple"
               @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
           </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              type="danger"
+              icon="el-icon-remove-outline"
+              size="mini"
+              plain
+              :disabled="multiple"
+              @click="handleClearIncludeCache">{{ $t("CMS.Template.ClearIncludeCache") }}</el-button>
+          </el-col>
         </el-row>
       </el-col>
       <el-col :span="12" style="text-align:right">
@@ -105,7 +114,7 @@
           <el-table-column 
             :label="$t('Common.Operation')"
             align="center"
-            width="200" 
+            width="320" 
             class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button 
@@ -120,6 +129,10 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
+              <el-button
+                type="text"
+                icon="el-icon-remove-outline"
+                @click="handleClearIncludeCache(scope.row)">{{ $t("CMS.Template.ClearIncludeCache") }}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -170,7 +183,7 @@
 <script>
 import { getPublishPipeSelectData } from "@/api/contentcore/publishpipe";
 import { getConfigKey } from "@/api/system/config"
-import { getTemplateList, getTemplateDetail, renameTemplate, addTemplate, delTemplate } from "@/api/contentcore/template";
+import { getTemplateList, getTemplateDetail, renameTemplate, addTemplate, delTemplate, clearIncludeCache } from "@/api/contentcore/template";
 
 export default {
   name: "CmsTemplate",
@@ -317,6 +330,12 @@ export default {
         this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
         this.getList();
       }).catch(function () { });
+    },
+    handleClearIncludeCache(row) {
+      const templateIds = row.templateId ? [ row.templateId ] : this.selectedIds
+      clearIncludeCache(templateIds).then(response => {
+        this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
+      });
     }
   }
 };

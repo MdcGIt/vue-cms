@@ -52,3 +52,12 @@ export function delTemplate(templates) {
     data: templates
   })
 }
+
+// 删除区块模板缓存
+export function clearIncludeCache(templates) {
+  return request({
+    url: '/cms/template/clearIncludeCache',
+    method: 'delete',
+    data: templates
+  })
+}
