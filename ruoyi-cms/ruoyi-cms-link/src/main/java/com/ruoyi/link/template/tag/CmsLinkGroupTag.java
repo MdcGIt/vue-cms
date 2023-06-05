@@ -44,6 +44,14 @@ public class CmsLinkGroupTag extends AbstractListTag {
 		LambdaQueryWrapper<CmsLinkGroup> q = new LambdaQueryWrapper<CmsLinkGroup>()
 				.eq(siteId != null && siteId > 0, CmsLinkGroup::getSiteId, siteId)
 				.eq(StringUtils.isNotEmpty(code), CmsLinkGroup::getCode, code);
+
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+		if (StringUtils.isNotEmpty(condition)) {
+			q.last(" AND (" + condition + ") ORDER BY sort_flag ASC");
+		} else {
+			q.orderByAsc(CmsLinkGroup::getSortFlag);
+		}
+
 		 Page<CmsLinkGroup> pageResult = this.linkGroupService.page(new Page<>(pageIndex, size, page), q);
 		return TagPageData.of(pageResult.getRecords(), pageResult.getTotal());
 	}

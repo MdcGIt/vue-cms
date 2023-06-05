@@ -61,7 +61,8 @@ public class LinkGroupController extends BaseRestController {
 		PageRequest pr = this.getPageRequest();
 		LambdaQueryWrapper<CmsLinkGroup> q = new LambdaQueryWrapper<CmsLinkGroup>()
 				.eq(CmsLinkGroup::getSiteId, site.getSiteId())
-				.like(StringUtils.isNotEmpty(query), CmsLinkGroup::getName, query);
+				.like(StringUtils.isNotEmpty(query), CmsLinkGroup::getName, query)
+				.orderByAsc(CmsLinkGroup::getSortFlag);
 		Page<CmsLinkGroup> page = this.linkGroupService.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true), q);
 		return this.bindDataTable(page);
 	}
@@ -96,7 +97,7 @@ public class LinkGroupController extends BaseRestController {
 			return R.fail("友链分组编码重复");
 		}
 		CmsLinkGroup linkGroup = new CmsLinkGroup();
-		BeanUtils.copyProperties(dto, linkGroup, "siteId", "sortFlag");
+		BeanUtils.copyProperties(dto, linkGroup, "siteId");
 		linkGroup.updateBy(StpAdminUtil.getLoginUser().getUsername());
 		this.linkGroupService.updateById(linkGroup);
 		return R.ok();
