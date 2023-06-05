@@ -51,7 +51,8 @@ public class CmsLinkTag extends AbstractListTag {
 			throw new TemplateException("获取分组数据失败：" + code, env);
 		}
 		LambdaQueryWrapper<CmsLink> q = new LambdaQueryWrapper<CmsLink>()
-				.eq(CmsLink::getGroupId, group.getLinkGroupId());
+				.eq(CmsLink::getGroupId, group.getLinkGroupId())
+				.orderByAsc(CmsLink::getSortFlag);
 		Page<CmsLink> pageResult = this.linkService.page(new Page<>(pageIndex, size, page), q);
 		return TagPageData.of(pageResult.getRecords(), pageResult.getTotal());
 	}

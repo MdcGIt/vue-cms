@@ -110,6 +110,9 @@
         <el-form-item :label="$t('CMS.FriendLink.GroupCode')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
+        <el-form-item v-if="form.linkGroupId" :label="$t('CMS.FriendLink.SortFlag')" prop="sortFlag">
+          <el-input-number v-model="form.sortFlag" controls-position="right" :min="0" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">{{ $t("Common.Confirm") }}</el-button>
