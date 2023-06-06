@@ -135,11 +135,11 @@ public class ConfigPropertyUtils {
 		IProperty prop = getConfigProperty(propertyKey);
 		if (prop != null) {
 			String v = MapUtils.getString(firstProps, prop.getId());
-			if (NumberUtils.isDigits(v)) {
+			if (NumberUtils.isCreatable(v)) {
 				return NumberUtils.toInt(v);
 			}
 			v = MapUtils.getString(secondProps, prop.getId());
-			if (NumberUtils.isDigits(v)) {
+			if (NumberUtils.isCreatable(v)) {
 				return NumberUtils.toInt(v);
 			}
 		}

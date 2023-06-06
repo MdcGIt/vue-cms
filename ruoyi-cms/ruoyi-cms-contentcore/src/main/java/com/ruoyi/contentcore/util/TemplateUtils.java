@@ -70,11 +70,10 @@ public class TemplateUtils {
 		// 站点属性
 		Map<String, Object> mapSite = ReflectASMUtils.beanToMap(site);
 		// 扩展属性
-
 		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(site.getConfigProps(), UseType.Site);
 		if (Objects.nonNull(configProps)) {
 			configProps.entrySet().forEach(e -> {
-				mapSite.put(ContentCoreConsts.SiteExtendFieldPrefix + e.getKey(), e.getValue());
+				mapSite.put(ContentCoreConsts.ConfigPropFieldPrefix + e.getKey(), e.getValue());
 			});
 		}
 		// 站点logo
@@ -97,6 +96,13 @@ public class TemplateUtils {
 	 */
 	public static void addCatalogVariables(CmsSite site, CmsCatalog catalog, TemplateContext context) {
 		Map<String, Object> mapCatalog = ReflectASMUtils.beanToMap(catalog);
+		// 扩展属性
+		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(), UseType.Catalog);
+		if (Objects.nonNull(configProps)) {
+			configProps.entrySet().forEach(e -> {
+				mapCatalog.put(ContentCoreConsts.ConfigPropFieldPrefix + e.getKey(), e.getValue());
+			});
+		}
 		// 栏目logo
 		String catalogLogo = InternalUrlUtils.getActualUrl(catalog.getLogo(), context.getPublishPipeCode(), context.isPreview());
 		if (StringUtils.isNotEmpty(catalogLogo)) {

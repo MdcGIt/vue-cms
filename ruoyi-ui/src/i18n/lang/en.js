@@ -850,6 +850,9 @@ export default {
         PublishMaxPageNum: "Publish Catalog Max Page",
         EnableEditPublished: "Edit Published Content",
         EnableSSI: "Enable SSI",
+        CatalogConfCardTitle: "Catalog",
+        CatalogPageSize: "Page List Size",
+        CatalogPageSizeTip: "When the value is -1, the system defaults to 10",
         ContentConfCardTitle: "Content",
         AutoArticleLogo: "Auto Article Cover",
         RecycleKeepDays: "Recycle expire days",
@@ -942,6 +945,8 @@ export default {
       MoveProgressTitle: "Move catalog task",
       Extend: {
         Basic: "Basic",
+        CatalogPageSize: "Page list Size",
+        CatalogPageSizeTip: "When the value is -1, the set value of the site is taken",
         EnableIndex: "Enable Content Index",
         CatalogExModel: "Catalog Ex-Model",
         ContentExModel: "Content Ex-Model",

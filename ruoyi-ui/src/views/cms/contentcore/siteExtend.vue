@@ -76,6 +76,17 @@
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
+          <span>{{ $t("CMS.Site.Extend.CatalogConfCardTitle") }}</span>
+        </div>
+        <el-form-item :label="$t('CMS.Site.Extend.CatalogPageSize')" prop="CatalogPageSize">
+          <el-input-number v-model="form_extend.CatalogPageSize" controls-position="right" :min="0"></el-input-number>
+          <div style="color: #909399;font-size:12px;line-height: 30px;">
+            <i class="el-icon-info mr5"></i>{{ $t('CMS.Site.Extend.CatalogPageSizeTip') }}
+          </div>
+        </el-form-item>
+      </el-card>
+      <el-card shadow="hover">
+        <div slot="header" class="clearfix">
           <span>{{ $t("CMS.Site.Extend.ContentConfCardTitle") }}</span>
         </div>
         <!-- <el-form-item 

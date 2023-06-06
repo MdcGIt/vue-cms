@@ -4,6 +4,7 @@ import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.utils.ConvertUtils;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsSite;
+import com.ruoyi.contentcore.properties.CatalogPageSizeProperty;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
 import org.springframework.stereotype.Component;
@@ -33,5 +34,8 @@ public class CatalogTemplateType implements ITemplateType {
 		CmsCatalog catalog = this.catalogService.getCatalog(ConvertUtils.toLong(dataId));
 		CmsSite site = this.siteService.getSite(catalog.getSiteId());
 		TemplateUtils.addCatalogVariables(site, catalog, context);
+
+		int pageSize = CatalogPageSizeProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
+		context.setPageSize(pageSize);
 	}
 }

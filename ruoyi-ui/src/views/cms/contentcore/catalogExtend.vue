@@ -75,6 +75,12 @@
             plain 
             @click="handleApplyToCatalog('ContentExtendModel')">{{ $t('CMS.ContentCore.ApplyToCatalog') }}</el-button>
         </el-form-item>
+        <el-form-item :label="$t('CMS.Catalog.Extend.CatalogPageSize')" prop="CatalogPageSize">
+          <el-input-number v-model="form_extend.CatalogPageSize" controls-position="right" :min="0"></el-input-number>
+          <div style="color: #909399;font-size:12px;line-height: 30px;">
+            <i class="el-icon-info mr5"></i>{{ $t('CMS.Catalog.Extend.CatalogPageSizeTip') }}
+          </div>
+        </el-form-item>
       </el-card>
       <!-- <el-card shadow="hover">
         <div slot="header" class="clearfix">
@@ -152,6 +158,7 @@ export default {
   created() {
     this.loadEXModelList();
     this.loadHotWordGroups();
+    this.loadCatalogExtends();
   },
   methods: {
     loadCatalogExtends () {
@@ -176,6 +183,7 @@ export default {
       });
     },
     handleSaveExtends () {
+      console.log("handleSaveExtends", 1)
       this.$refs["form_extend"].validate(valid => {
         if (valid) {
           const data = {};

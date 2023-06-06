@@ -28,7 +28,7 @@ public interface ContentCoreConsts {
 	public String TemplateDirectory = "template/";
 
 	/**
-	 * 站点扩展配置属性字段模板变量前缀
+	 * 扩展配置属性字段模板变量前缀
 	 */
-	public String SiteExtendFieldPrefix = "extend_";
+	public String ConfigPropFieldPrefix = "extend_";
 }
