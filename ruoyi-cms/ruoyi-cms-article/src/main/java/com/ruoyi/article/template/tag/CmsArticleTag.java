@@ -83,7 +83,6 @@ public class CmsArticleTag extends AbstractTag {
 				throw new TemplateException("分页标识已被其他标签激活", env);
 			}
 			context.setPaged(true);
-			context.setPageSize(1);
 
 			String[] pageContents = contentHtml.split(PAGE_BREAK_SPLITER);
 			if (context.getPageIndex() > pageContents.length) {
