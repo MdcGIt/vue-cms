@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
  * 系统操作日志处理器
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component
 @RequiredArgsConstructor

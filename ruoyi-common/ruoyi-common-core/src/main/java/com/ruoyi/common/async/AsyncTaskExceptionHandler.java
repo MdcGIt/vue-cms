@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * 异步任务异常处理器
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Slf4j
 public class AsyncTaskExceptionHandler implements AsyncUncaughtExceptionHandler {

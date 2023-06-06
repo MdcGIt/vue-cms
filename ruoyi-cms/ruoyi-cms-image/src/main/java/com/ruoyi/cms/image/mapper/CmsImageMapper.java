@@ -15,7 +15,7 @@ import com.ruoyi.cms.image.domain.CmsImage;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface CmsImageMapper extends BaseMapper<CmsImage> {
 

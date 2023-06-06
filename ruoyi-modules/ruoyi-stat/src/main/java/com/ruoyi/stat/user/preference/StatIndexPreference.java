@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
  * 统计默认打开菜单配置
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component
 @RequiredArgsConstructor

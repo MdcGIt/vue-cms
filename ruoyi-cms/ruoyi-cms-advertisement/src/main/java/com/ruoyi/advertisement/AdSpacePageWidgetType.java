@@ -15,7 +15,7 @@ import com.ruoyi.contentcore.domain.vo.PageWidgetVO;
  * 广告位页面部件
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component(IPageWidgetType.BEAN_NAME_PREFIX + AdSpacePageWidgetType.ID)
 public class AdSpacePageWidgetType implements IPageWidgetType {

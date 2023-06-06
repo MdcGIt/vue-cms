@@ -9,7 +9,7 @@ import com.ruoyi.member.domain.MemberLevelExpLog;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface MemberLevelExpLogMapper extends BaseMapper<MemberLevelExpLog> {
 

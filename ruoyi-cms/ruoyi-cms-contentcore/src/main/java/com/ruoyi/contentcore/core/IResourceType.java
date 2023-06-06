@@ -7,6 +7,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsResource;
 
+/**
+ * 资源类型
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 public interface IResourceType {
 	
 	/**

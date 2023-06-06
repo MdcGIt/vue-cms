@@ -14,7 +14,7 @@ import lombok.Setter;
  * 广告数据VO
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

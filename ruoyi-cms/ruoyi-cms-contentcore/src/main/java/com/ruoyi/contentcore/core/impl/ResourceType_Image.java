@@ -27,6 +27,12 @@ import com.ruoyi.contentcore.util.SiteUtils;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 
+/**
+ * 资源类型：图片
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @RequiredArgsConstructor
 @Component(IResourceType.BEAN_NAME_PREFIX + ResourceType_Image.ID)
 public class ResourceType_Image implements IResourceType {

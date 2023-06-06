@@ -8,14 +8,17 @@ import com.ruoyi.contentcore.domain.CmsPageWidget;
 import freemarker.template.TemplateException;
 
 /**
- * 页面部件实例
+ * 页面部件
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 public interface IPageWidget {
 
 	/**
 	 * 页面部件类型ID
 	 */
-	default public String getPageWidgetType() {
+	default String getPageWidgetType() {
 		return this.getPageWidgetEntity().getType();
 	}
 	

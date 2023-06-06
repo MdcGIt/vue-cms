@@ -13,7 +13,7 @@ import lombok.Setter;
  * 友情链接表对象 [cms_link]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

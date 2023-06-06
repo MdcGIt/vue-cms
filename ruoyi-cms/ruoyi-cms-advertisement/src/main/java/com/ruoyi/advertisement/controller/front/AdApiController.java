@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  * 广告统计数据收集
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @RestController
 @RequiredArgsConstructor

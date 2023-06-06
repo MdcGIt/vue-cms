@@ -37,7 +37,7 @@ public class MaxPageOnContentPublishProperty implements IProperty {
 	
 	@Override
 	public boolean validate(String value) {
-		return StringUtils.isEmpty(value) || NumberUtils.isDigits(value.toString());
+		return StringUtils.isEmpty(value) || NumberUtils.isCreatable(value.toString());
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class MaxPageOnContentPublishProperty implements IProperty {
 	@Override
 	public Integer getPropValue(Map<String, String> configProps) {
 		String string = MapUtils.getString(configProps, getId());
-		if (NumberUtils.isDigits(string)) {
+		if (NumberUtils.isCreatable(string)) {
 			return NumberUtils.toInt(string);
 		}
 		return defaultValue();

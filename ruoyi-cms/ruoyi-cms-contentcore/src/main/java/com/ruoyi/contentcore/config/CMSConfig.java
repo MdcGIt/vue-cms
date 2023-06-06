@@ -22,6 +22,12 @@ import freemarker.cache.FileTemplateLoader;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * CMS配置
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Slf4j
 @Configuration
 @EnableConfigurationProperties(CMSProperties.class)

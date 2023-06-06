@@ -6,7 +6,7 @@ import com.ruoyi.member.domain.MemberLevel;
  * 会员等级类型
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface ILevelType {
 	

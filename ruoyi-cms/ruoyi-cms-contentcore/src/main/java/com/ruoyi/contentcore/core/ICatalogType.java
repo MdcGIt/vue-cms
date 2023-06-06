@@ -1,19 +1,25 @@
 package com.ruoyi.contentcore.core;
 
+/**
+ * 栏目类型
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 public interface ICatalogType {
 	
 	/**
 	 * Bean名称前缀
 	 */
-	public static final String BEAN_NAME_PREFIX = "CatalogType_";
+	String BEAN_NAME_PREFIX = "CatalogType_";
 
 	/**
 	 * 栏目类型ID
 	 */
-	public String getId();
+	String getId();
 	
 	/**
 	 * 栏目类型名称
 	 */
-	public String getName();
+	String getName();
 }

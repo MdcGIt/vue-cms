@@ -9,7 +9,7 @@ import com.ruoyi.link.domain.CmsLink;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface CmsLinkMapper extends BaseMapper<CmsLink> {
 

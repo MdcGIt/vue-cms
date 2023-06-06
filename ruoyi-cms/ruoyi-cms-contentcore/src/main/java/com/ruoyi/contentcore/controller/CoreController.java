@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  * 内容核心管理
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -113,14 +113,14 @@ public class CoreController extends BaseRestController {
 			long s = System.currentTimeMillis();
 			CmsSite site = this.siteService.getSite(siteId);
 			// 模板ID = 通道:站点目录:模板文件名
-			String templateId = SiteUtils.getTemplateName(site, publishPipeCode, template);
+			String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, template);
 			// 缓存
-			String templateStaticContentCache = this.templateService.getTemplateStaticContentCache(templateId);
+			String templateStaticContentCache = this.templateService.getTemplateStaticContentCache(templateKey);
 			if (Objects.nonNull(templateStaticContentCache)) {
 				ServletUtils.getResponse().getWriter().write(templateStaticContentCache);
 				return;
 			}
-			TemplateContext templateContext = new TemplateContext(templateId, false, publishPipeCode);
+			TemplateContext templateContext = new TemplateContext(templateKey, false, publishPipeCode);
 			templateContext.setPageIndex(pageIndex);
 			// init template datamode
 			TemplateUtils.initGlobalVariables(site, templateContext);

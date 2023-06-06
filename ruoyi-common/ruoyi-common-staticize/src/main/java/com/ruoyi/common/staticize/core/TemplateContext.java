@@ -19,7 +19,7 @@ public class TemplateContext {
 	public static final String PlaceHolder_PageNo = "{0}";
 	
 	/**
-	 * 模板路径，相对ResourceRoot
+	 * 模板唯一标识，相对ResourceRoot的模板路径
 	 */
 	private String templateId;
 	
@@ -48,7 +48,7 @@ public class TemplateContext {
 	/**
 	 * 是否预览状态，默认false
 	 */
-	private boolean preview = false;
+	private boolean preview;
 	
 	/**
 	 * 发布通道编码

@@ -7,7 +7,7 @@ import lombok.Setter;
  * 广告位自定义属性
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

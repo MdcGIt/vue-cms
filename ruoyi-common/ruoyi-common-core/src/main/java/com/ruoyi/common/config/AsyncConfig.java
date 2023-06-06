@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
  * 异步任务线程池配置
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Configuration
 @RequiredArgsConstructor

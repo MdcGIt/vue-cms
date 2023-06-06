@@ -9,7 +9,7 @@ import com.ruoyi.comment.domain.CommentLike;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface CommentLikeMapper extends BaseMapper<CommentLike> {
 

@@ -14,7 +14,7 @@ import lombok.Setter;
  * 热词分组表对应 [cms_hot_word_group]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

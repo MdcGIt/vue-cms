@@ -10,7 +10,7 @@ import com.ruoyi.common.log.annotation.Log;
  * 日志类型接口，收集日志相关信息交给LogHandler处理。
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface ILogType {
 	

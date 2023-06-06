@@ -106,7 +106,7 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 							env);
 				}
 				if (tagAttr.getDataType() == TagAttrDataType.INTEGER && StringUtils.isNotEmpty(attrValue)
-						&& !NumberUtils.isDigits(attrValue)) {
+						&& !NumberUtils.isCreatable(attrValue)) {
 					throw new TemplateException(
 							StringUtils.messageFormat("The tag <@{0}> attribute '{1}' must be digit, but is: {2}", this.getTagName(), tagAttr.getName(), attrValue),
 							env);

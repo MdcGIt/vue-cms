@@ -12,7 +12,7 @@ import lombok.Setter;
  * 固定字典数据，此类定义的数据为系统运行必须，不可更改，系统模块的字典数据持久化管理会自动持久化此数据到数据库方便使用。
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

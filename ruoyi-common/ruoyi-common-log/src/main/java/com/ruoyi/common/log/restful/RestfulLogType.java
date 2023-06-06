@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
  * Restful Controller 访问日志
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @RequiredArgsConstructor
 @Component(RestfulLogType.TYPE)

@@ -5,13 +5,16 @@ import java.util.List;
 import com.ruoyi.common.utils.StringUtils;
 
 /**
- * 发不通道属性
+ * 发布通道属性
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 public interface IPublishPipeProp {
 	
-	public String DetailTemplatePropPrefix = "detailTemplate_";
+	String DetailTemplatePropPrefix = "detailTemplate_";
 	
-	public String DefaultDetailTemplatePropPrefix = "defaultDetailTemplate_";
+	String DefaultDetailTemplatePropPrefix = "defaultDetailTemplate_";
 
 	/**
 	 * 属性唯一标识键名

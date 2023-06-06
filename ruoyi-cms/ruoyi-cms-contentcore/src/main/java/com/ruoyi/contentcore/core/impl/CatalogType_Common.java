@@ -4,6 +4,12 @@ import org.springframework.stereotype.Component;
 
 import com.ruoyi.contentcore.core.ICatalogType;
 
+/**
+ * 栏目类型：普通栏目
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Component(ICatalogType.BEAN_NAME_PREFIX + CatalogType_Common.ID)
 public class CatalogType_Common implements ICatalogType {
 

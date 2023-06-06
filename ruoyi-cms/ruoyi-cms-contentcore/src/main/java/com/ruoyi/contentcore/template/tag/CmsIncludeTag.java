@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.ruoyi.contentcore.properties.EnableSSI;
+import com.ruoyi.contentcore.util.TemplateUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,6 @@ import com.ruoyi.common.staticize.tag.TagAttr;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
 import com.ruoyi.contentcore.util.SiteUtils;
@@ -103,9 +103,9 @@ public class CmsIncludeTag extends AbstractTag {
 		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
 		boolean virtual = Boolean.valueOf(attrs.get(TagAttr_VIRTUAL));
 
-		String includeTemplateName = SiteUtils.getTemplateName(site, context.getPublishPipeCode(), file);
+		String includeTemplateKey = SiteUtils.getTemplateKey(site, context.getPublishPipeCode(), file);
 		if (context.isPreview()) {
-			Template includeTemplate = env.getTemplateForInclusion(includeTemplateName,
+			Template includeTemplate = env.getTemplateForInclusion(includeTemplateKey,
 					StandardCharsets.UTF_8.displayName(), true);
 			env.include(includeTemplate);
 		} else if (virtual) {
@@ -121,10 +121,10 @@ public class CmsIncludeTag extends AbstractTag {
 			env.getOut().write(StringUtils.messageFormat(SSI_INCLUDE_VIRTUAL_TAG, virtualPath));
 		} else {
 			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
-			String staticFilePath = getStaticPath(site, context.getPublishPipeCode(), includeTemplateName);
-			String staticContent = templateService.getTemplateStaticContentCache(includeTemplateName);
+			String staticFilePath = TemplateUtils.getIncludeRelativeStaticPath(site, context.getPublishPipeCode(), includeTemplateKey);
+			String staticContent = templateService.getTemplateStaticContentCache(includeTemplateKey);
 			if (Objects.isNull(staticContent) || !new File(siteRoot + staticFilePath).exists()) {
-				staticContent = this.writeTo(env, context, includeTemplateName, siteRoot + staticFilePath);
+				staticContent = this.writeTo(env, context, includeTemplateKey, siteRoot + staticFilePath);
 			}
 			if (ssi) {
 				env.getOut().write(StringUtils.messageFormat(SSI_INCLUDE_TAG, "/" + staticFilePath));
@@ -133,17 +133,6 @@ public class CmsIncludeTag extends AbstractTag {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * 静态文件相对路径
-	 */
-	private String getStaticPath(CmsSite site, String publishPipeCode, String includeTemplateName) {
-		String siteTemplatePath = SiteUtils.getSiteTemplatePath(site.getPath(), publishPipeCode);
-		return "include/"
-				+ includeTemplateName.substring(siteTemplatePath.length(),
-						includeTemplateName.length() - TemplateSuffix.getValue().length())
-				+ "." + site.getStaticSuffix(publishPipeCode);
 	}
 
 	/**

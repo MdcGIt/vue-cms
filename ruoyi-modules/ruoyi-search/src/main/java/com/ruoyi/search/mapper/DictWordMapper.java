@@ -9,7 +9,7 @@ import com.ruoyi.search.domain.DictWord;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface DictWordMapper extends BaseMapper<DictWord> {
 

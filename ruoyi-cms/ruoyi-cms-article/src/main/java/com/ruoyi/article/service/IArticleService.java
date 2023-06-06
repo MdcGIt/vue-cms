@@ -9,7 +9,7 @@ import com.ruoyi.contentcore.domain.CmsSite;
  * 文章服务类
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface IArticleService extends IBackupService<CmsArticleDetail> {
 

@@ -13,7 +13,7 @@ import lombok.Setter;
  * 页面部件表对象 [cms_page_widget]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 
 @Getter

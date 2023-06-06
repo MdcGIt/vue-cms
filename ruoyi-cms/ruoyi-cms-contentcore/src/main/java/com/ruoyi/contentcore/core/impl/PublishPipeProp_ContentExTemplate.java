@@ -9,11 +9,16 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 内容自定义扩展模板，此模板会在内容发布时同时发布，可内容独立配置，也可通过栏目配置。
+ * 发布通道属性：内容自定义扩展模板
+ *
+ * <p>此模板会在内容发布时同时发布，可内容独立配置，也可通过栏目配置。</p>
  *
  * 应用场景：
  * 文章内容需要插入轮播图时，可将图集内容设置扩展模板发布成指定格式内容
  * 当不支持ssi时可发布成<script>引用json发布通道的图集数据来实现动态更新
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 @Component
 public class PublishPipeProp_ContentExTemplate implements IPublishPipeProp {

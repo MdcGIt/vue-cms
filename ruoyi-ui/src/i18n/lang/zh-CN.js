@@ -850,6 +850,9 @@ export default {
         PublishMaxPageNum: "内容发布更新列表页数",
         EnableEditPublished: "允许编辑已发布内容",
         EnableSSI: "是否启用SSI",
+        CatalogConfCardTitle: "列表配置",
+        CatalogPageSize: "分页列表大小",
+        CatalogPageSizeTip: "值为-1时系统默认取值10",
         ContentConfCardTitle: "内容配置",
         AutoArticleLogo: "正文首图作为封面",
         RecycleKeepDays: "回收站内容保留天数",
@@ -942,6 +945,8 @@ export default {
       MoveProgressTitle: "转移栏目",
       Extend: {
         Basic: "基础配置",
+        CatalogPageSize: "分页列表大小",
+        CatalogPageSizeTip: "值为-1时取站点扩展配置值",
         EnableIndex: "是否启用索引",
         CatalogExModel: "栏目扩展模型",
         ContentExModel: "内容扩展模型",
@@ -1188,6 +1193,7 @@ export default {
       RuleTips: {
         Name: "只能使用字母、数字和下划线，且后缀必须为：{0}"
       },
+      ClearIncludeCache: "清理区块缓存",
       AddTitle: "添加模板文件",
       EditTitle: "编辑模板文件名",
       SelectorTitle: "选择模板"

@@ -105,11 +105,11 @@ public class SiteUtils {
 	 * 获取模板相对项目资源根目录（ResourceRoot）的路径
 	 * 
 	 * @param site
-	 * @param template 模板文件路径，相对于站点模板目录路径
 	 * @param publishPipeCode 发布通道编码
+     * @param template 模板文件路径，相对于站点模板目录路径
 	 * @return
 	 */
-    public static String getTemplateName(CmsSite site, String publishPipeCode, String template) {
+    public static String getTemplateKey(CmsSite site, String publishPipeCode, String template) {
     	return site.getPath() + "_" + publishPipeCode + StringUtils.SLASH + ContentCoreConsts.TemplateDirectory + template;
     }
     

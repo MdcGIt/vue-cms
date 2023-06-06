@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  * 动态区块页面部件展示对象
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter 
 @Setter

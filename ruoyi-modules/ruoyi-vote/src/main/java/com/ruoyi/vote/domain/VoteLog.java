@@ -17,7 +17,7 @@ import lombok.Setter;
  * 问卷调查日志表
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

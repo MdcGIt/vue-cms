@@ -3,9 +3,10 @@ package com.ruoyi.contentcore.util;
 import java.util.Map;
 import java.util.Objects;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
 import org.springframework.stereotype.Component;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.utils.ReflectASMUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
@@ -69,11 +70,10 @@ public class TemplateUtils {
 		// 站点属性
 		Map<String, Object> mapSite = ReflectASMUtils.beanToMap(site);
 		// 扩展属性
-
 		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(site.getConfigProps(), UseType.Site);
 		if (Objects.nonNull(configProps)) {
 			configProps.entrySet().forEach(e -> {
-				mapSite.put(ContentCoreConsts.SiteExtendFieldPrefix + e.getKey(), e.getValue());
+				mapSite.put(ContentCoreConsts.ConfigPropFieldPrefix + e.getKey(), e.getValue());
 			});
 		}
 		// 站点logo
@@ -96,6 +96,13 @@ public class TemplateUtils {
 	 */
 	public static void addCatalogVariables(CmsSite site, CmsCatalog catalog, TemplateContext context) {
 		Map<String, Object> mapCatalog = ReflectASMUtils.beanToMap(catalog);
+		// 扩展属性
+		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(), UseType.Catalog);
+		if (Objects.nonNull(configProps)) {
+			configProps.entrySet().forEach(e -> {
+				mapCatalog.put(ContentCoreConsts.ConfigPropFieldPrefix + e.getKey(), e.getValue());
+			});
+		}
 		// 栏目logo
 		String catalogLogo = InternalUrlUtils.getActualUrl(catalog.getLogo(), context.getPublishPipeCode(), context.isPreview());
 		if (StringUtils.isNotEmpty(catalogLogo)) {
@@ -124,5 +131,19 @@ public class TemplateUtils {
 		context.getVariables().put(TemplateVariable_ResourcePrefix, SiteUtils.getResourcePrefix(site));
 		// 添加站点数据
 		addSiteVariables(site, context);
+	}
+
+	/**
+	 * 页面区块静态文件相对路径
+	 *
+	 * @param site
+	 * @param publishPipeCode
+	 * @param includeTemplateName 相对resourceRoot的模板路径
+	 */
+	public static String getIncludeRelativeStaticPath(CmsSite site, String publishPipeCode, String includeTemplateName) {
+		String siteTemplatePath = SiteUtils.getSiteTemplatePath(site.getPath(), publishPipeCode);
+		return "include/" + includeTemplateName.substring(siteTemplatePath.length(),
+				includeTemplateName.length() - TemplateSuffix.getValue().length())
+				+ "." + site.getStaticSuffix(publishPipeCode);
 	}
 }

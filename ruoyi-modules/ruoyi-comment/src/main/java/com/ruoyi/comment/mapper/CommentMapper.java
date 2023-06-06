@@ -12,7 +12,7 @@ import com.ruoyi.comment.domain.Comment;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface CommentMapper extends BaseMapper<Comment> {
 

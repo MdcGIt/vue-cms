@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * SA-TOKEN认证SpEL处理类
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component
 public class AuthEvaluator {

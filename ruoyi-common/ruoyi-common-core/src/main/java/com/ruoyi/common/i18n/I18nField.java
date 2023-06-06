@@ -12,7 +12,7 @@ import com.ruoyi.common.utils.StringUtils;
  * 类字段添加此注释，根据国际化字典表获取当前语言环境翻译.@see I18nUtils.replaceI18nFields
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

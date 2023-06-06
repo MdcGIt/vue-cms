@@ -16,7 +16,7 @@ import lombok.Setter;
  * 元数据模型字段定义表[XModelField]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

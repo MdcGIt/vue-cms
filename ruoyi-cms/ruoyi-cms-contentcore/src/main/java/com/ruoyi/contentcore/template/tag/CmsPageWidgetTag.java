@@ -99,19 +99,19 @@ public class CmsPageWidgetTag extends AbstractTag {
 		Assert.notNull(templateFile, () -> new TemplateException(StringUtils.messageFormat("页面部件[{0}]指定模板[{1}]不存在", code, pw.getTemplate()), env));
 
 		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
-		String templateName = SiteUtils.getTemplateName(site, pw.getPublishPipeCode(), pw.getTemplate());
+		String templateKey = SiteUtils.getTemplateKey(site, pw.getPublishPipeCode(), pw.getTemplate());
 		if (context.isPreview()) {
-			env.getOut().write(this.processTemplate(env, context, templateName));
+			env.getOut().write(this.processTemplate(env, context, templateKey));
 		} else {
 			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
 			String staticFileName = PageWidgetUtils.getStaticFileName(pw, site.getStaticSuffix(pw.getPublishPipeCode()));
 			String staticFilePath = pw.getPath() + staticFileName;
 			// 读取页面部件静态化内容
-			String staticContent = templateService.getTemplateStaticContentCache(templateName);
+			String staticContent = templateService.getTemplateStaticContentCache(templateKey);
 			if (Objects.isNull(staticContent) || !new File(siteRoot + staticFilePath).exists()) {
-				staticContent = this.processTemplate(env, context, templateName);
+				staticContent = this.processTemplate(env, context, templateKey);
 				FileUtils.writeStringToFile(new File(siteRoot + staticFilePath), staticContent, StandardCharsets.UTF_8);
-				this.templateService.setTemplateStaticContentCache(templateName, staticContent);
+				this.templateService.setTemplateStaticContentCache(templateKey, staticContent);
 			}
 			if (ssi) {
 				env.getOut().write(StringUtils.messageFormat(CmsIncludeTag.SSI_INCLUDE_TAG, "/" + staticFilePath));

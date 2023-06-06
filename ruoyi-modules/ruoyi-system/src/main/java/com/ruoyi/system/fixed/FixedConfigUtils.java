@@ -9,7 +9,7 @@ import com.ruoyi.common.utils.SpringUtils;
  * 固定参数项工具类
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public class FixedConfigUtils {
 

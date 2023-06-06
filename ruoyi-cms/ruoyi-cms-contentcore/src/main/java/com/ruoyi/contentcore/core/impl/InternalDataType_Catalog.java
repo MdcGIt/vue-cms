@@ -15,6 +15,12 @@ import com.ruoyi.contentcore.service.IPublishService;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 内部数据类型：栏目
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @RequiredArgsConstructor
 @Component(IInternalDataType.BEAN_NAME_PREFIX + InternalDataType_Catalog.ID)
 public class InternalDataType_Catalog implements IInternalDataType {

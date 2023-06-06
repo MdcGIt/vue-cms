@@ -10,7 +10,7 @@ import com.ruoyi.contentcore.core.AbstractPageWidget;
  * 广告位
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public class AdSpacePageWidget extends AbstractPageWidget {
 

@@ -14,7 +14,7 @@ import cn.dev33.satoken.annotation.SaMode;
  * 页面部件权限类型
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component(IPermissionType.BEAN_PREFIX + PageWidgetPermissionType.ID)
 public class PageWidgetPermissionType implements IPermissionType<Map<String, BitSet>> {

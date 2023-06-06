@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
  * 站点自定义属性管理
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
 @RestController

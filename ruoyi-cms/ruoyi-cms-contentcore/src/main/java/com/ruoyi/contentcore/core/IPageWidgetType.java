@@ -7,13 +7,16 @@ import com.ruoyi.contentcore.domain.vo.PageWidgetVO;
 
 /**
  * 页面部件类型
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 public interface IPageWidgetType {
 	
 	/**
 	 * Bean名称前缀
 	 */
-	public static final String BEAN_NAME_PREFIX = "PageWidgetType_";
+	String BEAN_NAME_PREFIX = "PageWidgetType_";
 
 	/**
 	 * 唯一标识：类型Id

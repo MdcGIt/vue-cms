@@ -12,7 +12,7 @@ import com.ruoyi.common.utils.StringUtils;
  * 敏感词DFA算法模型
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public class DFAModel<T> {
 

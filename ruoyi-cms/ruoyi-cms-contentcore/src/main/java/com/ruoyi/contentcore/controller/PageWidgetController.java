@@ -50,6 +50,12 @@ import freemarker.template.TemplateException;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 页面部件控制器
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
 @RequiredArgsConstructor
 @RestController
