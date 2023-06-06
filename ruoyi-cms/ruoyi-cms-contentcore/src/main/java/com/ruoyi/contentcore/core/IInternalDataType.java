@@ -14,6 +14,9 @@ import lombok.Setter;
 
 /**
  * 内部数据类型
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 public interface IInternalDataType {
 	

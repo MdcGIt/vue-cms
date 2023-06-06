@@ -14,7 +14,7 @@ import lombok.Setter;
  * 图集图片表对象 [cms_image]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

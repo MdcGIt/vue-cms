@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
  * 一键导航配置
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component
 @RequiredArgsConstructor

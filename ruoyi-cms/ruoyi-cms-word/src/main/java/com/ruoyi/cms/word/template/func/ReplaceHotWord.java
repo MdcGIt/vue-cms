@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  * Freemarker模板自定义函数，添加热词链接
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component
 @RequiredArgsConstructor

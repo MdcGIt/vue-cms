@@ -4,7 +4,7 @@ package com.ruoyi.member.level;
  * 等级经验变更操作项
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface IExpOperation {
 	

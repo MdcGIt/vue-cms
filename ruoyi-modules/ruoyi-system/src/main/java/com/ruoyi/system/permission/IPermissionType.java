@@ -11,7 +11,7 @@ import java.util.Set;
  * 系统模块提供权限持久化，各类型权限存储格式各自定义
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface IPermissionType<T> {
 

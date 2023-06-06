@@ -9,7 +9,7 @@ import com.ruoyi.common.utils.Assert;
  * 权限工具类
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public class PermissionUtils {
 

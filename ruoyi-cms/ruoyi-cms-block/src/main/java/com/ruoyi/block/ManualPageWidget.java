@@ -13,7 +13,7 @@ import com.ruoyi.contentcore.domain.CmsPageWidget;
  * 手动控制区块
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public class ManualPageWidget extends AbstractPageWidget {
 	

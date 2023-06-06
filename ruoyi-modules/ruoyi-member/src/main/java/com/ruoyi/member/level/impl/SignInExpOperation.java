@@ -8,7 +8,7 @@ import com.ruoyi.member.level.IExpOperation;
  * 等级经验操作项：签到
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component(IExpOperation.BEAN_PREFIX + SignInExpOperation.ID)
 public class SignInExpOperation implements IExpOperation {

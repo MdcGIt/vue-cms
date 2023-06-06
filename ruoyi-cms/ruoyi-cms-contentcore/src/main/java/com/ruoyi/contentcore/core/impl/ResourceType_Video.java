@@ -10,6 +10,12 @@ import com.ruoyi.contentcore.core.IResourceType;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 资源类型：视频
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @RequiredArgsConstructor
 @Component(IResourceType.BEAN_NAME_PREFIX + ResourceType_Video.ID)
 public class ResourceType_Video implements IResourceType {

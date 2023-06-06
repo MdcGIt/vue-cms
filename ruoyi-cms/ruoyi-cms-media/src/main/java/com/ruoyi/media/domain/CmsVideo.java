@@ -14,7 +14,7 @@ import lombok.Setter;
  * 视频数据表对象 [cms_video]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

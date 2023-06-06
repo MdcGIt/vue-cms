@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
  * 统计数据
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @SaAdminCheckLogin
 @RestController

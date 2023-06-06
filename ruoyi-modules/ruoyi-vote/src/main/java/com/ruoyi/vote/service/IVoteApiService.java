@@ -7,7 +7,7 @@ import com.ruoyi.vote.domain.vo.VoteVO;
  * 问卷调查前台业务服务类
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface IVoteApiService {
 

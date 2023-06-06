@@ -16,7 +16,7 @@ import lombok.Setter;
  * 发布通道表对象 [cms_publishpipe]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

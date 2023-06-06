@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * 安全配置应用对象接口
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface ISecurityUser {
 

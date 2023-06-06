@@ -31,6 +31,12 @@ import com.ruoyi.system.security.StpAdminUtil;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 内容回收站管理控制器
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
 @RequiredArgsConstructor
 @RestController

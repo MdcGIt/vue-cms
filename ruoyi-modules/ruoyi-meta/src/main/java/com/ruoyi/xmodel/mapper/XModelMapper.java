@@ -16,7 +16,7 @@ import com.ruoyi.xmodel.domain.XModel;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface XModelMapper extends BaseMapper<XModel> {
 

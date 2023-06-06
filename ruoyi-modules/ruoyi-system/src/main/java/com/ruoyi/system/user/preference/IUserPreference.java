@@ -4,7 +4,7 @@ package com.ruoyi.system.user.preference;
  * 用户偏好 配置项
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface IUserPreference {
 	

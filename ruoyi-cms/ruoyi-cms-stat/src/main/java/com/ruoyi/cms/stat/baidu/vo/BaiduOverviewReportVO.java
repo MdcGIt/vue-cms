@@ -9,7 +9,7 @@ import lombok.Setter;
  * 百度概况统计通用数据结构
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

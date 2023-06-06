@@ -12,7 +12,7 @@ import lombok.Setter;
  * 模板表对象 [cms_template]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

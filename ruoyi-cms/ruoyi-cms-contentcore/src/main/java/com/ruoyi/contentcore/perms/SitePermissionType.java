@@ -14,7 +14,7 @@ import cn.dev33.satoken.annotation.SaMode;
  * 站点权限类型
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component(IPermissionType.BEAN_PREFIX + SitePermissionType.ID)
 public class SitePermissionType implements IPermissionType<Map<String, BitSet>> {

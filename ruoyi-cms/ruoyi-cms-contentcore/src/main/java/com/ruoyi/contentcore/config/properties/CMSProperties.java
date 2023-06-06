@@ -5,6 +5,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * CMS配置属性
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "ruoyi.cms")

@@ -12,7 +12,7 @@ import lombok.Setter;
  * 易错词表 [CmsErrorProneWord]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

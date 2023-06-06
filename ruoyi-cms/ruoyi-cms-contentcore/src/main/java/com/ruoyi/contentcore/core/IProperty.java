@@ -8,14 +8,17 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.ruoyi.common.utils.StringUtils;
 
 /**
- * 扩展属性定义接口
+ * 扩展属性
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 public interface IProperty {
 	
 	/**
 	 * Bean名称前缀
 	 */
-	public static final String BEAN_NAME_PREFIX = "CMSProperty_";
+	String BEAN_NAME_PREFIX = "CMSProperty_";
 	
 	/**
 	 * 属性适用范围定义：站点、栏目

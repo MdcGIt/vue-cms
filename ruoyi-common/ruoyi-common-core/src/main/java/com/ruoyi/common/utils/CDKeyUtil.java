@@ -8,7 +8,7 @@ import org.apache.commons.lang3.RandomUtils;
  * 可复原随机码工具类
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public class CDKeyUtil {
 

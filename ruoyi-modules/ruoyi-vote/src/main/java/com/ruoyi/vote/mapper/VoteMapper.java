@@ -12,7 +12,7 @@ import com.ruoyi.vote.domain.Vote;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface VoteMapper extends BaseMapper<Vote> {
 

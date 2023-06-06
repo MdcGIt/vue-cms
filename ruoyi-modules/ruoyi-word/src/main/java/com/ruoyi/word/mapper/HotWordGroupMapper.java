@@ -13,7 +13,7 @@ import com.ruoyi.word.domain.HotWordGroup;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface HotWordGroupMapper extends BaseMapper<HotWordGroup> {
 

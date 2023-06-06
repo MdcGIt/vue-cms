@@ -12,7 +12,7 @@ import java.util.Set;
  * 通用权限 业务层
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface ISysPermissionService extends IService<SysPermission> {
 

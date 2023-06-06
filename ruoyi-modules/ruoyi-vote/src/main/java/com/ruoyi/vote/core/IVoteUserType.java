@@ -4,7 +4,7 @@ package com.ruoyi.vote.core;
  * 问卷调查用户类型
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface IVoteUserType {
 

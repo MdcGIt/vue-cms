@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
 
 import com.ruoyi.contentcore.core.IPublishPipeProp;
 
+/**
+ * 发布通道属性：站点域名
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Component
 public class PublishPipeProp_SiteUrl implements IPublishPipeProp {
 	

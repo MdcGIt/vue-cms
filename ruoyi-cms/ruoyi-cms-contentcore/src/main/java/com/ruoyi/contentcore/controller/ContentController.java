@@ -56,6 +56,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * 内容管理控制器
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
 @RequiredArgsConstructor
 @RestController

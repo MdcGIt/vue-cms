@@ -7,12 +7,18 @@ import com.ruoyi.contentcore.domain.vo.ContentVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * 内容类型
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 public interface IContentType extends Comparable<IContentType> {
 	
 	/**
 	 * Bean名称前缀
 	 */
-	public static final String BEAN_NAME_PREFIX = "ContentType_";
+	String BEAN_NAME_PREFIX = "ContentType_";
 
 	/**
 	 * 内容类型唯一标识ID

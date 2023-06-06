@@ -12,7 +12,7 @@ import lombok.Setter;
  * 标签分组表 [cc_tag_word_group]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

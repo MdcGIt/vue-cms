@@ -12,6 +12,12 @@ import com.ruoyi.contentcore.domain.CmsResource;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 资源类型：音频
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @RequiredArgsConstructor
 @Component(IResourceType.BEAN_NAME_PREFIX + ResourceType_Audio.ID)
 public class ResourceType_Audio implements IResourceType {

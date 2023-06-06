@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
  * 会员登录校验方法
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Component
 @RequiredArgsConstructor

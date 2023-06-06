@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
  * 例如校验可编辑的菜单数据：@Priv(value = "sys:menu:edit:${#menu.menuIdId}")
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Aspect
 @Component

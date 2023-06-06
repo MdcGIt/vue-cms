@@ -7,7 +7,7 @@ import com.ruoyi.member.domain.MemberExpConfig;
  * 等级经验值配置Mapper 接口
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface MemberExpConfigMapper extends BaseMapper<MemberExpConfig> {
 

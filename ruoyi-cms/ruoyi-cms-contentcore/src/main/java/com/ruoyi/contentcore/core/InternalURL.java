@@ -20,6 +20,9 @@ import lombok.Setter;
  * 内容：iurl://content?id=123<br/>
  * 资源：iurl://resources/image/2021/12/15/123.png?type=resource&id=123<br/>
  * 页面部件：iurl://pagewidget?id=123<br/>
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

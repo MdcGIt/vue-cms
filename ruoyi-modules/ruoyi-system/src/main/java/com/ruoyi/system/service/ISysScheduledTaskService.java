@@ -13,7 +13,7 @@ import com.ruoyi.system.schedule.ScheduledTask;
  * 未开启XXL-JOB时默认使用的一个简单本地定时任务，不支持集群
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface ISysScheduledTaskService extends IService<SysScheduledTask> {
 

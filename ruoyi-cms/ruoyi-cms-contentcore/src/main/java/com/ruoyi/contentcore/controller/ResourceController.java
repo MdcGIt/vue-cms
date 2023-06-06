@@ -50,6 +50,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 素材库管理控制器
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ResourceView)
 @RestController
 @RequestMapping("/cms/resource")

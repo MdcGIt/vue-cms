@@ -8,6 +8,12 @@ import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
 
+/**
+ * 内容抽象接口
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 public interface IContent<T> {
 
 	/**
@@ -78,7 +84,7 @@ public interface IContent<T> {
 	/**
 	 * 设置操作人信息
 	 * 
-	 * @param sysUser
+	 * @param operator
 	 */
 	public void setOperator(LoginUser operator);
 

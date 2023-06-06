@@ -15,6 +15,12 @@ import com.ruoyi.contentcore.util.SiteUtils;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 内部数据类型：资源
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @RequiredArgsConstructor
 @Component(IInternalDataType.BEAN_NAME_PREFIX + InternalDataType_Resource.ID)
 public class InternalDataType_Resource implements IInternalDataType {

@@ -25,7 +25,7 @@ import lombok.Setter;
  * 此区块内容支持多行多列自定义控制
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @RequiredArgsConstructor
 @Component(IPageWidgetType.BEAN_NAME_PREFIX + ManualPageWidgetType.ID)

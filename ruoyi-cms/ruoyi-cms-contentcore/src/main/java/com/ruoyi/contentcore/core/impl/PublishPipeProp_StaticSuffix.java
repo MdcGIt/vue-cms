@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 import com.ruoyi.contentcore.core.IPublishPipeProp;
 import com.ruoyi.contentcore.fixed.dict.StaticSuffix;
 
+/**
+ * 发布通道属性：静态文件类型
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
 @Component
 public class PublishPipeProp_StaticSuffix implements IPublishPipeProp {
 

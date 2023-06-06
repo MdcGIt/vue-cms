@@ -12,7 +12,7 @@ import lombok.Setter;
  * 元数据模型对象 [XModel]
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Getter
 @Setter

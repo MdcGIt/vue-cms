@@ -15,7 +15,7 @@ import com.ruoyi.media.domain.CmsVideo;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface CmsVideoMapper extends BaseMapper<CmsVideo> {
 

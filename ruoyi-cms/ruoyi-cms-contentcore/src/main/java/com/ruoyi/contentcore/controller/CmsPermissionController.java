@@ -49,7 +49,7 @@ import lombok.Setter;
  * 站点/栏目/内容权限
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @SaAdminCheckLogin
 @RequiredArgsConstructor

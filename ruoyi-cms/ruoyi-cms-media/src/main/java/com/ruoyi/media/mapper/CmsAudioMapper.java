@@ -15,7 +15,7 @@ import com.ruoyi.media.domain.CmsAudio;
  * </p>
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface CmsAudioMapper extends BaseMapper<CmsAudio> {
 

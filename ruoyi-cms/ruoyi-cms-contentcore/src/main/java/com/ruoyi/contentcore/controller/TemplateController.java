@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  * 模板管理
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.TemplateView)
 @RestController

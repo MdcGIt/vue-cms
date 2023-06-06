@@ -4,7 +4,7 @@ package com.ruoyi.system.permission;
  * 系统模块Controller访问权限统一管理类
  *
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 public interface SysMenuPriv {
 	

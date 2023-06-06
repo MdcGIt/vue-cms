@@ -3,6 +3,7 @@ package com.ruoyi.comment.controller;
 import java.util.List;
 import java.util.Objects;
 
+import com.ruoyi.comment.CommentConsts;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +54,7 @@ public class CommentController extends BaseRestController {
 				.eq(IdUtils.validate(sourceId), Comment::getSourceId, sourceId).eq(Comment::getParentId, 0)
 				.eq(IdUtils.validate(uid), Comment::getUid, uid)
 				.eq(Objects.nonNull(auditStatus), Comment::getAuditStatus, auditStatus)
+				.ne(Comment::getDelFlag, CommentConsts.DELETE_FLAG)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 
 		return this.bindDataTable(page);

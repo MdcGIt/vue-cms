@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  * 内容核心管理
  * 
  * @author 兮玥
- * @email liweiyimwz@126.com
+ * @email 190785909@qq.com
  */
 @Slf4j
 @RequiredArgsConstructor
