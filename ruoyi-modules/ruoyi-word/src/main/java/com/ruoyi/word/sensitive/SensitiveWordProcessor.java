@@ -249,6 +249,7 @@ public class SensitiveWordProcessor {
 				if (hit) {
 					// mismatch, reset
 					hit = false;
+					i--;
 					current = this.getWordDFAModel().getRoot();
 				}
 			}
