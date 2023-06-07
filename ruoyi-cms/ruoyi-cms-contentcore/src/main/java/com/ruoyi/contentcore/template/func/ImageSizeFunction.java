@@ -2,6 +2,7 @@ package com.ruoyi.contentcore.template.func;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
@@ -61,7 +62,7 @@ public class ImageSizeFunction extends AbstractFunc {
 			throw new TemplateModelException("Function[imageSize]: make sure the width/height is between 0 - 6144.");
 		}
 		if (!InternalUrlUtils.isInternalUrl(iurl)) {
-			throw new TemplateModelException("Function[imageSize]: invalid iurl=" + iurl);
+			return iurl; // 非内部链接直接返回
 		}
 		TemplateContext context = FreeMarkerUtils.getTemplateContext(Environment.getCurrentEnvironment());
 		InternalURL internalUrl = InternalUrlUtils.parseInternalUrl(iurl);
@@ -70,15 +71,15 @@ public class ImageSizeFunction extends AbstractFunc {
 		try {
 			CmsResource resource = this.resourceService.getById(internalUrl.getId());
 			// 仅支持本地图片
-			if (LocalFileStorageType.TYPE.equals(resource.getStorageType())) {
+			if (Objects.nonNull(resource) && LocalFileStorageType.TYPE.equals(resource.getStorageType())) {
 				String siteResourceRoot = SiteUtils.getSiteResourceRoot(siteService.getSite(resource.getSiteId()));
 				String destPath = StringUtils.substringBeforeLast(resource.getPath(), ".") + "_" + width + "x" + height
 						+ "." + StringUtils.substringAfterLast(resource.getPath(), ".");
 				Thumbnails.of(siteResourceRoot + resource.getPath()).size(width, height)
 						.toFile(siteResourceRoot + destPath);
+				return StringUtils.substringBeforeLast(actualUrl, ".") + "_" + width + "x" + height + "."
+						+ StringUtils.substringAfterLast(actualUrl, ".");
 			}
-			return StringUtils.substringBeforeLast(actualUrl, ".") + "_" + width + "x" + height + "."
-					+ StringUtils.substringAfterLast(actualUrl, ".");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
