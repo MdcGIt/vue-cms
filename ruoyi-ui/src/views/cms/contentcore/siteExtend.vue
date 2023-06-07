@@ -264,6 +264,13 @@
           :label="$t('CMS.Site.Extend.BaiduAccessToken')"
           prop="BaiduTjAccessToken">
           <el-input v-model="form_extend.BaiduTjAccessToken"></el-input>
+          <el-button  
+            class="ml5"
+            type="primary"
+            icon="el-icon-refresh"
+            :disabled="!this.siteId"
+            v-hasPermi="[ $p('Site:Edit:{0}', [ siteId ]) ]"
+            @click="handleRefreshBdTongjiToken">{{ $t("Common.Refresh") }}</el-button>
         </el-form-item>
       </el-card>
     </el-form>
@@ -273,6 +280,7 @@
 import { saveSiteExtends, getSiteExtends  } from "@/api/contentcore/site";
 import { getHotWordGroupOptions } from "@/api/word/hotWord";
 import { listXModel } from "@/api/contentcore/exmodel";
+import { refreshBdTongjiToken } from "@/api/stat/baidu";
 import CMSSimpleImageViewer from '@/views/cms/components/SimpleImageViewer';
 
 export default {
@@ -374,6 +382,11 @@ export default {
             this.$modal.msgSuccess(this.$t("Common.SaveSuccess"),);
           });
         }
+      });
+    },
+    handleRefreshBdTongjiToken() {
+      refreshBdTongjiToken().then(response => {
+        this.$modal.msgSuccess(this.$t("Common.SaveSuccess"),);
       });
     }
   }
