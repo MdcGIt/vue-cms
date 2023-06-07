@@ -18,10 +18,12 @@ import com.ruoyi.cms.stat.baidu.dto.BaiduTimeTrendDTO;
 import com.ruoyi.cms.stat.baidu.vo.BaiduOverviewReportVO;
 import com.ruoyi.cms.stat.baidu.vo.BaiduSiteVO;
 import com.ruoyi.cms.stat.baidu.vo.BaiduTimeTrendVO;
+import com.ruoyi.common.domain.R;
 import com.ruoyi.common.utils.HttpUtils;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
 
+import com.ruoyi.contentcore.domain.CmsSite;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -47,34 +49,31 @@ public class BaiduTongjiUtils {
 	/**
 	 * 刷新AccessToken
 	 * 
-	 * @param apiKey
-	 * @param secretKey
-	 * @param refreshToken
+	 * @param config
 	 * @return
 	 */
-	public static String refreshAccessToken(String apiKey, String secretKey, String refreshToken) {
-		String url = StringUtils.messageFormat(API_REFRESH_ACCESS_TOKEN, refreshToken, apiKey, secretKey);
+	public static Map<String, Object> refreshAccessToken(BaiduTongjiConfig config) {
+		String url = StringUtils.messageFormat(API_REFRESH_ACCESS_TOKEN, config.getRefreshToken(),
+				config.getApiKey(), config.getSecretKey());
 		String result = HttpUtils.get(URI.create(url));
-		return JacksonUtils.getAsString(result, "access_token");
+		return JacksonUtils.fromMap(result);
 	}
 
 	/**
 	 * 站点列表
 	 * 
-	 * @param accessToken
+	 * @param config
 	 * @return
-	 * @throws JsonMappingException
-	 * @throws JsonProcessingException
 	 */
-	public static List<BaiduSiteVO> getSiteList(String accessToken) {
-		String url = StringUtils.messageFormat(API_SITE_LIST, accessToken);
-		String reponseJson = HttpUtils.get(URI.create(url));
-		String errorMsg = JacksonUtils.getAsString(reponseJson, "error_msg");
+	public static R<List<BaiduSiteVO>> getSiteList(BaiduTongjiConfig config) {
+		String url = StringUtils.messageFormat(API_SITE_LIST, config.getAccessToken());
+		String responseJson = HttpUtils.get(URI.create(url));
+		String errorMsg = JacksonUtils.getAsString(responseJson, "error_msg");
 		if (StringUtils.isNotEmpty(errorMsg)) {
-			log.error("BaiduTongji api faild: " + errorMsg);
-			throw new RuntimeException(errorMsg);
+			return R.fail(errorMsg);
 		}
-		return JacksonUtils.getAsList(reponseJson, "list", BaiduSiteVO.class);
+		List<BaiduSiteVO> list = JacksonUtils.getAsList(responseJson, "list", BaiduSiteVO.class);
+		return R.ok(list);
 	}
 	
 	public static BaiduTimeTrendVO getSiteTimeTrend(String accessToken, BaiduTimeTrendDTO dto) {

@@ -7,6 +7,13 @@ export function getSiteList() {
   })
 }
 
+export function refreshBdTongjiToken() {
+  return request({
+    url: '/cms/stat/baidu/refreshToken',
+    method: 'put'
+  })
+}
+
 // 站点趋势概览数据
 export function getSiteTrendOverviewDatas(params) {
   return request({
