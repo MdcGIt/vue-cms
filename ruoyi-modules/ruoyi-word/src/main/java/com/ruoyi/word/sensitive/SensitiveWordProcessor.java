@@ -249,6 +249,7 @@ public class SensitiveWordProcessor {
 				if (hit) {
 					// mismatch, reset
 					hit = false;
+					i = index; // 索引回退到上次未匹配成功的匹配起始点继续
 					current = this.getWordDFAModel().getRoot();
 				}
 			}

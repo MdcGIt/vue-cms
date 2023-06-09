@@ -264,7 +264,7 @@ export default {
     },
     loadResources () {
       this.loadingList = true;
-      if (this.dateRange.length == 2) {
+      if (this.dateRange && this.dateRange.length == 2) {
         this.filterQuery.beginTime = this.dateRange[0];
         this.filterQuery.endTime = this.dateRange[1];
       }

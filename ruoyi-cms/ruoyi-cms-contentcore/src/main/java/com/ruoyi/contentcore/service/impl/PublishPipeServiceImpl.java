@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
+import com.ruoyi.contentcore.ContentCoreConsts;
+import com.ruoyi.contentcore.core.impl.PublishPipeProp_IndexTemplate;
+import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
+import com.ruoyi.contentcore.fixed.dict.StaticSuffix;
+import com.ruoyi.contentcore.service.ITemplateService;
+import com.ruoyi.contentcore.util.TemplateUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
@@ -108,12 +111,11 @@ public class PublishPipeServiceImpl extends ServiceImpl<CmsPublishPipeMapper, Cm
 			<html>
 				<head>
 					<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">
-					<title>${site.name}</title>
+					<title>${Site.name}</title>
 				</head>
 				<body>
-					<h1>${site.name}</h1>
-					<h3>${site.description!}</h3>
-					<h3>${site.createTime!}</h3>
+					<h1>${Site.name}</h1>
+					<h3>${Site.createTime!}</h3>
 				</body>
 			</html>
 			 		""";
@@ -136,9 +138,15 @@ public class PublishPipeServiceImpl extends ServiceImpl<CmsPublishPipeMapper, Cm
 		FileExUtils.mkdirs(siteRoot + "images"); // 图片资源目录
 		FileExUtils.mkdirs(siteRoot + "include"); // 区块文件目录
 		FileExUtils.mkdirs(siteRoot + "html"); // 静态文件目录
-		FileExUtils.mkdirs(siteRoot + "template"); // 模板文件目录
+		FileExUtils.mkdirs(siteRoot + ContentCoreConsts.TemplateDirectory); // 模板文件目录
 		// 默认首页模板
-		String indexTemplateFilePath = siteRoot + site.getIndexTemplate(publishPipe.getCode());
+		site.getPublishPipeProps(publishPipe.getCode())
+				.put(PublishPipeProp_IndexTemplate.KEY, "index" + TemplateSuffix.getValue());
+		siteService.updateById(site);
+		siteService.clearCache(site.getSiteId());
+
+		String indexTemplateFilePath = siteRoot + ContentCoreConsts.TemplateDirectory
+				+ site.getIndexTemplate(publishPipe.getCode());
 		File indexTemplateFile = new File(indexTemplateFilePath);
 		if (!indexTemplateFile.exists()) {
 			FileUtils.writeStringToFile(indexTemplateFile, DEFAULT_INDEX_TEMPLATE_CONTENT, StandardCharsets.UTF_8);

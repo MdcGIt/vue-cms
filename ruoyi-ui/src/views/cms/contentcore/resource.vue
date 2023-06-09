@@ -233,7 +233,7 @@ export default {
     /** 查询资源列表 */
     getList () {
       this.loading = true;
-      if (this.dateRange.length == 2) {
+      if (this.dateRange && this.dateRange.length == 2) {
         this.queryParams.beginTime = this.dateRange[0];
         this.queryParams.endTime = this.dateRange[1];
       }

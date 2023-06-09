@@ -52,7 +52,11 @@ public class BaiduTongjiController extends BaseRestController {
 	@GetMapping("/sites")
 	public R<?> getSiteList() {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		return this.cmsStatService.getBaiduSiteList(site);
+		R<List<BaiduSiteVO>> r = this.cmsStatService.getBaiduSiteList(site);
+		if (r.isSuccess()) {
+			return r;
+		}
+		return R.ok(); // 不返回错误了，直接返回空数组
 	}
 
 	/**
