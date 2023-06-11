@@ -237,7 +237,7 @@ export default {
     },
     handleGroupClick(row) {
       this.$router.push({ 
-        path: "/interact/link/list", 
+        path: "/operations/link/list", 
         query: { 
           groupId: row.linkGroupId
         } 

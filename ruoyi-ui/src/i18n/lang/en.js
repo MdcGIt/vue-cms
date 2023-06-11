@@ -880,6 +880,9 @@ export default {
         BaiduSecretKey: "Baidu SecretKey",
         BaiduRefreshToken: "Baidu RefreshToken",
         BaiduAccessToken: "Baidu AccessToken",
+        SiteApiUrl: "Site Api Url",
+        CustomFormCardTitle: "Custom Form Configuration",
+        EnableCustomFormCaptcha: "Enable Captcha On Submit"
       },
       Property: {
         QueryPlaceholder: "Input name/code",
@@ -1283,6 +1286,16 @@ export default {
       OnlyTitle: "Only Match Title",
       IndexDetails: "Index Details",
       ProgressTitle: "Create index task",
+    },
+    CustomForm: {
+      Name: "Name",
+      Code: "Code",
+      TableName: "Table Name",
+      Status: "Status",
+      AddTitle: "Add Custom Form",
+      EditTitle: "Edit Custom Form",
+      RouteFieldList: "Custom Form Fields",
+      Fields: "Fields",
     }
   },
   Stat: {
@@ -1401,6 +1414,32 @@ export default {
     RuleTips: {
       UserName: "Must starts with letter and only letters, numbers and underline can be useds.",
       Member: "The username phonenumber and email cannot all be empty."
+    }
+  },
+  MetaModel: {
+    FieldName: "Name",
+    FieldCode: "Code",
+    FieldType: "Type",
+    FieldControlType: "Control Type",
+    FieldMappingName: "Field Name",
+    FieldMandatory: "Mandatory",
+    FieldDefaultValue: "Default Value",
+    FieldOptions: "Field Options",
+    FieldOptionsInput: "Input",
+    FieldOptionsDict: "Dictionary",
+    AddFieldTitle: "Add model field",
+    EditFieldTitle: "Edit model field",
+    Placeholder: {
+      FieldQuery: "Input field name/code"
+    },
+    RuleTips: {
+      FieldName: "Name cannot be empty.",
+      FieldCode: "Code cannot be empty and only [A-Za-z0-9_]+",
+      FieldControlType: "Control type cannot be empty.",
+      FieldMandatory: "Mandatory cannot be empty.",
+      FieldType: "Field type cannot be empty.",
+      FieldMappingName: "Table column name cannot be empty.",
+      FieldMappingUsed: "The table column alreay used.",
     }
   }
 };

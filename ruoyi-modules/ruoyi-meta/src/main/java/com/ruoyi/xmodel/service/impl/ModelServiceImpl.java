@@ -3,6 +3,7 @@ package com.ruoyi.xmodel.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.xmodel.core.impl.MetaControlType_Input;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,6 @@ import com.ruoyi.xmodel.domain.XModelData;
 import com.ruoyi.xmodel.domain.XModelField;
 import com.ruoyi.xmodel.dto.XModelDTO;
 import com.ruoyi.xmodel.exception.MetaErrorCode;
-import com.ruoyi.xmodel.fixed.dict.MetaControlType;
 import com.ruoyi.xmodel.mapper.XModelDataMapper;
 import com.ruoyi.xmodel.mapper.XModelFieldMapper;
 import com.ruoyi.xmodel.mapper.XModelMapper;
@@ -34,11 +34,11 @@ import lombok.RequiredArgsConstructor;
 public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implements IModelService {
 
 	private final XModelFieldMapper modelFieldMapper;
-	
+
 	private final XModelDataMapper modelDataMapepr;
 
 	private final XModelMapper modelMapper;
-	
+
 	@Override
 	public List<String> listModelDataCustomTable() {
 		// 自定义表
@@ -66,12 +66,12 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 		}
 		XModel model = new XModel();
 		BeanUtils.copyProperties(dto, model, "modelId");
-    	model.setModelId(IdUtils.getSnowflakeId());
-    	model.createBy(dto.getOperator().getUsername());
-    	this.save(model);
-    	
+		model.setModelId(IdUtils.getSnowflakeId());
+		model.createBy(dto.getOperator().getUsername());
+		this.save(model);
+
 		// 自定义表直接初始化字段
-    	if (!XModelUtils.isDefaultTable(dto.getTableName())) {
+		if (!XModelUtils.isDefaultTable(dto.getTableName())) {
 			List<DbTableColumn> listTableColumn = this.modelMapper.listTableColumn(dto.getTableName(), XModelUtils.PRIMARY_FIELD_NAME);
 			for (DbTableColumn column : listTableColumn) {
 				XModelField field = new XModelField();
@@ -81,12 +81,12 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 				field.setCode(column.getColumnName());
 				field.setFieldName(column.getColumnName());
 				field.setMandatoryFlag(column.isMandatory());
-				field.setControlType(MetaControlType.INPUT);
+				field.setControlType(MetaControlType_Input.TYPE);
 				field.setDefaultValue(column.getColumnDefault());
 				field.createBy(dto.getOperator().getUsername());
 				this.modelFieldMapper.insert(field);
 			}
-    	}
+		}
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 		model.updateBy(dto.getOperator().getUsername());
 		this.updateById(model);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteModel(List<Long> modelIds) {
@@ -108,7 +108,11 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 				// 移除模型字段数据
 				this.modelFieldMapper.delete(new LambdaQueryWrapper<XModelField>().eq(XModelField::getModelId, modelId));
 				// 删除模型数据表数据
-				this.modelDataMapepr.delete(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modelId));
+				if (model.getTableName().equals(XModelData.TABLE_NAME)) {
+					this.modelDataMapepr.delete(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modelId));
+				} else {
+					this.modelMapper.dropModelDataTable(model.getTableName());
+				}
 				// 移除模型数据
 				this.removeById(model.getModelId());
 			}

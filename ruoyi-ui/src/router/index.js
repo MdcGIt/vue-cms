@@ -154,27 +154,33 @@ export const constantRoutes = [
         path: 'adspace/editor',
         component: () => import('@/views/cms/ad/adSpaceEditor'),
         name: 'CMSAdSpaceEditor',
-        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditAdvSpace'), activeMenu: '/interact/advertisement'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditAdvSpace'), activeMenu: '/operations/advertisement'}
       },
       {
         path: 'ad/editor',
         component: () => import('@/views/cms/ad/advertisementEditor'),
         name: 'CMSAdvertisementEditor',
-        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditAdv'), activeMenu: '/interact/advertisement'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditAdv'), activeMenu: '/operations/advertisement'}
       }
     ]
   },
   {
-    path: '/interact',
+    path: '/operations',
     component: Layout,
     hidden: true,
-    redirect: '/interact/link',
+    redirect: '/operations/link',
     children: [
       {
         path: 'link/list',
         component: () => import('@/views/cms/link/link'),
         name: 'CmsLink',
-        meta: { title: i18n.t('CMS.FriendLink.RouteLinkList'), activeMenu: '/interact/link'}
+        meta: { title: i18n.t('CMS.FriendLink.RouteLinkList'), activeMenu: '/operations/link'}
+      },
+      {
+        path: 'customform/fields',
+        component: () => import('@/views/meta/fieldList'),
+        name: 'CmsCustomFields',
+        meta: { title: i18n.t('CMS.CustomForm.RouteFieldList'), activeMenu: '/operations/customform'}
       }
     ]
   }

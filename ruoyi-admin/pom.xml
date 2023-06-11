@@ -129,6 +129,12 @@
 			<groupId>com.ruoyi</groupId>
 			<artifactId>ruoyi-cms-stat</artifactId>
 		</dependency>
+
+		<!-- CMS自定义表单模块 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-cms-customform</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -140,7 +146,7 @@
 				<version>${spring-boot.version}</version>
 				<configuration>
 					<!-- 如果没有该配置，devtools不会生效 -->
-					<fork>true</fork>
+					<!-- <fork>true</fork> -->
 				</configuration>
 				<executions>
 					<execution>

@@ -2,6 +2,7 @@ package com.ruoyi.xmodel.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -52,4 +53,7 @@ public interface XModelMapper extends BaseMapper<XModel> {
 			+ " and table_name=#{tableName}"
 			+ " and column_name=#{columnName}")
 	public DbTableColumn getTabelColumn(@Param("tableName") String tableName, @Param("columnName") String columnName);
+
+	@Delete("DROP TABLE #{tableName}")
+    void dropModelDataTable(@Param("tableName") String tableName);
 }

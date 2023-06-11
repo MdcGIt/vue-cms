@@ -32,7 +32,7 @@
             <el-input :placeholder="$t('CMS.ExModel.Placeholder.FieldQuery')" v-model="queryParams.query"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button-grou>
+            <el-button-group>
               <el-button 
                 type="primary"
                 icon="el-icon-search"
@@ -40,7 +40,7 @@
               <el-button 
                 icon="el-icon-refresh"
                 @click="resetQuery">{{ $t("Common.Reset") }}</el-button>
-            </el-button-grou>
+            </el-button-group>
           </el-form-item>
         </el-form>
       </el-col>
@@ -52,7 +52,7 @@
         <el-table-column :label="$t('CMS.ExModel.FieldCode')" align="center" prop="code" />
         <el-table-column :label="$t('CMS.ExModel.FieldControlType')" align="center" prop="controlType">
           <template slot-scope="scope">
-            <dict-tag :options="dict.type.MetaControlType" :value="scope.row.controlType"/>
+            {{ formatControlType(scope.row) }}
           </template>
         </el-table-column>
         <el-table-column :label="$t('CMS.ExModel.FieldMappingName')" align="center" prop="fieldName" />
@@ -120,10 +120,10 @@
         <el-form-item :label="$t('CMS.ExModel.FieldControlType')" prop="controlType">
           <el-select v-model="form.controlType">
             <el-option
-              v-for="dict in dict.type.MetaControlType"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
+              v-for="control in controlOptions"
+              :key="control.id"
+              :label="control.name"
+              :value="control.id"
             />
           </el-select>
         </el-form-item>
@@ -166,10 +166,11 @@
 </template>
 <script>
 import { addXModelField, editXModelField, deleteXModelField, listXModelField, listXModelTableFields } from "@/api/contentcore/exmodel";
+import { getControlOptions } from "@/api/meta/model"
 
 export default {
   name: "CMSEXModelField",
-  dicts: [ 'MetaFieldType', 'MetaControlType', 'YesOrNo' ],
+  dicts: [ 'MetaFieldType', 'YesOrNo' ],
   data () {
     return {
       // 遮罩层
@@ -194,6 +195,7 @@ export default {
       modelId: this.$route.query.modelId,
       isDefaultTable: this.$route.query.isDefaultTable === 'true',
       tableFields: [],
+      controlOptions: [],
       // 表单参数
       form: {
         options:{ type: "text" }
@@ -244,12 +246,22 @@ export default {
     }
   },
   created () {
+    this.loadControlOptions();
     this.loadXModelFieldList();
     if (!this.isDefaultTable) {
       this.loadXmodelUsableFields();
     }
   },
   methods: {
+    loadControlOptions() {
+      getControlOptions().then(response => {
+        this.controlOptions = response.data;
+      })
+    },
+    formatControlType(row) {
+      let control = this.controlOptions.find(item => item.id == row.controlType)
+      return control ? control.name : row.controlType
+    },
     loadXModelFieldList () {
       this.loading = true;
       listXModelField(this.queryParams).then(response => {

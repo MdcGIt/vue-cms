@@ -500,7 +500,7 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 						.eq(CmsContent::getCopyType, ContentCopyType.Mapping.value());
 				List<CmsContent> mappingContents = contentService.list(q);
 				for (int i = 0; i < mappingContents.size(); i++) {
-					this.setProgressInfo((int) (i * 100 / mappingContents.size()),
+					this.setProgressInfo(i * 100 / mappingContents.size(),
 							"正在发布相关映射内容：" + catalog.getName() + "[" + i + " / " + mappingContents.size() + "]");
 					contentStaticize(mappingContents.get(i));
 				}
@@ -659,8 +659,7 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 		String exTemplate = ContentUtils.getContentExTemplate(content, catalog, publishPipeCode);
 		File templateFile = this.templateService.findTemplateFile(site, exTemplate, publishPipeCode);
 		if (templateFile == null) {
-			logger.warn(AsyncTaskManager.addErrMessage(
-					StringUtils.messageFormat("[{0}]栏目[{1}]详情页扩展模板未设置或文件不存在", publishPipeCode, catalog.getName())));
+			logger.warn("[{}]栏目[{}]详情页扩展模板未设置或文件不存在", publishPipeCode, catalog.getName());
 			return;
 		}
 		try {

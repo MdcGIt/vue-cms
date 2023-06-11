@@ -27,6 +27,6 @@ public class SiteDefaultTemplateDTO extends BaseDTO {
 	/*
 	 * 默认模板属性
 	 */
-	@NotEmpty
+	@NotEmpty(message = "{VALIDATOR.CMS.SITE.PUBLISH_PIPE_PROPS_EMPTY}")
 	public List<PublishPipeProp> publishPipeProps;
 }

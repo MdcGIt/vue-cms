@@ -26,7 +26,7 @@ public class XModelFieldDataDTO {
 	public static XModelFieldDataDTO newInstance(XModelField field, String value) {
 		XModelFieldDataDTO dto = new XModelFieldDataDTO();
 		dto.setLabel(field.getName());
-		dto.setFieldName(XModelUtils.DATA_FIELD_PREFIX + field.getFieldName());
+		dto.setFieldName(XModelUtils.DATA_FIELD_PREFIX + field.getCode());
 		dto.setControlType(field.getControlType());
 		dto.setValue(value);
 		return dto;

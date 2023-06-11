@@ -73,6 +73,9 @@
             inactive-value="N">
           </el-switch>
         </el-form-item>
+        <el-form-item :label="$t('CMS.Site.Extend.SiteApiUrl')" prop="SiteApiUrl">
+          <el-input v-model="form_extend.SiteApiUrl" placeholder="http(s)://"></el-input>
+        </el-form-item>
       </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
@@ -271,6 +274,21 @@
             :disabled="!this.siteId"
             v-hasPermi="[ $p('Site:Edit:{0}', [ siteId ]) ]"
             @click="handleRefreshBdTongjiToken">{{ $t("Common.Refresh") }}</el-button>
+        </el-form-item>
+      </el-card>
+      
+      <el-card shadow="hover">
+        <div slot="header" class="clearfix">
+          <span>{{ $t('CMS.Site.Extend.CustomFormCardTitle') }}</span>
+        </div>
+        <el-form-item :label="$t('CMS.Site.Extend.EnableCustomFormCaptcha')" prop="EnableCustomFormCaptcha">
+          <el-switch
+            v-model="form_extend.EnableCustomFormCaptcha"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
+            active-value="Y"
+            inactive-value="N">
+          </el-switch>
         </el-form-item>
       </el-card>
     </el-form>

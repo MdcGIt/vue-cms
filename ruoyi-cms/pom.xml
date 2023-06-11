@@ -26,7 +26,8 @@
 		<module>ruoyi-cms-comment</module>
 		<module>ruoyi-cms-vote</module>
 		<module>ruoyi-cms-stat</module>
-	</modules>
+        <module>ruoyi-cms-customform</module>
+    </modules>
 	
 	<properties>
 	</properties>

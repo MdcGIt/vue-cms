@@ -3,6 +3,17 @@ package com.ruoyi.xmodel;
 public class XModelUtils {
 
 	/**
+	 * 字段选择项类型：文本
+	 * <p>格式：</p>
+	 */
+	public final static String OPTIONS_TYPE_TEXT = "text";
+
+	/**
+	 * 字段选择项类型：字典数据
+	 */
+	public final static String OPTIONS_TYPE_DICT = "dict";
+
+	/**
 	 * 系统内置扩展模型数据表
 	 */
 	public final static String DEFAULT_MODEL_VALUE_TABLE = "x_model_data";

@@ -33,6 +33,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -70,6 +71,7 @@ public class TemplateController extends BaseRestController {
 		Page<CmsTemplate> page = this.templateService.lambdaQuery().eq(CmsTemplate::getSiteId, site.getSiteId())
 				.eq(StringUtils.isNotEmpty(publishPipeCode), CmsTemplate::getPublishPipeCode, publishPipeCode)
 				.like(StringUtils.isNotEmpty(filename), CmsTemplate::getPath, filename)
+				.orderByAsc(CmsTemplate::getPath)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 		List<TemplateListVO> list = page.getRecords().stream().map(t -> {
 			return TemplateListVO.builder()

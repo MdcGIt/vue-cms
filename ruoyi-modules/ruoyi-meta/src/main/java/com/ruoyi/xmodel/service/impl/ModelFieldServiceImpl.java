@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.xmodel.core.impl.MetaControlType_Checkbox;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,6 @@ import com.ruoyi.xmodel.dto.FieldOptions;
 import com.ruoyi.xmodel.dto.XModelFieldDTO;
 import com.ruoyi.xmodel.dto.XModelFieldDataDTO;
 import com.ruoyi.xmodel.exception.MetaErrorCode;
-import com.ruoyi.xmodel.fixed.dict.MetaControlType;
 import com.ruoyi.xmodel.fixed.dict.MetaFieldType;
 import com.ruoyi.xmodel.mapper.XModelFieldMapper;
 import com.ruoyi.xmodel.mapper.XModelMapper;
@@ -37,11 +37,11 @@ import lombok.RequiredArgsConstructor;
 public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModelField> implements IModelFieldService {
 
 	private final XModelMapper modelMapper;
-	
+
 	private final IModelDataService modelDataService;
-	
+
 	private final ISysDictTypeService dictService;
-	
+
 	@Override
 	public void addModelField(XModelFieldDTO dto) {
 		XModel model = this.modelMapper.selectById(dto.getModelId());
@@ -78,7 +78,7 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 		xModelField.createBy(dto.getOperator().getUsername());
 		this.save(xModelField);
 	}
-	
+
 	@Override
 	public void editModelField(XModelFieldDTO dto) {
 		XModelField modelField = this.getById(dto.getFieldId());
@@ -123,10 +123,10 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 	public void deleteModelField(List<Long> fieldIds) {
 		this.removeByIds(fieldIds);
 	}
-	
+
 	/**
 	 * 判断指定表`tableName`是否含有指定字段`columnName`
-	 * 
+	 *
 	 * @param tableName
 	 * @param columnName
 	 * @return
@@ -135,10 +135,10 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 		DbTableColumn tabelColumn = this.modelMapper.getTabelColumn(tableName, columnName);
 		return tabelColumn != null;
 	}
-	
+
 	/**
 	 * 获取指定模型已配置过的数据库字段名
-	 * 
+	 *
 	 * @param modelId
 	 * @param fieldType
 	 * @param isDefaultTable
@@ -151,7 +151,7 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 		List<XModelField> list = this.list(q);
 		return list.stream().map(f -> f.getFieldName()).toArray(String[]::new);
 	}
-	
+
 	/**
 	 * 校验字段编码是否已存在
 	 */
@@ -172,30 +172,34 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 		List<XModelFieldDataDTO> result = list.stream().map(f -> {
 			XModelFieldDataDTO dto = XModelFieldDataDTO.newInstance(f, MapUtils.getString(modelData, f.getFieldName(), f.getDefaultValue()));
 			dto.setOptions(getOptions(f.getOptions()));
-			if (MetaControlType.isCheckbox(dto.getControlType())) {
-				if (dto.getValue() == null || StringUtils.isBlank(dto.getValue().toString().trim())) {
-					dto.setValue(new String[] {});
+			if (MetaControlType_Checkbox.TYPE.equals(dto.getControlType())) {
+				if (dto.getValue() == null || StringUtils.isBlank(dto.getValue().toString())) {
+					dto.setValue(new String[0]);
 				} else {
-					dto.setValue(dto.getValue().toString().split(","));
+					String[] value = StringUtils.split(dto.getValue().toString(), StringUtils.COMMA);
+					dto.setValue(value);
 				}
 			}
 			return dto;
 		}).toList();
 		return result;
 	}
-	
+
 	private List<Map<String, String>> getOptions(FieldOptions options) {
 		List<Map<String, String>> list = new ArrayList<>();
 		if (options != null && StringUtils.isNotEmpty(options.getValue())) {
-			if ("dict".equals(options.getType())) {
-				 return this.dictService.selectDictDatasByType(options.getValue())
-				 	.stream().map(dd -> Map.of("value", dd.getDictValue(), "name", dd.getDictLabel()))
-					.toList();
-			} else if("text".equals(options.getType())) {
+			if (XModelUtils.OPTIONS_TYPE_DICT.equals(options.getType())) {
+				return this.dictService.selectDictDatasByType(options.getValue())
+						.stream().map(dd -> Map.of("value", dd.getDictValue(), "name", dd.getDictLabel()))
+						.toList();
+			} else if(XModelUtils.OPTIONS_TYPE_TEXT.equals(options.getType())) {
 				String[] split = options.getValue().split("\n");
 				for (String string : split) {
-					String[] arr = string.split("=");
-					list.add(Map.of("value", arr[0], "name", arr[1]));
+					if (string.indexOf("=") > -1) {
+						String value = StringUtils.substringBefore(string, "=");
+						String name = StringUtils.substringAfter(string, "=");
+						list.add(Map.of("value", value, "name", name));
+					}
 				}
 			}
 		}

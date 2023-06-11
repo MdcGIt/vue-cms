@@ -520,6 +520,13 @@
 				<artifactId>ruoyi-cms-stat</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
+
+			<!-- CMS自定义表单模块 -->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-cms-customform</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
 			<!-- CMS Modules End -->
 		</dependencies>
 	</dependencyManagement>

@@ -1,10 +1,8 @@
 package com.ruoyi.xmodel.service.impl;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.ruoyi.system.fixed.dict.YesOrNo;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -64,7 +62,7 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 		}
 
 		for (XModelField field : fields) {
-			Object fieldValue = params.get(field.getFieldName());
+			Object fieldValue = params.get(field.getCode());
 			if (fieldValue == null) {
 				fieldValue = field.getDefaultValue();
 			} else if (fieldValue.getClass().isArray()) {
@@ -73,6 +71,10 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 			} else if (fieldValue instanceof List<?> list) {
 				fieldValue = StringUtils.join(list, StringUtils.COMMA);
 			}
+			if (YesOrNo.isYes(field.getMandatoryFlag()) && StringUtils.isEmpty(fieldValue.toString())) {
+				throw new RuntimeException("Validate field: " + field.getCode() + " cannot be empty.");
+			}
+			// TODO 其它自定义规则校验
 			dataMap.put(field.getFieldName(), fieldValue);
 		}
 		if (insert) {
