@@ -2,7 +2,7 @@ package com.ruoyi.media.service;
 
 import java.util.List;
 
-import com.ruoyi.common.mybatisplus.IBackupService;
+import com.ruoyi.common.mybatisplus.service.IBackupService;
 import com.ruoyi.media.domain.CmsVideo;
 
 public interface IVideoService extends IBackupService<CmsVideo> {

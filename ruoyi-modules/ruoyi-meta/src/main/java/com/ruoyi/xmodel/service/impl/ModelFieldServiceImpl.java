@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.mybatisplus.service.IDBService;
 import com.ruoyi.xmodel.core.impl.MetaControlType_Checkbox;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.BeanUtils;
@@ -17,7 +18,6 @@ import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysDictTypeService;
 import com.ruoyi.xmodel.XModelUtils;
-import com.ruoyi.xmodel.db.DbTableColumn;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.domain.XModelField;
 import com.ruoyi.xmodel.dto.FieldOptions;
@@ -41,6 +41,8 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 	private final IModelDataService modelDataService;
 
 	private final ISysDictTypeService dictService;
+
+	private final IDBService dbService;
 
 	@Override
 	public void addModelField(XModelFieldDTO dto) {
@@ -132,8 +134,8 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 	 * @return
 	 */
 	private boolean isTableContainsColumn(String tableName, String columnName) {
-		DbTableColumn tabelColumn = this.modelMapper.getTabelColumn(tableName, columnName);
-		return tabelColumn != null;
+		return this.dbService.getDbType().listTableColumns(tableName)
+				.stream().filter(tc -> tc.getName().equals(columnName)).findFirst().isPresent();
 	}
 
 	/**

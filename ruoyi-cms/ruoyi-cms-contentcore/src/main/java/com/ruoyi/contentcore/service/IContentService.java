@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.ruoyi.common.async.AsyncTask;
-import com.ruoyi.common.mybatisplus.IBackupService;
+import com.ruoyi.common.mybatisplus.service.IBackupService;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;

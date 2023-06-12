@@ -1,8 +1,11 @@
-package com.ruoyi.common.mybatisplus;
+package com.ruoyi.common.mybatisplus.service.impl;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoyi.common.mybatisplus.annotation.BackupTable;
+import com.ruoyi.common.mybatisplus.db.IDbType;
+import com.ruoyi.common.mybatisplus.service.IDBService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
@@ -14,14 +17,8 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.annotation.BackupTable;
-import com.ruoyi.common.mybatisplus.db.IDbType;
-import com.ruoyi.common.utils.StringUtils;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -30,13 +27,10 @@ public class BackupTableService implements CommandLineRunner {
 
 	static final String RESOURCE_PATTERN = "/**/*.class";
 
-	@Value("${mybatis-plus.dbType:}")
-	private String dbTypeStr;
-
 	@Value("${mybatis-plus.typeAliasesPackage:com.ruoyi.**.domain}")
 	private String typeAliasesPackage;
 
-	private final List<IDbType> dbTypes;
+	private final IDBService dbService;
 
 	/**
 	 * 创建备份表
@@ -72,32 +66,31 @@ public class BackupTableService implements CommandLineRunner {
 	 * @param backupRemark
 	 */
 	public <T> void backup(T entity, String backupOperator, String backupRemark) {
-		DbType dbType = StringUtils.isEmpty(dbTypeStr) ? DbType.MYSQL : DbType.getDbType(dbTypeStr);
-		this.dbTypes.stream().filter(dt -> dbType.getDb().equals(dt.getType())).findFirst().ifPresentOrElse(
-				dt -> dt.backup(entity, backupOperator, backupRemark),
-				() -> log.warn("IDbType not found: " + dbTypeStr));
+		IDbType dbType = this.dbService.getDbType();
+		dbType.backup(entity, backupOperator, backupRemark);
 	}
 
 	public void recover(Long backupId, Class<?> entityClass) {
-		DbType dbType = StringUtils.isEmpty(dbTypeStr) ? DbType.MYSQL : DbType.getDbType(dbTypeStr);
-		this.dbTypes.stream().filter(dt -> dbType.getDb().equals(dt.getType())).findFirst().ifPresentOrElse(
-				dt -> dt.recover(backupId, entityClass),
-				() -> log.warn("IDbType not found: " + dbTypeStr));
+		IDbType dbType = this.dbService.getDbType();
+		dbType.recover(backupId, entityClass);
 	}
 
+	/**
+	 * 删除备份数据
+	 *
+	 * @param backupIds
+	 * @param entityClass
+	 */
 	public void deleteByBackupIds(List<Long> backupIds, Class<?> entityClass) {
-		DbType dbType = StringUtils.isEmpty(dbTypeStr) ? DbType.MYSQL : DbType.getDbType(dbTypeStr);
-		this.dbTypes.stream().filter(dt -> dbType.getDb().equals(dt.getType())).findFirst().ifPresentOrElse(
-				dt -> dt.deleteBackupByIds(backupIds, entityClass),
-				() -> log.warn("IDbType not found: " + dbTypeStr));
+		IDbType dbType = this.dbService.getDbType();
+		dbType.deleteBackupByIds(backupIds, entityClass);
 	}
 
 	/**
 	 * 创建备份表
 	 */
 	private void createBackupTable(String sourceTable) {
-		DbType dbType = StringUtils.isEmpty(dbTypeStr) ? DbType.MYSQL : DbType.getDbType(dbTypeStr);
-		this.dbTypes.stream().filter(dt -> dbType.getDb().equals(dt.getType())).findFirst().ifPresentOrElse(
-				dt -> dt.createBackupTable(sourceTable), () -> log.warn("IDbType not found: " + dbTypeStr));
+		IDbType dbType = this.dbService.getDbType();
+		dbType.createBackupTable(sourceTable);
 	}
 }

@@ -3,6 +3,11 @@ package com.ruoyi.xmodel.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.common.mybatisplus.db.DBTable;
+import com.ruoyi.common.mybatisplus.db.DBTableColumn;
+import com.ruoyi.common.mybatisplus.db.IDbType;
+import com.ruoyi.common.mybatisplus.service.IDBService;
+import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.xmodel.core.impl.MetaControlType_Input;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -15,8 +20,6 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.xmodel.XModelUtils;
-import com.ruoyi.xmodel.db.DbTable;
-import com.ruoyi.xmodel.db.DbTableColumn;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.domain.XModelData;
 import com.ruoyi.xmodel.domain.XModelField;
@@ -39,14 +42,19 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 
 	private final XModelMapper modelMapper;
 
+	private final IDBService dbService;
+
 	@Override
 	public List<String> listModelDataCustomTable() {
-		// 自定义表
-		List<String> list = new ArrayList<>();
 		// 默认表
-		list.add(0, XModelUtils.DEFAULT_MODEL_VALUE_TABLE);
-		this.modelMapper.listDbTableByPrefix(XModelUtils.CUSTOM_TABLE_NAME_PRFIX)
-				.parallelStream().forEach(t -> list.add(t.getTableName()));
+		List<String> list = new ArrayList<>();
+		list.add(XModelUtils.DEFAULT_MODEL_VALUE_TABLE);
+		// 自定义表
+		this.dbService.listTables(null).forEach(t -> {
+			if (t.getTableName().startsWith(XModelUtils.CUSTOM_TABLE_NAME_PRFIX)) {
+				list.add(t.getTableName());
+			}
+		});
 		return list;
 	}
 
@@ -61,8 +69,8 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 			long count = this.count(new LambdaQueryWrapper<XModel>().eq(XModel::getTableName, dto.getTableName()));
 			Assert.isTrue(count == 0, () -> MetaErrorCode.META_TABLE_CONFICT.exception(dto.getTableName()));
 
-			DbTable dbTable = this.modelMapper.getDbTable(dto.getTableName());
-			Assert.notNull(dbTable, () -> MetaErrorCode.META_TABLE_NOT_EXISTS.exception(dto.getTableName()));
+			List<DBTable> dbTables = this.dbService.listTables(dto.getTableName());
+			Assert.isFalse(dbTables.isEmpty(), () -> MetaErrorCode.META_TABLE_NOT_EXISTS.exception(dto.getTableName()));
 		}
 		XModel model = new XModel();
 		BeanUtils.copyProperties(dto, model, "modelId");
@@ -72,17 +80,20 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 
 		// 自定义表直接初始化字段
 		if (!XModelUtils.isDefaultTable(dto.getTableName())) {
-			List<DbTableColumn> listTableColumn = this.modelMapper.listTableColumn(dto.getTableName(), XModelUtils.PRIMARY_FIELD_NAME);
-			for (DbTableColumn column : listTableColumn) {
+			IDbType dbType = this.dbService.getDbType();
+			List<DBTableColumn> listTableColumn = dbType.listTableColumns(dto.getTableName())
+					.stream().filter(tc -> !XModelUtils.PRIMARY_FIELD_NAME.equals(tc.getName()))
+					.toList();
+			for (DBTableColumn column : listTableColumn) {
 				XModelField field = new XModelField();
 				field.setFieldId(IdUtils.getSnowflakeId());
 				field.setModelId(model.getModelId());
-				field.setName(StringUtils.isEmpty(column.getColumnComment()) ? column.getColumnName() : column.getColumnComment());
-				field.setCode(column.getColumnName());
-				field.setFieldName(column.getColumnName());
-				field.setMandatoryFlag(column.isMandatory());
+				field.setName(StringUtils.isEmpty(column.getColumnComment()) ? column.getName() : column.getColumnComment());
+				field.setCode(column.getName());
+				field.setFieldName(column.getName());
+				field.setMandatoryFlag(column.isNullable() ? YesOrNo.NO : YesOrNo.YES);
 				field.setControlType(MetaControlType_Input.TYPE);
-				field.setDefaultValue(column.getColumnDefault());
+				field.setDefaultValue(column.getDefaultValue());
 				field.createBy(dto.getOperator().getUsername());
 				this.modelFieldMapper.insert(field);
 			}
@@ -111,7 +122,7 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 				if (model.getTableName().equals(XModelData.TABLE_NAME)) {
 					this.modelDataMapepr.delete(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modelId));
 				} else {
-					this.modelMapper.dropModelDataTable(model.getTableName());
+					this.dbService.getDbType().dropTable(model.getTableName());
 				}
 				// 移除模型数据
 				this.removeById(model.getModelId());
@@ -124,7 +135,9 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 		if (!model.getTableName().startsWith(XModelUtils.CUSTOM_TABLE_NAME_PRFIX)) {
 			return new ArrayList<>();
 		}
-		List<DbTableColumn> listTableColumn = this.modelMapper.listTableColumn(model.getTableName(), XModelUtils.PRIMARY_FIELD_NAME);
-		return listTableColumn.parallelStream().map(DbTableColumn::getColumnName).toList();
+		return this.dbService.listTableColumns(model.getTableName())
+				.stream().filter(tc -> !XModelUtils.PRIMARY_FIELD_NAME.equals(tc.getName()))
+				.map(DBTableColumn::getName)
+				.toList();
 	}
 }

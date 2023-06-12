@@ -1,8 +1,7 @@
 package com.ruoyi.article.service;
 
 import com.ruoyi.article.domain.CmsArticleDetail;
-import com.ruoyi.common.mybatisplus.IBackupService;
-import com.ruoyi.contentcore.domain.CmsContent;
+import com.ruoyi.common.mybatisplus.service.IBackupService;
 import com.ruoyi.contentcore.domain.CmsSite;
 
 /**

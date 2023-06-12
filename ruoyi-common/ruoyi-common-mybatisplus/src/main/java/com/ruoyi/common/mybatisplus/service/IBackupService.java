@@ -1,8 +1,9 @@
-package com.ruoyi.common.mybatisplus;
+package com.ruoyi.common.mybatisplus.service;
 
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.mybatisplus.service.impl.BackupTableService;
 import com.ruoyi.common.utils.SpringUtils;
 
 public interface IBackupService<T> extends IService<T> {
