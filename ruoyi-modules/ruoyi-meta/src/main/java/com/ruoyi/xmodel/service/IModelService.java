@@ -3,6 +3,7 @@ package com.ruoyi.xmodel.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.xmodel.core.MetaModel;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.dto.XModelDTO;
 
@@ -35,10 +36,14 @@ public interface IModelService extends IService<XModel> {
 	/**
 	 * 模型数据自定义表
 	 */
-	List<String> listModelDataCustomTable();
+	List<String> listModelDataTables(String type);
 
 	/**
 	 * 模型数据表字段
 	 */
 	List<String> listModelTableFields(XModel model);
+
+	MetaModel getMetaModel(Long modelId);
+
+	void clearMetaModelCache(Long modelId);
 }

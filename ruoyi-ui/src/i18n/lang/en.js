@@ -898,7 +898,8 @@ export default {
         Title: "Default Template",
         CatalogList: "Catalog List Template",
         ContentDetail: " Detail Template",
-        SelectCatalogFirst: "Please select catalog first."
+        SelectCatalogFirst: "Please select catalog first.",
+        CustomForm: "Custom Form Template",
       }
     },
     Catalog: {
@@ -1232,6 +1233,7 @@ export default {
       TableName: "Table Name",
       AddTtitle: "Add ex-model",
       EditTitle: "Edit ex-model",
+      Fields: "Fields",
       GoBack: "Go Back",
       FieldName: "Name",
       FieldCode: "Code",
@@ -1292,10 +1294,18 @@ export default {
       Code: "Code",
       TableName: "Table Name",
       Status: "Status",
+      NeedCaptcha: "Enable Captcha",
+      NeedLogin: "Enable Login",
+      RuleLimit: "Submit Rule",
+      Publish: "Publish",
+      Offline: "Offline",
       AddTitle: "Add Custom Form",
       EditTitle: "Edit Custom Form",
       RouteFieldList: "Custom Form Fields",
       Fields: "Fields",
+      RouteData: "Custom Form Data",
+      AddDataTitle: "Add Custom Form Data",
+      EditDataTitle: "Edit Custom Form Data",
     }
   },
   Stat: {

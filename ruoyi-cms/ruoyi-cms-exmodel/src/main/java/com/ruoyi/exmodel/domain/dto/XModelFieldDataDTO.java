@@ -1,9 +1,10 @@
-package com.ruoyi.xmodel.dto;
+package com.ruoyi.exmodel.domain.dto;
 
 import java.util.List;
 import java.util.Map;
 
-import com.ruoyi.xmodel.XModelUtils;
+import com.ruoyi.exmodel.CmsExtendMetaModelType;
+import com.ruoyi.xmodel.util.XModelUtils;
 import com.ruoyi.xmodel.domain.XModelField;
 
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class XModelFieldDataDTO {
 	public static XModelFieldDataDTO newInstance(XModelField field, String value) {
 		XModelFieldDataDTO dto = new XModelFieldDataDTO();
 		dto.setLabel(field.getName());
-		dto.setFieldName(XModelUtils.DATA_FIELD_PREFIX + field.getCode());
+		dto.setFieldName(CmsExtendMetaModelType.DATA_FIELD_PREFIX + field.getCode());
 		dto.setControlType(field.getControlType());
 		dto.setValue(value);
 		return dto;

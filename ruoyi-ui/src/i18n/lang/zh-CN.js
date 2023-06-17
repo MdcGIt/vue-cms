@@ -898,7 +898,8 @@ export default {
         Title: "默认模板配置",
         CatalogList: "栏目列表页模板",
         ContentDetail: "详情页模板",
-        SelectCatalogFirst: "请先选择栏目"
+        SelectCatalogFirst: "请先选择栏目",
+        CustomForm: "自定义表单模板",
       }
     },
     Catalog: {
@@ -1232,6 +1233,7 @@ export default {
       TableName: "数据表",
       AddTtitle: "新建模型",
       EditTitle: "编辑模型",
+      Fields: "编辑字段",
       GoBack: "返回模型列表",
       FieldName: "名称",
       FieldCode: "编码",
@@ -1292,10 +1294,18 @@ export default {
       Code: "编码",
       TableName: "数据表",
       Status: "状态",
+      NeedCaptcha: "是否需要验证码",
+      NeedLogin: "是否需要登录",
+      RuleLimit: "提交唯一性规则",
+      Publish: "发布",
+      Offline: "下线",
       AddTitle: "添加自定义表单",
       EditTitle: "编辑自定义表单",
       RouteFieldList: "自定义表单字段",
       Fields: "表单字段",
+      RouteData: "自定义表单数据",
+      AddDataTitle: "添加表单数据",
+      EditDataTitle: "编辑表单数据",
     }
   },
   Stat: {

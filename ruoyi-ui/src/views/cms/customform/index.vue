@@ -30,8 +30,8 @@
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadCustomFormList"></right-toolbar>
     </el-row>
-    <el-row>
-      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+    <el-row v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true">
         <el-form-item prop="query">
           <el-input
             v-model="queryParams.query"
@@ -99,8 +99,8 @@
       </el-table-column>
       <el-table-column  
         :label="$t('Common.Operation')"
-        align="center"
-        width="220" 
+        align="left"
+        width="320" 
         class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -108,6 +108,17 @@
             type="text"
             icon="el-icon-setting"
             @click="handleFields(scope.row)">{{ $t("CMS.CustomForm.Fields") }}</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-promotion"
+            @click="handlePublish(scope.row)">{{ $t("CMS.CustomForm.Publish") }}</el-button>
+          <el-button
+            v-show="scope.row.status==10"
+            size="mini"
+            type="text"
+            icon="el-icon-download"
+            @click="handleOffline(scope.row)">{{ $t("CMS.CustomForm.Offline") }}</el-button>
           <el-button 
             size="mini"
             type="text"
@@ -134,21 +145,44 @@
       :close-on-click-modal="false" 
       width="600px" 
       append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="名称" prop="name">
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
+        <el-form-item :label="$t('CMS.CustomForm.Name')" prop="name">
           <el-input v-model="form.name" :maxlength="30" />
         </el-form-item>
-        <el-form-item label="编码" prop="code">
+        <el-form-item :label="$t('CMS.CustomForm.Code')" prop="code">
           <el-input v-model="form.code" :maxlength="30" />
         </el-form-item>
         <el-form-item v-if="!form.formId || form.formId == 0" :label="$t('CMS.CustomForm.TableName')" prop="tableName">
-          <el-select v-model="form.tableName" filterable placeholder="请选择">
+          <el-select v-model="form.tableName" filterable>
             <el-option
               v-for="item in xmodelDataTableList"
               :key="item"
               :label="item"
               :value="item">
             </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('CMS.CustomForm.NeedCaptcha')" prop="needCaptcha">
+          <el-switch
+            v-model="form.needCaptcha"
+            active-value="Y"
+            inactive-value="N"
+          ></el-switch>
+        </el-form-item>
+        <el-form-item :label="$t('CMS.CustomForm.NeedLogin')" prop="needLogin">
+          <el-switch
+            v-model="form.needLogin"
+            active-value="Y"
+            inactive-value="N"
+          ></el-switch>
+        </el-form-item>
+        <el-form-item v-if="form.needLogin=='N'" :label="$t('CMS.CustomForm.RuleLimit')" prop="ruleLimit">
+          <el-select v-model="form.ruleLimit">
+            <el-option 
+              v-for="dict in dict.type.CustomFormRule"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value" />
           </el-select>
         </el-form-item>
         <div v-if="form.formId && form.formId > 0">
@@ -179,14 +213,14 @@
   </div>
 </template>
 <script>
-import { listModelDataTable } from "@/api/meta/model";
-import { listCustomForms, getCustomForm, addCustomForm, editCustomForm, deleteCustomForms } from "@/api/customform/customform";
+import { listModelDataTables } from "@/api/meta/model";
+import { listCustomForms, getCustomForm, addCustomForm, editCustomForm, deleteCustomForms, publishCustomForm, offlineCustomForm } from "@/api/customform/customform";
 
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
 
 export default {
   name: "CustomFormList",
-  dicts: [ 'CustomFormStatus' ],
+  dicts: [ 'CustomFormStatus', 'CustomFormRule' ],
   components: {
     'cms-template-selector': CMSTemplateSelector,
   },
@@ -209,7 +243,9 @@ export default {
         pageSize: 10,
       },
       form: {
-        status: '0'
+        needCaptcha: 'N',
+        needLogin: 'N',
+        dayLimit: 1
       },
       rules: {
         name: [
@@ -230,7 +266,7 @@ export default {
   },
   methods: {
     loadXModelDataTableList() {
-      listModelDataTable().then(response => {
+      listModelDataTables("CmsCustomForm").then(response => {
         this.xmodelDataTableList = response.data.rows;
       });
     },
@@ -257,7 +293,11 @@ export default {
     },
     reset () {
       this.resetForm("form");
-      this.form = { status: '0' };
+      this.form = { 
+        needCaptcha: 'N',
+        needLogin: 'N',
+        dayLimit: 1
+      };
     },
     handleSelectTemplate(publishPipeCode) {
       this.publishPipe = publishPipeCode;
@@ -332,8 +372,21 @@ export default {
         } 
       });
     },
+    handlePublish(row) {
+      publishCustomForm([ row.formId ]).then(response => {
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
+        this.loadCustomFormList();
+      });
+    },
+    handleOffline(row) {
+      offlineCustomForm([ row.formId ]).then(response => {
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
+        this.loadCustomFormList();
+      });
+    },
     handleViewData(row) {
-      
+      const formId = row.formId;
+      this.$router.push({ path: "/operations/customform/data", query: { formId: formId } });
     }
   }
 };

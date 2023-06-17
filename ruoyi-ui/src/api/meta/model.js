@@ -9,10 +9,13 @@ export function getControlOptions() {
 }
 
 // 查询扩展模型数据保存表
-export function listModelDataTable() {
+export function listModelDataTables(type) {
   return request({
     url: '/xmodel/tables',
-    method: 'get'
+    method: 'get',
+    params: {
+      type: type
+    }
   })
 }
 
@@ -80,9 +83,20 @@ export function deleteModel(data) {
 // 查询元数据模型字段列表
 export function listModelField(query) {
   return request({
-    url: '/xmodel/field',
+    url: '/xmodel/field/list',
     method: 'get',
     params: query
+  })
+}
+
+export function listModelAllField(modelId, ignoreFixedField = false) {
+  return request({
+    url: '/xmodel/field/all',
+    method: 'get',
+    params: {
+      modelId: modelId,
+      ignoreFixedField: ignoreFixedField
+    }
   })
 }
 
@@ -110,13 +124,5 @@ export function deleteModelField(data) {
     url: '/xmodel/field',
     method: 'delete',
     data: data
-  })
-}
-
-// 获取元数据模型指定ID数据
-export function getModelData(modelId, pkValue) {
-  return request({
-    url: '/xmodel/data/' + modelId + "?pkValue=" + pkValue,
-    method: 'get'
   })
 }

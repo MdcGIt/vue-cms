@@ -1,11 +1,10 @@
 package com.ruoyi.xmodel.service;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.xmodel.domain.XModelField;
 import com.ruoyi.xmodel.dto.XModelFieldDTO;
-import com.ruoyi.xmodel.dto.XModelFieldDataDTO;
+
+import java.util.List;
 
 public interface IModelFieldService extends IService<XModelField> {
 
@@ -29,13 +28,4 @@ public interface IModelFieldService extends IService<XModelField> {
 	 * @param fieldIds
 	 */
 	void deleteModelField(List<Long> fieldIds);
-
-	/**
-	 * 获取元数据模型数据
-	 * 
-	 * @param modelId
-	 * @param pkValue
-	 * @return
-	 */
-	List<XModelFieldDataDTO> getFieldDatas(Long modelId, String pkValue);
 }

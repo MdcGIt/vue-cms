@@ -1,37 +1,60 @@
 package com.ruoyi.xmodel.service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ruoyi.xmodel.domain.XModel;
+import com.ruoyi.common.mybatisplus.util.SqlBuilder;
 import com.ruoyi.xmodel.domain.XModelData;
 
 public interface IModelDataService extends IService<XModelData> {
 
 	/**
+	 * 根据主键获取模型数据
+	 *
+	 * @param modelId
+	 * @param pkValues
+	 * @return
+	 */
+	Map<String, Object> getModelDataByPkValue(Long modelId, Map<String, Object> pkValues);
+
+	/**
 	 * 保存模型数据
 	 * 
 	 * @param modelId
-	 * @param pkValue
 	 * @param params
 	 * @return
 	 */
-	void saveModelData(Long modelId, String pkValue, Map<String, Object> params);
+	void saveModelData(Long modelId, Map<String, Object> params);
 
 	/**
-	 * 获取扩展模型数据
-	 * 
-	 * @param xmodel
-	 * @param pkValue
-	 * @return
+	 * 添加元数据模型数据
+	 *
+	 * @param modelId
+	 * @param data
 	 */
-	Map<String, Object> getModelData(XModel xmodel, String pkValue);
+    void addModelData(Long modelId, Map<String, Object> data);
 
 	/**
-	 * 删除扩展模型数据
-	 * 
-	 * @param valueOf
-	 * @param pkValue
+	 * 更新元数据模型数据
+	 *
+	 * @param modelId
+	 * @param data
 	 */
-	void deleteModelData(Long valueOf, String pkValue);
+	void updateModelData(Long modelId, Map<String, Object> data);
+
+	/**
+	 * 删除元数据模型数据
+	 *
+	 * @param modeId
+	 * @param pkValues
+	 */
+	void deleteModelDataByPkValue(Long modeId, List<Map<String, String>> pkValues);
+
+    List<Map<String, Object>> selectModelDataList(Long modelId, Consumer<SqlBuilder> consumer);
+
+	IPage<Map<String, Object>> selectModelDataPage(Long modelId, IPage<Map<String, Object>> page,
+												   Consumer<SqlBuilder> consumer);
 }

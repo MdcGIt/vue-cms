@@ -75,7 +75,8 @@
                 <cms-exmodel-editor 
                   ref="EXModelEditor"
                   :xmodel="form.catalogConfigProps.ContentExtendModel" 
-                  :pk="form.contentId">
+                  type="content"
+                  :id="form.contentId">
                 </cms-exmodel-editor>
               </el-card>
             </el-col>
@@ -477,6 +478,7 @@ export default {
             });
             window.open(routeData.href, '_self');
           } else {
+            this.opType = 'UPDATE';
             this.$router.push({ path: "/cms/content/editor", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
           }
         }

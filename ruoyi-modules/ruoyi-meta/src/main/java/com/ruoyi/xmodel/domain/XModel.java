@@ -1,6 +1,7 @@
 package com.ruoyi.xmodel.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.mybatisplus.domain.BaseEntity;
@@ -25,14 +26,14 @@ public class XModel extends BaseEntity {
 
     @TableId(value = "model_id", type = IdType.INPUT)
     private Long modelId;
-    
+
     /**
-     * 所属类型
+     * 类型
      */
     private String ownerType;
-    
+
     /**
-     * 所属类型ID
+     * 类型关联ID
      */
     private String ownerId;
 
@@ -50,4 +51,7 @@ public class XModel extends BaseEntity {
      * 数据保存表
      */
     private String tableName;
+
+    @TableField(exist = false)
+    private Boolean isDefaultTable;
 }

@@ -161,7 +161,7 @@ public class CatalogVO {
     /*
      * 栏目扩展配置
      */
-    private Map<String, Object> configProps;
+    private Map<String, String> configProps;
 
     /*
      * 栏目发布通道数据

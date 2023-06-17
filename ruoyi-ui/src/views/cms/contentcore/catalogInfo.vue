@@ -247,8 +247,9 @@
         
         <cms-exmodel-editor 
           ref="EXModelEditor"
-          :xmodel="form_info.configProps.ExtendModel" 
-          :pk="catalogId">
+          :xmodel="form_info.configProps.CatalogExtendModel" 
+          type="catalog"
+          :id="form_info.catalogId">
         </cms-exmodel-editor>
       </el-card>
     </el-form>
@@ -316,7 +317,7 @@ export default {
   },
   computed: {
     showEXModel() {
-      return this.form_info.configProps && this.form_info.configProps.ExtendModel != null && this.form_info.configProps.ExtendModel.length > 0;
+      return this.form_info.configProps && this.form_info.configProps.CatalogExtendModel != null && this.form_info.configProps.CatalogExtendModel.length > 0;
     },
     catalogVisible() {
       return this.form_info.visibleFlag == "Y";
@@ -370,9 +371,10 @@ export default {
   created() {
     this.loadCatalogTypes();
     this.loadContentTypes();
+    this.loadCatalogInfo();
   },
   watch: {
-    cid(newVal) { 
+    cid(newVal) {
       this.catalogId = newVal;
     },
     catalogId(newVal) {
@@ -396,7 +398,7 @@ export default {
     },
     loadCatalogInfo () {
       if (!this.catalogId) {
-        this.$modal.msgError(this.$t('CMS.Catalog.SelectCatalogFirst'));
+        // this.$modal.msgError(this.$t('CMS.Catalog.SelectCatalogFirst'));
         return;
       }
       this.loading = true;

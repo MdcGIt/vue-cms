@@ -9,14 +9,6 @@ export function listXModel(query) {
   })
 }
 
-// 查询扩展模型数据保存表
-export function listXModelDataTable() {
-  return request({
-    url: '/xmodel/tables',
-    method: 'get'
-  })
-}
-
 // 查询扩展模型数据保存表字段
 export function listXModelTableFields(params) {
   return request({
@@ -89,10 +81,14 @@ export function deleteXModelField(data) {
   })
 }
 
-// 删除扩展模型字段
-export function getXModelFieldData(modelId, pkValue) {
+export function getXModelFieldData(modelId, dataType, dataId) {
   return request({
-    url: '/cms/exmodel/data/' + modelId + "?pkValue=" + pkValue,
-    method: 'get'
+    url: '/cms/exmodel/data',
+    method: 'get',
+    params: {
+      modelId: modelId,
+      dataType: dataType,
+      dataId: dataId
+    }
   })
 }

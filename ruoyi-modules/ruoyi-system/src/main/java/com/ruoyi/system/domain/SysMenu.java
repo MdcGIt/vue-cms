@@ -31,7 +31,7 @@ public class SysMenu extends BaseEntity {
 	public static final String TABLE_NAME = "sys_menu";
 
 	/** 菜单ID */
-	@TableId(value = "menu_id", type = IdType.AUTO)
+	@TableId(value = "menu_id", type = IdType.INPUT)
 	private Long menuId;
 
 	/** 菜单名称 */

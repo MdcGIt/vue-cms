@@ -3,6 +3,9 @@ package com.ruoyi.customform.domain.vo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.ruoyi.customform.domain.CmsCustomForm;
+import com.ruoyi.system.fixed.dict.YesOrNo;
+import com.ruoyi.system.validator.Dict;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +34,12 @@ public class CustomFormVO {
     private String code;
 
     private Integer status;
+
+    private String needCaptcha;
+
+    private String needLogin;
+
+    private String ruleLimit;
 
     private List<Map<String, String>> templates;
 

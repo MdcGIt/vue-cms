@@ -56,6 +56,21 @@ public class CmsCustomForm extends BaseEntity {
     private Integer status;
 
     /**
+     * 是否需要验证码
+     */
+    private String needCaptcha;
+
+    /**
+     * 是否需要会员登录
+     */
+    private String needLogin;
+
+    /**
+     * 提交用户唯一性限制（IP、浏览器指纹）
+     */
+    private String ruleLimit;
+
+    /**
      * 发布通道模板配置
      */
     @TableField(typeHandler = JacksonTypeHandler.class)

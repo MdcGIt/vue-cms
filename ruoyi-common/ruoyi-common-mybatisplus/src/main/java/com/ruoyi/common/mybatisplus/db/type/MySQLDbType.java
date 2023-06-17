@@ -1,27 +1,25 @@
 package com.ruoyi.common.mybatisplus.db.type;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import com.ruoyi.common.mybatisplus.db.DBTable;
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.ColumnCache;
 import com.ruoyi.common.mybatisplus.annotation.BackupTable;
-import com.ruoyi.common.mybatisplus.db.IDbType;
+import com.ruoyi.common.mybatisplus.db.DBTable;
 import com.ruoyi.common.mybatisplus.db.DBTableColumn;
+import com.ruoyi.common.mybatisplus.db.IDbType;
 import com.ruoyi.common.mybatisplus.mapper.MySQLMapper;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.ReflectASMUtils;
-
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component(IDbType.BEAN_PREFIX + MySQLDbType.TYPE)
 @RequiredArgsConstructor

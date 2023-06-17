@@ -42,6 +42,10 @@ public class DBTableColumn {
      */
     private boolean nullable;
 
+    public DBTableColumn() {
+
+    }
+
     public DBTableColumn(String name, String type, String defaultValue, Boolean nullable,
              Boolean primary, Boolean autoIncrement) {
         this.name = name;

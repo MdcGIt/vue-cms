@@ -27,7 +27,7 @@ public class SysI18nDict {
 
 	public static final String TABLE_NAME = "sys_i18n_dict";
 
-	@TableId(value = "dict_id", type = IdType.AUTO)
+	@TableId(value = "dict_id", type = IdType.INPUT)
 	private Long dictId;
 	
 	/**

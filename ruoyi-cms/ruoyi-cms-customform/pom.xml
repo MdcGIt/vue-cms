@@ -14,15 +14,15 @@
     <description>自定义表单模块</description>
 
     <dependencies>
-        <!-- 内容核心 -->
+        <!-- 扩展模型 -->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-cms-contentcore</artifactId>
+            <artifactId>ruoyi-cms-exmodel</artifactId>
         </dependency>
-        <!-- 元数据 -->
+        <!-- 会员 -->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-meta</artifactId>
+            <artifactId>ruoyi-member</artifactId>
         </dependency>
     </dependencies>
 </project>

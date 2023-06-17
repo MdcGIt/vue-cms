@@ -40,6 +40,8 @@ public class MetaFieldType extends FixedDictType {
 
 	/**
 	 * 字典项备注=可用字段数量
+	 *
+	 * @see com.ruoyi.xmodel.core.BaseModelData
 	 */
 	public MetaFieldType() {
 		super(TYPE, "{DICT." + TYPE + "}");

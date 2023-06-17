@@ -139,9 +139,9 @@ export const constantRoutes = [
         meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditContent'), activeMenu: '/configs/content'}
       },
       {
-        path: 'exmodel/field',
-        component: () => import('@/views/cms/exmodel/modelField'),
-        name: 'CMSEXModelField',
+        path: 'exmodel/fields',
+        component: () => import('@/views/meta/fieldList'),
+        name: 'CMSEXModelFields',
         meta: { noCache: true, title: i18n.t('CMS.ExModel.RouteExModelField'), activeMenu: '/configs/exmodel'}
       },
       {
@@ -181,6 +181,12 @@ export const constantRoutes = [
         component: () => import('@/views/meta/fieldList'),
         name: 'CmsCustomFields',
         meta: { title: i18n.t('CMS.CustomForm.RouteFieldList'), activeMenu: '/operations/customform'}
+      },
+      {
+        path: 'customform/data',
+        component: () => import('@/views/cms/customform/data'),
+        name: 'CmsCustomData',
+        meta: { title: i18n.t('CMS.CustomForm.RouteData'), activeMenu: '/operations/customform'}
       }
     ]
   }

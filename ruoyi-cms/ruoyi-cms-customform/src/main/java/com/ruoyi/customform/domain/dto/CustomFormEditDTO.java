@@ -1,6 +1,8 @@
 package com.ruoyi.customform.domain.dto;
 
 import com.ruoyi.common.security.domain.BaseDTO;
+import com.ruoyi.system.fixed.dict.YesOrNo;
+import com.ruoyi.system.validator.Dict;
 import com.ruoyi.system.validator.LongId;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -33,6 +35,29 @@ public class CustomFormEditDTO extends BaseDTO {
      */
     @NotBlank
     private String code;
+
+    /**
+     * 是否需要验证码
+     */
+    @Dict(YesOrNo.TYPE)
+    private String needCaptcha;
+
+    /**
+     * 是否需要会员登录
+     */
+    @Dict(YesOrNo.TYPE)
+    private String needLogin;
+
+    /**
+     * 提交用户唯一性限制（无限制、IP、浏览器指纹）
+     */
+    @NotBlank
+    private String ruleLimit;
+
+    /**
+     * 唯一性限制下的每日提交次数上限（0表示不限制）
+     */
+    private Integer dayLimit;
 
     /**
      * 模板配置

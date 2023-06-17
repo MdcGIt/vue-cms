@@ -54,16 +54,26 @@ export default {
       type: String,
       required: true,
     },
-    pk: {
+    type: {
+      type: String,
+      required: true
+    },
+    id: {
       type: String,
       required: false
     }
   },
   watch: {
-    pk(newVal) {
-      this.pkValue = newVal;
+    type(newVal) {
+      console.log("type", newVal)
+      this.dataType = newVal;
     },
-    pkValue(newVal) {
+    id(newVal) {
+      console.log("id", newVal)
+      this.dataId = newVal;
+    },
+    dataId(newVal) {
+      console.log("dataId", newVal)
       if (newVal && newVal != null && newVal.length > 0) {
         this.loadModelFieldData();
       }
@@ -72,7 +82,8 @@ export default {
   data () {
     return {
       modelId: this.xmodel,
-      pkValue: this.pk,
+      dataId: this.id,
+      dataType: this.type,
       fieldList: [],
     };
   },
@@ -81,7 +92,7 @@ export default {
   },
   methods: {
     loadModelFieldData() {
-      getXModelFieldData(this.modelId, this.pkValue).then(response => {
+      getXModelFieldData(this.modelId, this.dataType, this.dataId).then(response => {
         this.fieldList = response.data;
       });
     },

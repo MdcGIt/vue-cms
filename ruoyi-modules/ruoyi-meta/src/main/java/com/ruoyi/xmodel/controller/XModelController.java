@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.xmodel.core.IMetaControlType;
+import com.ruoyi.xmodel.core.IMetaModelType;
+import com.ruoyi.xmodel.util.XModelUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -62,8 +64,8 @@ public class XModelController extends BaseRestController {
 	}
 
 	@GetMapping("/tables")
-	public R<?> getModelDataCustomTableList() {
-		List<String> list = this.modelService.listModelDataCustomTable();
+	public R<?> getModelDataTableList(@RequestParam String type) {
+		List<String> list = this.modelService.listModelDataTables(type);
 		return this.bindDataTable(list);
 	}
 
@@ -79,6 +81,10 @@ public class XModelController extends BaseRestController {
 	@GetMapping("/{modelId}")
 	public R<?> getModel(@PathVariable @LongId Long modelId) {
 		XModel model = this.modelService.getById(modelId);
+		Assert.notNull(model, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("modelId", modelId));
+
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getOwnerType());
+		model.setIsDefaultTable(mmt.getDefaultTable().equals(model.getTableName()));
 		return R.ok(model);
 	}
 

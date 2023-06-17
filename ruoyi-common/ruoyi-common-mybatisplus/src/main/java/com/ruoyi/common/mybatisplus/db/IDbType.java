@@ -63,7 +63,18 @@ public interface IDbType {
 	 */
     List<DBTable> listTables(String tableName);
 
+	/**
+	 * 查找数据表字段列表
+	 *
+	 * @param tableName
+	 * @return
+	 */
 	List<DBTableColumn> listTableColumns(String tableName);
 
+	/**
+	 * 删除数据表
+	 *
+	 * @param tableName
+	 */
 	void dropTable(String tableName);
 }

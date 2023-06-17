@@ -1,6 +1,5 @@
 package com.ruoyi.customform.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -21,15 +20,8 @@ import com.ruoyi.customform.domain.vo.CustomFormVO;
 import com.ruoyi.customform.permission.CustomFormPriv;
 import com.ruoyi.customform.service.ICustomFormService;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
-import com.ruoyi.xmodel.domain.XModel;
-import com.ruoyi.xmodel.domain.XModelField;
-import com.ruoyi.xmodel.dto.XModelDTO;
-import com.ruoyi.xmodel.dto.XModelFieldDTO;
-import com.ruoyi.xmodel.dto.XModelFieldDataDTO;
-import com.ruoyi.xmodel.service.IModelFieldService;
 import com.ruoyi.xmodel.service.IModelService;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -53,20 +46,21 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomFormController extends BaseRestController {
 
-    private final ICustomFormService customFormService;
-
     private final ISiteService siteService;
 
     private final IPublishPipeService publishPipeService;
 
-    private final IModelService modelService;
+    private final ICustomFormService customFormService;
 
     @Priv(type = AdminUserType.TYPE, value = CustomFormPriv.View)
     @GetMapping
-    public R<?> getList(@RequestParam(value = "query", required = false) String query) {
+    public R<?> getList(@RequestParam(value = "query", required = false) String query,
+                        @RequestParam(required = false) String status) {
         PageRequest pr = this.getPageRequest();
         CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
         Page<CmsCustomForm> page = this.customFormService.lambdaQuery()
+                .eq(CmsCustomForm::getSiteId, site.getSiteId())
+                .eq(StringUtils.isNotEmpty(status), CmsCustomForm::getStatus, status)
                 .like(StringUtils.isNotEmpty(query), CmsCustomForm::getName, query)
                 .page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
         return this.bindDataTable(page);
@@ -79,11 +73,12 @@ public class CustomFormController extends BaseRestController {
         Assert.notNull(form, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("formId", formId));
 
         CustomFormVO vo = CustomFormVO.from(form);
-        List<Map<String, String>> templates = this.publishPipeService.getPublishPipes(form.getSiteId()).stream().map(pp -> {
-            return Map.of("name", pp.getName(),
+        List<Map<String, String>> templates = this.publishPipeService.getPublishPipes(form.getSiteId())
+                .stream().map(pp -> Map.of(
+                    "name", pp.getName(),
                     "code", pp.getCode(),
-                    "template", form.getTemplates().getOrDefault(pp.getCode(), ""));
-        }).toList();
+                    "template", form.getTemplates().getOrDefault(pp.getCode(), "")
+        )).toList();
         vo.setTemplates(templates);
         return R.ok(vo);
     }
@@ -118,9 +113,17 @@ public class CustomFormController extends BaseRestController {
 
     @Log(title = "发布自定义表单", businessType = BusinessType.UPDATE)
     @Priv(type = AdminUserType.TYPE, value = { CustomFormPriv.Add, CustomFormPriv.Edit })
-    @PostMapping("/publish")
+    @PutMapping("/publish")
     public R<?> publish(@RequestBody @Validated @NotEmpty List<Long> formIds) {
         this.customFormService.publishCustomForms(formIds, StpAdminUtil.getLoginUser().getUsername());
+        return R.ok();
+    }
+
+    @Log(title = " 下线自定义表单", businessType = BusinessType.UPDATE)
+    @Priv(type = AdminUserType.TYPE, value = { CustomFormPriv.Add, CustomFormPriv.Edit })
+    @PutMapping("/offline")
+    public R<?> offline(@RequestBody @Validated @NotEmpty List<Long> formIds) throws IOException {
+        this.customFormService.offlineCustomForms(formIds, StpAdminUtil.getLoginUser().getUsername());
         return R.ok();
     }
 }

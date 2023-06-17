@@ -1,59 +1,49 @@
 package com.ruoyi.xmodel.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.ruoyi.common.mybatisplus.service.IDBService;
-import com.ruoyi.xmodel.core.impl.MetaControlType_Checkbox;
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.mybatisplus.service.IDBService;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.service.ISysDictTypeService;
-import com.ruoyi.xmodel.XModelUtils;
+import com.ruoyi.xmodel.core.IMetaModelType;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.domain.XModelField;
-import com.ruoyi.xmodel.dto.FieldOptions;
 import com.ruoyi.xmodel.dto.XModelFieldDTO;
-import com.ruoyi.xmodel.dto.XModelFieldDataDTO;
 import com.ruoyi.xmodel.exception.MetaErrorCode;
 import com.ruoyi.xmodel.fixed.dict.MetaFieldType;
 import com.ruoyi.xmodel.mapper.XModelFieldMapper;
-import com.ruoyi.xmodel.mapper.XModelMapper;
-import com.ruoyi.xmodel.service.IModelDataService;
 import com.ruoyi.xmodel.service.IModelFieldService;
-
+import com.ruoyi.xmodel.service.IModelService;
+import com.ruoyi.xmodel.util.XModelUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModelField> implements IModelFieldService {
 
-	private final XModelMapper modelMapper;
-
-	private final IModelDataService modelDataService;
-
-	private final ISysDictTypeService dictService;
+	private final IModelService modelService;
 
 	private final IDBService dbService;
 
 	@Override
 	public void addModelField(XModelFieldDTO dto) {
-		XModel model = this.modelMapper.selectById(dto.getModelId());
+		XModel model = this.modelService.getById(dto.getModelId());
 		Assert.notNull(model, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("modelId", dto.getModelId()));
 
 		dto.setFieldId(null);
 		if (!this.checkFieldCodeUnique(dto)) {
 			throw CommonErrorCode.DATA_CONFLICT.exception("code");
 		}
-		boolean isDefaultTable = XModelUtils.isDefaultTable(model.getTableName());
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getOwnerType());
+		boolean isDefaultTable = mmt.getDefaultTable().equals(model.getTableName());
 		String[] usedFields = this.getUsedFields(model.getModelId(), dto.getFieldType(), isDefaultTable);
 		if (isDefaultTable) {
 			int fieldTypeLimit = MetaFieldType.getFieldTypeLimit(dto.getFieldType());
@@ -67,6 +57,10 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 				}
 			}
 		} else {
+			List<String> fixedFields = mmt.getFixedFields().stream().map(f -> f.getFieldName()).toList();
+			if (fixedFields.contains(dto.getFieldName())) {
+				throw MetaErrorCode.META_FIELD_CONFLICT.exception(dto.getFieldName());
+			}
 			if (StringUtils.containsAny(dto.getFieldName(), usedFields)) {
 				throw MetaErrorCode.META_FIELD_CONFLICT.exception(dto.getFieldName());
 			}
@@ -79,6 +73,8 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 		xModelField.setFieldId(IdUtils.getSnowflakeId());
 		xModelField.createBy(dto.getOperator().getUsername());
 		this.save(xModelField);
+
+		this.modelService.clearMetaModelCache(model.getModelId());
 	}
 
 	@Override
@@ -92,8 +88,9 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 		String oldFieldName = modelField.getFieldName();
 		String oldFieldType = modelField.getFieldType();
 
-		XModel model = this.modelMapper.selectById(dto.getModelId());
-		boolean isDefaultTable = XModelUtils.isDefaultTable(model.getTableName());
+		XModel model = this.modelService.getById(dto.getModelId());
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getOwnerType());
+		boolean isDefaultTable = mmt.getDefaultTable().equals(model.getTableName());
 		if (isDefaultTable && !dto.getFieldType().equals(oldFieldType)) {
 			// 字段种类变更，重新计算是否有可用字段
 			String[] usedFields = this.getUsedFields(model.getModelId(), dto.getFieldType(), true);
@@ -108,6 +105,10 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 				}
 			}
 		} else if (!isDefaultTable && !dto.getFieldName().equals(oldFieldName)) {
+			List<String> fixedFields = mmt.getFixedFields().stream().map(f -> f.getFieldName()).toList();
+			if (fixedFields.contains(dto.getFieldName())) {
+				throw MetaErrorCode.META_FIELD_CONFLICT.exception(dto.getFieldName());
+			}
 			String[] usedFields = this.getUsedFields(model.getModelId(), dto.getFieldType(), false);
 			if (StringUtils.containsAny(dto.getFieldName(), usedFields)) {
 				throw MetaErrorCode.META_FIELD_CONFLICT.exception(dto.getFieldName());
@@ -119,11 +120,18 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 		BeanUtils.copyProperties(dto, modelField, "fieldId", "modelId");
 		modelField.updateBy(dto.getOperator().getUsername());
 		this.updateById(modelField);
+
+		this.modelService.clearMetaModelCache(model.getModelId());
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteModelField(List<Long> fieldIds) {
+		List<XModelField> fields = this.listByIds(fieldIds);
 		this.removeByIds(fieldIds);
+
+		fields.stream().map(XModelField::getModelId).collect(Collectors.toSet())
+				.forEach(this.modelService::clearMetaModelCache);
 	}
 
 	/**
@@ -163,48 +171,5 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 				.eq(XModelField::getCode, dto.getCode())
 				.ne(dto.getFieldId() != null && dto.getFieldId() > 0, XModelField::getFieldId, dto.getFieldId());
 		return this.count(q) == 0;
-	}
-
-	@Override
-	public List<XModelFieldDataDTO> getFieldDatas(Long modelId, String pkValue) {
-		XModel model = this.modelMapper.selectById(modelId);
-		List<XModelField> list = this.list(new LambdaQueryWrapper<XModelField>()
-				.eq(XModelField::getModelId, modelId));
-		Map<String, Object> modelData = this.modelDataService.getModelData(model, pkValue);
-		List<XModelFieldDataDTO> result = list.stream().map(f -> {
-			XModelFieldDataDTO dto = XModelFieldDataDTO.newInstance(f, MapUtils.getString(modelData, f.getFieldName(), f.getDefaultValue()));
-			dto.setOptions(getOptions(f.getOptions()));
-			if (MetaControlType_Checkbox.TYPE.equals(dto.getControlType())) {
-				if (dto.getValue() == null || StringUtils.isBlank(dto.getValue().toString())) {
-					dto.setValue(new String[0]);
-				} else {
-					String[] value = StringUtils.split(dto.getValue().toString(), StringUtils.COMMA);
-					dto.setValue(value);
-				}
-			}
-			return dto;
-		}).toList();
-		return result;
-	}
-
-	private List<Map<String, String>> getOptions(FieldOptions options) {
-		List<Map<String, String>> list = new ArrayList<>();
-		if (options != null && StringUtils.isNotEmpty(options.getValue())) {
-			if (XModelUtils.OPTIONS_TYPE_DICT.equals(options.getType())) {
-				return this.dictService.selectDictDatasByType(options.getValue())
-						.stream().map(dd -> Map.of("value", dd.getDictValue(), "name", dd.getDictLabel()))
-						.toList();
-			} else if(XModelUtils.OPTIONS_TYPE_TEXT.equals(options.getType())) {
-				String[] split = options.getValue().split("\n");
-				for (String string : split) {
-					if (string.indexOf("=") > -1) {
-						String value = StringUtils.substringBefore(string, "=");
-						String name = StringUtils.substringAfter(string, "=");
-						list.add(Map.of("value", value, "name", name));
-					}
-				}
-			}
-		}
-		return list;
 	}
 }

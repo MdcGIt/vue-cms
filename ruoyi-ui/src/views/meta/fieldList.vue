@@ -14,6 +14,12 @@
           size="mini"
           :disabled="multiple"
           @click="handleBatchDelete">{{ $t("Common.Delete") }}</el-button>
+        <el-button 
+          plain
+          type="warning"
+          icon="el-icon-close"
+          size="mini"
+          @click="handleClose">{{ $t("Common.Close") }}</el-button>
       </el-col>
       <el-col :span="12">
         <el-form 
@@ -91,23 +97,23 @@
         <el-form-item :label="$t('MetaModel.FieldCode')" prop="code">
           <el-input v-model="form.code" />
         </el-form-item>
-        <el-form-item v-if="!isDefaultTable" :label="$t('MetaModel.FieldMappingName')" prop="fieldName">
-          <el-select v-model="form.fieldName">
-            <el-option
-              v-for="fieldName in tableFields"
-              :key="fieldName"
-              :label="fieldName"
-              :value="fieldName"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="isDefaultTable" :label="$t('MetaModel.FieldType')" prop="fieldType">
+        <el-form-item v-if="model.isDefaultTable" :label="$t('MetaModel.FieldType')" prop="fieldType">
           <el-select v-model="form.fieldType">
             <el-option
               v-for="dict in dict.type.MetaFieldType"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-else :label="$t('MetaModel.FieldMappingName')" prop="fieldName">
+          <el-select v-model="form.fieldName">
+            <el-option
+              v-for="fieldName in tableFields"
+              :key="fieldName"
+              :label="fieldName"
+              :value="fieldName"
             />
           </el-select>
         </el-form-item>
@@ -181,12 +187,12 @@ export default {
       multiple: true,
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         modelId: this.$route.query.modelId,
         query: undefined
       },
       modelId: this.$route.query.modelId,
-      isDefaultTable: this.$route.query.isDefaultTable === 'true',
+      model: {},
       tableFields: [],
       controlOptions: [],
       // 表单参数
@@ -209,7 +215,7 @@ export default {
         ],
         fieldType: [
           { required: true, validator: (rule, value, callback) => {
-                if (this.isDefaultTable && (!value || value == null || value == '')) {
+                if (this.model.isDefaultTable && (!value || value == null || value == '')) {
                   return callback(new Error(this.$t('MetaModel.RuleTips.FieldType')));
                 }
                 callback();
@@ -217,7 +223,7 @@ export default {
         ],
         fieldName: [
           { required: true, validator: (rule, value, callback) => {
-                if (!this.isDefaultTable) {
+                if (!this.model.isDefaultTable) {
                   if (!value || value == null || value == '') {
                     return callback(new Error(this.$t('MetaModel.RuleTips.FieldMappingName')));
                   }
@@ -259,8 +265,8 @@ export default {
     },
     loadXModel() {
       getModel(this.modelId).then(response => {
-        this.isDefaultTable = response.data.tableName === 'x_model_data';
-        if (!this.isDefaultTable) {
+        this.model = response.data
+        if (!response.data.isDefaultTable) {
           this.loadXmodelUsableFields();
         }
       })
@@ -347,8 +353,16 @@ export default {
         this.loadXModelFieldList();
       }).catch(function () { });
     },
-    handleGoBack() {
-      this.$router.push({ path: "/configs/exmodel" });
+    handleClose() {
+      if (this.model.ownerType == 'CmsCustomForm') {
+        const obj = { path: "/operations/customform" };
+        this.$tab.closeOpenPage(obj);
+      } else if (this.model.ownerType == 'CmsExtend') {
+        const obj = { path: "/configs/exmodel" };
+        this.$tab.closeOpenPage(obj);
+      } else {
+        this.$tab.closePage();
+      }
     }
   }
 };

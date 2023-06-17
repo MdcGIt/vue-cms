@@ -7,6 +7,7 @@ import com.ruoyi.customform.domain.dto.CustomFormEditDTO;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.dto.XModelDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ICustomFormService extends IService<CmsCustomForm> {
@@ -42,4 +43,12 @@ public interface ICustomFormService extends IService<CmsCustomForm> {
 	 * @param username
 	 */
     void publishCustomForms(List<Long> formIds, String username);
+
+	/**
+	 * 下线自定义表单
+	 *
+	 * @param formIds
+	 * @param username
+	 */
+    void offlineCustomForms(List<Long> formIds, String username) throws IOException;
 }

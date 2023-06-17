@@ -144,8 +144,9 @@
         </div>
         <cms-exmodel-editor 
           ref="EXModelEditor"
-          :xmodel="form_info.configProps.ExtendModel" 
-          :pk="siteId">
+          :xmodel="form_info.configProps.SiteExtendModel" 
+          type="site"
+          :id="form_info.siteId">
         </cms-exmodel-editor>
       </el-card>
     </el-form>
@@ -177,7 +178,7 @@ export default {
   dicts: ['CMSStaticSuffix'],
   computed: {
     showEXModel() {
-      return this.form_info.configProps && this.form_info.configProps.ExtendModel != null && this.form_info.configProps.ExtendModel.length > 0;
+      return this.form_info.configProps && this.form_info.configProps.SiteExtendModel != null && this.form_info.configProps.SiteExtendModel.length > 0;
     }
   },
   props: {
