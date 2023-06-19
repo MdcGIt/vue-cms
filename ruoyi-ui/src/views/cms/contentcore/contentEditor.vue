@@ -477,6 +477,7 @@ export default {
             });
             window.open(routeData.href, '_self');
           } else {
+            this.opType = 'UPDATE';
             this.$router.push({ path: "/cms/content/editor", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
           }
         }
