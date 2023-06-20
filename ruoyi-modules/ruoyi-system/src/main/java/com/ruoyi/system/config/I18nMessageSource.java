@@ -33,7 +33,7 @@ public class I18nMessageSource extends AbstractMessageSource implements Initiali
 
 	private Charset encoding = StandardCharsets.UTF_8;
 
-	private int cacheSeconds;
+	private long cacheSeconds;
 
 	private Locale defaultLocale = Locale.SIMPLIFIED_CHINESE;
 	

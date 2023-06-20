@@ -1,4 +1,4 @@
-package com.ruoyi.common.mybatisplus.domain;
+package com.ruoyi.common.db.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

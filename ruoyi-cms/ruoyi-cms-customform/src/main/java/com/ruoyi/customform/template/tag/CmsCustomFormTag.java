@@ -8,20 +8,16 @@ import com.ruoyi.common.staticize.tag.AbstractTag;
 import com.ruoyi.common.staticize.tag.TagAttr;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.contentcore.core.IPageWidgetType;
-import com.ruoyi.contentcore.domain.CmsPageWidget;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.properties.EnableSSI;
-import com.ruoyi.contentcore.service.IPageWidgetService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
 import com.ruoyi.contentcore.template.tag.CmsIncludeTag;
-import com.ruoyi.contentcore.util.PageWidgetUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
+import com.ruoyi.customform.CustomFormConsts;
 import com.ruoyi.customform.domain.CmsCustomForm;
 import com.ruoyi.customform.mapper.CustomFormMapper;
 import com.ruoyi.customform.publishpipe.PublishPipeProp_CustomFormTemplate;
-import com.ruoyi.customform.template.type.CustomFormTemplateType;
 import freemarker.core.Environment;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -110,7 +106,7 @@ public class CmsCustomFormTag extends AbstractTag {
 		} else {
 			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
 			String staticFileName = form.getCode() + "." + site.getStaticSuffix(context.getPublishPipeCode());
-			String staticFilePath = CustomFormTemplateType.STATICIZE_DIRECTORY + staticFileName;
+			String staticFilePath = CustomFormConsts.STATICIZE_DIRECTORY + staticFileName;
 			// 读取自定义表单静态化内容
 			String staticContent = templateService.getTemplateStaticContentCache(templateKey);
 			if (Objects.isNull(staticContent) || !new File(siteRoot + staticFilePath).exists()) {
@@ -134,8 +130,8 @@ public class CmsCustomFormTag extends AbstractTag {
 			env.setOut(writer);
 			Template includeTemplate = env.getTemplateForInclusion(templateName,
 					StandardCharsets.UTF_8.displayName(), true);
-			Map<String, Object> customFormVariables = CustomFormTemplateType.getCustomFormVariables(form);
-			FreeMarkerUtils.setVariables(env, Map.of(CustomFormTemplateType.TemplateVariable_CustomForm,
+			Map<String, Object> customFormVariables = CustomFormConsts.getCustomFormVariables(form);
+			FreeMarkerUtils.setVariables(env, Map.of(CustomFormConsts.TemplateVariable_CustomForm,
 					this.wrap(env, customFormVariables)));
 			env.include(includeTemplate);
 			return writer.getBuffer().toString();

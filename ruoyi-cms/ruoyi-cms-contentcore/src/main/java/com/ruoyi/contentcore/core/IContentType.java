@@ -23,17 +23,17 @@ public interface IContentType extends Comparable<IContentType> {
 	/**
 	 * 内容类型唯一标识ID
 	 */
-    public String getId();
+    String getId();
 
     /**
      * 内容类型名称
      */
-    public String getName();
+    String getName();
 
     /**
      * 图标
      */
-    default public String getIcon() {
+    default String getIcon() {
         return null;
     }
 
@@ -45,12 +45,12 @@ public interface IContentType extends Comparable<IContentType> {
     /**
      * 显示顺序
      */
-    default public int getOrder() {
+    default int getOrder() {
         return 0;
     }
 
     @Override
-    default public int compareTo(IContentType o) {
+    default int compareTo(IContentType o) {
         return this.getOrder() - o.getOrder();
     }
 
@@ -60,7 +60,7 @@ public interface IContentType extends Comparable<IContentType> {
 	 * @param xContent
 	 * @return
 	 */
-	public IContent<?> loadContent(CmsContent xContent);
+	IContent<?> loadContent(CmsContent xContent);
 
     /**
      * 从请求读取内容数据
@@ -69,7 +69,7 @@ public interface IContentType extends Comparable<IContentType> {
      * @return
      * @throws IOException
      */
-    public IContent<?> readRequest(HttpServletRequest request) throws IOException;
+    IContent<?> readRequest(HttpServletRequest request) throws IOException;
     
     /**
      * 初始化内容编辑页面数据
@@ -78,14 +78,14 @@ public interface IContentType extends Comparable<IContentType> {
      * @param contentId
      * @return
      */
-    public ContentVO initEditor(Long catalogId, Long contentId);
+    ContentVO initEditor(Long catalogId, Long contentId);
 
     /**
      * 恢复内容扩展实体备份表数据
      * 
      * @param contentId
      */
-	default public void recover(Long contentId) {
+	default void recover(Long contentId) {
 		
 	}
 
@@ -94,7 +94,7 @@ public interface IContentType extends Comparable<IContentType> {
 	 * 
 	 * @param contentId
 	 */
-	default public void deleteBackups(Long contentId) {
+	default void deleteBackups(Long contentId) {
 		
 	}
 }

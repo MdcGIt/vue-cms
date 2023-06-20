@@ -23,7 +23,6 @@ import com.ruoyi.contentcore.domain.dto.CopyContentDTO;
 import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
-import com.ruoyi.contentcore.domain.vo.RecycleContentVO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.fixed.config.BackendContext;
 import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
@@ -61,7 +60,7 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	private static final Logger logger = LoggerFactory.getLogger(ContentServiceImpl.class);
 
 	private final ApplicationContext applicationContext;
-	
+
 	private final CmsContentMapper contentMapper;
 
 	private final ISiteService siteService;
@@ -71,7 +70,12 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	private final IPublishPipeService publishPipeService;
 
 	private final AsyncTaskManager asyncTaskManager;
-	
+
+	@Override
+	public CmsContentMapper getContentMapper() {
+		return contentMapper;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteContents(List<Long> contentIds, LoginUser operator) {
@@ -92,24 +96,25 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void recoverContents(List<Long> backupIds, LoginUser operator) {
-		List<RecycleContentVO> backupContents = this.contentMapper.selectRecycleContentByBackupIds(backupIds);
-		for (RecycleContentVO backupContent : backupContents) {
+		List<CmsContent> backupContents = this.contentMapper.selectByIdsWithLogicDel(backupIds);
+		for (CmsContent backupContent : backupContents) {
 			IContentType contentType = ContentCoreUtils.getContentType(backupContent.getContentType());
 			contentType.recover(backupContent.getContentId());
+
+			this.contentMapper.recoverById(backupContent.getContentId());
 		}
-		backupIds.forEach(backupId -> {
-			this.recover(backupId, CmsContent.class);
-		});
 	}
-	
+
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteRecycleContents(List<Long> backupIds) {
-		List<RecycleContentVO> backupContents = this.contentMapper.selectRecycleContentByBackupIds(backupIds);
-		for (RecycleContentVO backupContent : backupContents) {
+		List<CmsContent> backupContents = this.contentMapper.selectByIdsWithLogicDel(backupIds);
+		for (CmsContent backupContent : backupContents) {
 			IContentType contentType = ContentCoreUtils.getContentType(backupContent.getContentType());
 			contentType.deleteBackups(backupContent.getContentId());
 		}
-		this.deleteBackups(backupIds, CmsContent.class);
+		this.contentMapper.deleteByIdsIgnoreLogicDel(backupIds);
+		this.removeByIds(backupIds);
 	}
 
 	@Override

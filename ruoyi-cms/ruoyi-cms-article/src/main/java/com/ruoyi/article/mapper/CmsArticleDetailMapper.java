@@ -1,11 +1,13 @@
 package com.ruoyi.article.mapper;
 
+import com.ruoyi.common.db.DBConstants;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.article.domain.CmsArticleDetail;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -17,12 +19,40 @@ import com.ruoyi.article.domain.CmsArticleDetail;
  */
 public interface CmsArticleDetailMapper extends BaseMapper<CmsArticleDetail> {
 
-	@Select("SELECT backup_id FROM cms_article_detail_backup WHERE content_id = #{contentId}")
-	Long selectBackupIdByContentId(@Param("contentId") Long contentId);
-	
-	@Select("SELECT count(*) FROM cms_article_detail_backup WHERE site_id = #{siteId}")
-	Long selectBackupCountBySiteId(@Param("siteId") Long siteId);
-	
-	@Delete("DELETE FROM cms_article_detail_backup WHERE site_id = #{siteId} limit ${limit}")
-	Long deleteBackupBySiteId(@Param("siteId") Long siteId, @Param("limit") Integer limit);
+	/**
+	 * 删除逻辑删除标识deleted=1的数据
+	 *
+	 * @param contentId
+	 * @return
+	 */
+	@Delete("DELETE FROM cms_article_detail WHERE deleted = 1 AND content_id = #{contentId}")
+	Long deleteLogicDeletedById(@Param("contentId") Long contentId);
+
+	/**
+	 * 删除站点内容，忽略逻辑删除标识影响
+	 *
+	 * @param siteId
+	 * @param limit
+	 * @return
+	 */
+	@Delete("DELETE FROM cms_article_detail WHERE site_id = #{siteId} limit ${limit}")
+	Long deleteBySiteIdIgnoreLogicDel(@Param("siteId") Long siteId, @Param("limit") Integer limit);
+
+	/**
+	 * 查询站点内容，忽略逻辑删除标识影响
+	 *
+	 * @param siteId
+	 * @return
+	 */
+	@Select("SELECT count(*) FROM cms_article_detail WHERE site_id = #{siteId}")
+	Long selectCountBySiteIdIgnoreLogicDel(@Param("siteId") Long siteId);
+
+	/**
+	 * 设置cms_article_detail的deleted逻辑删除标识值为0
+	 *
+	 * @param contentId
+	 * @return
+	 */
+	@Update("UPDATE cms_article_detail SET deleted = " + DBConstants.DELETED_NO + " WHERE content_id = #{contentId}")
+	Long recoverById(@Param("contentId") Long contentId);
 }

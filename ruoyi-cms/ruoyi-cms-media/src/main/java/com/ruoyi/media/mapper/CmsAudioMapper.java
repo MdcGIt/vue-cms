@@ -1,13 +1,13 @@
 package com.ruoyi.media.mapper;
 
-import java.util.List;
-
+import com.ruoyi.common.db.DBConstants;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.media.domain.CmsAudio;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -20,17 +20,39 @@ import com.ruoyi.media.domain.CmsAudio;
 public interface CmsAudioMapper extends BaseMapper<CmsAudio> {
 
 	/**
-	 * 查询音频表备份ID
-	 * 
+	 * 删除逻辑删除标识 deleted = 1 的数据
+	 *
 	 * @param contentId
 	 * @return
 	 */
-	@Select("SELECT backup_id FROM cms_audio_backup WHERE content_id = #{contentId}")
-	List<Long> selectBackupIdsByContentId(@Param("contentId") Long contentId);
-	
-	@Select("SELECT count(*) FROM cms_audio_backup WHERE site_id = #{siteId}")
-	Long selectBackupCountBySiteId(@Param("siteId") Long siteId);
-	
-	@Delete("DELETE FROM cms_audio_backup WHERE site_id = #{siteId} limit ${limit}")
-	Long deleteBackupBySiteId(@Param("siteId") Long siteId, @Param("limit") Integer limit);
+	@Delete("DELETE FROM cms_audio WHERE deleted = " + DBConstants.DELETED_YES + " AND content_id = #{contentId}")
+	Long deleteLogicDeletedByContentId(Long contentId);
+
+	/**
+	 * 删除站点内容，忽略逻辑删除标识
+	 *
+	 * @param siteId
+	 * @param limit
+	 * @return
+	 */
+	@Delete("DELETE FROM cms_audio WHERE site_id = #{siteId} limit ${limit}")
+	Long deleteBySiteIdIgnoreLogicDel(@Param("siteId") Long siteId, @Param("limit") Integer limit);
+
+	/**
+	 * 查询站点内容，忽略逻辑删除标识
+	 *
+	 * @param siteId
+	 * @return
+	 */
+	@Select("SELECT count(*) FROM cms_audio WHERE site_id = #{siteId}")
+	Long selectCountBySiteIdIgnoreLogicDel(@Param("siteId") Long siteId);
+
+	/**
+	 * 设置 cms_audio 的 deleted 逻辑删除标识值为0
+	 *
+	 * @param contentId
+	 * @return
+	 */
+	@Update("UPDATE cms_audio SET deleted = " + DBConstants.DELETED_NO + " WHERE content_id = #{contentId}")
+	void recoverByContentId(Long contentId);
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.SpringUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -106,21 +107,10 @@ public class AudioContent extends AbstractContent<List<CmsAudio>> {
 
 	@Override
 	public void delete() {
-		this.backup();
 		super.delete();
 		if (this.hasExtendEntity()) {
-			this.getAudioService().remove(new LambdaQueryWrapper<CmsAudio>().eq(CmsAudio::getContentId,
-					this.getContentEntity().getContentId()));
-		}
-	}
-
-	@Override
-	public void backup() {
-		super.backup();
-		if (this.hasExtendEntity()) {
-			this.getAudioService().lambdaQuery().eq(CmsAudio::getContentId, this.getContentEntity().getContentId())
-					.list()
-					.forEach(audio -> getAudioService().backup(audio, this.getOperator().getUsername()));
+			this.getAudioService().lambdaQuery().eq(CmsAudio::getContentId, this.getContentEntity().getContentId()).list()
+					.forEach(audio -> this.getAudioService().removeById(audio));
 		}
 	}
 

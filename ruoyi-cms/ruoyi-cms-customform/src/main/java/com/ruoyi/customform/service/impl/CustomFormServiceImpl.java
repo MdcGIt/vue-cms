@@ -7,9 +7,11 @@ import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.ReflectASMUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsPublishPipe;
 import com.ruoyi.contentcore.domain.CmsSite;
+import com.ruoyi.contentcore.fixed.config.SiteApiUrl;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
@@ -18,6 +20,7 @@ import com.ruoyi.contentcore.template.impl.SiteTemplateType;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.contentcore.util.TemplateUtils;
 import com.ruoyi.customform.CmsCustomFormMetaModelType;
+import com.ruoyi.customform.CustomFormConsts;
 import com.ruoyi.customform.domain.CmsCustomForm;
 import com.ruoyi.customform.domain.dto.CustomFormAddDTO;
 import com.ruoyi.customform.domain.dto.CustomFormEditDTO;
@@ -25,7 +28,6 @@ import com.ruoyi.customform.fixed.dict.CustomFormStatus;
 import com.ruoyi.customform.mapper.CustomFormMapper;
 import com.ruoyi.customform.publishpipe.PublishPipeProp_CustomFormTemplate;
 import com.ruoyi.customform.service.ICustomFormService;
-import com.ruoyi.customform.template.type.CustomFormTemplateType;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.service.IModelService;
 import freemarker.template.TemplateException;
@@ -39,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -113,7 +116,9 @@ public class CustomFormServiceImpl extends ServiceImpl<CustomFormMapper, CmsCust
 		// 删除自定义表单数据
 		this.removeByIds(formIds);
 		// 删除元数据模型及数据
-		this.modelService.deleteModel(formIds);
+		for (Long formId : formIds) {
+			this.modelService.getBaseMapper().deleteById(formId);
+		}
 	}
 
 	@Override
@@ -133,7 +138,7 @@ public class CustomFormServiceImpl extends ServiceImpl<CustomFormMapper, CmsCust
 			// 删除静态文件
 			for (CmsPublishPipe pp : publishPipes) {
 				String siteRoot = SiteUtils.getSiteRoot(site, pp.getCode());
-				File f = new File(siteRoot + CustomFormTemplateType.STATICIZE_DIRECTORY
+				File f = new File(siteRoot + CustomFormConsts.STATICIZE_DIRECTORY
 						+ form.getCode() + "." + site.getStaticSuffix(pp.getCode()));
 				if (f.exists()) {
 					FileUtils.delete(f);
@@ -179,11 +184,13 @@ public class CustomFormServiceImpl extends ServiceImpl<CustomFormMapper, CmsCust
 			// init template datamode
 			TemplateUtils.initGlobalVariables(site, templateContext);
 			// init templateType data to datamode
-			ITemplateType templateType = this.templateService.getTemplateType(CustomFormTemplateType.TypeId);
-			templateType.initTemplateData(form.getFormId(), templateContext);
+			ITemplateType templateType = this.templateService.getTemplateType(SiteTemplateType.TypeId);
+			templateType.initTemplateData(form.getSiteId(), templateContext);
+			templateContext.getVariables().put(CustomFormConsts.TemplateVariable_CustomForm,
+					CustomFormConsts.getCustomFormVariables(form));
 			// 静态化文件地址
 			String siteRoot = SiteUtils.getSiteRoot(site, publishPipeCode);
-			templateContext.setDirectory(siteRoot + CustomFormTemplateType.STATICIZE_DIRECTORY);
+			templateContext.setDirectory(siteRoot + CustomFormConsts.STATICIZE_DIRECTORY);
 			String fileName = form.getCode() + "." + site.getStaticSuffix(publishPipeCode);
 			templateContext.setFirstFileName(fileName);
 			// 静态化

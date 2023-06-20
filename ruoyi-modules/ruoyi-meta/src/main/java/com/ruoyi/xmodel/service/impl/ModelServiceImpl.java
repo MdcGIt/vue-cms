@@ -1,30 +1,23 @@
 package com.ruoyi.xmodel.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.db.DBService;
+import com.ruoyi.common.db.util.SqlBuilder;
+import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.mybatisplus.db.DBTable;
 import com.ruoyi.common.mybatisplus.db.DBTableColumn;
 import com.ruoyi.common.mybatisplus.db.IDbType;
-import com.ruoyi.common.mybatisplus.service.IDBService;
 import com.ruoyi.common.redis.RedisCache;
+import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.xmodel.core.IMetaModelType;
 import com.ruoyi.xmodel.core.MetaModel;
 import com.ruoyi.xmodel.core.MetaModelField;
 import com.ruoyi.xmodel.core.impl.MetaControlType_Input;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.exception.CommonErrorCode;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.xmodel.util.XModelUtils;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.domain.XModelField;
 import com.ruoyi.xmodel.dto.XModelDTO;
@@ -32,8 +25,14 @@ import com.ruoyi.xmodel.exception.MetaErrorCode;
 import com.ruoyi.xmodel.mapper.XModelFieldMapper;
 import com.ruoyi.xmodel.mapper.XModelMapper;
 import com.ruoyi.xmodel.service.IModelService;
-
+import com.ruoyi.xmodel.util.XModelUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +42,7 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 
 	private final XModelFieldMapper modelFieldMapper;
 
-	private final IDBService dbService;
+	private final DBService dbService;
 
 	private final RedisCache redisCache;
 
@@ -79,8 +78,8 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 		List<String> list = new ArrayList<>();
 		// 数据表
 		this.dbService.listTables(null).forEach(t -> {
-			if (t.getTableName().startsWith(mmt.getTableNamePrefix())) {
-				list.add(t.getTableName());
+			if (t.getName().startsWith(mmt.getTableNamePrefix())) {
+				list.add(t.getName());
 			}
 		});
 		return list;
@@ -110,21 +109,23 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 		List<String> fixedFields = mmt.getFixedFields().stream().map(f -> f.getFieldName()).toList();
 		// 自定义表直接初始化非固定字段
 		if (!mmt.getDefaultTable().equals(dto.getTableName())) {
-			IDbType dbType = this.dbService.getDbType();
-			List<DBTableColumn> listTableColumn = dbType.listTableColumns(dto.getTableName());
-			for (DBTableColumn column : listTableColumn) {
-				if (!fixedFields.contains(column.getName())) {
-					XModelField field = new XModelField();
-					field.setFieldId(IdUtils.getSnowflakeId());
-					field.setModelId(model.getModelId());
-					field.setName(StringUtils.isEmpty(column.getColumnComment()) ? column.getName() : column.getColumnComment());
-					field.setCode(column.getName());
-					field.setFieldName(column.getName());
-					field.setMandatoryFlag(column.isNullable() ? YesOrNo.NO : YesOrNo.YES);
-					field.setControlType(MetaControlType_Input.TYPE);
-					field.setDefaultValue(column.getDefaultValue());
-					field.createBy(dto.getOperator().getUsername());
-					this.modelFieldMapper.insert(field);
+			List<DBTable> tables = this.dbService.listTables(dto.getTableName());
+			if (!tables.isEmpty()) {
+				List<DBTableColumn> listTableColumn = tables.get(0).getColumns();
+				for (DBTableColumn column : listTableColumn) {
+					if (!fixedFields.contains(column.getName())) {
+						XModelField field = new XModelField();
+						field.setFieldId(IdUtils.getSnowflakeId());
+						field.setModelId(model.getModelId());
+						field.setName(column.getLabel());
+						field.setCode(column.getName());
+						field.setFieldName(column.getName());
+						field.setMandatoryFlag(column.isNullable() ? YesOrNo.NO : YesOrNo.YES);
+						field.setControlType(MetaControlType_Input.TYPE);
+						field.setDefaultValue(column.getDefaultValue());
+						field.createBy(dto.getOperator().getUsername());
+						this.modelFieldMapper.insert(field);
+					}
 				}
 			}
 		}
@@ -145,16 +146,18 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteModel(List<Long> modelIds) {
 		for (Long modelId : modelIds) {
-			XModel model = this.getById(modelId);
+			MetaModel model = this.getMetaModel(modelId);
 			if (model != null) {
 				// 移除模型字段数据
 				this.modelFieldMapper.delete(new LambdaQueryWrapper<XModelField>().eq(XModelField::getModelId, modelId));
-				// 删除模型数据表数据
-				this.dbService.getDbType().dropTable(model.getTableName());
 				// 移除模型数据
-				this.removeById(model.getModelId());
+				this.removeById(model.getModel().getModelId());
+				// 移除模型数据表数据
+				new SqlBuilder().delete().from(model.getModel().getTableName()).where()
+						.eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId())
+						.executeDelete();
 				// 清理缓存
-				this.clearMetaModelCache(model.getModelId());
+				this.clearMetaModelCache(model.getModel().getModelId());
 			}
 		}
 	}
@@ -165,9 +168,10 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 		if (model.getTableName().equals(mmt.getDefaultTable())) {
 			return new ArrayList<>();
 		}
-		return this.dbService.listTableColumns(model.getTableName())
-				.stream()
-				.map(DBTableColumn::getName)
-				.toList();
+		List<DBTable> dbTables = this.dbService.listTables(model.getTableName());
+		if (dbTables.isEmpty()) {
+			return List.of();
+		}
+		return dbTables.get(0).getColumns().stream().map(DBTableColumn::getName).toList();
 	}
 }

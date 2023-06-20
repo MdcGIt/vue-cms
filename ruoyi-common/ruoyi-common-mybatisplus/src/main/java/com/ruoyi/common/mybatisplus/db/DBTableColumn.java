@@ -10,17 +10,38 @@ public class DBTableColumn {
     /**
      * 字段名称
      */
+    private String label;
+
+    /**
+     * 字段名称（COLUMN_NAME）
+     */
     private String name;
 
     /**
-     * 字段类型
+     * 字段类型（DATA_TYPE）
+     * 来自 java.sql.Types 的 SQL 类型
      */
-    private String type;
+    private int type;
 
     /**
-     * 字段备注
+     * 字段类型名称（TYPE_NAME）
      */
-    private String columnComment;
+    private String typeName;
+
+    /**
+     * 列大小
+     */
+    private int size;
+
+    /**
+     * 小数部分的位数。对于 DECIMAL_DIGITS 不适用的数据类型，则返回 Null
+     */
+    private int decimalDigits;
+
+    /**
+     * 基数（通常为 10 或 2）
+     */
+    private int numPrecRadix;
 
     /**
      * 默认值
@@ -30,7 +51,7 @@ public class DBTableColumn {
     /**
      * 是否自增
      */
-    private Boolean autoIncrement;
+    private boolean autoIncrement;
 
     /**
      * 是否主键
@@ -42,11 +63,16 @@ public class DBTableColumn {
      */
     private boolean nullable;
 
+    /**
+     * 字段注释
+     */
+    private String comment;
+
     public DBTableColumn() {
 
     }
 
-    public DBTableColumn(String name, String type, String defaultValue, Boolean nullable,
+    public DBTableColumn(String name, int type, String defaultValue, Boolean nullable,
              Boolean primary, Boolean autoIncrement) {
         this.name = name;
         this.type = type;

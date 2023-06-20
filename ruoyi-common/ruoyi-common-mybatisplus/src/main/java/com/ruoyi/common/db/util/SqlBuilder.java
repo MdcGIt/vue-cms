@@ -1,9 +1,8 @@
-package com.ruoyi.common.mybatisplus.util;
+package com.ruoyi.common.db.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils;
 import com.baomidou.mybatisplus.extension.toolkit.SqlRunner;
-import com.ruoyi.common.mybatisplus.MybatisPlusErrorCode;
+import com.ruoyi.common.db.DBErrorCode;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -167,7 +166,7 @@ public class SqlBuilder {
      */
     public SqlBuilder in(String field, Collection<?> values) {
         this.checkSqlInjection(field);
-        Assert.isTrue(StringUtils.isNotEmpty(values), MybatisPlusErrorCode.SQL_IN_PARAMS_EMPTY::exception);
+        Assert.isTrue(StringUtils.isNotEmpty(values), DBErrorCode.SQL_IN_PARAMS_EMPTY::exception);
 
         append(" ");
         append(field);
@@ -384,6 +383,11 @@ public class SqlBuilder {
         return this;
     }
 
+    public SqlBuilder selectAll() {
+        append("SELECT *");
+        return this;
+    }
+
     /**
      * 增加 Select 子句
      */
@@ -392,16 +396,10 @@ public class SqlBuilder {
         if (StringUtils.isEmpty(columns)) {
             append("*");
         } else {
-            boolean first = true;
             for (String column : columns) {
-                if (first) {
-                    first = false;
-                } else {
-                    append(",");
-                }
                 this.checkSqlInjection(column);
-                append(column);
             }
+            append(StringUtils.join(columns, ","));
         }
         return this;
     }
@@ -414,16 +412,10 @@ public class SqlBuilder {
         if (StringUtils.isEmpty(columns)) {
             append("*");
         } else {
-            boolean first = true;
             for (String column : columns) {
-                if (first) {
-                    first = false;
-                } else {
-                    append(",");
-                }
                 this.checkSqlInjection(column);
-                append(column);
             }
+            append(StringUtils.join(columns, ","));
         }
         return this;
     }
@@ -432,7 +424,7 @@ public class SqlBuilder {
      * 增加 FROM 字句
      */
     public SqlBuilder from(String... tables) {
-        Assert.isTrue(StringUtils.isNotEmpty(tables), MybatisPlusErrorCode.SQL_FROM_TABLE::exception);
+        Assert.isTrue(StringUtils.isNotEmpty(tables), DBErrorCode.SQL_FROM_TABLE::exception);
         append(" FROM ");
         boolean first = true;
         for (String table : tables) {
@@ -446,6 +438,12 @@ public class SqlBuilder {
         }
         return this;
     }
+
+    public SqlBuilder join(String table) {
+
+        return this;
+    }
+
 
     /**
      * 增加 DELETE 关键字

@@ -2,8 +2,9 @@ package com.ruoyi.xmodel.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.db.DBService;
 import com.ruoyi.common.exception.CommonErrorCode;
-import com.ruoyi.common.mybatisplus.service.IDBService;
+import com.ruoyi.common.mybatisplus.db.DBTable;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -31,7 +32,7 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 
 	private final IModelService modelService;
 
-	private final IDBService dbService;
+	private final DBService dbService;
 
 	@Override
 	public void addModelField(XModelFieldDTO dto) {
@@ -142,8 +143,12 @@ public class ModelFieldServiceImpl extends ServiceImpl<XModelFieldMapper, XModel
 	 * @return
 	 */
 	private boolean isTableContainsColumn(String tableName, String columnName) {
-		return this.dbService.getDbType().listTableColumns(tableName)
-				.stream().filter(tc -> tc.getName().equals(columnName)).findFirst().isPresent();
+		List<DBTable> dbTables = this.dbService.listTables(tableName);
+		if (dbTables.isEmpty()) {
+			return false;
+		}
+		return dbTables.get(0).getColumns().stream()
+				.filter(tc -> tc.getName().equals(columnName)).findFirst().isPresent();
 	}
 
 	/**

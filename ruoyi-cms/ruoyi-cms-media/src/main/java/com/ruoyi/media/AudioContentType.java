@@ -1,14 +1,5 @@
 package com.ruoyi.media;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
@@ -33,10 +24,16 @@ import com.ruoyi.media.domain.CmsAudio;
 import com.ruoyi.media.domain.dto.AudioAlbumDTO;
 import com.ruoyi.media.domain.vo.AudioAlbumVO;
 import com.ruoyi.media.mapper.CmsAudioMapper;
-import com.ruoyi.media.service.IAudioService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component(IContentType.BEAN_NAME_PREFIX + AudioContentType.ID)
 @RequiredArgsConstructor
@@ -49,8 +46,6 @@ public class AudioContentType implements IContentType {
 	private final CmsContentMapper contentMapper;
 
 	private final CmsAudioMapper audioMapper;
-	
-	private final IAudioService audioService;
 
 	private final ICatalogService catalogService;
 
@@ -78,9 +73,9 @@ public class AudioContentType implements IContentType {
 
 	@Override
 	public IContent<?> loadContent(CmsContent xContent) {
-		AudioContent imageContent = new AudioContent();
-		imageContent.setContentEntity(xContent);
-		return imageContent;
+		AudioContent audioContent = new AudioContent();
+		audioContent.setContentEntity(xContent);
+		return audioContent;
 	}
 
 	@Override
@@ -157,14 +152,11 @@ public class AudioContentType implements IContentType {
 
 	@Override
 	public void recover(Long contentId) {
-		this.audioMapper.selectBackupIdsByContentId(contentId).forEach(backupId -> {
-			this.audioService.recover(backupId, CmsAudio.class);
-		});
+		this.audioMapper.recoverByContentId(contentId);
 	}
-	
+
 	@Override
 	public void deleteBackups(Long contentId) {
-		List<Long> backupIds = this.audioMapper.selectBackupIdsByContentId(contentId);
-		this.audioService.deleteBackups(backupIds, CmsAudio.class);
+		this.audioMapper.deleteLogicDeletedByContentId(contentId);
 	}
 }

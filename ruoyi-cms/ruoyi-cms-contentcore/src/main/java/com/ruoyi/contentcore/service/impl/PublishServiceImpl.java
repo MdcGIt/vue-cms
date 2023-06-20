@@ -497,7 +497,7 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 				// 发布关联内容，映射的引用内容
 				LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<CmsContent>()
 						.eq(CmsContent::getCopyId, content.getContentEntity().getContentId())
-						.eq(CmsContent::getCopyType, ContentCopyType.Mapping.value());
+						.eq(CmsContent::getCopyType, ContentCopyType.Mapping);
 				List<CmsContent> mappingContents = contentService.list(q);
 				for (int i = 0; i < mappingContents.size(); i++) {
 					this.setProgressInfo(i * 100 / mappingContents.size(),

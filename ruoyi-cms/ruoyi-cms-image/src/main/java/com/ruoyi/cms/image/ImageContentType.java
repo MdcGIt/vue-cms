@@ -1,20 +1,10 @@
 package com.ruoyi.cms.image;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.cms.image.domain.CmsImage;
 import com.ruoyi.cms.image.domain.dto.ImageAlbumDTO;
 import com.ruoyi.cms.image.domain.vo.ImageAlbumVO;
 import com.ruoyi.cms.image.mapper.CmsImageMapper;
-import com.ruoyi.cms.image.service.IImageService;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -34,9 +24,16 @@ import com.ruoyi.contentcore.mapper.CmsContentMapper;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component(IContentType.BEAN_NAME_PREFIX + ImageContentType.ID)
 @RequiredArgsConstructor
@@ -49,8 +46,6 @@ public class ImageContentType implements IContentType {
 	private final CmsContentMapper contentMapper;
 
 	private final CmsImageMapper imageMapper;
-
-	private final IImageService imageService;
 
 	private final ICatalogService catalogService;
 
@@ -158,14 +153,11 @@ public class ImageContentType implements IContentType {
 
 	@Override
 	public void recover(Long contentId) {
-		this.imageMapper.selectBackupIdsByContentId(contentId).forEach(imageBackupId -> {
-			this.imageService.recover(imageBackupId, CmsImage.class);
-		});
+		this.imageMapper.recoverByContentId(contentId);
 	}
-	
+
 	@Override
 	public void deleteBackups(Long contentId) {
-		List<Long> backupIds = this.imageMapper.selectBackupIdsByContentId(contentId);
-		this.imageService.deleteBackups(backupIds, CmsImage.class);
+		this.imageMapper.deleteLogicDeletedByContentId(contentId);
 	}
 }

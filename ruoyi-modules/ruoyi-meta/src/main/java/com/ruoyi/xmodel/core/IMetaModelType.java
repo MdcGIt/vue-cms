@@ -40,6 +40,9 @@ public interface IMetaModelType {
         return List.of(FIELD_MODEL_ID);
     }
 
+    /**
+     * 数据表必须包含的字段
+     */
     MetaModelField FIELD_MODEL_ID = new MetaModelField("模型ID", "modelId",
             "model_id", false, true, MetaControlType_Input.TYPE);
 }

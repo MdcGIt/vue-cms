@@ -1,11 +1,11 @@
 package com.ruoyi.media.service;
 
-import java.util.List;
-
-import com.ruoyi.common.mybatisplus.service.IBackupService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.media.domain.CmsVideo;
 
-public interface IVideoService extends IBackupService<CmsVideo> {
+import java.util.List;
+
+public interface IVideoService extends IService<CmsVideo> {
 
 	/**
 	 * 获取视频集视频列表
@@ -18,7 +18,7 @@ public interface IVideoService extends IBackupService<CmsVideo> {
 	/**
 	 * 处理视频信息
 	 * 
-	 * @param audio
+	 * @param video
 	 */
 	void progressVideoInfo(CmsVideo video);
 }

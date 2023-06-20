@@ -1,15 +1,13 @@
 package com.ruoyi.xmodel.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ruoyi.common.db.util.SqlBuilder;
+
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.ruoyi.common.mybatisplus.util.SqlBuilder;
-import com.ruoyi.xmodel.domain.XModelData;
-
-public interface IModelDataService extends IService<XModelData> {
+public interface IModelDataService {
 
 	/**
 	 * 根据主键获取模型数据

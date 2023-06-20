@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 import com.ruoyi.common.utils.poi.converter.LocalDateTimeConverter;
 import com.ruoyi.system.annotation.ExcelDictField;
 import com.ruoyi.system.config.converter.DictConverter;

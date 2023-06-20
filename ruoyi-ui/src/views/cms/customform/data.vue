@@ -28,6 +28,14 @@
           :disabled="multiple"
           @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button 
+          plain
+          type="warning"
+          icon="el-icon-close"
+          size="mini"
+          @click="handleClose">{{ $t("Common.Close") }}</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadCustomFormDataList"></right-toolbar>
     </el-row>
     <el-row v-show="showSearch">
@@ -224,6 +232,10 @@ export default {
         this.loadCustomFormDataList();
         this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
       }).catch(function () { });
+    },
+    handleClose() {
+      const obj = { path: "/operations/customform" };
+      this.$tab.closeOpenPage(obj);
     }
   }
 };

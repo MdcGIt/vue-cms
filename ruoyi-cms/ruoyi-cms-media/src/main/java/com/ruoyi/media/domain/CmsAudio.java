@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.annotation.BackupTable;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
-
+import com.ruoyi.common.db.domain.BaseEntityWithLogicDelete;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +16,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@BackupTable
 @TableName(CmsAudio.TABLE_NAME)
-public class CmsAudio extends BaseEntity {
+public class CmsAudio extends BaseEntityWithLogicDelete {
 
     private static final long serialVersionUID=1L;
     

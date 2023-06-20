@@ -1,16 +1,13 @@
 package com.ruoyi.xmodel.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.mybatisplus.util.SqlBuilder;
+import com.ruoyi.common.db.util.SqlBuilder;
 import com.ruoyi.common.utils.ObjectUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.xmodel.core.IMetaModelType;
 import com.ruoyi.xmodel.core.MetaModel;
 import com.ruoyi.xmodel.core.MetaModelField;
 import com.ruoyi.xmodel.domain.XModel;
-import com.ruoyi.xmodel.domain.XModelData;
-import com.ruoyi.xmodel.mapper.XModelDataMapper;
 import com.ruoyi.xmodel.service.IModelDataService;
 import com.ruoyi.xmodel.service.IModelService;
 import com.ruoyi.xmodel.util.XModelUtils;
@@ -27,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelData> implements IModelDataService {
+public class ModelDataServiceImpl implements IModelDataService {
 
 	private final IModelService modelService;
 
@@ -41,7 +38,7 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 		if (primaryKeys.isEmpty()) {
 			throw new RuntimeException("Meta model primary key not defined.");
 		}
-		SqlBuilder sqlBuilder = new SqlBuilder().select().from(model.getTableName()).where();
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getTableName()).where();
 		for (int i = 0; i < primaryKeys.size(); i++) {
 			if (i > 0) {
 				sqlBuilder.and();
@@ -171,7 +168,7 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 		if (ObjectUtils.isAnyNull(args)) {
 			return Map.of();
 		}
-		SqlBuilder sqlBuilder = new SqlBuilder().select().from(model.getModel().getTableName()).where();
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName()).where();
 		for (int i = 0; i < primaryKeys.size(); i++) {
 			if (i > 0) {
 				sqlBuilder.and();
@@ -203,7 +200,7 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
 		mmt.getFixedFields().forEach(f -> fieldNameToCode.put(f.getFieldName(), f.getCode()));
 
-		SqlBuilder sqlBuilder = new SqlBuilder().select().from(model.getModel().getTableName())
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName())
 				.where().eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId());
 		consumer.accept(sqlBuilder);
 
@@ -224,7 +221,7 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
 		mmt.getFixedFields().forEach(f -> fieldNameToCode.put(f.getFieldName(), f.getCode()));
 
-		SqlBuilder sqlBuilder = new SqlBuilder().select().from(model.getModel().getTableName())
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName())
 				.where().eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId());
 		consumer.accept(sqlBuilder);
 

@@ -1,14 +1,5 @@
 package com.ruoyi.media;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
@@ -33,10 +24,16 @@ import com.ruoyi.media.domain.CmsVideo;
 import com.ruoyi.media.domain.dto.VideoAlbumDTO;
 import com.ruoyi.media.domain.vo.VideoAlbumVO;
 import com.ruoyi.media.mapper.CmsVideoMapper;
-import com.ruoyi.media.service.IVideoService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component(IContentType.BEAN_NAME_PREFIX + VideoContentType.ID)
 @RequiredArgsConstructor
@@ -50,8 +47,6 @@ public class VideoContentType implements IContentType {
 
 	private final CmsVideoMapper videoMapper;
 	
-	private final IVideoService videoService;
-
 	private final ICatalogService catalogService;
 
 	private final IPublishPipeService publishPipeService;
@@ -78,9 +73,9 @@ public class VideoContentType implements IContentType {
 
 	@Override
 	public IContent<?> loadContent(CmsContent xContent) {
-		AudioContent imageContent = new AudioContent();
-		imageContent.setContentEntity(xContent);
-		return imageContent;
+		VideoContent videoContent = new VideoContent();
+		videoContent.setContentEntity(xContent);
+		return videoContent;
 	}
 
 	@Override
@@ -157,14 +152,11 @@ public class VideoContentType implements IContentType {
 
 	@Override
 	public void recover(Long contentId) {
-		this.videoMapper.selectBackupIdsByContentId(contentId).forEach(backupId -> {
-			this.videoService.recover(backupId, CmsVideo.class);
-		});
+		this.videoMapper.recoverByContentId(contentId);
 	}
-	
+
 	@Override
 	public void deleteBackups(Long contentId) {
-		List<Long> backupIds = this.videoMapper.selectBackupIdsByContentId(contentId);
-		this.videoService.deleteBackups(backupIds, CmsVideo.class);
+		this.videoMapper.deleteLogicDeletedByContentId(contentId);
 	}
 }

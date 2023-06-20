@@ -1,8 +1,8 @@
-package com.ruoyi.common.mybatisplus;
+package com.ruoyi.common.db;
 
 import com.ruoyi.common.exception.ErrorCode;
 
-public enum MybatisPlusErrorCode implements ErrorCode {
+public enum DBErrorCode implements ErrorCode {
 	
 	/**
 	 * 不支持的数据库类型：{0}

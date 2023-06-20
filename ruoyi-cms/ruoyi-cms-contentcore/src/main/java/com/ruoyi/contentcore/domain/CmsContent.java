@@ -1,20 +1,18 @@
 package com.ruoyi.contentcore.domain;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.ruoyi.common.mybatisplus.annotation.BackupTable;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntityWithLogicDelete;
 import com.ruoyi.system.fixed.dict.YesOrNo;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * 内容表对象 [cms_content]
@@ -24,9 +22,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@BackupTable
 @TableName(value = CmsContent.TABLE_NAME, autoResultMap = true)
-public class CmsContent extends BaseEntity {
+public class CmsContent extends BaseEntityWithLogicDelete {
 
     private static final long serialVersionUID=1L;
     

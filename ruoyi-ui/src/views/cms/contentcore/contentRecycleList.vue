@@ -111,13 +111,13 @@
       <el-table-column 
         :label="$t('CMS.Content.DeleteTime')"
         align="center"
-        prop="backupTime"
+        prop="updateTime"
         width="160">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.backupTime) }}</span>
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('CMS.Content.DeleteUser')" align="center" :show-overflow-tooltip="true" prop="backupOperator" width="140" />
+      <el-table-column :label="$t('CMS.Content.DeleteUser')" align="center" :show-overflow-tooltip="true" prop="updateBy" width="140" />
       <el-table-column 
         :label="$t('Common.Operation')"
         align="center"
@@ -254,9 +254,9 @@ export default {
       this.handleQuery();
     },
     handleDelete (row) {
-      const backupIds = row.backupId ? [ row.backupId ] : this.selectedRows.map(row => row.backupId);
+      const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(row => row.contentId);
       this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function () {
-        return deleteRecycleContents(backupIds);
+        return deleteRecycleContents(contentIds);
       }).then(() => {
         this.loadRecyclecontentRecycleList();
         this.$modal.msgSuccess(this.$t('Common.DeleteSuccess'));
@@ -268,8 +268,8 @@ export default {
       this.tableMaxHeight = this.tableHeight;
     },
     handleRecover(row) {
-      const backupIds = row.backupId ? [ row.backupId ] : this.selectedRows.map(row => row.backupId);
-      recoverRecycleContent(backupIds).then(response => {
+      const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(row => row.contentId);
+      recoverRecycleContent(contentIds).then(response => {
         this.loadRecyclecontentRecycleList();
         this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
       });

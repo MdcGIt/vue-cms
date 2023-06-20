@@ -256,6 +256,9 @@ export default {
         ],
         tableName: [
           { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" },
+        ],
+        ruleLimit: [
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" },
         ]
       }
     };
