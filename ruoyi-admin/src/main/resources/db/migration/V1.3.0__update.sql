@@ -215,6 +215,9 @@ ALTER TABLE cms_image add column deleted tinyint;
 ALTER TABLE cms_audio add column deleted tinyint;
 ALTER TABLE cms_video add column deleted tinyint;
 
+ALTER TABLE sys_config modify column config_id bigint;
+ALTER TABLE sys_notice modify column notice_id bigint;
+
 DROP TABLE x_model_data;
 DROP TABLE cms_content_backup;
 DROP TABLE cms_article_detail_backup;
