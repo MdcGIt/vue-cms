@@ -221,3 +221,5 @@ DROP TABLE cms_article_detail_backup;
 DROP TABLE cms_image_backup;
 DROP TABLE cms_audio_backup;
 DROP TABLE cms_video_backup;
+
+alter table cc_comment drop column del_flag;
