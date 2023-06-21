@@ -6,16 +6,16 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_comment`;
 CREATE TABLE `cc_comment`  (
-  `comment_id` bigint(0) NOT NULL COMMENT 'ID',
-  `uid` bigint(0) NOT NULL COMMENT '评论用户ID',
-  `parent_id` bigint(0) NOT NULL COMMENT '父级评论ID',
-  `reply_uid` bigint(0) NOT NULL COMMENT '回复用户ID',
-  `reply_count` int(0) NOT NULL COMMENT '回复数',
+  `comment_id` bigint NOT NULL COMMENT 'ID',
+  `uid` bigint NOT NULL COMMENT '评论用户ID',
+  `parent_id` bigint NOT NULL COMMENT '父级评论ID',
+  `reply_uid` bigint NOT NULL COMMENT '回复用户ID',
+  `reply_count` int NOT NULL COMMENT '回复数',
   `source_type` varchar(20) NOT NULL COMMENT '评论对象类型',
   `source_id` varchar(64) NOT NULL COMMENT '评论对象ID',
   `content` varchar(2000) NOT NULL COMMENT '评论内容',
-  `like_count` int(0) NOT NULL COMMENT '评论点赞数',
-  `audit_status` int(0) NOT NULL COMMENT '评论审核状态',
+  `like_count` int NOT NULL COMMENT '评论点赞数',
+  `audit_status` int NOT NULL COMMENT '评论审核状态',
   `comment_time` datetime(0) NOT NULL COMMENT '评论时间',
   `ip` varchar(60) NOT NULL COMMENT 'IP地址',
   `location` varchar(100) NULL DEFAULT NULL COMMENT '属地',
@@ -38,9 +38,9 @@ INSERT INTO `cc_comment` VALUES (5, 5, 0, 0, 0, 'cms:123', '3', '啊撒旦立刻
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_comment_like`;
 CREATE TABLE `cc_comment_like`  (
-  `log_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `comment_id` bigint(0) NOT NULL COMMENT '评论ID',
-  `uid` bigint(0) NOT NULL COMMENT '点赞用户ID',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `comment_id` bigint NOT NULL COMMENT '评论ID',
+  `uid` bigint NOT NULL COMMENT '点赞用户ID',
   `like_time` datetime(0) NOT NULL COMMENT '点赞时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -50,7 +50,7 @@ CREATE TABLE `cc_comment_like`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_error_prone_word`;
 CREATE TABLE `cc_error_prone_word`  (
-  `word_id` bigint(0) NOT NULL COMMENT '主键ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
   `word` varchar(255) NOT NULL COMMENT '词汇',
   `replace_word` varchar(255) NOT NULL COMMENT '替换词',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
@@ -73,13 +73,13 @@ INSERT INTO `cc_error_prone_word` VALUES (3, '幅射', '辐射', 'admin', '2022-
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_hot_word`;
 CREATE TABLE `cc_hot_word`  (
-  `word_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(0) NOT NULL COMMENT '分组ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
+  `group_id` bigint NOT NULL COMMENT '分组ID',
   `word` varchar(255) NOT NULL COMMENT '词汇',
   `url` varchar(255) NULL DEFAULT NULL COMMENT '跳转链接',
   `url_target` varchar(10) NOT NULL COMMENT '跳转方式',
-  `use_count` int(0) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(0) NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `use_count` int NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint NOT NULL DEFAULT 0 COMMENT '点击次数',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -98,10 +98,10 @@ INSERT INTO `cc_hot_word` VALUES (1, 1, '王者荣耀', 'http://www.119you.com',
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_hot_word_group`;
 CREATE TABLE `cc_hot_word_group`  (
-  `group_id` bigint(0) NOT NULL,
+  `group_id` bigint NOT NULL,
   `name` varchar(255) NOT NULL,
   `code` varchar(50) NOT NULL,
-  `sort_flag` bigint(0) NULL DEFAULT NULL,
+  `sort_flag` bigint NULL DEFAULT NULL,
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -120,7 +120,7 @@ INSERT INTO `cc_hot_word_group` VALUES (1, '游戏热词', 'game', 168027138000,
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member`;
 CREATE TABLE `cc_member`  (
-  `member_id` bigint(0) NOT NULL COMMENT ' ',
+  `member_id` bigint NOT NULL COMMENT ' ',
   `user_name` varchar(30) NOT NULL COMMENT '用户名',
   `password` varchar(100) NULL DEFAULT NULL COMMENT '密码',
   `nick_name` varchar(30) NULL DEFAULT NULL COMMENT '昵称',
@@ -147,12 +147,12 @@ CREATE TABLE `cc_member`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_exp_config`;
 CREATE TABLE `cc_member_exp_config`  (
-  `config_id` bigint(0) NOT NULL,
+  `config_id` bigint NOT NULL,
   `op_type` varchar(50) NOT NULL COMMENT '操作项唯一标识',
   `level_type` varchar(20) NOT NULL COMMENT '等级类型',
-  `exp` int(0) NOT NULL COMMENT '经验值',
-  `day_limit` int(0) NOT NULL COMMENT '每日经验值生效次数上限',
-  `total_limit` int(0) NOT NULL COMMENT '总经验值生效次数上限',
+  `exp` int NOT NULL COMMENT '经验值',
+  `day_limit` int NOT NULL COMMENT '每日经验值生效次数上限',
+  `total_limit` int NOT NULL COMMENT '总经验值生效次数上限',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT '' COMMENT '更新者',
@@ -171,15 +171,15 @@ INSERT INTO `cc_member_exp_config` VALUES (1, 'SignIn', 'Default', 10, 1, 0, 'ad
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_exp_log`;
 CREATE TABLE `cc_member_exp_log`  (
-  `log_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `member_id` bigint(0) NOT NULL COMMENT '会员ID',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `member_id` bigint NOT NULL COMMENT '会员ID',
   `op_type` varchar(50) NOT NULL COMMENT '操作项唯一标识',
   `level_type` varchar(30) NOT NULL COMMENT '等级类型',
-  `change_exp` int(0) NOT NULL COMMENT '变更经验值',
-  `level` int(0) NOT NULL COMMENT '变更后等级',
-  `exp` int(0) NOT NULL COMMENT '变更后经验值',
-  `day_limit` int(0) NOT NULL COMMENT '当前日上限',
-  `total_limit` int(0) NOT NULL COMMENT '当前总上限',
+  `change_exp` int NOT NULL COMMENT '变更经验值',
+  `level` int NOT NULL COMMENT '变更后等级',
+  `exp` int NOT NULL COMMENT '变更后经验值',
+  `day_limit` int NOT NULL COMMENT '当前日上限',
+  `total_limit` int NOT NULL COMMENT '当前总上限',
   `log_time` datetime(0) NULL DEFAULT NULL COMMENT '日志时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -189,11 +189,11 @@ CREATE TABLE `cc_member_exp_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_level`;
 CREATE TABLE `cc_member_level`  (
-  `data_id` bigint(0) NOT NULL,
-  `member_id` bigint(0) NOT NULL COMMENT '会员ID',
+  `data_id` bigint NOT NULL,
+  `member_id` bigint NOT NULL COMMENT '会员ID',
   `level_type` varchar(30) NOT NULL COMMENT '等级类型',
-  `level` int(0) NOT NULL COMMENT '当前等级',
-  `exp` bigint(0) NOT NULL COMMENT '当前经验值',
+  `level` int NOT NULL COMMENT '当前等级',
+  `exp` bigint NOT NULL COMMENT '当前经验值',
   PRIMARY KEY (`data_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -202,12 +202,12 @@ CREATE TABLE `cc_member_level`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_level_config`;
 CREATE TABLE `cc_member_level_config`  (
-  `config_id` bigint(0) NOT NULL,
+  `config_id` bigint NOT NULL,
   `level_type` varchar(30) NOT NULL COMMENT '等级类型',
-  `level` int(0) NOT NULL COMMENT '等级',
+  `level` int NOT NULL COMMENT '等级',
   `name` varchar(30) NULL DEFAULT NULL COMMENT '等级名称',
   `icon` varchar(100) NULL DEFAULT NULL COMMENT '等级图标',
-  `next_need_exp` bigint(0) NOT NULL COMMENT '升级到下一等级需要的经验值',
+  `next_need_exp` bigint NOT NULL COMMENT '升级到下一等级需要的经验值',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT '' COMMENT '更新者',
@@ -231,9 +231,9 @@ INSERT INTO `cc_member_level_config` VALUES (6, 'Default', 5, '一代宗师', NU
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_member_signin_log`;
 CREATE TABLE `cc_member_signin_log`  (
-  `log_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '日志主键ID',
-  `member_id` bigint(0) NOT NULL COMMENT '会员ID',
-  `sign_in_key` int(0) NOT NULL COMMENT '签到日志唯一标识，格式：yyyyMMdd',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志主键ID',
+  `member_id` bigint NOT NULL COMMENT '会员ID',
+  `sign_in_key` int NOT NULL COMMENT '签到日志唯一标识，格式：yyyyMMdd',
   `log_time` datetime(0) NOT NULL COMMENT '签到时间',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -243,7 +243,7 @@ CREATE TABLE `cc_member_signin_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_sensitive_word`;
 CREATE TABLE `cc_sensitive_word`  (
-  `word_id` bigint(0) NOT NULL COMMENT '主键ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
   `type` varchar(5) NOT NULL COMMENT '类型：BLACK=敏感词，WHITE=白名单',
   `word` varchar(255) NOT NULL COMMENT '词汇',
   `replace_word` varchar(255) NULL DEFAULT NULL COMMENT '替换词',
@@ -270,13 +270,13 @@ INSERT INTO `cc_sensitive_word` VALUES (6, 'BLACK', '游行', NULL, 'admin', '20
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_tag_word`;
 CREATE TABLE `cc_tag_word`  (
-  `word_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `group_id` bigint(0) NOT NULL COMMENT '分组ID',
+  `word_id` bigint NOT NULL COMMENT '主键ID',
+  `group_id` bigint NOT NULL COMMENT '分组ID',
   `word` varchar(255) NOT NULL COMMENT '词汇',
   `logo` varchar(255) NULL DEFAULT NULL COMMENT '跳转链接',
-  `use_count` int(0) NOT NULL DEFAULT 0 COMMENT '引用次数',
-  `hit_count` bigint(0) NOT NULL DEFAULT 0 COMMENT '点击次数',
-  `sort_flag` bigint(0) NOT NULL COMMENT '排序标识',
+  `use_count` int NOT NULL DEFAULT 0 COMMENT '引用次数',
+  `hit_count` bigint NOT NULL DEFAULT 0 COMMENT '点击次数',
+  `sort_flag` bigint NOT NULL COMMENT '排序标识',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -290,12 +290,12 @@ CREATE TABLE `cc_tag_word`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_tag_word_group`;
 CREATE TABLE `cc_tag_word_group`  (
-  `group_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `parent_id` bigint(0) NOT NULL COMMENT '父级ID',
+  `group_id` bigint NOT NULL COMMENT '主键ID',
+  `parent_id` bigint NOT NULL COMMENT '父级ID',
   `name` varchar(255) NOT NULL COMMENT '名称',
   `code` varchar(50) NOT NULL COMMENT '唯一编码',
   `logo` varchar(255) NULL DEFAULT NULL COMMENT '图片',
-  `sort_flag` bigint(0) NULL DEFAULT NULL COMMENT '排序标识',
+  `sort_flag` bigint NULL DEFAULT NULL COMMENT '排序标识',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -309,17 +309,17 @@ CREATE TABLE `cc_tag_word_group`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote`;
 CREATE TABLE `cc_vote`  (
-  `vote_id` bigint(0) NOT NULL COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT 'ID',
   `code` varchar(20) NOT NULL COMMENT '编码，唯一标识',
   `title` varchar(255) NOT NULL COMMENT '标题',
   `start_time` datetime(0) NOT NULL COMMENT '开始时间',
   `end_time` datetime(0) NOT NULL COMMENT '结束时间',
   `user_type` varchar(20) NOT NULL COMMENT '用户类型',
-  `day_limit` int(0) NOT NULL COMMENT '日上限',
-  `total_limit` int(0) NOT NULL COMMENT '总上限',
+  `day_limit` int NOT NULL COMMENT '日上限',
+  `total_limit` int NOT NULL COMMENT '总上限',
   `status` varchar(20) NOT NULL COMMENT '状态',
   `view_type` varchar(20) NOT NULL COMMENT '结果查看方式',
-  `total` int(0) NOT NULL COMMENT '总参与人数',
+  `total` int NOT NULL COMMENT '总参与人数',
   `source` varchar(100) NULL DEFAULT NULL COMMENT '来源归属标识',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
@@ -339,14 +339,14 @@ INSERT INTO `cc_vote` VALUES (1, 'test', '测试阿斯顿发送到阿萨德法�
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote_item`;
 CREATE TABLE `cc_vote_item`  (
-  `item_id` bigint(0) NOT NULL COMMENT 'ID',
-  `vote_id` bigint(0) NOT NULL COMMENT '归属调查投票ID',
-  `subject_id` bigint(0) NOT NULL COMMENT '归属主题ID',
+  `item_id` bigint NOT NULL COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT '归属调查投票ID',
+  `subject_id` bigint NOT NULL COMMENT '归属主题ID',
   `type` varchar(20) NOT NULL COMMENT '类型（文字、图片）',
   `content` varchar(255) NULL DEFAULT NULL COMMENT '选项内容',
   `description` varchar(255) NULL DEFAULT NULL COMMENT '选项描述',
-  `sort_flag` int(0) NOT NULL COMMENT '排序标识',
-  `total` int(0) NOT NULL COMMENT '票数',
+  `sort_flag` int NOT NULL COMMENT '排序标识',
+  `total` int NOT NULL COMMENT '票数',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT '' COMMENT '更新者',
@@ -380,8 +380,8 @@ INSERT INTO `cc_vote_item` VALUES (16, 1, 2, 'Text', '暂无职业', NULL, 11, 0
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote_log`;
 CREATE TABLE `cc_vote_log`  (
-  `log_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `vote_id` bigint(0) NOT NULL COMMENT '调查投票ID',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT '调查投票ID',
   `user_type` varchar(20) NOT NULL COMMENT '投票人类型',
   `user_id` varchar(100) NOT NULL COMMENT '投票人唯一标识',
   `result` varchar(1000) NOT NULL COMMENT '投票结果（格式：<subjectId, itemId|inputText>）',
@@ -396,11 +396,11 @@ CREATE TABLE `cc_vote_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cc_vote_subject`;
 CREATE TABLE `cc_vote_subject`  (
-  `subject_id` bigint(0) NOT NULL COMMENT 'ID',
-  `vote_id` bigint(0) NOT NULL COMMENT '归属调查投票ID',
+  `subject_id` bigint NOT NULL COMMENT 'ID',
+  `vote_id` bigint NOT NULL COMMENT '归属调查投票ID',
   `type` varchar(20) NOT NULL COMMENT '类型（单选、多选、输入）',
   `title` varchar(255) NOT NULL COMMENT '标题',
-  `sort_flag` int(0) NOT NULL COMMENT '排序值',
+  `sort_flag` int NOT NULL COMMENT '排序值',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT '' COMMENT '更新者',
@@ -421,9 +421,9 @@ INSERT INTO `cc_vote_subject` VALUES (3, 1, 'input', '您对RuoYi-Vue-CMS有什�
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_ad_click_log`;
 CREATE TABLE `cms_ad_click_log`  (
-  `log_id` bigint(0) AUTO_INCREMENT NOT NULL COMMENT 'ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
-  `ad_id` bigint(0) NOT NULL COMMENT '广告ID',
+  `log_id` bigint AUTO_INCREMENT NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `ad_id` bigint NOT NULL COMMENT '广告ID',
   `host` varchar(255) NULL DEFAULT NULL COMMENT '请求域',
   `ip` varchar(255) NULL DEFAULT NULL COMMENT 'IP地址',
   `address` varchar(255) NULL DEFAULT NULL COMMENT 'IP所属地区',
@@ -442,12 +442,12 @@ CREATE TABLE `cms_ad_click_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_ad_hour_stat`;
 CREATE TABLE `cms_ad_hour_stat`  (
-  `stat_id` bigint(0) AUTO_INCREMENT NOT NULL,
-  `site_id` bigint(0) NULL DEFAULT NULL,
+  `stat_id` bigint AUTO_INCREMENT NOT NULL,
+  `site_id` bigint NULL DEFAULT NULL,
   `hour` varchar(10) NOT NULL,
-  `advertisement_id` bigint(0) NOT NULL,
-  `click` bigint(0) NOT NULL,
-  `view` bigint(0) NOT NULL,
+  `advertisement_id` bigint NOT NULL,
+  `click` bigint NOT NULL,
+  `view` bigint NOT NULL,
   PRIMARY KEY (`stat_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -456,9 +456,9 @@ CREATE TABLE `cms_ad_hour_stat`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_ad_view_log`;
 CREATE TABLE `cms_ad_view_log`  (
-  `log_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
-  `ad_id` bigint(0) NOT NULL COMMENT '广告ID',
+  `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `ad_id` bigint NOT NULL COMMENT '广告ID',
   `host` varchar(255) NULL DEFAULT NULL COMMENT '请求域',
   `ip` varchar(255) NULL DEFAULT NULL COMMENT 'IP地址',
   `address` varchar(255) NULL DEFAULT NULL COMMENT 'IP所属地区',
@@ -477,12 +477,12 @@ CREATE TABLE `cms_ad_view_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_advertisement`;
 CREATE TABLE `cms_advertisement`  (
-  `advertisement_id` bigint(0) NOT NULL COMMENT 'ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
-  `ad_space_id` bigint(0) NOT NULL COMMENT '所属广告位ID',
+  `advertisement_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `ad_space_id` bigint NOT NULL COMMENT '所属广告位ID',
   `type` varchar(20) NOT NULL COMMENT '类型',
   `name` varchar(255) NOT NULL COMMENT '名称',
-  `weight` int(0) NOT NULL COMMENT '权重',
+  `weight` int NOT NULL COMMENT '权重',
   `keywords` varchar(255) NULL DEFAULT NULL COMMENT '关键词',
   `state` varchar(1) NOT NULL COMMENT '状态（0=正常，1=停用）',
   `online_date` datetime(0) NOT NULL COMMENT '上线时间',
@@ -508,13 +508,13 @@ INSERT INTO `cms_advertisement` VALUES (2, 1630092239507464193, 2, 'image', '广
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_article_detail`;
 CREATE TABLE `cms_article_detail`  (
-  `content_id` bigint(0) NOT NULL COMMENT 'ID',
-  `site_id` bigint(0) NULL DEFAULT NULL,
+  `content_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NULL DEFAULT NULL,
   `content_html` longtext NOT NULL COMMENT '文章正文（json格式）',
   `content_json` longtext NULL COMMENT '文章正文（html格式）',
   `page_titles` varchar(1500) NULL DEFAULT NULL COMMENT '分页标题',
   `download_remote_image` varchar(1) NOT NULL DEFAULT '0' COMMENT '是否下载远程图片',
-  `deleted` tinyint(0) NOT NULL DEFAULT 0,
+  `deleted` tinyint NOT NULL DEFAULT 0,
   PRIMARY KEY (`content_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -570,28 +570,28 @@ INSERT INTO `cms_article_detail` VALUES (425521194676293, 1630092239507464193, '
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_audio`;
 CREATE TABLE `cms_audio`  (
-  `audio_id` bigint(0) NOT NULL COMMENT 'ID',
-  `content_id` bigint(0) NOT NULL COMMENT '所属内容ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
+  `audio_id` bigint NOT NULL COMMENT 'ID',
+  `content_id` bigint NOT NULL COMMENT '所属内容ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
   `title` varchar(100) NOT NULL COMMENT '音频标题',
   `author` varchar(50) NULL DEFAULT NULL COMMENT '作者',
   `description` varchar(255) NULL DEFAULT NULL COMMENT '简介',
   `type` varchar(10) NULL DEFAULT NULL,
   `path` varchar(255) NOT NULL COMMENT '音频文件路径',
-  `file_size` bigint(0) NULL DEFAULT NULL,
+  `file_size` bigint NULL DEFAULT NULL,
   `format` varchar(20) NULL DEFAULT NULL,
-  `duration` bigint(0) NULL DEFAULT NULL,
+  `duration` bigint NULL DEFAULT NULL,
   `decoder` varchar(20) NULL DEFAULT NULL COMMENT '编码方式',
-  `channels` int(0) NULL DEFAULT NULL,
-  `bit_rate` int(0) NULL DEFAULT NULL,
-  `sampling_rate` int(0) NULL DEFAULT NULL,
-  `sort_flag` int(0) NOT NULL COMMENT '排序字段',
+  `channels` int NULL DEFAULT NULL,
+  `bit_rate` int NULL DEFAULT NULL,
+  `sampling_rate` int NULL DEFAULT NULL,
+  `sort_flag` int NOT NULL COMMENT '排序字段',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) NULL DEFAULT NULL COMMENT '备注',
-  `deleted` tinyint(0) NULL DEFAULT NULL,
+  `deleted` tinyint NULL DEFAULT NULL,
   PRIMARY KEY (`audio_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -600,13 +600,13 @@ CREATE TABLE `cms_audio`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_block`;
 CREATE TABLE `cms_block`  (
-  `block_id` bigint(0) NOT NULL COMMENT 'ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
-  `catalog_id` bigint(0) NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
+  `block_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `catalog_id` bigint NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
   `block_type` varchar(20) NOT NULL COMMENT '区块类型',
   `name` varchar(255) NOT NULL COMMENT '区块名称',
   `code` varchar(50) NOT NULL COMMENT '区块编码，站内唯一标识',
-  `state` int(0) NOT NULL COMMENT '状态',
+  `state` int NOT NULL COMMENT '状态',
   `publish_pipe_code` varchar(50) NOT NULL COMMENT '发布通道编码',
   `template` varchar(255) NULL DEFAULT NULL COMMENT '模板',
   `path` varchar(255) NOT NULL COMMENT '发布目录',
@@ -623,9 +623,9 @@ CREATE TABLE `cms_block`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_catalog`;
 CREATE TABLE `cms_catalog`  (
-  `catalog_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(0) NOT NULL COMMENT '站点ID',
-  `parent_id` bigint(0) NULL DEFAULT NULL COMMENT '父级栏目ID',
+  `catalog_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
+  `parent_id` bigint NULL DEFAULT NULL COMMENT '父级栏目ID',
   `name` varchar(100) NOT NULL COMMENT '栏目名称',
   `logo` varchar(255) NULL DEFAULT NULL COMMENT '栏目引导图',
   `alias` varchar(100) NOT NULL COMMENT '栏目别名',
@@ -637,18 +637,18 @@ CREATE TABLE `cms_catalog`  (
   `redirect_url` varchar(255) NULL DEFAULT NULL COMMENT '标题栏目跳转地址',
   `static_flag` char(1) NOT NULL DEFAULT '1' COMMENT '是否生成静态页面',
   `visible_flag` char(1) NOT NULL DEFAULT '1' COMMENT '栏目是否可见',
-  `sort_flag` bigint(0) NOT NULL COMMENT '排序字段',
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
   `index_template` varchar(100) NULL DEFAULT NULL COMMENT '栏目首页模板',
   `index_file_name` varchar(100) NULL DEFAULT NULL COMMENT '栏目首页命名',
   `list_template` varchar(100) NULL DEFAULT NULL COMMENT '列表页模板',
   `list_name_rule` varchar(100) NULL DEFAULT NULL COMMENT '列表页命名规则',
   `detail_template` varchar(100) NULL DEFAULT NULL COMMENT '详情页模板',
   `detail_name_rule` varchar(100) NULL DEFAULT NULL COMMENT '详情页命名规则',
-  `tree_level` int(0) NOT NULL COMMENT '栏目层级',
-  `child_count` int(0) NOT NULL COMMENT '子栏目数',
-  `content_count` int(0) NOT NULL COMMENT '内容数量',
+  `tree_level` int NOT NULL COMMENT '栏目层级',
+  `child_count` int NOT NULL COMMENT '子栏目数',
+  `content_count` int NOT NULL COMMENT '内容数量',
   `status` char(1) NULL DEFAULT NULL COMMENT '状态',
-  `hit_count` int(0) NULL DEFAULT NULL COMMENT '点击量',
+  `hit_count` int NULL DEFAULT NULL COMMENT '点击量',
   `seo_keywords` varchar(400) NULL DEFAULT NULL COMMENT 'SEO关键词',
   `seo_description` varchar(1000) NULL DEFAULT NULL COMMENT 'SEO描述',
   `seo_title` varchar(200) NULL DEFAULT NULL COMMENT 'SEO标题',
@@ -691,9 +691,9 @@ INSERT INTO `cms_catalog` VALUES (390572061470789, 1630092239507464193, 39057139
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_cfd_default`;
 CREATE TABLE `cms_cfd_default`  (
-  `data_id` bigint(0) NOT NULL COMMENT '数据主键ID',
-  `model_id` bigint(0) NOT NULL COMMENT '自定义表单ID（元数据模型ID）',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
+  `data_id` bigint NOT NULL COMMENT '数据主键ID',
+  `model_id` bigint NOT NULL COMMENT '自定义表单ID（元数据模型ID）',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
   `client_ip` varchar(64) NOT NULL COMMENT 'IP',
   `uuid` varchar(128) NOT NULL COMMENT '用户唯一标识（浏览器指纹、会员ID）',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
@@ -752,16 +752,16 @@ CREATE TABLE `cms_cfd_default`  (
   `large_text3` varchar(2000) NULL DEFAULT NULL,
   `large_text4` varchar(2000) NULL DEFAULT NULL,
   `clob_text1` mediumtext NULL,
-  `long1` bigint(0) NULL DEFAULT NULL,
-  `long2` bigint(0) NULL DEFAULT NULL,
-  `long3` bigint(0) NULL DEFAULT NULL,
-  `long4` bigint(0) NULL DEFAULT NULL,
-  `long5` bigint(0) NULL DEFAULT NULL,
-  `long6` bigint(0) NULL DEFAULT NULL,
-  `long7` bigint(0) NULL DEFAULT NULL,
-  `long8` bigint(0) NULL DEFAULT NULL,
-  `long9` bigint(0) NULL DEFAULT NULL,
-  `long10` bigint(0) NULL DEFAULT NULL,
+  `long1` bigint NULL DEFAULT NULL,
+  `long2` bigint NULL DEFAULT NULL,
+  `long3` bigint NULL DEFAULT NULL,
+  `long4` bigint NULL DEFAULT NULL,
+  `long5` bigint NULL DEFAULT NULL,
+  `long6` bigint NULL DEFAULT NULL,
+  `long7` bigint NULL DEFAULT NULL,
+  `long8` bigint NULL DEFAULT NULL,
+  `long9` bigint NULL DEFAULT NULL,
+  `long10` bigint NULL DEFAULT NULL,
   `double1` double(255, 0) NULL DEFAULT NULL,
   `double2` double(255, 0) NULL DEFAULT NULL,
   `double3` double(255, 0) NULL DEFAULT NULL,
@@ -795,12 +795,12 @@ INSERT INTO `cms_cfd_default` VALUES (429472634650693, 427277567438917, 16300922
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_content`;
 CREATE TABLE `cms_content`  (
-  `content_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
-  `catalog_id` bigint(0) NOT NULL COMMENT '所属栏目ID',
+  `content_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `catalog_id` bigint NOT NULL COMMENT '所属栏目ID',
   `catalog_ancestors` varchar(100) NOT NULL COMMENT '所属栏目祖级IDs',
-  `top_catalog` bigint(0) NOT NULL COMMENT '所属顶级栏目ID',
-  `dept_id` bigint(0) NULL DEFAULT NULL COMMENT '部门ID',
+  `top_catalog` bigint NOT NULL COMMENT '所属顶级栏目ID',
+  `dept_id` bigint NULL DEFAULT NULL COMMENT '部门ID',
   `dept_code` varchar(100) NULL DEFAULT NULL COMMENT '部门编码',
   `content_type` varchar(20) NOT NULL COMMENT '内容类型',
   `title` varchar(360) NOT NULL COMMENT '标题',
@@ -816,14 +816,14 @@ CREATE TABLE `cms_content`  (
   `summary` varchar(500) NULL DEFAULT NULL COMMENT '摘要',
   `static_path` varchar(255) NULL DEFAULT NULL COMMENT '自定义内容静态化文件路径',
   `status` char(3) NOT NULL DEFAULT '0' COMMENT '内容状态',
-  `attributes` int(0) NULL DEFAULT 0 COMMENT '内容属性',
-  `top_flag` bigint(0) NOT NULL DEFAULT 0 COMMENT '置顶标识',
+  `attributes` int NULL DEFAULT 0 COMMENT '内容属性',
+  `top_flag` bigint NOT NULL DEFAULT 0 COMMENT '置顶标识',
   `top_date` datetime(0) NULL DEFAULT NULL COMMENT '置顶时间',
-  `sort_flag` bigint(0) NOT NULL COMMENT '排序字段',
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
   `keywords` varchar(200) NULL DEFAULT NULL COMMENT '关键词',
   `tags` varchar(200) NULL DEFAULT NULL COMMENT 'TAGs',
-  `copy_type` tinyint(0) NOT NULL DEFAULT 0 COMMENT '复制类型',
-  `copy_id` bigint(0) NULL DEFAULT 0 COMMENT '复制源ID',
+  `copy_type` tinyint NOT NULL DEFAULT 0 COMMENT '复制类型',
+  `copy_id` bigint NULL DEFAULT 0 COMMENT '复制源ID',
   `publish_date` datetime(0) NULL DEFAULT NULL COMMENT '发布时间',
   `offline_date` datetime(0) NULL DEFAULT NULL COMMENT '下线时间',
   `publish_pipe` varchar(100) NULL DEFAULT NULL COMMENT '发布通道',
@@ -833,7 +833,7 @@ CREATE TABLE `cms_content`  (
   `is_lock` char(1) NOT NULL DEFAULT '0' COMMENT '是否已锁定（Y=是，N=否）',
   `lock_user` varchar(50) NULL DEFAULT NULL COMMENT '锁定用户名',
   `config_props` varchar(2000) NULL DEFAULT NULL COMMENT '扩展属性',
-  `deleted` tinyint(0) NOT NULL DEFAULT 0,
+  `deleted` tinyint NOT NULL DEFAULT 0,
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -895,12 +895,12 @@ INSERT INTO `cms_content` VALUES (425521194676293, 1630092239507464193, 39056748
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_custom_form`;
 CREATE TABLE `cms_custom_form`  (
-  `form_id` bigint(0) NOT NULL COMMENT 'ID',
-  `site_id` bigint(0) NOT NULL COMMENT '站点ID ',
-  `model_id` bigint(0) NOT NULL COMMENT '关联元数据模型ID',
+  `form_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID ',
+  `model_id` bigint NOT NULL COMMENT '关联元数据模型ID',
   `name` varchar(100) NOT NULL COMMENT '表单名称',
   `code` varchar(50) NOT NULL COMMENT '同站点唯一编码',
-  `status` int(0) NOT NULL COMMENT '状态',
+  `status` int NOT NULL COMMENT '状态',
   `templates` varchar(100) NULL DEFAULT NULL COMMENT '模板',
   `need_captcha` varchar(1) NOT NULL COMMENT '是否启用验证码',
   `need_login` varchar(1) NOT NULL COMMENT '是否需要会员登录',
@@ -923,9 +923,9 @@ INSERT INTO `cms_custom_form` VALUES (427277567438917, 1630092239507464193, 4272
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_exd_default`;
 CREATE TABLE `cms_exd_default`  (
-  `data_id` bigint(0) NOT NULL COMMENT '关联数据ID',
+  `data_id` bigint NOT NULL COMMENT '关联数据ID',
   `data_type` varchar(20) NOT NULL COMMENT '关联数据类型',
-  `model_id` bigint(0) NOT NULL COMMENT '元数据模型ID',
+  `model_id` bigint NOT NULL COMMENT '元数据模型ID',
   `short_text1` varchar(50) NULL DEFAULT NULL,
   `short_text2` varchar(50) NULL DEFAULT NULL,
   `short_text3` varchar(50) NULL DEFAULT NULL,
@@ -981,16 +981,16 @@ CREATE TABLE `cms_exd_default`  (
   `large_text3` varchar(2000) NULL DEFAULT NULL,
   `large_text4` varchar(2000) NULL DEFAULT NULL,
   `clob_text1` mediumtext NULL,
-  `long1` bigint(0) NULL DEFAULT NULL,
-  `long2` bigint(0) NULL DEFAULT NULL,
-  `long3` bigint(0) NULL DEFAULT NULL,
-  `long4` bigint(0) NULL DEFAULT NULL,
-  `long5` bigint(0) NULL DEFAULT NULL,
-  `long6` bigint(0) NULL DEFAULT NULL,
-  `long7` bigint(0) NULL DEFAULT NULL,
-  `long8` bigint(0) NULL DEFAULT NULL,
-  `long9` bigint(0) NULL DEFAULT NULL,
-  `long10` bigint(0) NULL DEFAULT NULL,
+  `long1` bigint NULL DEFAULT NULL,
+  `long2` bigint NULL DEFAULT NULL,
+  `long3` bigint NULL DEFAULT NULL,
+  `long4` bigint NULL DEFAULT NULL,
+  `long5` bigint NULL DEFAULT NULL,
+  `long6` bigint NULL DEFAULT NULL,
+  `long7` bigint NULL DEFAULT NULL,
+  `long8` bigint NULL DEFAULT NULL,
+  `long9` bigint NULL DEFAULT NULL,
+  `long10` bigint NULL DEFAULT NULL,
   `double1` double(255, 0) NULL DEFAULT NULL,
   `double2` double(255, 0) NULL DEFAULT NULL,
   `double3` double(255, 0) NULL DEFAULT NULL,
@@ -1026,21 +1026,21 @@ INSERT INTO `cms_exd_default` VALUES (411683596922949, 'site', 396563529257029, 
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_image`;
 CREATE TABLE `cms_image`  (
-  `image_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(0) NULL DEFAULT NULL,
-  `content_id` bigint(0) NOT NULL COMMENT '所属内容ID',
+  `image_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NULL DEFAULT NULL,
+  `content_id` bigint NOT NULL COMMENT '所属内容ID',
   `title` varchar(255) NOT NULL COMMENT '图片标题',
   `description` varchar(255) NULL DEFAULT NULL COMMENT '图片摘要',
   `file_name` varchar(255) NOT NULL COMMENT '图片原文件名',
   `path` varchar(255) NOT NULL COMMENT '图片路径',
   `image_type` varchar(20) NOT NULL COMMENT '图片类型',
-  `file_size` bigint(0) NOT NULL COMMENT '图片文件大小',
-  `width` int(0) NOT NULL DEFAULT 0 COMMENT '图片宽度',
-  `height` int(0) NOT NULL DEFAULT 0 COMMENT '图片高度',
+  `file_size` bigint NOT NULL COMMENT '图片文件大小',
+  `width` int NOT NULL DEFAULT 0 COMMENT '图片宽度',
+  `height` int NOT NULL DEFAULT 0 COMMENT '图片高度',
   `redirect_url` varchar(255) NULL DEFAULT NULL COMMENT '跳转链接',
   `hit_count` varchar(255) NULL DEFAULT NULL COMMENT '点击量',
-  `sort_flag` bigint(0) NOT NULL COMMENT '排序字段',
-  `deleted` tinyint(0) NOT NULL DEFAULT 0,
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
+  `deleted` tinyint NOT NULL DEFAULT 0,
   `create_by` varchar(64) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT NULL COMMENT '最近修改人',
@@ -1065,13 +1065,13 @@ INSERT INTO `cms_image` VALUES (390590523232330, 1630092239507464193, 3905905228
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_link`;
 CREATE TABLE `cms_link`  (
-  `link_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(0) NOT NULL COMMENT '站点ID',
-  `group_id` bigint(0) NOT NULL COMMENT '所属分组ID',
+  `link_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
+  `group_id` bigint NOT NULL COMMENT '所属分组ID',
   `name` varchar(255) NOT NULL COMMENT '友链名称',
   `url` varchar(255) NOT NULL COMMENT '友链地址',
   `logo` varchar(255) NULL DEFAULT NULL COMMENT '引导图',
-  `sort_flag` bigint(0) NOT NULL COMMENT '排序字段',
+  `sort_flag` bigint NOT NULL COMMENT '排序字段',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -1092,11 +1092,11 @@ INSERT INTO `cms_link` VALUES (3, 1630092239507464193, 1, 'Google', 'https://www
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_link_group`;
 CREATE TABLE `cms_link_group`  (
-  `link_group_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
+  `link_group_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
   `name` varchar(255) NOT NULL COMMENT '分组名称',
   `code` varchar(50) NOT NULL COMMENT '分组编码',
-  `sort_flag` bigint(0) NOT NULL COMMENT '排序标识',
+  `sort_flag` bigint NOT NULL COMMENT '排序标识',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -1115,14 +1115,14 @@ INSERT INTO `cms_link_group` VALUES (1, 1630092239507464193, '首页友链', 'in
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_page_widget`;
 CREATE TABLE `cms_page_widget`  (
-  `page_widget_id` bigint(0) NOT NULL COMMENT 'ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
-  `catalog_id` bigint(0) NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
+  `page_widget_id` bigint NOT NULL COMMENT 'ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
+  `catalog_id` bigint NOT NULL DEFAULT 0 COMMENT '所属栏目ID',
   `catalog_ancestors` varchar(100) NULL DEFAULT NULL,
   `type` varchar(20) NOT NULL COMMENT '类型ID',
   `name` varchar(255) NOT NULL COMMENT '名称',
   `code` varchar(50) NOT NULL COMMENT '编码，站内唯一标识',
-  `state` int(0) NOT NULL COMMENT '状态',
+  `state` int NOT NULL COMMENT '状态',
   `publish_pipe_code` varchar(50) NOT NULL COMMENT '发布通道编码',
   `template` varchar(255) NULL DEFAULT NULL COMMENT '模板',
   `path` varchar(255) NOT NULL COMMENT '发布目录',
@@ -1146,12 +1146,12 @@ INSERT INTO `cms_page_widget` VALUES (2, 1630092239507464193, 0, NULL, 'ads', '�
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_publishpipe`;
 CREATE TABLE `cms_publishpipe`  (
-  `publishpipe_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(0) NOT NULL COMMENT '站点ID',
+  `publishpipe_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
   `name` varchar(100) NOT NULL COMMENT '发布点名称',
   `code` varchar(20) NOT NULL COMMENT '发布点编码（同站点唯一标识）',
   `state` char(1) NOT NULL COMMENT '发布通道状态（0 = 禁用，1 = 启用）',
-  `sort` bigint(0) NOT NULL COMMENT '排序',
+  `sort` bigint NOT NULL COMMENT '排序',
   `create_by` varchar(64) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT NULL COMMENT '最近修改人',
@@ -1173,19 +1173,19 @@ INSERT INTO `cms_publishpipe` VALUES (416663171403845, 411683596922949, 'ee', 'e
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_resource`;
 CREATE TABLE `cms_resource`  (
-  `resource_id` bigint(0) NOT NULL COMMENT 'id',
-  `site_id` bigint(0) NOT NULL COMMENT '站点id',
+  `resource_id` bigint NOT NULL COMMENT 'id',
+  `site_id` bigint NOT NULL COMMENT '站点id',
   `resource_type` varchar(20) NOT NULL COMMENT '资源类型',
   `storage_type` varchar(20) NOT NULL COMMENT '存储类型（本地=local，阿里SSO=sso）',
   `name` varchar(255) NOT NULL COMMENT '资源名称',
   `path` varchar(255) NOT NULL COMMENT '文件保存相对路径',
   `file_name` varchar(100) NOT NULL COMMENT '文件名称',
   `suffix` varchar(20) NOT NULL COMMENT '后缀名，不带.',
-  `width` int(0) NULL DEFAULT NULL COMMENT '宽',
-  `height` int(0) NULL DEFAULT NULL COMMENT '高',
-  `file_size` bigint(0) NOT NULL COMMENT '文件大小',
+  `width` int NULL DEFAULT NULL COMMENT '宽',
+  `height` int NULL DEFAULT NULL COMMENT '高',
+  `file_size` bigint NOT NULL COMMENT '文件大小',
   `source_url` varchar(255) NULL DEFAULT NULL COMMENT '来源地址',
-  `status` int(0) NOT NULL COMMENT '状态',
+  `status` int NOT NULL COMMENT '状态',
   `usage_info` varchar(255) NULL DEFAULT NULL COMMENT '引用关系',
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
@@ -1416,18 +1416,18 @@ INSERT INTO `cms_resource` VALUES (424199504609349, 1630092239507464193, 'image'
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_site`;
 CREATE TABLE `cms_site`  (
-  `site_id` bigint(0) NOT NULL COMMENT '站点ID',
-  `parent_id` bigint(0) NOT NULL DEFAULT 0 COMMENT '父级站点ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
+  `parent_id` bigint NOT NULL DEFAULT 0 COMMENT '父级站点ID',
   `name` varchar(150) NOT NULL COMMENT '站点名称',
   `description` varchar(500) NULL DEFAULT NULL COMMENT '简介',
   `logo` varchar(255) NULL DEFAULT NULL COMMENT '站点LOGO',
   `path` varchar(100) NOT NULL COMMENT '站点目录',
   `resource_url` varchar(100) NULL DEFAULT NULL COMMENT '站点资源访问地址',
-  `catalog_max_code` int(0) NULL DEFAULT 0 COMMENT '顶级栏目编码最大值',
+  `catalog_max_code` int NULL DEFAULT 0 COMMENT '顶级栏目编码最大值',
   `dept_code` varchar(100) NULL DEFAULT NULL COMMENT '所属机构编码',
   `index_template` varchar(100) NULL DEFAULT NULL COMMENT '首页模板',
   `static_suffix` varchar(10) NULL DEFAULT NULL COMMENT '静态文件类型',
-  `sort_flag` bigint(0) NOT NULL COMMENT '排序标识',
+  `sort_flag` bigint NOT NULL COMMENT '排序标识',
   `publish_pipe_props` text NULL COMMENT '发布通道属性',
   `config_props` mediumtext NULL COMMENT '站点扩展属性',
   `seo_keywords` varchar(255) NULL DEFAULT NULL COMMENT 'SEO关键词',
@@ -1453,8 +1453,8 @@ INSERT INTO `cms_site` VALUES (1630092239507464193, 0, '思威控', NULL, 'iurl:
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_site_property`;
 CREATE TABLE `cms_site_property`  (
-  `property_id` bigint(0) NOT NULL COMMENT '属性ID',
-  `site_id` bigint(0) NOT NULL COMMENT '站点ID',
+  `property_id` bigint NOT NULL COMMENT '属性ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
   `prop_name` varchar(100) NOT NULL COMMENT '属性名称',
   `prop_code` varchar(50) NOT NULL COMMENT '属性编码',
   `prop_value` varchar(255) NULL DEFAULT NULL COMMENT '属性值',
@@ -1471,13 +1471,13 @@ CREATE TABLE `cms_site_property`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_template`;
 CREATE TABLE `cms_template`  (
-  `template_id` bigint(0) NOT NULL COMMENT '主键ID',
-  `site_id` bigint(0) NOT NULL COMMENT '站点ID',
+  `template_id` bigint NOT NULL COMMENT '主键ID',
+  `site_id` bigint NOT NULL COMMENT '站点ID',
   `publish_pipe_code` varchar(20) NOT NULL COMMENT '发布通道编码',
   `path` varchar(200) NOT NULL COMMENT '模板路径',
   `content` longblob NOT NULL COMMENT '模板内容',
-  `filesize` int(0) NOT NULL COMMENT '模板文件大小',
-  `modify_time` bigint(0) NOT NULL COMMENT '模板文件更新时间戳',
+  `filesize` int NOT NULL COMMENT '模板文件大小',
+  `modify_time` bigint NOT NULL COMMENT '模板文件更新时间戳',
   `create_by` varchar(64) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT NULL COMMENT '最近修改人',
@@ -1513,23 +1513,23 @@ INSERT INTO `cms_template` VALUES (25, 1630092239507464193, 'pc', 'contactus.tem
 -- ----------------------------
 DROP TABLE IF EXISTS `cms_video`;
 CREATE TABLE `cms_video`  (
-  `video_id` bigint(0) NOT NULL,
-  `content_id` bigint(0) NOT NULL COMMENT '所属内容ID',
-  `site_id` bigint(0) NOT NULL COMMENT '所属站点ID',
+  `video_id` bigint NOT NULL,
+  `content_id` bigint NOT NULL COMMENT '所属内容ID',
+  `site_id` bigint NOT NULL COMMENT '所属站点ID',
   `title` varchar(100) NOT NULL COMMENT '视频标题',
   `description` varchar(255) NULL DEFAULT NULL COMMENT '简介',
   `type` varchar(10) NULL DEFAULT NULL,
   `path` varchar(255) NOT NULL COMMENT '视频文件路径',
-  `file_size` bigint(0) NULL DEFAULT NULL,
+  `file_size` bigint NULL DEFAULT NULL,
   `format` varchar(20) NULL DEFAULT NULL,
-  `duration` bigint(0) NULL DEFAULT NULL,
+  `duration` bigint NULL DEFAULT NULL,
   `decoder` varchar(50) NULL DEFAULT NULL COMMENT '视频编码方式',
-  `width` int(0) NULL DEFAULT NULL,
-  `height` int(0) NULL DEFAULT NULL,
-  `bit_rate` int(0) NULL DEFAULT NULL,
-  `frame_rate` int(0) NULL DEFAULT NULL,
-  `sort_flag` int(0) NOT NULL COMMENT '排序字段',
-  `deleted` tinyint(0) NOT NULL DEFAULT 0,
+  `width` int NULL DEFAULT NULL,
+  `height` int NULL DEFAULT NULL,
+  `bit_rate` int NULL DEFAULT NULL,
+  `frame_rate` int NULL DEFAULT NULL,
+  `sort_flag` int NOT NULL COMMENT '排序字段',
+  `deleted` tinyint NOT NULL DEFAULT 0,
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -1551,7 +1551,7 @@ INSERT INTO `cms_video` VALUES (424520789483589, 424165015334981, 16300922395074
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table`;
 CREATE TABLE `gen_table`  (
-  `table_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `table_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
   `table_name` varchar(200) NULL DEFAULT '' COMMENT '表名称',
   `table_comment` varchar(500) NULL DEFAULT '' COMMENT '表描述',
   `sub_table_name` varchar(64) NULL DEFAULT NULL COMMENT '关联子表的表名',
@@ -1579,7 +1579,7 @@ CREATE TABLE `gen_table`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `gen_table_column`;
 CREATE TABLE `gen_table_column`  (
-  `column_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `column_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
   `table_id` varchar(64) NULL DEFAULT NULL COMMENT '归属表编号',
   `column_name` varchar(200) NULL DEFAULT NULL COMMENT '列名称',
   `column_comment` varchar(500) NULL DEFAULT NULL COMMENT '列描述',
@@ -1596,7 +1596,7 @@ CREATE TABLE `gen_table_column`  (
   `query_type` varchar(200) NULL DEFAULT 'EQ' COMMENT '查询方式（等于、不等于、大于、小于、范围）',
   `html_type` varchar(200) NULL DEFAULT NULL COMMENT '显示类型（文本框、文本域、下拉框、复选框、单选框、日期控件）',
   `dict_type` varchar(200) NULL DEFAULT '' COMMENT '字典类型',
-  `sort` int(0) NULL DEFAULT NULL COMMENT '排序',
+  `sort` int NULL DEFAULT NULL COMMENT '排序',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT '' COMMENT '更新者',
@@ -1610,7 +1610,7 @@ CREATE TABLE `gen_table_column`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `search_dict_word`;
 CREATE TABLE `search_dict_word`  (
-  `word_id` bigint(0) NOT NULL,
+  `word_id` bigint NOT NULL,
   `word_type` varchar(10) NOT NULL COMMENT '类型（WORD,STOP）',
   `word` varchar(100) NOT NULL,
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
@@ -1632,7 +1632,7 @@ INSERT INTO `search_dict_word` VALUES (2, 'WORD', '陈港生', 'admin', '2023-03
 -- ----------------------------
 DROP TABLE IF EXISTS `search_log`;
 CREATE TABLE `search_log`  (
-  `log_id` bigint(0) AUTO_INCREMENT NOT NULL,
+  `log_id` bigint AUTO_INCREMENT NOT NULL,
   `word` varchar(255) NOT NULL,
   `user_agent` varchar(255) NULL DEFAULT NULL,
   `ip` varchar(50) NULL DEFAULT NULL,
@@ -1648,9 +1648,9 @@ CREATE TABLE `search_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `search_word`;
 CREATE TABLE `search_word`  (
-  `word_id` bigint(0) NOT NULL,
+  `word_id` bigint NOT NULL,
   `word` varchar(255) NOT NULL,
-  `search_total` bigint(0) NOT NULL,
+  `search_total` bigint NOT NULL,
   `create_by` varchar(50) NOT NULL COMMENT '创建人',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
@@ -1669,7 +1669,7 @@ INSERT INTO `search_word` VALUES (1, '测试', 1, 'admin', '2022-02-22 18:36:58'
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_config`;
 CREATE TABLE `sys_config`  (
-  `config_id` int(0) NOT NULL COMMENT '参数主键',
+  `config_id` bigint NOT NULL COMMENT '参数主键',
   `config_name` varchar(100) NULL DEFAULT '' COMMENT '参数名称',
   `config_key` varchar(100) NULL DEFAULT '' COMMENT '参数键名',
   `config_value` varchar(500) NULL DEFAULT '' COMMENT '参数键值',
@@ -1703,11 +1703,11 @@ INSERT INTO `sys_config` VALUES (186, 'CONFIG.SiteApiUrl', 'SiteApiUrl', 'http:/
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept`  (
-  `dept_id` bigint(0) NOT NULL COMMENT '部门id',
-  `parent_id` bigint(0) NULL DEFAULT 0 COMMENT '父部门id',
+  `dept_id` bigint NOT NULL COMMENT '部门id',
+  `parent_id` bigint NULL DEFAULT 0 COMMENT '父部门id',
   `ancestors` varchar(50) NULL DEFAULT '' COMMENT '祖级列表',
   `dept_name` varchar(30) NULL DEFAULT '' COMMENT '部门名称',
-  `order_num` int(0) NULL DEFAULT 0 COMMENT '显示顺序',
+  `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
   `leader` varchar(20) NULL DEFAULT NULL COMMENT '负责人',
   `phone` varchar(11) NULL DEFAULT NULL COMMENT '联系电话',
   `email` varchar(50) NULL DEFAULT NULL COMMENT '邮箱',
@@ -1733,8 +1733,8 @@ INSERT INTO `sys_dept` VALUES (103, 100, '0,100', '测试', 3, NULL, NULL, NULL,
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_data`;
 CREATE TABLE `sys_dict_data`  (
-  `dict_code` bigint(0) NOT NULL COMMENT '字典编码',
-  `dict_sort` int(0) NOT NULL DEFAULT 0 COMMENT '字典排序',
+  `dict_code` bigint NOT NULL COMMENT '字典编码',
+  `dict_sort` int NOT NULL DEFAULT 0 COMMENT '字典排序',
   `dict_label` varchar(100) NOT NULL DEFAULT '' COMMENT '字典标签',
   `dict_value` varchar(100) NOT NULL DEFAULT '' COMMENT '字典键值',
   `dict_type` varchar(100) NOT NULL DEFAULT '' COMMENT '字典类型',
@@ -1850,7 +1850,7 @@ INSERT INTO `sys_dict_data` VALUES (361, 3, 'DICT.CustomFormRule.2', '2', 'Custo
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_type`;
 CREATE TABLE `sys_dict_type`  (
-  `dict_id` bigint(0) NOT NULL COMMENT '字典主键',
+  `dict_id` bigint NOT NULL COMMENT '字典主键',
   `dict_name` varchar(100) NOT NULL DEFAULT '' COMMENT '字典名称',
   `dict_type` varchar(100) NOT NULL DEFAULT '' COMMENT '字典类型',
   `create_by` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者',
@@ -1898,7 +1898,7 @@ INSERT INTO `sys_dict_type` VALUES (170, 'DICT.CustomFormRule', 'CustomFormRule'
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_i18n_dict`;
 CREATE TABLE `sys_i18n_dict`  (
-  `dict_id` bigint(0) NOT NULL,
+  `dict_id` bigint NOT NULL,
   `lang_tag` varchar(10) NOT NULL COMMENT '语言ID',
   `lang_key` varchar(100) NOT NULL COMMENT '国际化字符键',
   `lang_value` varchar(255) NOT NULL COMMENT '国际化字符值',
@@ -2049,7 +2049,7 @@ INSERT INTO `sys_i18n_dict` VALUES (246, 'en', 'MENU.NAME.430649774219333', 'Cus
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_logininfor`;
 CREATE TABLE `sys_logininfor`  (
-  `info_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '访问ID',
+  `info_id` bigint NOT NULL AUTO_INCREMENT COMMENT '访问ID',
   `user_type` varchar(255) NULL DEFAULT NULL COMMENT '用户类型',
   `user_id` varchar(255) NULL DEFAULT NULL COMMENT '用户ID',
   `user_name` varchar(50) NULL DEFAULT '' COMMENT '用户账号',
@@ -2069,10 +2069,10 @@ CREATE TABLE `sys_logininfor`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
-  `menu_id` bigint(0) NOT NULL COMMENT '菜单ID',
+  `menu_id` bigint NOT NULL COMMENT '菜单ID',
   `menu_name` varchar(50) NOT NULL COMMENT '菜单名称',
-  `parent_id` bigint(0) NULL DEFAULT 0 COMMENT '父菜单ID',
-  `order_num` int(0) NULL DEFAULT 0 COMMENT '显示顺序',
+  `parent_id` bigint NULL DEFAULT 0 COMMENT '父菜单ID',
+  `order_num` int NULL DEFAULT 0 COMMENT '显示顺序',
   `path` varchar(200) NULL DEFAULT '' COMMENT '路由地址',
   `component` varchar(255) NULL DEFAULT NULL COMMENT '组件路径',
   `query` varchar(255) NULL DEFAULT NULL COMMENT '路由参数',
@@ -2206,7 +2206,7 @@ INSERT INTO `sys_menu` VALUES (430649774219333, '自定义表单', 2035, 5, 'cus
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_notice`;
 CREATE TABLE `sys_notice`  (
-  `notice_id` int(0) NOT NULL COMMENT '公告ID',
+  `notice_id` bigint NOT NULL COMMENT '公告ID',
   `notice_title` varchar(50) NOT NULL COMMENT '公告标题',
   `notice_type` char(1) NOT NULL COMMENT '公告类型（1通知 2公告）',
   `notice_content` longblob NULL COMMENT '公告内容',
@@ -2229,13 +2229,13 @@ INSERT INTO `sys_notice` VALUES (1, '测试', '1', 0x3C6F6C3E3C6C693E3C7374726F6
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_oper_log`;
 CREATE TABLE `sys_oper_log`  (
-  `oper_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '日志主键',
+  `oper_id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志主键',
   `title` varchar(50) NULL DEFAULT '' COMMENT '模块标题',
   `business_type` varchar(50) NULL DEFAULT '0' COMMENT '业务类型',
   `method` varchar(200) NULL DEFAULT '' COMMENT '方法名称',
   `request_method` varchar(10) NULL DEFAULT '' COMMENT '请求方式',
   `operator_type` varchar(20) NULL DEFAULT '0' COMMENT '操作人类型',
-  `oper_uid` bigint(0) NULL DEFAULT NULL COMMENT '操作人员ID',
+  `oper_uid` bigint NULL DEFAULT NULL COMMENT '操作人员ID',
   `oper_name` varchar(50) NULL DEFAULT '' COMMENT '操作人员',
   `dept_name` varchar(50) NULL DEFAULT '' COMMENT '部门名称',
   `oper_url` varchar(255) NULL DEFAULT '' COMMENT '请求URL',
@@ -2243,9 +2243,9 @@ CREATE TABLE `sys_oper_log`  (
   `oper_location` varchar(255) NULL DEFAULT '' COMMENT '操作地点',
   `request_args` varchar(2000) NULL DEFAULT '' COMMENT '请求参数',
   `response_result` varchar(2000) NULL DEFAULT '' COMMENT '响应结果',
-  `response_code` int(0) NULL DEFAULT 0 COMMENT '响应状态',
+  `response_code` int NULL DEFAULT 0 COMMENT '响应状态',
   `oper_time` datetime(0) NULL DEFAULT NULL COMMENT '操作时间',
-  `cost` bigint(0) NULL DEFAULT NULL COMMENT '操作耗时',
+  `cost` bigint NULL DEFAULT NULL COMMENT '操作耗时',
   `user_agent` varchar(255) NULL DEFAULT NULL COMMENT '请求头User-Agent信息',
   PRIMARY KEY (`oper_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
@@ -2255,7 +2255,7 @@ CREATE TABLE `sys_oper_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_permission`;
 CREATE TABLE `sys_permission`  (
-  `perm_id` bigint(0) NOT NULL COMMENT 'id',
+  `perm_id` bigint NOT NULL COMMENT 'id',
   `owner_type` varchar(20) NOT NULL COMMENT '所属对象类型',
   `owner` varchar(100) NOT NULL COMMENT '所属对象唯一标识',
   `permissions` mediumtext NULL COMMENT '功能授权信息',
@@ -2280,10 +2280,10 @@ INSERT INTO `sys_permission` VALUES (14, 'User', '1', '{\"Catalog\":\"{\\\"40587
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_post`;
 CREATE TABLE `sys_post`  (
-  `post_id` bigint(0) NOT NULL COMMENT '岗位ID',
+  `post_id` bigint NOT NULL COMMENT '岗位ID',
   `post_code` varchar(64) NOT NULL COMMENT '岗位编码',
   `post_name` varchar(50) NOT NULL COMMENT '岗位名称',
-  `post_sort` int(0) NOT NULL COMMENT '显示顺序',
+  `post_sort` int NOT NULL COMMENT '显示顺序',
   `status` char(1) NOT NULL COMMENT '状态（0正常 1停用）',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
@@ -2306,10 +2306,10 @@ INSERT INTO `sys_post` VALUES (4, 'user', '普通员工', 4, '0', 'admin', '2022
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
-  `role_id` bigint(0) NOT NULL COMMENT '角色ID',
+  `role_id` bigint NOT NULL COMMENT '角色ID',
   `role_name` varchar(30) NOT NULL COMMENT '角色名称',
   `role_key` varchar(100) NOT NULL COMMENT '角色权限字符串',
-  `role_sort` int(0) NOT NULL COMMENT '显示顺序',
+  `role_sort` int NOT NULL COMMENT '显示顺序',
   `status` char(1) NOT NULL COMMENT '角色状态（0正常 1停用）',
   `create_by` varchar(64) NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
@@ -2331,7 +2331,7 @@ INSERT INTO `sys_role` VALUES (3, '测试员', 'test', 3, '0', 'admin', '2023-02
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_scheduled_task`;
 CREATE TABLE `sys_scheduled_task`  (
-  `task_id` bigint(0) NOT NULL,
+  `task_id` bigint NOT NULL,
   `task_type` varchar(50) NOT NULL,
   `status` varchar(1) NOT NULL,
   `task_trigger` varchar(10) NOT NULL,
@@ -2349,14 +2349,14 @@ CREATE TABLE `sys_scheduled_task`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_scheduled_task_log`;
 CREATE TABLE `sys_scheduled_task_log`  (
-  `log_id` bigint(0) AUTO_INCREMENT NOT NULL,
-  `task_id` bigint(0) NOT NULL,
+  `log_id` bigint AUTO_INCREMENT NOT NULL,
+  `task_id` bigint NOT NULL,
   `task_type` varchar(50) NOT NULL,
   `ready_time` datetime(0) NOT NULL,
   `start_time` datetime(0) NOT NULL,
   `end_time` datetime(0) NOT NULL,
   `interrupt_time` datetime(0) NULL DEFAULT NULL,
-  `percent` int(0) NULL DEFAULT NULL,
+  `percent` int NULL DEFAULT NULL,
   `result` varchar(1) NOT NULL,
   `message` varchar(2000) NULL DEFAULT NULL,
   `log_time` datetime(0) NOT NULL,
@@ -2368,19 +2368,19 @@ CREATE TABLE `sys_scheduled_task_log`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_security_config`;
 CREATE TABLE `sys_security_config`  (
-  `config_id` bigint(0) NOT NULL COMMENT '主键ID',
+  `config_id` bigint NOT NULL COMMENT '主键ID',
   `status` char(1) NOT NULL COMMENT '是否启用，只有第一个启用状态的配置有效',
-  `password_len_min` int(0) NOT NULL COMMENT '密码最小长度',
-  `password_len_max` int(0) NOT NULL COMMENT '密码最大长度',
+  `password_len_min` int NOT NULL COMMENT '密码最小长度',
+  `password_len_max` int NOT NULL COMMENT '密码最大长度',
   `password_rule` varchar(50) NOT NULL COMMENT '密码校验规则',
   `password_sensitive` varchar(255) NULL DEFAULT NULL COMMENT '密码不可包含的敏感信息',
   `weak_passwords` varchar(500) NULL DEFAULT NULL COMMENT '弱密码集合',
   `force_modify_pwd_after_add` char(1) NOT NULL COMMENT '后台添加的用户首次登陆是否需要强制修改密码',
   `force_modify_pwd_after_reset` char(1) NOT NULL COMMENT '后台重置密码后首次登陆是否需要强制修改密码',
-  `password_expire_seconds` int(0) NOT NULL COMMENT '密码有效期（单位：秒）',
-  `password_retry_limit` int(0) NOT NULL COMMENT '密码错误次数阈值',
+  `password_expire_seconds` int NOT NULL COMMENT '密码有效期（单位：秒）',
+  `password_retry_limit` int NOT NULL COMMENT '密码错误次数阈值',
   `password_retry_strategy` varchar(20) NOT NULL COMMENT '密码错误次数阈值触发后的处理策略',
-  `password_retry_lock_seconds` int(0) NOT NULL COMMENT '密码错误阈值触发锁定账号时长，单位：秒',
+  `password_retry_lock_seconds` int NOT NULL COMMENT '密码错误阈值触发锁定账号时长，单位：秒',
   `create_by` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   `update_by` varchar(64) NULL DEFAULT '' COMMENT '更新者',
@@ -2400,7 +2400,7 @@ INSERT INTO `sys_security_config` VALUES (2, '0', 6, 24, 'LETTER_NUMBER', '[\"AC
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_storage_config`;
 CREATE TABLE `sys_storage_config`  (
-  `config_id` bigint(0) NOT NULL COMMENT '主键ID',
+  `config_id` bigint NOT NULL COMMENT '主键ID',
   `status` char(1) NOT NULL COMMENT '是否启用，只有第一个启用状态的配置有效',
   `storage_type` varchar(20) NOT NULL COMMENT '存储方式',
   `access_key` varchar(100) NULL DEFAULT NULL,
@@ -2427,8 +2427,8 @@ INSERT INTO `sys_storage_config` VALUES (3, '0', 'Local', NULL, NULL, NULL, 'D:/
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
-  `user_id` bigint(0) NOT NULL COMMENT '用户ID',
-  `dept_id` bigint(0) NULL DEFAULT NULL COMMENT '部门ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `dept_id` bigint NULL DEFAULT NULL COMMENT '部门ID',
   `user_name` varchar(30) NOT NULL COMMENT '用户账号',
   `nick_name` varchar(30) NOT NULL COMMENT '用户昵称',
   `real_name` varchar(50) NULL DEFAULT NULL COMMENT '真实姓名',
@@ -2465,8 +2465,8 @@ INSERT INTO `sys_user` VALUES (2, 101, 'test', '测试员', NULL, '00', 'test@qq
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_post`;
 CREATE TABLE `sys_user_post`  (
-  `user_id` bigint(0) NOT NULL COMMENT '用户ID',
-  `post_id` bigint(0) NOT NULL COMMENT '岗位ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `post_id` bigint NOT NULL COMMENT '岗位ID',
   PRIMARY KEY (`user_id`, `post_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户与岗位关联表' ROW_FORMAT = Dynamic;
 
@@ -2481,7 +2481,7 @@ INSERT INTO `sys_user_post` VALUES (2, 2);
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_preference`;
 CREATE TABLE `sys_user_preference`  (
-  `user_id` bigint(0) NOT NULL COMMENT '用户ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
   `config_props` mediumtext NOT NULL COMMENT '偏好配置详情',
   PRIMARY KEY (`user_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -2496,8 +2496,8 @@ INSERT INTO `sys_user_preference` VALUES (1, '{\"Shortcut\":[\"114\",\"2027\",\"
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
-  `user_id` bigint(0) NOT NULL COMMENT '用户ID',
-  `role_id` bigint(0) NOT NULL COMMENT '角色ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `role_id` bigint NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`user_id`, `role_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = Dynamic;
 
@@ -2512,7 +2512,7 @@ INSERT INTO `sys_user_role` VALUES (2, 3);
 -- ----------------------------
 DROP TABLE IF EXISTS `x_model`;
 CREATE TABLE `x_model`  (
-  `model_id` bigint(0) NOT NULL COMMENT '模型ID',
+  `model_id` bigint NOT NULL COMMENT '模型ID',
   `owner_type` varchar(20) NOT NULL COMMENT '模型分类',
   `owner_id` varchar(20) NULL DEFAULT NULL COMMENT '模型分类关联ID',
   `name` varchar(100) NOT NULL COMMENT '模型名称',
@@ -2537,8 +2537,8 @@ INSERT INTO `x_model` VALUES (427277567438917, 'CmsCustomForm', '163009223950746
 -- ----------------------------
 DROP TABLE IF EXISTS `x_model_field`;
 CREATE TABLE `x_model_field`  (
-  `field_id` bigint(0) NOT NULL COMMENT '模型字段ID',
-  `model_id` bigint(0) NOT NULL COMMENT '所属模型ID',
+  `field_id` bigint NOT NULL COMMENT '模型字段ID',
+  `model_id` bigint NOT NULL COMMENT '所属模型ID',
   `name` varchar(50) NOT NULL COMMENT '字段名称',
   `code` varchar(50) NOT NULL COMMENT '字段唯一标识编码',
   `control_type` varchar(20) NOT NULL COMMENT '控件类型',
