@@ -126,6 +126,7 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostMapper, SysPost> impl
 		boolean checkPostUnique = this.checkPostUnique(post);
 		Assert.isTrue(checkPostUnique, () -> CommonErrorCode.DATA_CONFLICT.exception());
 
+		post.setPostId(IdUtils.getSnowflakeId());
 		post.setCreateTime(LocalDateTime.now());
 		this.save(post);
 		this.redisCache.deleteObject(SysConstants.CACHE_SYS_POST_KEY + post.getPostCode());

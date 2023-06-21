@@ -32,7 +32,7 @@ public class SysDept extends BaseEntity {
 	public static final String TABLE_NAME = "sys_dept";
 
 	/** 部门ID */
-	@TableId(value = "dept_id", type = IdType.AUTO)
+	@TableId(value = "dept_id", type = IdType.INPUT)
 	private Long deptId;
 
 	/** 父部门ID */

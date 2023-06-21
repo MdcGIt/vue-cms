@@ -29,7 +29,7 @@ public class SysSecurityConfig extends BaseEntity {
 	
 	public final static String TABLE_NAME = "sys_security_config";
 	
-	@TableId(value = "config_id", type = IdType.AUTO)
+	@TableId(value = "config_id", type = IdType.INPUT)
 	private Long configId;
 	
 	/**

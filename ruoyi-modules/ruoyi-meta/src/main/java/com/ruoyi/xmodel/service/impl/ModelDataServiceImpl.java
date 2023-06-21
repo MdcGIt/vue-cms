@@ -62,7 +62,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 	public void addModelData(Long modelId, Map<String, Object> data) {
 		MetaModel model = this.modelService.getMetaModel(modelId);
 
-		final Map<String, Object> fieldValues = this.parseFieldValues(model, data);
+		final Map<String, String> fieldValues = this.parseFieldValues(model, data);
 		// 构建插入sql添加数据
 		SqlBuilder sqlBuilder = new SqlBuilder().insertInto(model.getModel().getTableName(),
 				fieldValues.keySet(), fieldValues.values());
@@ -74,7 +74,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 		MetaModel model = this.modelService.getMetaModel(modelId);
 
 		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
-		final Map<String, Object> fieldValues = this.parseFieldValues(model, data);
+		final Map<String, String> fieldValues = this.parseFieldValues(model, data);
 
 		List<MetaModelField> primaryKeys = mmt.getFixedFields().stream()
 				.filter(MetaModelField::isPrimaryKey).toList();
@@ -98,8 +98,8 @@ public class ModelDataServiceImpl implements IModelDataService {
 		sqlBuilder.executeUpdate();
 	}
 
-	private Map<String, Object> parseFieldValues(MetaModel model, Map<String, Object> data) {
-		final Map<String, Object> fieldValues = new HashMap<>();
+	private Map<String, String> parseFieldValues(MetaModel model, Map<String, Object> data) {
+		final Map<String, String> fieldValues = new HashMap<>();
 		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
 		// 固定字段
 		mmt.getFixedFields().forEach(f -> {
@@ -107,7 +107,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 			if (f.isMandatory() && Objects.isNull(value)) {
 				throw new RuntimeException("Validate field: " + f.getCode() + " cannot be empty.");
 			}
-			fieldValues.put(f.getFieldName(), value);
+			fieldValues.put(f.getFieldName(), value.toString());
 		});
 		// 自定义字段
 		model.getFields().forEach(field -> {
@@ -125,7 +125,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 				throw new RuntimeException("Validate field: " + field.getCode() + " cannot be empty.");
 			}
 			// TODO 其它自定义规则校验
-			fieldValues.put(field.getFieldName(), fieldValue);
+			fieldValues.put(field.getFieldName(), Objects.isNull(fieldValue) ? "" : fieldValue.toString());
 		});
 		return fieldValues;
 	}

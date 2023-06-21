@@ -28,7 +28,7 @@ public class SysPermission extends BaseEntity {
 	
 	public final static String TABLE_NAME = "sys_permission";
 	
-	@TableId(value = "perm_id", type = IdType.AUTO)
+	@TableId(value = "perm_id", type = IdType.INPUT)
 	private Long permId;
 	
 	/**

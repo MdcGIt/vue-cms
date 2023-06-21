@@ -80,7 +80,6 @@ public class AdvertisementStatJob extends IJobHandler {
 				CmsAdHourStat stat = stats.get(advertisementId);
 				if (Objects.isNull(stat)) {
 					stat = new CmsAdHourStat();
-					stat.setStatId(IdUtils.getSnowflakeId());
 					stat.setSiteId(advertisements.get(advertisementId));
 					stat.setHour(hour);
 					stat.setAdvertisementId(advertisementId);

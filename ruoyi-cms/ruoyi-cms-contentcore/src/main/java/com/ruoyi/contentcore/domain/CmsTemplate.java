@@ -26,7 +26,7 @@ public class CmsTemplate extends BaseEntity {
     /**
      * 模板ID
      */
-    @TableId(value = "template_id", type = IdType.AUTO)
+    @TableId(value = "template_id", type = IdType.INPUT)
     private Long templateId;
 
     /**

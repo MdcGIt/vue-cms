@@ -46,7 +46,7 @@ public class SysUser extends BaseEntity implements ISecurityUser {
 
 	/** 用户ID */
 	@ExcelProperty
-	@TableId(value = "user_id", type = IdType.AUTO)
+	@TableId(value = "user_id", type = IdType.INPUT)
 	private Long userId;
 
 	/** 部门ID */

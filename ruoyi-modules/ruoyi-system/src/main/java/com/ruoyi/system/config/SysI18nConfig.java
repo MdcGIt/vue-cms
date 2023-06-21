@@ -6,11 +6,13 @@ import com.ruoyi.system.service.ISysI18nDictService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
@@ -28,8 +30,6 @@ import java.util.Locale;
 public class SysI18nConfig {
 
 	private final RedisCache redisCache;
-	
-	private final ISysI18nDictService i18nDictService;
 
 	@Bean
 	@ConfigurationProperties(prefix = "spring.messages")
@@ -39,7 +39,7 @@ public class SysI18nConfig {
 
 	@Bean("messageSource")
 	public MessageSource messageSource(MessageSourceProperties properties) {
-		I18nMessageSource messageSource = new I18nMessageSource(this.redisCache, this.i18nDictService);
+		I18nMessageSource messageSource = new I18nMessageSource(this.redisCache);
 		if (StringUtils.isNotBlank(properties.getBasename())) {
 			messageSource.setBasename(properties.getBasename());
 		}

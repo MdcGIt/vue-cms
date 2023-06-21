@@ -27,7 +27,7 @@ public class SysConfig extends BaseEntity {
 
 	/** 参数主键 */
 	@ExcelProperty("参数主键")
-	@TableId(value = "config_id", type = IdType.AUTO)
+	@TableId(value = "config_id", type = IdType.INPUT)
 	private Long configId;
 
 	/** 参数名称 */

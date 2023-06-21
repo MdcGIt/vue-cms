@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.ruoyi.common.utils.IdUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +55,7 @@ public class SecurityConfigServiceImpl extends ServiceImpl<SysSecurityConfigMapp
 
 	@Override
 	public void addConfig(SysSecurityConfig config) {
+		config.setConfigId(IdUtils.getSnowflakeId());
 		config.setStatus(EnableOrDisable.DISABLE); // 默认不开启
 		config.createBy(config.getOperator().getUsername());
 		this.save(config);

@@ -29,7 +29,7 @@ public class SysDictData extends BaseEntity {
 
 	/** 字典编码 */
 	@ExcelProperty("字典编码")
-	@TableId(value = "dict_code", type = IdType.AUTO)
+	@TableId(value = "dict_code", type = IdType.INPUT)
 	private Long dictCode;
 
 	/** 字典排序 */

@@ -70,8 +70,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 查询用户所属角色组
-	 * 
-	 * @param userName 用户名
+	 *
+	 * @param userId 用户ID
 	 * @return 结果
 	 */
 	@Override
@@ -85,8 +85,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 查询用户所属岗位组
-	 * 
-	 * @param userName 用户名
+	 *
+	 * @param userId 用户ID
 	 * @return 结果
 	 */
 	@Override
@@ -100,8 +100,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 校验用户名称是否唯一
-	 * 
-	 * @param user 用户信息
+	 *
+	 * @param username 用户名
+	 * @param userId 用户ID
 	 * @return 结果
 	 */
 	@Override
@@ -125,7 +126,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	/**
 	 * 校验手机号码是否唯一
 	 *
-	 * @param user 用户信息
+	 * @param phoneNumber 用户电话号码
+	 * @param userId 用户ID
 	 * @return
 	 */
 	@Override
@@ -141,7 +143,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	/**
 	 * 校验email是否唯一
 	 *
-	 * @param user 用户信息
+	 * @param email 用户Email
+	 * @param userId 用户ID
 	 * @return
 	 */
 	@Override
@@ -156,7 +159,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 新增保存用户信息
-	 * 
+	 *
 	 * @param user 用户信息
 	 * @return 结果
 	 */
@@ -170,6 +173,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		// 强制首次登陆修改密码
 		this.securityConfigService.forceModifyPwdAfterUserAdd(user);
 		// 密码家吗
+		user.setUserId(IdUtils.getSnowflakeId());
 		user.setPassword(SecurityUtils.passwordEncode(user.getPassword()));
 		user.setCreateTime(LocalDateTime.now());
 		this.save(user);
@@ -179,7 +183,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 注册用户信息
-	 * 
+	 *
 	 * @param user 用户信息
 	 * @return 结果
 	 */
@@ -190,6 +194,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 		this.securityConfigService.validPassword(user, user.getPassword());
 
+		user.setUserId(IdUtils.getSnowflakeId());
 		user.setPassword(SecurityUtils.passwordEncode(user.getPassword()));
 		user.setCreateTime(LocalDateTime.now());
 		this.save(user);
@@ -197,7 +202,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 修改保存用户信息
-	 * 
+	 *
 	 * @param user 用户信息
 	 * @return 结果
 	 */
@@ -234,7 +239,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 用户授权角色
-	 * 
+	 *
 	 * @param userId  用户ID
 	 * @param roleIds 角色组
 	 */
@@ -250,7 +255,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 重置用户密码
-	 * 
+	 *
 	 * @param user 用户信息
 	 * @return 结果
 	 */
@@ -269,7 +274,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 新增用户岗位信息
-	 * 
+	 *
 	 * @param user 用户对象
 	 */
 	public void insertUserPost(SysUser user) {
@@ -284,7 +289,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	/**
 	 * 批量删除用户信息
-	 * 
+	 *
 	 * @param userIds 需要删除的用户ID
 	 * @return 结果
 	 */

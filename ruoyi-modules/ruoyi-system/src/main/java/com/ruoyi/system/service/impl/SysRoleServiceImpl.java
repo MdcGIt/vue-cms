@@ -101,6 +101,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 		Assert.isTrue(checkRoleUnique, () -> CommonErrorCode.DATA_CONFLICT.exception("RoleName,RoleKey"));
 		
 		// 新增角色信息
+		role.setRoleId(IdUtils.getSnowflakeId());
 		role.setCreateTime(LocalDateTime.now());
 		this.save(role);
 		this.redisCache.deleteObject(SysConstants.CACHE_SYS_POST_KEY + role.getRoleKey());

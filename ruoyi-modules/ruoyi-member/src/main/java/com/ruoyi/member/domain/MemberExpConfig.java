@@ -21,7 +21,7 @@ public class MemberExpConfig extends BaseEntity {
 	
 	public static final String TABLE_NAME = "cc_member_exp_config";
 
-	@TableId(value = "config_id", type = IdType.AUTO)
+	@TableId(value = "config_id", type = IdType.INPUT)
     private Long configId;
 	
 	/**

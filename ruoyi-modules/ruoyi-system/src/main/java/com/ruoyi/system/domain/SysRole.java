@@ -28,7 +28,7 @@ public class SysRole extends BaseEntity {
 
 	/** 角色ID */
 	@ExcelProperty("角色序号")
-	@TableId(value = "role_id", type = IdType.AUTO)
+	@TableId(value = "role_id", type = IdType.INPUT)
 	private Long roleId;
 
 	/** 角色名称 */

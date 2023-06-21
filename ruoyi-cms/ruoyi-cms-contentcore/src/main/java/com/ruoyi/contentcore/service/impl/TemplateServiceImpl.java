@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.contentcore.util.TemplateUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,7 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 				}, () -> {
 					try {
 						CmsTemplate t = new CmsTemplate();
+						t.setTemplateId(IdUtils.getSnowflakeId());
 						t.setSiteId(site.getSiteId());
 						t.setPublishPipeCode(pp.getCode());
 						t.setPath(path);
@@ -175,6 +177,8 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 	@Override
 	public void saveTemplate(TemplateUpdateDTO dto) throws IOException {
 		CmsTemplate dbTemplate = this.getById(dto.getTemplateId());
+		Assert.notNull(dbTemplate, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
+
 		dbTemplate.setContent(dto.getContent());
 		dbTemplate.setRemark(dto.getRemark());
 		// 变更文件内容
@@ -209,6 +213,7 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 		}
 		FileUtils.writeStringToFile(file, StringUtils.EMPTY, StandardCharsets.UTF_8);
 
+		template.setTemplateId(IdUtils.getSnowflakeId());
 		template.setContent(StringUtils.EMPTY);
 		template.setModifyTime(file.lastModified());
 		template.setFilesize(file.length());

@@ -126,7 +126,6 @@ public class SysScheduledTaskServiceImpl extends ServiceImpl<SysScheduledTaskMap
 	@Override
 	public void addTaskLog(ScheduledTask task) {
 		SysScheduledTaskLog taskLog = new SysScheduledTaskLog();
-		taskLog.setLogId(IdUtils.getSnowflakeId());
 		taskLog.setTaskId(task.getTaskId());
 		taskLog.setTaskType(task.getType());
 		taskLog.setResult(task.getStatus() == ScheduledTaskStatus.SUCCESS ? SuccessOrFail.SUCCESS : SuccessOrFail.FAIL);
