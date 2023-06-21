@@ -45,18 +45,17 @@
     <el-row>
       <el-table v-loading="loading" :data="xmodelList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-        <el-table-column :label="$t('CMS.ExModel.Name')">
-          <template slot-scope="scope">
-            <el-link type="primary" @click="handleOpenModelField(scope.row)" class="link-type">
-              <span>{{ scope.row.name }}</span>
-            </el-link>
-          </template>
-        </el-table-column>
+        <el-table-column :label="$t('CMS.ExModel.Name')" prop="name" />
         <el-table-column :label="$t('CMS.ExModel.Code')" prop="code" />
         <el-table-column :label="$t('CMS.ExModel.OwnerType')" prop="ownerType" />
         <el-table-column :label="$t('CMS.ExModel.TableName')" prop="tableName" />
         <el-table-column :label="$t('Common.Operation')" align="center" width="300" class-name="small-padding fixed-width">
           <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-setting"
+              @click="handleFields(scope.row)">{{ $t("CMS.ExModel.Fields") }}</el-button>
             <el-button 
               size="mini"
               type="text"
@@ -120,7 +119,8 @@
 <style scoped>
 </style>
 <script>
-import { addXModel, editXModel, deleteXModel, listXModel, listXModelDataTable } from "@/api/contentcore/exmodel";
+import { listModelDataTables } from "@/api/meta/model";
+import { addXModel, editXModel, deleteXModel, listXModel } from "@/api/contentcore/exmodel";
 
 export default {
   name: "CMSEXmodel",
@@ -176,7 +176,7 @@ export default {
       });
     },
     loadXModelDataTableList() {
-      listXModelDataTable().then(response => {
+      listModelDataTables("CmsExtend").then(response => {
         this.xmodelDataTableList = response.data.rows;
       });
     },
@@ -242,8 +242,13 @@ export default {
         this.loadXModelList();
       }).catch(function () { });
     },
-    handleOpenModelField (row) {
-      this.$router.push({ path: "/cms/exmodel/field", query: { modelId: row.modelId, isDefaultTable: row.tableName == 'x_model_data' } });
+    handleFields(row) {
+      this.$router.push({ 
+        path: "/cms/exmodel/fields", 
+        query: { 
+          modelId: row.modelId
+        } 
+      });
     }
   }
 };

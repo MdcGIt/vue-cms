@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
 
 import jakarta.validation.constraints.Email;
@@ -32,7 +32,7 @@ public class SysDept extends BaseEntity {
 	public static final String TABLE_NAME = "sys_dept";
 
 	/** 部门ID */
-	@TableId(value = "dept_id", type = IdType.AUTO)
+	@TableId(value = "dept_id", type = IdType.INPUT)
 	private Long deptId;
 
 	/** 父部门ID */

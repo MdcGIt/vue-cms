@@ -1,10 +1,7 @@
 package com.ruoyi.contentcore.service;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.async.AsyncTask;
-import com.ruoyi.common.mybatisplus.IBackupService;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -13,8 +10,12 @@ import com.ruoyi.contentcore.domain.dto.CopyContentDTO;
 import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
+import com.ruoyi.contentcore.mapper.CmsContentMapper;
 
-public interface IContentService extends IBackupService<CmsContent> {
+import java.io.IOException;
+import java.util.List;
+
+public interface IContentService extends IService<CmsContent> {
 
 	/**
 	 * 添加内容
@@ -47,10 +48,10 @@ public interface IContentService extends IBackupService<CmsContent> {
 	/**
 	 * 恢复回收站删除的内容到指定栏目
 	 * 
-	 * @param dto
+	 * @param contentIds
 	 * @param operator
 	 */
-	void recoverContents(List<Long> backupIds, LoginUser operator);
+	void recoverContents(List<Long> contentIds, LoginUser operator);
 	
 	/**
 	 * 删除指定栏目内容
@@ -65,7 +66,7 @@ public interface IContentService extends IBackupService<CmsContent> {
 	 * 
 	 * @param content
 	 * @param publishPipeCode
-	 * @param preview
+	 * @param isPreview
 	 * @return
 	 */
 	public String getContentLink(CmsContent content, int pageIndex, String publishPipeCode, boolean isPreview);
@@ -91,8 +92,7 @@ public interface IContentService extends IBackupService<CmsContent> {
 	/**
 	 * 复制内容
 	 * 
-	 * @param contentIds
-	 * @param catalogIds
+	 * @param dto
 	 * @return
 	 */
 	public void copy(CopyContentDTO dto);
@@ -100,16 +100,18 @@ public interface IContentService extends IBackupService<CmsContent> {
 	/**
 	 * 转移内容
 	 * 
-	 * @param contentIds
-	 * @param catalogId
+	 * @param dto
 	 * @return
 	 */
 	public void move(MoveContentDTO dto);
 
 	/**
 	 * 校验重复标题，存在重复标题返回true
-	 * 
-	 * @param contentEntity
+	 *
+	 * @param siteId
+	 * @param catalogId
+	 * @param contentId
+	 * @param title
 	 * @return
 	 */
 	public boolean checkSameTitle(Long siteId, Long catalogId, Long contentId, String title);
@@ -117,7 +119,7 @@ public interface IContentService extends IBackupService<CmsContent> {
 	/**
 	 * 置顶
 	 * 
-	 * @param contentIds
+	 * @param dto
 	 * @return
 	 */
 	void setTop(SetTopContentDTO dto);
@@ -168,4 +170,6 @@ public interface IContentService extends IBackupService<CmsContent> {
 	 * @param backupIds
 	 */
 	public void deleteRecycleContents(List<Long> backupIds);
+
+    CmsContentMapper getContentMapper();
 }

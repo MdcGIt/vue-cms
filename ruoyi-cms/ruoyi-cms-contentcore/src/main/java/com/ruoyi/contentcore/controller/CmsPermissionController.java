@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.ruoyi.system.SysConstants;
+import com.ruoyi.system.security.StpAdminUtil;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -129,8 +131,15 @@ public class CmsPermissionController extends BaseRestController {
 			}
 		});
 		SysPermission permissions = this.permissionService.getPermissions(dto.getOwnerType(), dto.getOwner());
+		if (permissions == null) {
+			permissions = new SysPermission();
+			permissions.setPermId(IdUtils.getSnowflakeId());
+			permissions.setOwnerType(dto.getOwnerType());
+			permissions.setOwner(dto.getOwner());
+			permissions.createBy(StpAdminUtil.getLoginUser().getUsername());
+		}
 		permissions.getPermissions().put(SitePermissionType.ID, this.sitePermissionType.serialize(map));
-		this.permissionService.updateById(permissions);
+		this.permissionService.saveOrUpdate(permissions);
 		return R.ok();
 	}
 
@@ -204,6 +213,13 @@ public class CmsPermissionController extends BaseRestController {
 	public R<?> saveCatalogPermissions(@RequestBody @Validated SaveCatalogPermissionDTO dto) {
 		Map<String, BitSet> map;
 		SysPermission permissions = this.permissionService.getPermissions(dto.getOwnerType(), dto.getOwner());
+		if (permissions == null) {
+			permissions = new SysPermission();
+			permissions.setPermId(IdUtils.getSnowflakeId());
+			permissions.setOwnerType(dto.getOwnerType());
+			permissions.setOwner(dto.getOwner());
+			permissions.createBy(StpAdminUtil.getLoginUser().getUsername());
+		}
 		String json = permissions.getPermissions().get(CatalogPermissionType.ID);
 		if (StringUtils.isNotEmpty(json)) {
 			map = this.catalogPermissionType.deserialize(json);
@@ -212,7 +228,7 @@ public class CmsPermissionController extends BaseRestController {
 		}
 		this.invokeCatalogPerms(dto.getPerms(), map);
 		permissions.getPermissions().put(CatalogPermissionType.ID, this.catalogPermissionType.serialize(map));
-		this.permissionService.updateById(permissions);
+		this.permissionService.saveOrUpdate(permissions);
 		return R.ok();
 	}
 

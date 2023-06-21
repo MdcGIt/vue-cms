@@ -29,7 +29,7 @@
             :label="pp.pipeName">
             <el-form-item 
               :label="$t('CMS.Site.DefaultTemplate.CatalogList')"
-              prop="listTemplate">
+              prop="defaultListTemplate">
               <el-input v-model="pp.props.defaultListTemplate">
                 <el-button 
                   slot="append"
@@ -61,6 +61,22 @@
                 type="primary" 
                 plain 
                 @click="handleApplyToCatalog(`defaultDetailTemplate_${ct.id}`)">{{ $t('CMS.ContentCore.ApplyToCatalog') }}</el-button>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.CustomForm')"
+              prop="defaultCustomFormTemplate">
+              <el-input v-model="pp.props.defaultCustomFormTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('defaultCustomFormTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+              <el-button 
+                class="ml5"
+                icon="el-icon-finished" 
+                type="primary" 
+                plain 
+                @click="handleApplyToCatalog('defaultCustomFormTemplate')">{{ $t('CMS.ContentCore.ApplyToCatalog') }}</el-button>
             </el-form-item>
           </el-tab-pane>
         </el-tabs>

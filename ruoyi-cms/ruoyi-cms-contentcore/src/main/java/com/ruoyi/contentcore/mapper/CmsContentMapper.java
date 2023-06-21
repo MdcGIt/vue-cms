@@ -3,6 +3,8 @@ package com.ruoyi.contentcore.mapper;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.ruoyi.common.db.DBConstants;
+import com.ruoyi.contentcore.enums.ContentCopyType;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -11,8 +13,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.contentcore.domain.CmsContent;
-import com.ruoyi.contentcore.domain.vo.RecycleContentVO;
 import com.ruoyi.contentcore.service.impl.SiteStatServiceImpl.SiteStatData;
+import org.apache.ibatis.annotations.Update;
 
 public interface CmsContentMapper extends BaseMapper<CmsContent> {
 	
@@ -31,71 +33,118 @@ public interface CmsContentMapper extends BaseMapper<CmsContent> {
 			""")
 	List<SiteStatData> countContentGroupByType(@Param("siteId") Long siteId);
 
+	/**
+	 * 查询指定条件的逻辑删除内容分页数据
+	 *
+	 * @param page
+	 * @param siteId
+	 * @param catalogId
+	 * @param contentType
+	 * @param status
+	 * @param title
+	 * @return
+	 */
 	@Select("""
 			<script>
-			SELECT * FROM cms_content_backup WHERE site_id = #{siteId} 
+			SELECT * FROM cms_content WHERE site_id = #{siteId} AND deleted = 1
 			<if test=' catalogId != null and catalogId != 0 '> AND catalog_id = #{catalogId} </if>
 			<if test=' status != null and status != "" '> AND status = #{status} </if>
 			<if test=' contentType != null and contentType != "" '> AND content_type = #{contentType} </if>
 			<if test=' title != null and title != "" '> AND title LIKE #{title} </if>
-			ORDER BY backup_id DESC
+			ORDER BY update_time DESC
 			</script>
 			""")
-	public Page<RecycleContentVO> selectRecycleContentList(IPage<RecycleContentVO> page, @Param("siteId") Long siteId,
-			@Param("catalogId") Long catalogId, @Param("contentType") String contentType, @Param("status") String status,
-			@Param("title") String title);
-	
+	Page<CmsContent> selectPageWithLogicDel(IPage<CmsContent> page, @Param("siteId") Long siteId,
+											@Param("catalogId") Long catalogId, @Param("contentType") String contentType, @Param("status") String status,
+											@Param("title") String title);
+
+
 	/**
-	 * 获取内容备份表数据
-	 * 
-	 * @param backupIds
+	 * 查询指定IDs的逻辑删除内容列表
+	 *
+	 * @param contentIds
 	 * @return
 	 */
 	@Select("""
 			<script>
-			SELECT * FROM cms_content_backup WHERE backup_id in (
-			<foreach item="backupId" collection="backupIds" separator=",">
-			#{backupId}
+			SELECT * FROM cms_content WHERE content_id in (
+			<foreach item="contentId" collection="contentIds" separator=",">
+			#{contentId}
 			</foreach>
 			)
 			</script>
 			""")
-	public List<RecycleContentVO> selectRecycleContentByBackupIds(@Param("backupIds") List<Long> backupIds);
-	
+	List<CmsContent> selectByIdsWithLogicDel(@Param("contentIds") List<Long> contentIds);
+
 	/**
-	 * 获取指定备份时间之前的内容备份表数据总数
+	 * 获取指定备份时间之前的逻辑删除标识为1的数据总数
 	 * 
-	 * @param backupTime
+	 * @param updateTime
 	 * @return
 	 */
-	@Select("SELECT count(*) FROM cms_content_backup WHERE backup_time < #{backupTime}")
-	public Long selectRecycleContentCountBefore(@Param("backupTime") LocalDateTime backupTime);
+	@Select("SELECT count(*) FROM cms_content WHERE deleted = " + DBConstants.DELETED_YES + " AND update_time < #{updateTime}")
+	Long selectCountBeforeWithLogicDel(@Param("updateTime") LocalDateTime updateTime);
 	
 	/**
-	 * 获取指定备份时间之前的内容备份表数据
+	 * 获取指定备份时间之前的内容逻辑删除标识为1的数据
 	 * 
 	 * @param page
-	 * @param backupTime
+	 * @param updateTime
 	 * @return
 	 */
-	@Select("SELECT * FROM cms_content_backup WHERE backup_time < #{backupTime}")
-	public List<RecycleContentVO> selectRecycleContentBefore(IPage<RecycleContentVO> page, @Param("backupTime") LocalDateTime backupTime);
-	
+	@Select("SELECT * FROM cms_content WHERE deleted = " + DBConstants.DELETED_YES + " AND update_time < #{updateTime}")
+	Page<CmsContent> selectPageBeforeWithLogicDel(IPage<CmsContent> page, @Param("updateTime") LocalDateTime updateTime);
+
 	/**
-	 * 删除站点下备份内容数据
+	 * 删除指定内容，忽略逻辑删除标识
+	 *
+	 * @param contentIds
+	 * @return
+	 */
+	@Delete("""
+			<script>
+			DELETE FROM cms_content WHERE content_id in (
+			<foreach item="contentId" collection="contentIds" separator=",">
+			#{contentId}
+			</foreach>
+			)
+			</script>
+			""")
+	Long deleteByIdsIgnoreLogicDel(@Param("contentIds") List<Long> contentIds);
+
+	/**
+	 * 删除所有映射内容，忽略逻辑删除标识
+	 *
+	 * @param contentId
+	 */
+	@Delete("DELETE FROM cms_content WHERE copy_id = #{contentId} AND copy_type > " + ContentCopyType.Mapping)
+	Long deleteMappingIgnoreLogicDel(@Param("contentId") Long contentId);
+
+	/**
+	 * 删除站点内容，忽略逻辑删除标识影响
+	 *
+	 * @param siteId
+	 * @param limit
+	 * @return
+	 */
+	@Delete("DELETE FROM cms_content WHERE site_id = #{siteId} limit ${limit}")
+	Long deleteBySiteIdIgnoreLogicDel(@Param("siteId") Long siteId, @Param("limit") Integer limit);
+
+	/**
+	 * 查询站点内容，忽略逻辑删除标识影响
 	 * 
 	 * @param siteId
 	 * @return
 	 */
-	@Delete("DELETE FROM cms_content_backup WHERE site_id = #{siteId} limit ${limit}")
-	public Long deleteRecycleContentsBySiteId(@Param("siteId") Long siteId, @Param("limit") Integer limit);
-	
+	@Select("SELECT count(*) FROM cms_content WHERE site_id = #{siteId}")
+	Long selectCountBySiteIdIgnoreLogicDel(@Param("siteId") Long siteId);
+
 	/**
-	 * 查询站点备份内容
-	 * 
-	 * @param siteId
+	 * 设置cms_content的逻辑删除标识为0
+	 *
+	 * @param contentId
 	 * @return
 	 */
-	@Select("SELECT count(*) FROM cms_content_backup WHERE site_id = #{siteId}")
-	Long selectBackupCountBySiteId(@Param("siteId") Long siteId);
+	@Update("UPDATE cms_content SET deleted = " + DBConstants.DELETED_NO + " WHERE content_id = #{contentId}")
+	Long recoverById(@Param("contentId") Long contentId);
 }

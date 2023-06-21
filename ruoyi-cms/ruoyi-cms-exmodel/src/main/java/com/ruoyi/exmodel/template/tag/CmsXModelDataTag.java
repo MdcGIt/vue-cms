@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.staticize.StaticizeConstants;
+import com.ruoyi.exmodel.CmsExtendMetaModelType;
+import com.ruoyi.exmodel.domain.CmsExtendModelData;
+import com.ruoyi.exmodel.fixed.dict.ExtendModelDataType;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +33,11 @@ public class CmsXModelDataTag extends AbstractTag {
 	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
 	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
 
-	public final static String TagAttr_ModelId = "modelid";
+	public final static String TagAttr_ModelId = "modelId";
 
-	public final static String TagAttr_PkValue = "pkvalue";
+	public final static String TagAttr_Data_Type = "dataType";
 
-	public final static String TemplateVariable_ModelData = "ModelData";
+	public final static String TagAttr_Data_ID = "dataId";
 	
 	private final IModelService modelService;
 	
@@ -43,7 +47,8 @@ public class CmsXModelDataTag extends AbstractTag {
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = new ArrayList<>();
 		tagAttrs.add(new TagAttr(TagAttr_ModelId, true, TagAttrDataType.INTEGER, "模型ID") );
-		tagAttrs.add(new TagAttr(TagAttr_PkValue, true, TagAttrDataType.STRING, "模型数据ID") );
+		tagAttrs.add(new TagAttr(TagAttr_Data_Type, true, TagAttrDataType.STRING, "模型数据类型") );
+		tagAttrs.add(new TagAttr(TagAttr_Data_ID, true, TagAttrDataType.STRING, "模型数据ID") );
 		return tagAttrs;
 	}
 	
@@ -54,16 +59,21 @@ public class CmsXModelDataTag extends AbstractTag {
 		if (modelId <= 0) {
 			throw new TemplateException("扩展模型数据ID错误：" + modelId, env);
 		}
-		String pkValue = MapUtils.getString(attrs, TagAttr_PkValue);
-		if (StringUtils.isEmpty(pkValue)) {
-			throw new TemplateException("扩展模型数据ID不能为空：" + pkValue, env);
+		String dataType = MapUtils.getString(attrs, TagAttr_Data_Type);
+		if (StringUtils.isEmpty(dataType)) {
+			throw new TemplateException("扩展模型数据类型不能为空：" + dataType, env);
 		}
-		XModel xmodel = this.modelService.getById(modelId);
-		if (xmodel == null) {
-			throw new TemplateException("扩展模型数据未找到：" + modelId, env);
+		String dataId = MapUtils.getString(attrs, TagAttr_Data_ID);
+		if (StringUtils.isEmpty(dataId)) {
+			throw new TemplateException("扩展模型数据ID不能为空：" + dataId, env);
 		}
-		Map<String, Object> modelData = this.modelDataService.getModelData(xmodel, pkValue);
-		return Map.of(TemplateVariable_ModelData, this.wrap(env, modelData));
+		Map<String, Object> modelData = this.modelDataService.getModelDataByPkValue(modelId,
+				Map.of(
+						CmsExtendMetaModelType.FIELD_MODEL_ID.getCode(), modelId,
+						CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), dataType,
+						CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
+				));
+		return Map.of(StaticizeConstants.TemplateVariable_Data, this.wrap(env, modelData));
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.AbstractContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
+import com.ruoyi.media.domain.CmsAudio;
 import com.ruoyi.media.domain.CmsVideo;
 import com.ruoyi.media.service.IVideoService;
 
@@ -118,21 +119,10 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 
 	@Override
 	public void delete() {
-		this.backup();
 		super.delete();
 		if (this.hasExtendEntity()) {
-			this.getVideoService().remove(new LambdaQueryWrapper<CmsVideo>().eq(CmsVideo::getContentId,
-					this.getContentEntity().getContentId()));
-		}
-	}
-
-	@Override
-	public void backup() {
-		super.backup();
-		if (this.hasExtendEntity()) {
-			this.getVideoService().lambdaQuery().eq(CmsVideo::getContentId, this.getContentEntity().getContentId())
-					.list()
-					.forEach(video -> this.getVideoService().backup(video, this.getOperator().getUsername()));
+			this.getVideoService().lambdaQuery().eq(CmsVideo::getContentId, this.getContentEntity().getContentId()).list()
+					.forEach(video -> this.getVideoService().removeById(video));
 		}
 	}
 

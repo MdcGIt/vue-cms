@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.i18n.I18nField;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +31,7 @@ public class SysMenu extends BaseEntity {
 	public static final String TABLE_NAME = "sys_menu";
 
 	/** 菜单ID */
-	@TableId(value = "menu_id", type = IdType.AUTO)
+	@TableId(value = "menu_id", type = IdType.INPUT)
 	private Long menuId;
 
 	/** 菜单名称 */

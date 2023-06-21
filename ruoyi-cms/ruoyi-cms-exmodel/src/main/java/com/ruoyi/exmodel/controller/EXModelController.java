@@ -1,12 +1,19 @@
 package com.ruoyi.exmodel.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.ruoyi.exmodel.CmsExtendMetaModelType;
+import com.ruoyi.exmodel.domain.CmsExtendModelData;
+import com.ruoyi.xmodel.core.impl.MetaControlType_Checkbox;
+import com.ruoyi.xmodel.service.IModelDataService;
+import com.ruoyi.xmodel.util.XModelUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +41,7 @@ import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.domain.XModelField;
 import com.ruoyi.xmodel.dto.XModelDTO;
 import com.ruoyi.xmodel.dto.XModelFieldDTO;
-import com.ruoyi.xmodel.dto.XModelFieldDataDTO;
+import com.ruoyi.exmodel.domain.dto.XModelFieldDataDTO;
 import com.ruoyi.xmodel.service.IModelFieldService;
 import com.ruoyi.xmodel.service.IModelService;
 
@@ -54,11 +61,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EXModelController extends BaseRestController {
 
-	public final static String OwnerType_Site = "site";
-
 	private final IModelService modelService;
 
 	private final IModelFieldService modelFieldService;
+
+	private final IModelDataService modelDataService;
 
 	private final ISiteService siteService;
 
@@ -68,9 +75,9 @@ public class EXModelController extends BaseRestController {
 		PageRequest pr = this.getPageRequest();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		LambdaQueryWrapper<XModel> q = new LambdaQueryWrapper<XModel>()
-				.eq(XModel::getOwnerType, OwnerType_Site)
-				.eq(XModel::getOwnerId, site.getSiteId()).
-				like(StringUtils.isNotEmpty(query), XModel::getName, query);
+				.eq(XModel::getOwnerType, CmsExtendMetaModelType.TYPE)
+				.eq(XModel::getOwnerId, site.getSiteId())
+				.like(StringUtils.isNotEmpty(query), XModel::getName, query);
 		Page<XModel> page = this.modelService.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true), q);
 		return this.bindDataTable(page);
 	}
@@ -80,8 +87,8 @@ public class EXModelController extends BaseRestController {
 	@PostMapping
 	public R<?> add(@RequestBody @Validated XModelDTO dto) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		dto.setOwnerType(OwnerType_Site);
-		dto.setOwnerId(String.valueOf(site.getSiteId()));
+		dto.setOwnerType(CmsExtendMetaModelType.TYPE);
+		dto.setOwnerId(site.getSiteId().toString());
 		dto.setOperator(StpAdminUtil.getLoginUser());
 		this.modelService.addModel(dto);
 		return R.ok();
@@ -108,47 +115,34 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
-	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.View)
-	@GetMapping("/fields")
-	public R<?> getModelFieldList(@RequestParam(value = "query", required = false) String query,
-			@RequestParam(value = "modelId", required = false) Long modelId) {
-		PageRequest pr = this.getPageRequest();
-		LambdaQueryWrapper<XModelField> q = new LambdaQueryWrapper<XModelField>().eq(XModelField::getModelId, modelId)
-				.like(StringUtils.isNotEmpty(query), XModelField::getName, query);
-		Page<XModelField> page = this.modelFieldService.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true), q);
-		return this.bindDataTable(page);
-	}
-
-	@Log(title = "新增扩展模型字段", businessType = BusinessType.INSERT)
-	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.Add, EXModelPriv.Edit })
-	@PostMapping("/field")
-	public R<?> addField(@RequestBody @Validated XModelFieldDTO dto) {
-		dto.setOperator(StpAdminUtil.getLoginUser());
-		this.modelFieldService.addModelField(dto);
-		return R.ok();
-	}
-
-	@Log(title = "编辑扩展模型字段", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.Add, EXModelPriv.Edit })
-	@PutMapping("/field")
-	public R<?> editField(@RequestBody @Validated XModelFieldDTO dto) {
-		dto.setOperator(StpAdminUtil.getLoginUser());
-		this.modelFieldService.editModelField(dto);
-		return R.ok();
-	}
-
-	@Log(title = "删除扩展模型字段", businessType = BusinessType.UPDATE)
-	@Priv(type = AdminUserType.TYPE, value = { EXModelPriv.Add, EXModelPriv.Edit })
-	@DeleteMapping("/field")
-	public R<?> removeField(@RequestBody @NotEmpty List<Long> fieldIds) {
-		this.modelFieldService.deleteModelField(fieldIds);
-		return R.ok();
-	}
-
 	@SaAdminCheckLogin
-	@GetMapping("data/{modelId}")
-	public R<?> getModelData(@PathVariable @LongId Long modelId, @RequestParam String pkValue) {
-		List<XModelFieldDataDTO> mfd = this.modelFieldService.getFieldDatas(modelId, pkValue);
-		return R.ok(mfd);
+	@GetMapping("/data")
+	public R<?> getModelData(@RequestParam @LongId Long modelId,
+							 @RequestParam String dataType,
+							 @RequestParam(required = false, defaultValue = "") String dataId) {
+		Map<String, Object> data = this.modelDataService.getModelDataByPkValue(modelId,
+				Map.of(
+						CmsExtendMetaModelType.FIELD_MODEL_ID.getCode(), modelId,
+						CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), dataType,
+						CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
+				));
+
+		List<XModelFieldDataDTO> list = new ArrayList<>();
+		List<XModelField> fields = this.modelFieldService.lambdaQuery().eq(XModelField::getModelId, modelId).list();
+		for (XModelField f : fields) {
+			String fv = MapUtils.getString(data, f.getCode(), f.getDefaultValue());
+			XModelFieldDataDTO dto = XModelFieldDataDTO.newInstance(f, fv);
+			dto.setOptions(XModelUtils.getOptions(f.getOptions()));
+			if (MetaControlType_Checkbox.TYPE.equals(dto.getControlType())) {
+				if (dto.getValue() == null || StringUtils.isBlank(dto.getValue().toString())) {
+					dto.setValue(new String[0]);
+				} else {
+					String[] value = StringUtils.split(dto.getValue().toString(), StringUtils.COMMA);
+					dto.setValue(value);
+				}
+			}
+			list.add(dto);
+		}
+		return R.ok(list);
 	}
 }

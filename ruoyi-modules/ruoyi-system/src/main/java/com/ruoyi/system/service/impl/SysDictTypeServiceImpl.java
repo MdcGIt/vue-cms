@@ -83,6 +83,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
 	public void insertDictType(SysDictType dict) {
 		Assert.isTrue(this.checkDictTypeUnique(dict),
 				() -> SysErrorCode.DICT_TYPE_CONFLICT.exception(dict.getDictType()));
+		dict.setDictId(IdUtils.getSnowflakeId());
 		dict.setCreateTime(LocalDateTime.now());
 		this.save(dict);
 	}
@@ -149,7 +150,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
 
 	/**
 	 * 将列表指定字段getter值通过字典数据映射字典名称到指定字段setter
-	 * 
+	 *
 	 * @param <T>
 	 * @param dictType
 	 * @param list
@@ -184,6 +185,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
 				SysDictType dictType = this.lambdaQuery().eq(SysDictType::getDictType, dict.getDictType()).one();
 				if (Objects.isNull(dictType)) {
 					SysDictType dt = new SysDictType();
+					dt.setDictId(IdUtils.getSnowflakeId());
 					dt.setDictType(dict.getDictType());
 					dt.setDictName(I18nUtils.get(dict.getDictName()));
 					dt.setRemark(dict.getRemark());
@@ -197,6 +199,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
 						.anyMatch(d2 -> StringUtils.equals(d2.getDictValue(), d.getValue()));
 				if (!contains) {
 					SysDictData data = new SysDictData();
+					data.setDictCode(IdUtils.getSnowflakeId());
 					data.setDictType(dict.getDictType());
 					data.setDictValue(d.getValue());
 					data.setDictLabel(I18nUtils.get(d.getLabel()));

@@ -3,7 +3,7 @@ package com.ruoyi.contentcore.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class CmsTemplate extends BaseEntity {
     /**
      * 模板ID
      */
-    @TableId(value = "template_id", type = IdType.AUTO)
+    @TableId(value = "template_id", type = IdType.INPUT)
     private Long templateId;
 
     /**

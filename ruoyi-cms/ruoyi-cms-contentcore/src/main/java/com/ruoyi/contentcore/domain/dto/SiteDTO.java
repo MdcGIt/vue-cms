@@ -44,7 +44,7 @@ public class SiteDTO extends BaseDTO {
 
 	private String seoTitle;
 
-	private Map<String, Object> configProps;
+	private Map<String, String> configProps;
 
 	private List<PublishPipeProp> publishPipeDatas;
 

@@ -1,8 +1,7 @@
 package com.ruoyi.article.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.article.domain.CmsArticleDetail;
-import com.ruoyi.common.mybatisplus.IBackupService;
-import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
 
 /**
@@ -11,7 +10,7 @@ import com.ruoyi.contentcore.domain.CmsSite;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-public interface IArticleService extends IBackupService<CmsArticleDetail> {
+public interface IArticleService extends IService<CmsArticleDetail> {
 
 	/**
 	 * 保存内部链接

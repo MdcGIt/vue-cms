@@ -43,7 +43,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 构建前端路由所需要的菜单
-	 * 
+	 *
 	 * @param menus 菜单列表
 	 * @return 路由列表
 	 */
@@ -96,7 +96,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 构建前端所需要树结构
-	 * 
+	 *
 	 * @param menus 菜单列表
 	 * @return 树结构列表
 	 */
@@ -123,7 +123,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 构建前端所需要下拉树结构
-	 * 
+	 *
 	 * @param menus 菜单列表
 	 * @return 下拉树结构列表
 	 */
@@ -146,7 +146,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 新增保存菜单信息
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 结果
 	 */
@@ -158,6 +158,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 		boolean checkMenuUnique = this.checkMenuUnique(menu.getMenuName(), menu.getParentId(), null);
 		Assert.isTrue(checkMenuUnique, () -> CommonErrorCode.DATA_CONFLICT.exception("菜单名称"));
 
+		menu.setMenuId(IdUtils.getSnowflakeId());
 		menu.setCreateTime(LocalDateTime.now());
 		this.save(menu);
 	}
@@ -170,7 +171,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 修改保存菜单信息
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 结果
 	 */
@@ -192,7 +193,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 删除菜单管理信息
-	 * 
+	 *
 	 * @param menuId 菜单ID
 	 * @return 结果
 	 */
@@ -205,7 +206,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 获取路由名称
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 路由名称
 	 */
@@ -220,7 +221,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 获取路由地址
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 路由地址
 	 */
@@ -244,7 +245,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 获取组件信息
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 组件信息
 	 */
@@ -263,7 +264,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 是否为菜单内部跳转
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 结果
 	 */
@@ -274,7 +275,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 是否为内链组件
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 结果
 	 */
@@ -284,7 +285,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 是否为parent_view组件
-	 * 
+	 *
 	 * @param menu 菜单信息
 	 * @return 结果
 	 */
@@ -294,7 +295,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 根据父节点的ID获取所有子节点
-	 * 
+	 *
 	 * @param list     分类表
 	 * @param parentId 传入的父节点ID
 	 * @return String
@@ -315,7 +316,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 递归列表
-	 * 
+	 *
 	 * @param list
 	 * @param t
 	 */
@@ -354,7 +355,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 	/**
 	 * 内链域名特殊字符替换
-	 * 
+	 *
 	 * @return
 	 */
 	public String innerLinkReplaceEach(String path) {

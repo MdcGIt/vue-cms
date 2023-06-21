@@ -51,7 +51,6 @@ public class AdvertisementStatServiceImpl implements IAdvertisementStatService {
 		String cacheKey = CLIC_CACHE_PREFIX + clickLog.getEvtTime().format(DATE_TIME_FORMAT);
 		redisCache.zsetIncr(cacheKey, clickLog.getAdId().toString(), 1);
 		// 记录点击日志
-		clickLog.setLogId(IdUtils.getSnowflakeId());
 		this.clickLogMapper.insert(clickLog);
 	}
 
@@ -68,7 +67,6 @@ public class AdvertisementStatServiceImpl implements IAdvertisementStatService {
 		String cacheKey = VIEW_CACHE_PREFIX + viewLog.getEvtTime().format(DATE_TIME_FORMAT);
 		redisCache.zsetIncr(cacheKey, viewLog.getAdId().toString(), 1);
 		// 记录展现日志
-		viewLog.setLogId(IdUtils.getSnowflakeId());
 		this.viewLogMapper.insert(viewLog);
 	}
 }

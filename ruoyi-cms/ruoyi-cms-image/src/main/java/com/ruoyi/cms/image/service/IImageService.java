@@ -1,11 +1,11 @@
 package com.ruoyi.cms.image.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.cms.image.domain.CmsImage;
+
 import java.util.List;
 
-import com.ruoyi.cms.image.domain.CmsImage;
-import com.ruoyi.common.mybatisplus.IBackupService;
-
-public interface IImageService extends IBackupService<CmsImage> {
+public interface IImageService extends IService<CmsImage> {
 
 	/**
 	 * 获取图集中的图片列表

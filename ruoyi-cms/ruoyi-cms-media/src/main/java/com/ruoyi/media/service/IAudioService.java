@@ -1,11 +1,11 @@
 package com.ruoyi.media.service;
 
-import java.util.List;
-
-import com.ruoyi.common.mybatisplus.IBackupService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.media.domain.CmsAudio;
 
-public interface IAudioService extends IBackupService<CmsAudio> {
+import java.util.List;
+
+public interface IAudioService extends IService<CmsAudio> {
 
 	/**
 	 * 获取音频集音频列表数据

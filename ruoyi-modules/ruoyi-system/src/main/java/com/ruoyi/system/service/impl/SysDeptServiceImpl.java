@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> implements ISysDeptService {
-	
+
 	private final SysUserMapper userMapper;
 
 	private final RedisCache redisCache;
@@ -55,7 +55,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
 	/**
 	 * 构建前端所需要树结构
-	 * 
+	 *
 	 * @param depts
 	 *            部门列表
 	 * @return 树结构列表
@@ -82,7 +82,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
 	/**
 	 * 构建前端所需要下拉树结构
-	 * 
+	 *
 	 * @param depts
 	 *            部门列表
 	 * @return 下拉树结构列表
@@ -104,7 +104,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
 	/**
 	 * 当前父节点下无同名部门
-	 * 
+	 *
 	 * @param dept
 	 * @return
 	 */
@@ -118,7 +118,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
 	/**
 	 * 新增保存部门信息
-	 * 
+	 *
 	 * @param dept
 	 *            部门信息
 	 * @return 结果
@@ -131,7 +131,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
 		boolean unique = this.checkDeptNameUnique(dept);
 		Assert.isTrue(unique, () -> CommonErrorCode.DATA_CONFLICT.exception(dept.getDeptName()));
-		
+
+		dept.setDeptId(IdUtils.getSnowflakeId());
 		dept.setAncestors(parent.getAncestors() + "," + dept.getParentId());
 		dept.setCreateTime(LocalDateTime.now());
 		this.save(dept);
@@ -140,7 +141,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
 	/**
 	 * 修改保存部门信息
-	 * 
+	 *
 	 * @param dept
 	 *            部门信息
 	 * @return 结果
@@ -153,10 +154,10 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 				&& this.lambdaQuery().likeRight(SysDept::getAncestors, db.getAncestors() + "," + db.getDeptId()).count() > 0) {
 			throw CommonErrorCode.SYSTEM_ERROR.exception("该部门包含未停用的子部门！");
 		}
-		
+
 		boolean unique = this.checkDeptNameUnique(dept);
 		Assert.isTrue(unique, () -> CommonErrorCode.DATA_CONFLICT.exception(dept.getDeptName()));
-		
+
 		db.setDeptName(dept.getDeptName());
 		db.setOrderNum(dept.getOrderNum());
 		db.setLeader(dept.getLeader());
@@ -166,13 +167,13 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 		db.setUpdateTime(LocalDateTime.now());
 		db.updateBy(dept.getUpdateBy());
 		this.updateById(dept);
-		
+
 		this.redisCache.deleteObject(SysConstants.CACHE_SYS_DEPT_KEY + dept.getDeptId());
 	}
 
 	/**
 	 * 删除部门管理信息
-	 * 
+	 *
 	 * @param deptId
 	 *            部门ID
 	 * @return 结果
@@ -181,12 +182,12 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 	public void deleteDeptById(Long deptId) {
 		boolean hasChildren = this.lambdaQuery().eq(SysDept::getParentId, deptId).count() > 0;
 		Assert.isFalse(hasChildren, () -> CommonErrorCode.SYSTEM_ERROR.exception("存在下级部门,不允许删除"));
-		
+
 		boolean hasUser = this.userMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getDeptId, deptId)) > 0;
 		Assert.isFalse(hasUser, () -> CommonErrorCode.SYSTEM_ERROR.exception("部门存在用户,不允许删除"));
-		
+
 		this.removeById(deptId);
-		
+
 		this.redisCache.deleteObject(SysConstants.CACHE_SYS_DEPT_KEY + deptId);
 	}
 

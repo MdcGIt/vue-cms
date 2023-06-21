@@ -27,19 +27,16 @@ public class I18nMessageSource extends AbstractMessageSource implements Initiali
 
 	private final RedisCache redisCache;
 
-	private final ISysI18nDictService i18nDictService;
-
 	private String basename;
 
 	private Charset encoding = StandardCharsets.UTF_8;
 
-	private int cacheSeconds;
+	private long cacheSeconds;
 
 	private Locale defaultLocale = Locale.SIMPLIFIED_CHINESE;
-	
+
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		this.i18nDictService.loadMessages(this);
+	public void afterPropertiesSet() {
 	}
 
 	@Override

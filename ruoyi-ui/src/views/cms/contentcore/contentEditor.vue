@@ -75,7 +75,8 @@
                 <cms-exmodel-editor 
                   ref="EXModelEditor"
                   :xmodel="form.catalogConfigProps.ContentExtendModel" 
-                  :pk="form.contentId">
+                  type="content"
+                  :id="form.contentId">
                 </cms-exmodel-editor>
               </el-card>
             </el-col>

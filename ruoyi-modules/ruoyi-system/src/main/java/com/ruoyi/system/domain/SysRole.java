@@ -4,7 +4,7 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
 
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +28,7 @@ public class SysRole extends BaseEntity {
 
 	/** 角色ID */
 	@ExcelProperty("角色序号")
-	@TableId(value = "role_id", type = IdType.AUTO)
+	@TableId(value = "role_id", type = IdType.INPUT)
 	private Long roleId;
 
 	/** 角色名称 */

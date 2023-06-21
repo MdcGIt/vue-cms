@@ -19,9 +19,6 @@ import org.springframework.util.AntPathMatcher;
  * @author ruoyi
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
-	
-	/** 空字符串 */
-	private static final String NULLSTR = "";
 
 	/** 下划线 */
 	private static final char SEPARATOR = '_';
@@ -143,7 +140,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @return true：为空 false：非空
 	 */
 	public static boolean isEmpty(String str) {
-		return Objects.isNull(str) || NULLSTR.equals(str.trim());
+		return Objects.isNull(str) || EMPTY.equals(str.trim());
 	}
 
 	/**
@@ -186,7 +183,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 */
 	public static String substring(final String str, int start) {
 		if (str == null) {
-			return NULLSTR;
+			return EMPTY;
 		}
 
 		if (start < 0) {
@@ -197,7 +194,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			start = 0;
 		}
 		if (start > str.length()) {
-			return NULLSTR;
+			return EMPTY;
 		}
 
 		return str.substring(start);
@@ -216,7 +213,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 */
 	public static String substring(final String str, int start, int end) {
 		if (str == null) {
-			return NULLSTR;
+			return EMPTY;
 		}
 
 		if (end < 0) {
@@ -231,7 +228,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 
 		if (start > end) {
-			return NULLSTR;
+			return EMPTY;
 		}
 
 		if (start < 0) {
@@ -296,8 +293,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 	/**
 	 * 字符串按指定字符分隔转成map
-	 * 
-	 * @param messages
+	 *
+	 * @param str
 	 * @param entrySpliter
 	 * @param kvSpliter
 	 */
@@ -319,7 +316,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	/**
 	 * 判断给定的set列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
 	 *
-	 * @param set
+	 * @param collection
 	 *            给定的集合
 	 * @param array
 	 *            给定的数组
@@ -588,7 +585,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * 分隔字符串未字符串数据，并且忽略空字符串
 	 * 
 	 * @param str
-	 * @param spliter
+	 * @param separator
 	 * @return
 	 */
 	public static String[] splitIgnoreEmpty(String str, String separator) {

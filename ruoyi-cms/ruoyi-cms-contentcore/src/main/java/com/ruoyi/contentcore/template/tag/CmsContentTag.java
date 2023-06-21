@@ -74,15 +74,13 @@ public class CmsContentTag extends AbstractListTag {
 			catalog = this.catalogService.getCatalog(catalogId);
 		}
 		long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
-		if (catalog == null) {
-			String alias = MapUtils.getString(attrs, "catalogalias");
-			if (StringUtils.isNotEmpty(alias)) {
-				catalog = this.catalogService.getCatalogByAlias(siteId, alias);
-			}
+		String alias = MapUtils.getString(attrs, "catalogalias");
+		if (catalog == null && StringUtils.isNotEmpty(alias)) {
+			catalog = this.catalogService.getCatalogByAlias(siteId, alias);
 		}
 		String level = MapUtils.getString(attrs, "level");
 		if (!"Root".equalsIgnoreCase(level) && Objects.isNull(catalog)) {
-			throw new CatalogNotFoundException(getTagName(), catalogId, env);
+			throw new CatalogNotFoundException(getTagName(), catalogId, alias, env);
 		}
 		LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<>();
 		q.eq(CmsContent::getSiteId, siteId).eq(CmsContent::getStatus, ContentStatus.PUBLISHED);

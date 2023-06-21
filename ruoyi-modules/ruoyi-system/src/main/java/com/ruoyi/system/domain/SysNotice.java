@@ -3,7 +3,7 @@ package com.ruoyi.system.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,7 +25,7 @@ public class SysNotice extends BaseEntity {
 	public static final String TABLE_NAME = "sys_notice";
 
 	/** 公告ID */
-	@TableId(value = "notice_id", type = IdType.AUTO)
+	@TableId(value = "notice_id", type = IdType.INPUT)
 	private Long noticeId;
 
 	/** 公告标题 */

@@ -3,14 +3,16 @@ package com.ruoyi.common.mybatisplus.db;
 import java.util.List;
 
 public interface IDbType {
-	
-	static final String COLUMN_BACKUP_ID = "backup_id";
 
-	static final String COLUMN_BACKUP_OPERATOR = "backup_operator";
+	String BEAN_PREFIX = "DB_TYPE_";
 	
-	static final String COLUMN_BACKUP_TIME = "backup_time";
+	String COLUMN_BACKUP_ID = "backup_id";
+
+	String COLUMN_BACKUP_OPERATOR = "backup_operator";
 	
-	static final String COLUMN_BACKUP_REMARK = "backup_remark";
+	String COLUMN_BACKUP_TIME = "backup_time";
+	
+	String COLUMN_BACKUP_REMARK = "backup_remark";
 	
 	static String getBackupTableName(String sourceTableName) {
 		return sourceTableName + "_backup";
@@ -31,7 +33,6 @@ public interface IDbType {
 	 * 
 	 * @param <T>
 	 * @param entity
-	 * @param backupId
 	 * @param backupOperator
 	 * @param backupRemark
 	 */
@@ -53,4 +54,27 @@ public interface IDbType {
 	 * @return
 	 */
 	void deleteBackupByIds(List<Long> backupIds, Class<?> entityClass);
+
+	/**
+	 * 根据表名前缀查询数据库所有数据表集合
+	 *
+	 * @param tableName
+	 * @return
+	 */
+    List<DBTable> listTables(String tableName);
+
+	/**
+	 * 查找数据表字段列表
+	 *
+	 * @param tableName
+	 * @return
+	 */
+	List<DBTableColumn> listTableColumns(String tableName);
+
+	/**
+	 * 删除数据表
+	 *
+	 * @param tableName
+	 */
+	void dropTable(String tableName);
 }

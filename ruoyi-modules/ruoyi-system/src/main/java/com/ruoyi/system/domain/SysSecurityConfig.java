@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;
 import com.ruoyi.system.fixed.dict.YesOrNo;
@@ -29,7 +29,7 @@ public class SysSecurityConfig extends BaseEntity {
 	
 	public final static String TABLE_NAME = "sys_security_config";
 	
-	@TableId(value = "config_id", type = IdType.AUTO)
+	@TableId(value = "config_id", type = IdType.INPUT)
 	private Long configId;
 	
 	/**

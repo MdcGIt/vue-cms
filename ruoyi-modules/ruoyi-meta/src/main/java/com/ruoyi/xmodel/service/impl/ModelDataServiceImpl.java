@@ -1,70 +1,117 @@
 package com.ruoyi.xmodel.service.impl;
 
-import java.util.Collections;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ruoyi.common.db.util.SqlBuilder;
+import com.ruoyi.common.utils.ObjectUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.xmodel.core.IMetaModelType;
+import com.ruoyi.xmodel.core.MetaModel;
+import com.ruoyi.xmodel.core.MetaModelField;
+import com.ruoyi.xmodel.domain.XModel;
+import com.ruoyi.xmodel.service.IModelDataService;
+import com.ruoyi.xmodel.service.IModelService;
+import com.ruoyi.xmodel.util.XModelUtils;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.exception.CommonErrorCode;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.xmodel.XModelUtils;
-import com.ruoyi.xmodel.domain.XModel;
-import com.ruoyi.xmodel.domain.XModelData;
-import com.ruoyi.xmodel.domain.XModelField;
-import com.ruoyi.xmodel.mapper.XModelDataMapper;
-import com.ruoyi.xmodel.mapper.XModelFieldMapper;
-import com.ruoyi.xmodel.mapper.XModelMapper;
-import com.ruoyi.xmodel.service.IModelDataService;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelData> implements IModelDataService {
+public class ModelDataServiceImpl implements IModelDataService {
 
-	private final XModelMapper modelMapper;
-
-	private final XModelFieldMapper modelFieldMapper;
-
-	private final XModelDataMapper modelDataMapper;
+	private final IModelService modelService;
 
 	@Override
-	public void saveModelData(Long modelId, String pkValue, Map<String, Object> params) {
-		XModel model = this.modelMapper.selectById(modelId);
-		Assert.notNull(model, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("modelId", modelId));
+	public void saveModelData(Long modelId, Map<String, Object> params) {
+		XModel model = this.modelService.getMetaModel(modelId).getModel();
 
-		LambdaQueryWrapper<XModelField> q = new LambdaQueryWrapper<XModelField>().eq(XModelField::getModelId, modelId);
-		List<XModelField> fields = this.modelFieldMapper.selectList(q);
-
-		boolean insert = false;
-		Map<String, Object> dataMap = null;
-		if (XModelUtils.isDefaultTable(model.getTableName())) {
-			dataMap = this.getMap(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modelId)
-					.eq(XModelData::getPkValue, pkValue));
-			if (dataMap == null) {
-				insert = true;
-				dataMap = new HashMap<>();
-				dataMap.put(XModelUtils.PRIMARY_FIELD_NAME, pkValue);
-				dataMap.put("model_id", modelId);
-				dataMap.put("data_id", IdUtils.getSnowflakeId());
-			}
-		} else {
-			dataMap = this.modelDataMapper.getCustomModelData(model.getTableName(), pkValue);
-			if (dataMap == null) {
-				insert = true;
-				dataMap = new HashMap<>();
-				dataMap.put(XModelUtils.PRIMARY_FIELD_NAME, pkValue);
-			}
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getOwnerType());
+		List<MetaModelField> primaryKeys = mmt.getFixedFields().stream()
+				.filter(MetaModelField::isPrimaryKey).toList();
+		if (primaryKeys.isEmpty()) {
+			throw new RuntimeException("Meta model primary key not defined.");
 		}
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getTableName()).where();
+		for (int i = 0; i < primaryKeys.size(); i++) {
+			if (i > 0) {
+				sqlBuilder.and();
+			}
+			MetaModelField pkField = primaryKeys.get(i);
+			Object fieldValue = params.get(pkField.getCode());
+			if (Objects.isNull(fieldValue)) {
+				throw new RuntimeException("Meta model primary key value cannot be null.");
+			}
+			sqlBuilder.eq(pkField.getFieldName(), fieldValue);
+		}
+		long count = sqlBuilder.selectCount();
+		if (count > 0) {
+			this.updateModelData(modelId, params);
+		} else {
+			this.addModelData(modelId, params);
+		}
+	}
 
-		for (XModelField field : fields) {
-			Object fieldValue = params.get(field.getFieldName());
+	@Override
+	public void addModelData(Long modelId, Map<String, Object> data) {
+		MetaModel model = this.modelService.getMetaModel(modelId);
+
+		final Map<String, String> fieldValues = this.parseFieldValues(model, data);
+		// 构建插入sql添加数据
+		SqlBuilder sqlBuilder = new SqlBuilder().insertInto(model.getModel().getTableName(),
+				fieldValues.keySet(), fieldValues.values());
+		sqlBuilder.execInsert();
+	}
+
+	@Override
+	public void updateModelData(Long modelId, Map<String, Object> data) {
+		MetaModel model = this.modelService.getMetaModel(modelId);
+
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
+		final Map<String, String> fieldValues = this.parseFieldValues(model, data);
+
+		List<MetaModelField> primaryKeys = mmt.getFixedFields().stream()
+				.filter(MetaModelField::isPrimaryKey).toList();
+		// 移除可能存在的主键字段值
+		primaryKeys.forEach(f -> fieldValues.remove(f.getFieldName()));
+		// 更新数据
+		SqlBuilder sqlBuilder = new SqlBuilder().update(model.getModel().getTableName());
+		fieldValues.entrySet().forEach(e -> sqlBuilder.set(e.getKey(), e.getValue()));
+		sqlBuilder.where();
+		for (int i = 0; i < primaryKeys.size(); i++) {
+			if (i > 0) {
+				sqlBuilder.and();
+			}
+			MetaModelField pkField = primaryKeys.get(i);
+			Object fieldValue = data.get(pkField.getCode());
+			if (Objects.isNull(fieldValue)) {
+				throw new RuntimeException("Meta model primary key `"+pkField.getCode()+"` value cannot be null.");
+			}
+			sqlBuilder.eq(pkField.getFieldName(), fieldValue);
+		}
+		sqlBuilder.executeUpdate();
+	}
+
+	private Map<String, String> parseFieldValues(MetaModel model, Map<String, Object> data) {
+		final Map<String, String> fieldValues = new HashMap<>();
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
+		// 固定字段
+		mmt.getFixedFields().forEach(f -> {
+			Object value = data.get(f.getCode());
+			if (f.isMandatory() && Objects.isNull(value)) {
+				throw new RuntimeException("Validate field: " + f.getCode() + " cannot be empty.");
+			}
+			fieldValues.put(f.getFieldName(), value.toString());
+		});
+		// 自定义字段
+		model.getFields().forEach(field -> {
+			Object fieldValue = data.get(field.getCode());
 			if (fieldValue == null) {
 				fieldValue = field.getDefaultValue();
 			} else if (fieldValue.getClass().isArray()) {
@@ -73,62 +120,118 @@ public class ModelDataServiceImpl extends ServiceImpl<XModelDataMapper, XModelDa
 			} else if (fieldValue instanceof List<?> list) {
 				fieldValue = StringUtils.join(list, StringUtils.COMMA);
 			}
-			dataMap.put(field.getFieldName(), fieldValue);
-		}
-		if (insert) {
-			StringBuilder sbInsertFields = new StringBuilder();
-			StringBuilder sbInsertValues = new StringBuilder();
-			dataMap.entrySet().forEach(e -> {
-				sbInsertFields.append(sbInsertFields.length() > 0 ? "," : "").append(e.getKey());
-				sbInsertValues.append(sbInsertValues.length() > 0 ? "," : "");
-				if (e.getValue() == null) {
-					sbInsertValues.append("null");
-				} else {
-					sbInsertValues.append("'").append(e.getValue()).append("'");
-				}
-			});
-			this.modelDataMapper.insertCustomModelData(model.getTableName(), sbInsertFields.toString(),
-					sbInsertValues.toString());
-		} else {
-			StringBuilder sbUpdateFields = new StringBuilder();
-			dataMap.entrySet().forEach(e -> {
-				sbUpdateFields.append(sbUpdateFields.length() > 0 ? "," : "").append(e.getKey()).append("=");
-				if (e.getValue() == null) {
-					sbUpdateFields.append("null");
-				} else {
-					sbUpdateFields.append("'").append(e.getValue()).append("'");
-				}
-			});
-			this.modelDataMapper.udpateCustomModelData(model.getTableName(), sbUpdateFields.toString(), pkValue);
-		}
-	}
-
-	@Override
-	public Map<String, Object> getModelData(XModel model, String pkValue) {
-		if (StringUtils.isNotEmpty(pkValue)) {
-			if (XModelUtils.isDefaultTable(model.getTableName())) {
-				Map<String, Object> data = this.getMap(new LambdaQueryWrapper<XModelData>()
-						.eq(XModelData::getModelId, model.getModelId()).eq(XModelData::getPkValue, pkValue));
-				if (data != null) {
-					return data;
-				}
-			} else {
-				Map<String, Object> data = this.modelDataMapper.getCustomModelData(model.getTableName(), pkValue);
-				if (data != null) {
-					return data;
-				}
+			// 必填校验
+			if (field.isMandatory() && (Objects.isNull(fieldValue) || StringUtils.isEmpty(fieldValue.toString()))) {
+				throw new RuntimeException("Validate field: " + field.getCode() + " cannot be empty.");
 			}
-		}
-		return Collections.emptyMap();
+			// TODO 其它自定义规则校验
+			fieldValues.put(field.getFieldName(), Objects.isNull(fieldValue) ? "" : fieldValue.toString());
+		});
+		return fieldValues;
 	}
 
 	@Override
-	public void deleteModelData(Long modeId, String pkValue) {
-		XModel model = this.modelMapper.selectById(modeId);
-		if (XModelUtils.isDefaultTable(model.getTableName())) {
-			this.remove(new LambdaQueryWrapper<XModelData>().eq(XModelData::getModelId, modeId).eq(XModelData::getPkValue, pkValue));
-		} else {
-			this.modelDataMapper.deleteCustomModelData(model.getTableName(), pkValue);
+	public void deleteModelDataByPkValue(Long modelId, List<Map<String, String>> pkValues) {
+		MetaModel model = this.modelService.getMetaModel(modelId);
+
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
+
+		List<MetaModelField> primaryKeys = mmt.getFixedFields().stream()
+				.filter(MetaModelField::isPrimaryKey).toList();
+
+		pkValues.forEach(pkValue -> {
+			SqlBuilder sqlBuilder = new SqlBuilder().delete().from(model.getModel().getTableName()).where();
+			for (int i = 0; i < primaryKeys.size(); i++) {
+				if (i > 0) {
+					sqlBuilder.and();
+				}
+				MetaModelField pkField = primaryKeys.get(i);
+				String fieldValue = pkValue.get(pkField.getCode());
+				if (Objects.isNull(fieldValue)) {
+					throw new RuntimeException("Primary key cannot be null!");
+				}
+				sqlBuilder.eq(pkField.getFieldName(), fieldValue);
+			}
+			sqlBuilder.executeDelete();
+		});
+	}
+
+	@Override
+	public Map<String, Object> getModelDataByPkValue(Long modelId, Map<String, Object> pkValues) {
+		MetaModel model = this.modelService.getMetaModel(modelId);
+
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
+
+		List<MetaModelField> primaryKeys = mmt.getFixedFields().stream()
+				.filter(MetaModelField::isPrimaryKey).toList();
+		Object[] args = primaryKeys.stream().map(f -> pkValues.get(f.getCode())).toArray(Object[]::new);
+		if (ObjectUtils.isAnyNull(args)) {
+			return Map.of();
 		}
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName()).where();
+		for (int i = 0; i < primaryKeys.size(); i++) {
+			if (i > 0) {
+				sqlBuilder.and();
+			}
+			MetaModelField pkField = primaryKeys.get(i);
+			sqlBuilder.eq(pkField.getFieldName(), pkValues.get(pkField.getCode()));
+		}
+		Map<String, Object> map = sqlBuilder.selectOne();
+		if (map == null) {
+			return Map.of();
+		}
+		Map<String, Object> dataMap = new HashMap<>();
+		// 固定字段
+		mmt.getFixedFields().stream().forEach(f -> {
+			dataMap.put(f.getCode(), MapUtils.getString(map, f.getFieldName(), StringUtils.EMPTY));
+		});
+		// 自定义字段
+		model.getFields().forEach(f -> {
+			dataMap.put(f.getCode(), MapUtils.getString(map, f.getFieldName(), StringUtils.EMPTY));
+		});
+		return dataMap;
+	}
+
+	@Override
+	public List<Map<String, Object>> selectModelDataList(Long modelId, Consumer<SqlBuilder> consumer) {
+		MetaModel model = this.modelService.getMetaModel(modelId);
+		Map<String, String> fieldNameToCode = model.getFields().stream()
+				.collect(Collectors.toMap(MetaModelField::getFieldName, MetaModelField::getCode));
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
+		mmt.getFixedFields().forEach(f -> fieldNameToCode.put(f.getFieldName(), f.getCode()));
+
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName())
+				.where().eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId());
+		consumer.accept(sqlBuilder);
+
+		List<Map<String, Object>> list = sqlBuilder.selectList().stream().map(data -> {
+			Map<String, Object> map = new HashMap<>();
+			data.entrySet().forEach(e -> map.put(fieldNameToCode.get(e.getKey()), e.getValue()));
+			return map;
+		}).toList();
+		return list;
+	}
+
+	@Override
+	public IPage<Map<String, Object>> selectModelDataPage(Long modelId, IPage<Map<String, Object>> page,
+														  Consumer<SqlBuilder> consumer) {
+		MetaModel model = this.modelService.getMetaModel(modelId);
+		Map<String, String> fieldNameToCode = model.getFields().stream()
+				.collect(Collectors.toMap(MetaModelField::getFieldName, MetaModelField::getCode));
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getModel().getOwnerType());
+		mmt.getFixedFields().forEach(f -> fieldNameToCode.put(f.getFieldName(), f.getCode()));
+
+		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName())
+				.where().eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId());
+		consumer.accept(sqlBuilder);
+
+		IPage<Map<String, Object>> pageData = sqlBuilder.selectPage(page);
+		List<Map<String, Object>> list = pageData.getRecords().stream().map(data -> {
+			Map<String, Object> map = new HashMap<>();
+			data.entrySet().forEach(e -> map.put(fieldNameToCode.get(e.getKey()), e.getValue()));
+			return map;
+		}).toList();
+		pageData.setRecords(list);
+		return pageData;
 	}
 }

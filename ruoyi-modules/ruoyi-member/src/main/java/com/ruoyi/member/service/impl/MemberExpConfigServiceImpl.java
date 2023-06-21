@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.utils.IdUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,7 @@ public class MemberExpConfigServiceImpl extends ServiceImpl<MemberExpConfigMappe
 		Assert.isTrue(count == 0,
 				() -> MemberErrorCode.EXP_CONFIG_EXIST.exception(expOp.getOpType() + "=" + expOp.getLevelType()));
 
+		expOp.setConfigId(IdUtils.getSnowflakeId());
 		expOp.createBy(expOp.getCreateBy());
 		this.save(expOp);
 	}

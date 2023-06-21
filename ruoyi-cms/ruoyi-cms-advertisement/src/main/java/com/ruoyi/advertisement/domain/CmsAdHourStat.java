@@ -25,7 +25,7 @@ public class CmsAdHourStat implements Serializable {
 
 	public final static String TABLE_NAME = "cms_ad_hour_stat";
 
-	@TableId(value = "stat_id", type = IdType.INPUT)
+	@TableId(value = "stat_id", type = IdType.AUTO)
 	private Long statId;
 	
 	/**

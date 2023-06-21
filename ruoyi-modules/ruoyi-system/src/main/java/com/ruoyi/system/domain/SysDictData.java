@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.i18n.I18nField;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 
 import jakarta.validation.constraints.NotBlank;
@@ -29,7 +29,7 @@ public class SysDictData extends BaseEntity {
 
 	/** 字典编码 */
 	@ExcelProperty("字典编码")
-	@TableId(value = "dict_code", type = IdType.AUTO)
+	@TableId(value = "dict_code", type = IdType.INPUT)
 	private Long dictCode;
 
 	/** 字典排序 */

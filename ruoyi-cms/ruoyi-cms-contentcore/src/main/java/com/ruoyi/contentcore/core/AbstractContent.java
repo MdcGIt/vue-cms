@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ruoyi.common.async.AsyncTaskManager;
 import org.springframework.beans.BeanUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -178,21 +176,12 @@ public abstract class AbstractContent<T> implements IContent<T> {
 	public void delete() {
 		this.checkLock();
 		this.getContentService().removeById(this.getContentEntity());
-		// 删除站内映射内容
-		List<CmsContent> copyList = this.getContentService()
-				.list(new LambdaQueryWrapper<CmsContent>().eq(CmsContent::getCopyId, content.getContentId())
-						.gt(CmsContent::getCopyType, ContentCopyType.Mapping.value()));
-		this.getContentService().removeBatchByIds(copyList);
-
+		// 直接删除站内映射内容
+		this.getContentService().getContentMapper().deleteMappingIgnoreLogicDel(content.getContentId());
 		// 栏目内容数-1
 		CmsCatalog catalog = this.getCatalogService().getById(this.getCatalogId());
 		catalog.setContentCount(catalog.getContentCount() - 1);
 		this.getCatalogService().updateById(catalog);
-	}
-
-	@Override
-	public void backup() {
-		this.getContentService().backup(this.getContentEntity(), this.getOperator().getUsername());
 	}
 
 	@Override

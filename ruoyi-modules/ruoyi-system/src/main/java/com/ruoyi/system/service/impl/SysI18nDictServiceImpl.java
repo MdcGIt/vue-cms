@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -32,11 +33,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI18nDict> implements ISysI18nDictService {
+public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI18nDict>
+        implements ISysI18nDictService, CommandLineRunner {
 
     private final static String CACHE_PREFIX = "i18n:";
 
     private final RedisCache redisCache;
+
+    private final I18nMessageSource messageSource;
 
     @Override
     public String getLangValue(String languageTag, String langKey) {
@@ -52,6 +56,7 @@ public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI1
     public void insertI18nDict(SysI18nDict dict) {
         Assert.isTrue(this.checkUnique(dict), () -> CommonErrorCode.DATA_CONFLICT.exception(dict.getLangTag() + ":" + dict.getLangKey()));
 
+        dict.setDictId(IdUtils.getSnowflakeId());
         this.save(dict);
         redisCache.setCacheMapValue(CACHE_PREFIX + dict.getLangTag(), dict.getLangKey(), dict.getLangValue());
     }
@@ -92,6 +97,9 @@ public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI1
         for (SysI18nDict dict : dicts) {
             boolean checkUnique = this.checkUnique(dict);
             Assert.isTrue(checkUnique, () -> CommonErrorCode.DATA_CONFLICT.exception(dict.getLangTag() + ":" + dict.getLangKey()));
+            if (IdUtils.validate(dict.getDictId())) {
+                dict.setDictId(IdUtils.getSnowflakeId());
+            }
         }
         this.saveOrUpdateBatch(dicts);
 
@@ -145,5 +153,10 @@ public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI1
                 redisCache.setCacheMap(CACHE_PREFIX + langTag, map);
             }
         }
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        this.loadMessages(this.messageSource);
     }
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ruoyi.common.utils.IdUtils;
 import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -54,9 +55,15 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	public void saveMenuPermissions(SysPermissionDTO dto) {
 		Optional<SysPermission> opt = this.lambdaQuery().eq(SysPermission::getOwnerType, dto.getOwnerType())
 				.eq(SysPermission::getOwner, dto.getOwner()).oneOpt();
-		SysPermission db = opt.orElseGet(SysPermission::new);
-		db.setOwnerType(dto.getOwnerType());
-		db.setOwner(dto.getOwner());
+
+		SysPermission db = opt.orElseGet(() -> {
+			SysPermission p = new SysPermission();
+			p.setPermId(IdUtils.getSnowflakeId());
+			p.setOwnerType(dto.getOwnerType());
+			p.setOwner(dto.getOwner());
+			p.createBy(dto.getOperator().getUsername());
+			return p;
+		});
 
 		String permissionStr = menuPermissionType.serialize(dto.getPermissions().stream().toList());
 		db.getPermissions().put(dto.getPermType(), permissionStr);

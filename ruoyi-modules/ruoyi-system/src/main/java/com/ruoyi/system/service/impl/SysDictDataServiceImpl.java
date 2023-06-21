@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDictData> implements ISysDictDataService {
 
 	private final RedisCache redisCache;
-	
+
 	/**
 	 * 批量删除字典数据信息
 	 */
@@ -51,7 +51,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
 
 	/**
 	 * 是否系统固定字典数据
-	 * 
+	 *
 	 * @param data
 	 * @return
 	 */
@@ -62,7 +62,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
 
 	/**
 	 * 新增保存字典数据信息
-	 * 
+	 *
 	 * @param data 字典数据信息
 	 * @return 结果
 	 */
@@ -75,7 +75,8 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
 		if (Objects.nonNull(dictType) && !dictType.isAllowAdd()) {
 			throw CommonErrorCode.FIXED_DICT_NOT_ALLOW_ADD.exception();
 		}
-		
+
+		data.setDictCode(IdUtils.getSnowflakeId());
 		data.setCreateTime(LocalDateTime.now());
 		if (this.save(data)) {
 			this.redisCache.deleteObject(SysConstants.CACHE_SYS_DICT_KEY + data.getDictType());
@@ -84,7 +85,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
 
 	/**
 	 * 修改保存字典数据信息
-	 * 
+	 *
 	 * @param data 字典数据信息
 	 * @return 结果
 	 */
@@ -116,7 +117,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
 
 	/**
 	 * 校验字典数据项值是否冲突
-	 * 
+	 *
 	 * @param data
 	 * @return
 	 */

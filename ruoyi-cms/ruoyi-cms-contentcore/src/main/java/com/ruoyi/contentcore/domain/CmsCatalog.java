@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 import com.ruoyi.contentcore.core.impl.PublishPipeProp_IndexTemplate;
 import com.ruoyi.contentcore.core.impl.PublishPipeProp_ListTemplate;
 import com.ruoyi.system.fixed.dict.EnableOrDisable;

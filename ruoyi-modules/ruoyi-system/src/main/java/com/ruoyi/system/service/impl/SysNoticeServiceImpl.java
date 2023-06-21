@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.IdUtils;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,16 +21,10 @@ import com.ruoyi.system.service.ISysNoticeService;
 @Service
 public class SysNoticeServiceImpl extends ServiceImpl<SysNoticeMapper, SysNotice> implements ISysNoticeService {
 
-	/**
-	 * 新增公告
-	 * 
-	 * @param notice
-	 *            公告信息
-	 * @return 结果
-	 */
 	@Override
 	public void insertNotice(SysNoticeDTO dto) {
 		SysNotice notice = new SysNotice();
+		notice.setNoticeId(IdUtils.getSnowflakeId());
 		notice.setNoticeTitle(dto.getNoticeTitle());
 		notice.setNoticeType(dto.getNoticeType());
 		notice.setNoticeContent(dto.getNoticeContent());
@@ -39,13 +34,6 @@ public class SysNoticeServiceImpl extends ServiceImpl<SysNoticeMapper, SysNotice
 		this.save(notice);
 	}
 
-	/**
-	 * 修改公告
-	 * 
-	 * @param notice
-	 *            公告信息
-	 * @return 结果
-	 */
 	@Override
 	public void updateNotice(SysNoticeDTO dto) {
 		SysNotice db = this.getById(dto.getNoticeId());

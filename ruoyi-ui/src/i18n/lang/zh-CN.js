@@ -880,6 +880,9 @@ export default {
         BaiduSecretKey: "百度统计SecretKey",
         BaiduRefreshToken: "百度统计RefreshToken",
         BaiduAccessToken: "百度统计AccessToken",
+        SiteApiUrl: "站点API地址前缀",
+        CustomFormCardTitle: "自定义表单",
+        EnableCustomFormCaptcha: "是否开启验证码"
       },
       Property: {
         QueryPlaceholder: "输入名称/编码查询",
@@ -895,7 +898,8 @@ export default {
         Title: "默认模板配置",
         CatalogList: "栏目列表页模板",
         ContentDetail: "详情页模板",
-        SelectCatalogFirst: "请先选择栏目"
+        SelectCatalogFirst: "请先选择栏目",
+        CustomForm: "自定义表单模板",
       }
     },
     Catalog: {
@@ -1229,6 +1233,7 @@ export default {
       TableName: "数据表",
       AddTtitle: "新建模型",
       EditTitle: "编辑模型",
+      Fields: "编辑字段",
       GoBack: "返回模型列表",
       FieldName: "名称",
       FieldCode: "编码",
@@ -1283,6 +1288,24 @@ export default {
       OnlyTitle: "仅匹配标题",
       IndexDetails: "索引详情",
       ProgressTitle: "创建索引任务",
+    },
+    CustomForm: {
+      Name: "名称",
+      Code: "编码",
+      TableName: "数据表",
+      Status: "状态",
+      NeedCaptcha: "是否需要验证码",
+      NeedLogin: "是否需要登录",
+      RuleLimit: "提交唯一性规则",
+      Publish: "发布",
+      Offline: "下线",
+      AddTitle: "添加自定义表单",
+      EditTitle: "编辑自定义表单",
+      RouteFieldList: "自定义表单字段",
+      Fields: "表单字段",
+      RouteData: "自定义表单数据",
+      AddDataTitle: "添加表单数据",
+      EditDataTitle: "编辑表单数据",
     }
   },
   Stat: {
@@ -1401,6 +1424,32 @@ export default {
     RuleTips: {
       UserName: "必须以字母开头，且只能为（大小写字母，数字，下滑线）",
       Member: "用户名/手机号/Email不能全为空"
+    }
+  },
+  MetaModel: {
+    FieldName: "名称",
+    FieldCode: "编码",
+    FieldType: "字段类型",
+    FieldControlType: "控件类型",
+    FieldMappingName: "数据表字段",
+    FieldMandatory: "是否必填",
+    FieldDefaultValue: "默认值",
+    FieldOptions: "可选配置",
+    FieldOptionsInput: "手动输入",
+    FieldOptionsDict: "字典数据",
+    AddFieldTitle: "添加模型字段",
+    EditFieldTitle: "编辑模型字段",
+    Placeholder: {
+      FieldQuery: "字段名称/编码查询"
+    },
+    RuleTips: {
+      FieldName: "名称不能为空",
+      FieldCode: "编码不能为空",
+      FieldControlType: "控件类型不能为空",
+      FieldMandatory: "是否必填不能为空",
+      FieldType: "字段类型不能为空",
+      FieldMappingName: "数据表字段不能为空",
+      FieldMappingUsed: "数据表字段已被占用",
     }
   }
 };

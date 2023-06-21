@@ -19,62 +19,57 @@ public interface IContent<T> {
 	/**
 	 * 获取站点ID
 	 */
-	public Long getSiteId();
+	Long getSiteId();
 
 	/**
 	 * 获取所属站点
 	 */
-	public CmsSite getSite();
+	CmsSite getSite();
 
 	/**
 	 * 获取栏目ID
 	 */
-	public Long getCatalogId();
+	Long getCatalogId();
 
 	/**
 	 * 获取所属栏目
 	 */
-	public CmsCatalog getCatalog();
+	CmsCatalog getCatalog();
 
 	/**
 	 * 获取内容类型
 	 */
-	public String getContentType();
+	String getContentType();
 
 	/**
 	 * 获取内容Entity
 	 */
-	public CmsContent getContentEntity();
+	CmsContent getContentEntity();
 	
 	/**
 	 * 获取内容扩展Entitiy
 	 */
-	public T getExtendEntity();
+	T getExtendEntity();
 	
 	/**
 	 * 新建内容
 	 */
-	public Long add();
+	Long add();
 	
 	/**
 	 * 更新内容信息
 	 */
-	public Long save();
+	Long save();
 
 	/**
 	 * 删除内容
 	 */
-	public void delete();
-
-	/**
-	 * 备份数据到备份表
-	 */
-	public void backup();
+	void delete();
 
 	/**
 	 * 发布内容
 	 */
-	public boolean publish();
+	boolean publish();
 
 	/**
 	 * 获取操作人信息
@@ -86,7 +81,7 @@ public interface IContent<T> {
 	 * 
 	 * @param operator
 	 */
-	public void setOperator(LoginUser operator);
+	void setOperator(LoginUser operator);
 
 	/**
 	 * 复制内容到指定栏目
@@ -95,7 +90,7 @@ public interface IContent<T> {
 	 * @param copyType
 	 * @return
 	 */
-	public void copyTo(CmsCatalog catalog, Integer copyType);
+	void copyTo(CmsCatalog catalog, Integer copyType);
 
 	/**
 	 * 转移内容到指定栏目
@@ -103,56 +98,56 @@ public interface IContent<T> {
 	 * @param catalog
 	 * @return
 	 */
-	public void moveTo(CmsCatalog catalog);
+	void moveTo(CmsCatalog catalog);
 
 	/**
 	 * 自定义参数，扩展用
 	 */
-	public Map<String, Object> getParams();
+	Map<String, Object> getParams();
 
 	/**
 	 * 设置自定义参数
 	 * 
 	 * @param params
 	 */
-	public void setParams(Map<String, Object> params);
+	void setParams(Map<String, Object> params);
 
 	/**
 	 * 置顶
 	 * @return
 	 */
-	public void setTop(LocalDateTime topEndTime);
+	void setTop(LocalDateTime topEndTime);
 
 	/**
 	 * 取消置顶
 	 * @return
 	 */
-	public void cancelTop();
+	void cancelTop();
 
 	/**
 	 * 排序
 	 * @return
 	 */
-	public void sort(Long targetContentId);
+	void sort(Long targetContentId);
 
 	/**
 	 * 下线
 	 * @return
 	 */
-	public void offline();
+	void offline();
 
 	/**
 	 * 归档
 	 * @return
 	 */
-	public void archive();
+	void archive();
 
 	/**
 	 * 全文检索分词内容
 	 * 
 	 * @return
 	 */
-	public String getFullText();
+	String getFullText();
 
 	/**
 	 * 是否有扩展表

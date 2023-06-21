@@ -27,7 +27,17 @@ public enum MetaErrorCode implements ErrorCode {
 	/**
 	 * 数据库表‘{0}’不存在
 	 */
-	META_TABLE_NOT_EXISTS;
+	META_TABLE_NOT_EXISTS,
+
+	/**
+	 * 不支持的元数据模型类型：{0}
+	 */
+	UNSUPPORTED_META_MODEL_TYPE,
+
+	/**
+	 * 元数据模型不存在
+	 */
+	META_MODEL_NOT_FOUND;
 	
 	@Override
 	public String value() {

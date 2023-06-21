@@ -126,7 +126,7 @@ public class ContentIndexService {
 		String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
 		if (YesOrNo.isYes(enableIndex)) {
 			LambdaQueryChainWrapper<CmsContent> q = this.contentService.lambdaQuery()
-					.ne(CmsContent::getCopyType, ContentCopyType.Mapping.value())
+					.ne(CmsContent::getCopyType, ContentCopyType.Mapping)
 					.eq(CmsContent::getStatus, ContentStatus.PUBLISHED)
 					.eq(!includeChild, CmsContent::getCatalogId, catalog.getCatalogId())
 					.likeRight(includeChild, CmsContent::getCatalogAncestors, catalog.getAncestors());
@@ -182,7 +182,7 @@ public class ContentIndexService {
 					if (YesOrNo.isYes(enableIndex)) {
 						LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<CmsContent>()
 								.eq(CmsContent::getSiteId, site.getSiteId())
-								.ne(CmsContent::getCopyType, ContentCopyType.Mapping.value())
+								.ne(CmsContent::getCopyType, ContentCopyType.Mapping)
 								.eq(CmsContent::getStatus, ContentStatus.PUBLISHED)
 								.eq(CmsContent::getCatalogId, catalog.getCatalogId());
 						long total = contentService.count(q);

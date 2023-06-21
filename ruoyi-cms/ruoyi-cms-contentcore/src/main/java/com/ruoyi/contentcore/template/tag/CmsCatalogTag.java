@@ -64,7 +64,7 @@ public class CmsCatalogTag extends AbstractListTag {
 		}
 		String level = MapUtils.getString(attrs, TAG_ATTR_LEVEL);
 		if (!CatalogTagLevel.isRoot(level) && Objects.isNull(catalog)) {
-			throw new CatalogNotFoundException(getTagName(), catalogId, env);
+			throw new CatalogNotFoundException(getTagName(), catalogId, alias, env);
 		}
 
 		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<>();

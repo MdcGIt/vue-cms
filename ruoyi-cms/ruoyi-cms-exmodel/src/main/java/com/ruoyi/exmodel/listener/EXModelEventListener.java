@@ -1,39 +1,36 @@
 package com.ruoyi.exmodel.listener;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-
 import com.ruoyi.common.utils.NumberUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.vo.ContentVO;
-import com.ruoyi.contentcore.listener.event.AfterCatalogDeleteEvent;
-import com.ruoyi.contentcore.listener.event.AfterCatalogSaveEvent;
-import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
-import com.ruoyi.contentcore.listener.event.AfterContentEditorInitEvent;
-import com.ruoyi.contentcore.listener.event.AfterContentSaveEvent;
-import com.ruoyi.contentcore.listener.event.AfterSiteDeleteEvent;
-import com.ruoyi.contentcore.listener.event.AfterSiteSaveEvent;
+import com.ruoyi.contentcore.listener.event.*;
 import com.ruoyi.contentcore.service.ICatalogService;
+import com.ruoyi.exmodel.CmsExtendMetaModelType;
+import com.ruoyi.exmodel.domain.CmsExtendModelData;
+import com.ruoyi.exmodel.fixed.dict.ExtendModelDataType;
 import com.ruoyi.exmodel.properties.CatalogExtendModelProperty;
 import com.ruoyi.exmodel.properties.ContentExtendModelProperty;
 import com.ruoyi.exmodel.properties.SiteExtendModelProperty;
-import com.ruoyi.xmodel.XModelUtils;
 import com.ruoyi.xmodel.service.IModelDataService;
-
+import com.ruoyi.xmodel.util.XModelUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class EXModelEventListener {
 
 	private final IModelDataService modelDataService;
-	
+
 	private final ICatalogService catalogService;
-	
+
 	@EventListener
 	public void afterContentEditorInit(AfterContentEditorInitEvent event) {
 		ContentVO vo = event.getContentVO();
@@ -43,50 +40,58 @@ public class EXModelEventListener {
 			vo.getCatalogConfigProps().put(ContentExtendModelProperty.ID, modelId);
 		}
 	}
-	
+
 	@EventListener
 	public void afterSiteSave(AfterSiteSaveEvent event) {
 		String modelId = SiteExtendModelProperty.getValue(event.getSite().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
-			String pkValue = event.getSite().getSiteId().toString();
-			this.saveModelData(Long.valueOf(modelId), pkValue, event.getSiteDTO().getParams());
+			String dataId = event.getSite().getSiteId().toString();
+			this.saveModelData(Long.valueOf(modelId), ExtendModelDataType.SITE, dataId, event.getSiteDTO().getParams());
 		}
 	}
-	
+
 	@EventListener
 	public void afterSiteDelete(AfterSiteDeleteEvent event) {
 		String modelId = SiteExtendModelProperty.getValue(event.getSite().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
-			String pkValue = event.getSite().getSiteId().toString();
-			this.modelDataService.deleteModelData(Long.valueOf(modelId), pkValue);
+			String dataId = event.getSite().getSiteId().toString();
+			this.modelDataService.deleteModelDataByPkValue(Long.valueOf(modelId),
+					List.of(Map.of(
+							CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), ExtendModelDataType.SITE,
+							CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
+					)));
 		}
 	}
-	
+
 	@EventListener
 	public void afterCatalogSave(AfterCatalogSaveEvent event) {
-		String modelId =	CatalogExtendModelProperty.getValue(event.getCatalog().getConfigProps());
+		String modelId = CatalogExtendModelProperty.getValue(event.getCatalog().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
-			String pkValue = event.getCatalog().getCatalogId().toString();
-			this.saveModelData(Long.valueOf(modelId), pkValue, event.getExtendParams());
+			String dataId = event.getCatalog().getCatalogId().toString();
+			this.saveModelData(Long.valueOf(modelId), ExtendModelDataType.CATALOG, dataId, event.getExtendParams());
 		}
 	}
-	
+
 	@EventListener
 	public void afterCatalogDelete(AfterCatalogDeleteEvent event) {
 		String modelId = CatalogExtendModelProperty.getValue(event.getCatalog().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
-			String pkValue = event.getCatalog().getCatalogId().toString();
-			this.modelDataService.deleteModelData(Long.valueOf(modelId), pkValue);
+			String dataId = event.getCatalog().getCatalogId().toString();
+			this.modelDataService.deleteModelDataByPkValue(Long.valueOf(modelId),
+					List.of(Map.of(
+							CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), ExtendModelDataType.CATALOG,
+							CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
+					)));
 		}
 	}
-	
+
 	@EventListener
 	public void afterContentSave(AfterContentSaveEvent event) {
 		IContent<?> content = event.getContent();
 		String modelId = ContentExtendModelProperty.getValue(content.getCatalog().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
-			String pkValue = String.valueOf(content.getContentEntity().getContentId());
-			this.saveModelData(Long.valueOf(modelId), pkValue, content.getParams());
+			String dataId = String.valueOf(content.getContentEntity().getContentId());
+			this.saveModelData(Long.valueOf(modelId), ExtendModelDataType.CONTENT, dataId, content.getParams());
 		}
 	}
 
@@ -95,18 +100,27 @@ public class EXModelEventListener {
 		IContent<?> content = event.getContent();
 		String modelId = ContentExtendModelProperty.getValue(content.getCatalog().getConfigProps());
 		if (NumberUtils.isDigits(modelId)) {
-			String pkValue = String.valueOf(content.getContentEntity().getContentId());
-			this.modelDataService.deleteModelData(Long.valueOf(modelId), pkValue);
+			String dataId = String.valueOf(content.getContentEntity().getContentId());
+			this.modelDataService.deleteModelDataByPkValue(Long.valueOf(modelId),
+					List.of(Map.of(
+							CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), ExtendModelDataType.CONTENT,
+							CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
+					)));
 		}
 	}
-	
-	private void saveModelData(Long modelId, String pkValue, Map<String, Object> params) {
-		Map<String, Object> datas = new HashMap<>();
+
+	private void saveModelData(Long modelId, String dataType, String dataId, Map<String, Object> params) {
+		Map<String, Object> dataMap = new HashMap<>();
 		params.entrySet().forEach(e -> {
-			if (e.getKey().startsWith(XModelUtils.DATA_FIELD_PREFIX)) {
-				datas.put(e.getKey().substring(XModelUtils.DATA_FIELD_PREFIX.length()), e.getValue());
+			String fieldCode = e.getKey();
+			if (fieldCode.startsWith(CmsExtendMetaModelType.DATA_FIELD_PREFIX)) {
+				fieldCode = StringUtils.substringAfter(e.getKey(), CmsExtendMetaModelType.DATA_FIELD_PREFIX);
 			}
+			dataMap.put(fieldCode, e.getValue());
 		});
-		this.modelDataService.saveModelData(modelId, pkValue, datas);
+		dataMap.put(CmsExtendMetaModelType.FIELD_MODEL_ID.getCode(), modelId);
+		dataMap.put(CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), dataType);
+		dataMap.put(CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId);
+		this.modelDataService.saveModelData(modelId, dataMap);
 	}
 }

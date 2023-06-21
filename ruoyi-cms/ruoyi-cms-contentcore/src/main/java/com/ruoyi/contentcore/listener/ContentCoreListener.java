@@ -76,29 +76,16 @@ public class ContentCoreListener {
 		// 删除页面部件
 		AsyncTaskManager.setTaskProgressInfo(90, "正在删除页面部件数据");
 		this.pageWidgetService.remove(new LambdaQueryWrapper<CmsPageWidget>().eq(CmsPageWidget::getSiteId, site.getSiteId()));
-		// 删除内容
+		// 删除内容数据
 		try {
-			long total = this.contentService
-					.count(new LambdaQueryWrapper<CmsContent>().eq(CmsContent::getSiteId, site.getSiteId()));
-			for (int i = 0; i * pageSize < total; i++) {
-				AsyncTaskManager.setTaskProgressInfo((int)  (i * pageSize * 100 / total), "正在删除内容数据：" + (i * pageSize) + "/" + total);
-				this.contentService.remove(new LambdaQueryWrapper<CmsContent>()
-						.eq(CmsContent::getSiteId, site.getSiteId()).last("limit " + pageSize));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			AsyncTaskManager.addErrMessage("删除内容数据错误：" + e.getMessage());
-		}
-		// 删除内容备份数据
-		try {
-			long total = this.contentMapper.selectBackupCountBySiteId(site.getSiteId());
+			long total = this.contentMapper.selectCountBySiteIdIgnoreLogicDel(site.getSiteId());
 			for (int i = 0; i * pageSize < total; i++) {
 				AsyncTaskManager.setTaskProgressInfo((int)  (i * pageSize * 100 / total), "正在删除内容备份数据：" + (i * pageSize) + "/" + total);
-				this.contentMapper.deleteRecycleContentsBySiteId(site.getSiteId(), pageSize);
+				this.contentMapper.deleteBySiteIdIgnoreLogicDel(site.getSiteId(), pageSize);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			AsyncTaskManager.addErrMessage("删除内容备份错误：" + e.getMessage());
+			AsyncTaskManager.addErrMessage("删除内容错误：" + e.getMessage());
 		}
 		// 删除资源数据
 		try {
@@ -200,7 +187,7 @@ public class ContentCoreListener {
 			public void run0() throws Exception {
 				// 映射关联内容同步下线
 				List<CmsContent> mappingList = contentService.lambdaQuery()
-						.gt(CmsContent::getCopyType, ContentCopyType.Mapping.value())
+						.gt(CmsContent::getCopyType, ContentCopyType.Mapping)
 						.eq(CmsContent::getCopyId, contentId).list();
 				for (CmsContent c : mappingList) {
 					if (ContentStatus.PUBLISHED == c.getStatus()) {

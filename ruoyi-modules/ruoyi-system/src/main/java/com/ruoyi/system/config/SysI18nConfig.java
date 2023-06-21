@@ -1,51 +1,58 @@
 package com.ruoyi.system.config;
 
-import java.nio.charset.Charset;
-import java.util.Locale;
-
-import org.springframework.beans.factory.annotation.Value;
+import com.ruoyi.common.redis.RedisCache;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.service.ISysI18nDictService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
-import com.ruoyi.common.redis.RedisCache;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.service.ISysI18nDictService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import java.time.Duration;
+import java.util.Locale;
 
 /**
  * 动态国际化字符串存储数据库
  */
+@Order
 @Configuration
+@EnableConfigurationProperties
 @RequiredArgsConstructor
 public class SysI18nConfig {
-	
-	@Value("${spring.messages.basename:i18n/messages}")
-	private String basename;
-	
-	@Value("${spring.messages.cache-seconds:7200}")
-	private int cacheSeconds;
-	
-	@Value("${spring.messages.encoding:UTF-8}")
-	private String encoding;
 
 	private final RedisCache redisCache;
-	
-	private final ISysI18nDictService i18nDictService;
-	
+
+	@Bean
+	@ConfigurationProperties(prefix = "spring.messages")
+	public MessageSourceProperties messageSourceProperties() {
+		return new MessageSourceProperties();
+	}
+
 	@Bean("messageSource")
-	@DependsOn(value = { "flywayInitializer" })
-	public MessageSource messageSource() {
-		I18nMessageSource messageSource = new I18nMessageSource(this.redisCache, this.i18nDictService);
-		messageSource.setBasename(this.basename);
-		messageSource.setCacheSeconds(this.cacheSeconds);
-		messageSource.setEncoding(Charset.forName(this.encoding));
-		messageSource.setUseCodeAsDefaultMessage(true);
+	public MessageSource messageSource(MessageSourceProperties properties) {
+		I18nMessageSource messageSource = new I18nMessageSource(this.redisCache);
+		if (StringUtils.isNotBlank(properties.getBasename())) {
+			messageSource.setBasename(properties.getBasename());
+		}
+		if (properties.getEncoding() != null) {
+			messageSource.setEncoding(properties.getEncoding());
+		}
+//		messageSource.setFallbackToSystemLocale(properties.isFallbackToSystemLocale());
+		Duration cacheDuration = properties.getCacheDuration();
+		if (cacheDuration != null) {
+			messageSource.setCacheSeconds(cacheDuration.toSeconds());
+		}
+		messageSource.setAlwaysUseMessageFormat(properties.isAlwaysUseMessageFormat());
+		messageSource.setUseCodeAsDefaultMessage(properties.isUseCodeAsDefaultMessage());
 		return messageSource;
 	}
 

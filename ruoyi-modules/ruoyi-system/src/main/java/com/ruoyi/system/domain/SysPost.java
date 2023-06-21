@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +30,7 @@ public class SysPost extends BaseEntity {
 
 	/** 岗位序号 */
 	@ExcelProperty("岗位序号")
-	@TableId(value = "post_id", type = IdType.AUTO)
+	@TableId(value = "post_id", type = IdType.INPUT)
 	private Long postId;
 
 	/** 岗位编码 */

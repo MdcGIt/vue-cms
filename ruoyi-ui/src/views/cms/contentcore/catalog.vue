@@ -14,6 +14,7 @@
         <el-tabs v-model="activeName" @tab-click="handleTabClick">
           <el-tab-pane :label="$t('CMS.Catalog.Tab.Basic')" name="basicInfo">
             <cms-catalog-info 
+              v-if="this.activeName=='basicInfo'" 
               :cid="selectedCatalogId"
               @update="handleCatalogUpdate"
               @remove="handleCatalogDelete"

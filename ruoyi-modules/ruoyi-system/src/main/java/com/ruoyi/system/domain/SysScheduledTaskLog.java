@@ -22,7 +22,7 @@ public class SysScheduledTaskLog implements Serializable {
 	
 	public static final String TABLE_NAME = "sys_scheduled_task_log";
 
-	@TableId(value = "log_id", type = IdType.INPUT)
+	@TableId(value = "log_id", type = IdType.AUTO)
 	private Long logId;
 	
 	/**

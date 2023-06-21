@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class MemberExpConfig extends BaseEntity {
 	
 	public static final String TABLE_NAME = "cc_member_exp_config";
 
-	@TableId(value = "config_id", type = IdType.AUTO)
+	@TableId(value = "config_id", type = IdType.INPUT)
     private Long configId;
 	
 	/**

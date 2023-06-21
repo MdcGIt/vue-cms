@@ -60,6 +60,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
 		boolean checkConfigKeyUnique = this.checkConfigKeyUnique(config);
 		Assert.isTrue(checkConfigKeyUnique, () -> CommonErrorCode.DATA_CONFLICT.exception(config.getConfigKey()));
 
+		config.setConfigId(IdUtils.getSnowflakeId());
 		config.setCreateTime(LocalDateTime.now());
 		if (this.save(config)) {
 			redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
@@ -165,6 +166,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
 		FixedConfigUtils.allConfigs().forEach(fc -> {
 			if (!this.redisCache.hasKey(getCacheKey(fc.getKey()))) {
 				SysConfig config = new SysConfig();
+				config.setConfigId(IdUtils.getSnowflakeId());
 				config.setConfigKey(fc.getKey());
 				config.setConfigName(I18nUtils.get(fc.getName()));
 				config.setConfigValue(fc.getDefaultValue());

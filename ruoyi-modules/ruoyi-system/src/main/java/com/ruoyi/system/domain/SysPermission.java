@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.ruoyi.common.mybatisplus.domain.BaseEntity;
+import com.ruoyi.common.db.domain.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +28,7 @@ public class SysPermission extends BaseEntity {
 	
 	public final static String TABLE_NAME = "sys_permission";
 	
-	@TableId(value = "perm_id", type = IdType.AUTO)
+	@TableId(value = "perm_id", type = IdType.INPUT)
 	private Long permId;
 	
 	/**

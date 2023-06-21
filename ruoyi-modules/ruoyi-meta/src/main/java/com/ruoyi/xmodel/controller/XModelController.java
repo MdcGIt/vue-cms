@@ -1,17 +1,15 @@
 package com.ruoyi.xmodel.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.xmodel.core.IMetaControlType;
+import com.ruoyi.xmodel.core.IMetaModelType;
+import com.ruoyi.xmodel.util.XModelUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
@@ -33,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * <p>
- * 扩展模型前端控制器
+ * 元数据模型前端控制器
  * </p>
  *
  * @author 兮玥
@@ -47,6 +45,16 @@ public class XModelController extends BaseRestController {
 
 	private final IModelService modelService;
 
+	private final List<IMetaControlType> controlTypes;
+
+	@GetMapping("/controls")
+	public R<?> getControlTypeOptions() {
+		List<Map<String, String>> list = controlTypes.stream().map(t ->
+			Map.of("id", t.getType(), "name", I18nUtils.get(t.getName()))
+		).toList();
+		return R.ok(list);
+	}
+
 	@GetMapping
 	public R<?> getModelList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -56,8 +64,8 @@ public class XModelController extends BaseRestController {
 	}
 
 	@GetMapping("/tables")
-	public R<?> getModelDataCustomTableList() {
-		List<String> list = this.modelService.listModelDataCustomTable();
+	public R<?> getModelDataTableList(@RequestParam String type) {
+		List<String> list = this.modelService.listModelDataTables(type);
 		return this.bindDataTable(list);
 	}
 
@@ -68,6 +76,16 @@ public class XModelController extends BaseRestController {
 
 		List<String> list = this.modelService.listModelTableFields(model);
 		return this.bindDataTable(list);
+	}
+
+	@GetMapping("/{modelId}")
+	public R<?> getModel(@PathVariable @LongId Long modelId) {
+		XModel model = this.modelService.getById(modelId);
+		Assert.notNull(model, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("modelId", modelId));
+
+		IMetaModelType mmt = XModelUtils.getMetaModelType(model.getOwnerType());
+		model.setIsDefaultTable(mmt.getDefaultTable().equals(model.getTableName()));
+		return R.ok(model);
 	}
 
 	@Log(title = "新增元数据", businessType = BusinessType.INSERT)

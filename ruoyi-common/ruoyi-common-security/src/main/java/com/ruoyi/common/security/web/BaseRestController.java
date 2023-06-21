@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +57,7 @@ public class BaseRestController {
 		return PageRequestDTO.buildPageRequest();
 	}
 
-	protected R<?> bindDataTable(Page<?> page) {
+	protected R<?> bindDataTable(IPage<?> page) {
 		return R.ok(new TableData<>(page.getRecords(), page.getTotal()));
 	}
 	
