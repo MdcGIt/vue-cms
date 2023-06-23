@@ -97,7 +97,7 @@ public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI1
         for (SysI18nDict dict : dicts) {
             boolean checkUnique = this.checkUnique(dict);
             Assert.isTrue(checkUnique, () -> CommonErrorCode.DATA_CONFLICT.exception(dict.getLangTag() + ":" + dict.getLangKey()));
-            if (IdUtils.validate(dict.getDictId())) {
+            if (!IdUtils.validate(dict.getDictId())) {
                 dict.setDictId(IdUtils.getSnowflakeId());
             }
         }
