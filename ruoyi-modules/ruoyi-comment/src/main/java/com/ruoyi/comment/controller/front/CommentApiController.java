@@ -2,6 +2,7 @@ package com.ruoyi.comment.controller.front;
 
 import java.util.List;
 
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,6 +62,7 @@ public class CommentApiController extends BaseRestController {
 		return R.ok(list);
 	}
 
+	@IgnoreDemoMode
 	@SaMemberCheckLogin
 	@PostMapping
 	public R<?> submitComment(@RequestBody SubmitCommentDTO dto) {
@@ -69,6 +71,7 @@ public class CommentApiController extends BaseRestController {
 		return R.ok();
 	}
 
+	@IgnoreDemoMode
 	@SaMemberCheckLogin
 	@PutMapping("/like/{commentId}")
 	public R<?> likeComment(@PathVariable @Min(1) Long commentId) {
@@ -76,6 +79,7 @@ public class CommentApiController extends BaseRestController {
 		return R.ok();
 	}
 
+	@IgnoreDemoMode
 	@SaMemberCheckLogin
 	@DeleteMapping("/{commentId}")
 	public R<?> deleteMyComment(@PathVariable @Min(1) Long commentId) {

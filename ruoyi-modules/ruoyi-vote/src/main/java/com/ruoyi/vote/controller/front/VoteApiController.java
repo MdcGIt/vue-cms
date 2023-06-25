@@ -1,5 +1,6 @@
 package com.ruoyi.vote.controller.front;
 
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ public class VoteApiController extends BaseRestController {
 		return R.ok(vote);
 	}
 
+	@IgnoreDemoMode
 	@PostMapping
 	public R<?> submitVote(@RequestBody @Validated VoteSubmitDTO dto, HttpServletRequest request) {
 		dto.setIp(ServletUtils.getIpAddr(request));
