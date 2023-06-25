@@ -209,11 +209,11 @@ INSERT INTO `sys_menu` VALUES (430649774219333, '自定义表单', 2035, 5, 'cus
 INSERT INTO `sys_i18n_dict` VALUES (null, 'zh-CN', 'MENU.NAME.430649774219333', '自定义表单');
 INSERT INTO `sys_i18n_dict` VALUES (null, 'en', 'MENU.NAME.430649774219333', 'Custom Form');
 
-ALTER TABLE cms_content add column deleted tinyint;
-ALTER TABLE cms_article_detail add column deleted tinyint;
-ALTER TABLE cms_image add column deleted tinyint;
-ALTER TABLE cms_audio add column deleted tinyint;
-ALTER TABLE cms_video add column deleted tinyint;
+ALTER TABLE cms_content add column deleted tinyint DEFAULT 0;
+ALTER TABLE cms_article_detail add column deleted tinyint DEFAULT 0;
+ALTER TABLE cms_image add column deleted tinyint DEFAULT 0;
+ALTER TABLE cms_audio add column deleted tinyint DEFAULT 0;
+ALTER TABLE cms_video add column deleted tinyint DEFAULT 0;
 
 ALTER TABLE sys_config modify column config_id bigint;
 ALTER TABLE sys_notice modify column notice_id bigint;

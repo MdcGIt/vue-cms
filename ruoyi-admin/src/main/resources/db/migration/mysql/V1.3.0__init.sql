@@ -591,7 +591,7 @@ CREATE TABLE `cms_audio`  (
   `update_by` varchar(50) NULL DEFAULT NULL COMMENT '最后修改人',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '最后修改时间',
   `remark` varchar(255) NULL DEFAULT NULL COMMENT '备注',
-  `deleted` tinyint NULL DEFAULT NULL,
+  `deleted` tinyint NULL DEFAULT 0,
   PRIMARY KEY (`audio_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
