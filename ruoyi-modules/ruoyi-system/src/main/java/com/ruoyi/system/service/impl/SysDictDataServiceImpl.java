@@ -57,7 +57,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
 	 */
 	private boolean isFixed(SysDictData data) {
 		FixedDictType dictType = FixedDictUtils.getFixedDictType(data.getDictType());
-		return dictType.getDataList().stream().anyMatch(d -> d.getValue().equals(data.getDictValue()));
+		return dictType != null && dictType.getDataList().stream().anyMatch(d -> d.getValue().equals(data.getDictValue()));
 	}
 
 	/**

@@ -1,11 +1,19 @@
 package com.ruoyi.system.controller.common;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.Objects;
-
+import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
+import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.file.FileExUtils;
+import com.ruoyi.system.config.SystemConfig;
+import com.ruoyi.system.fixed.config.SysUploadSizeLimit;
+import com.ruoyi.system.fixed.config.SysUploadTypeLimit;
+import com.ruoyi.system.security.AdminUserType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,20 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ruoyi.common.domain.R;
-import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.file.FileExUtils;
-import com.ruoyi.system.config.SystemConfig;
-import com.ruoyi.system.fixed.config.SysUploadSizeLimit;
-import com.ruoyi.system.fixed.config.SysUploadTypeLimit;
-import com.ruoyi.system.security.SaAdminCheckLogin;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 通用请求处理
@@ -44,7 +43,7 @@ public class CommonController extends BaseRestController {
 	/**
 	 * 通用上传请求（单个）
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@PostMapping("/upload")
 	public R<?> uploadFile(MultipartFile file) throws Exception {
 		try {
@@ -71,7 +70,7 @@ public class CommonController extends BaseRestController {
 	/**
 	 * 本地资源通用下载
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/download")
 	public void resourceDownload(String path, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

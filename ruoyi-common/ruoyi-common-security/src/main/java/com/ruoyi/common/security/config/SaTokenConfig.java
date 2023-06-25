@@ -1,11 +1,9 @@
 package com.ruoyi.common.security.config;
 
-import cn.dev33.satoken.strategy.SaStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -18,8 +16,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
     @Autowired
     public void rewriteGetAnnotationSaStrategy() {
         // 重写Sa-Token的注解处理器，增加注解合并功能
-        SaStrategy.me.getAnnotation = (element, annotationClass) ->
-                AnnotatedElementUtils.getMergedAnnotation(element, annotationClass);
+//        SaStrategy.me.getAnnotation = (element, annotationClass) ->
+//                AnnotatedElementUtils.getMergedAnnotation(element, annotationClass);
     }
 
     /**

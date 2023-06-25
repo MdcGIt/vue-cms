@@ -1,15 +1,6 @@
 package com.ruoyi.contentcore.controller;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.staticize.core.TemplateContext;
@@ -25,11 +16,20 @@ import com.ruoyi.contentcore.template.impl.SiteTemplateType;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.contentcore.util.TemplateUtils;
-
+import com.ruoyi.system.security.AdminUserType;
 import freemarker.template.TemplateException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 内容核心管理
@@ -58,6 +58,7 @@ public class CoreController extends BaseRestController {
 	 * @throws IOException
 	 * @throws TemplateException
 	 */
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/cms/preview/{dataType}/{dataId}")
 	public void preview(@PathVariable("dataType") String dataType, @PathVariable("dataId") Long dataId,
 			@RequestParam(value = "pp") String publishPipe,

@@ -1,19 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.i18n.I18nUtils;
@@ -27,14 +13,18 @@ import com.ruoyi.system.fixed.FixedDictUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysDictTypeService;
-
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 数据字典信息
@@ -92,7 +82,7 @@ public class SysDictDataController extends BaseRestController {
 	/**
 	 * 根据字典类型查询字典数据信息
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping(value = "/type/{dictType}")
 	public R<?> getDictDatasByType(@PathVariable String dictType) {
 		List<SysDictData> datas = dictTypeService.selectDictDatasByType(dictType);

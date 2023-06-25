@@ -1,14 +1,5 @@
 package com.ruoyi.cms.stat.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.ruoyi.cms.stat.baidu.BaiduTongjiConfig;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import com.ruoyi.cms.stat.baidu.BaiduTongjiUtils;
 import com.ruoyi.cms.stat.baidu.dto.BaiduTimeTrendDTO;
 import com.ruoyi.cms.stat.baidu.vo.BaiduOverviewReportVO;
@@ -17,14 +8,21 @@ import com.ruoyi.cms.stat.baidu.vo.BaiduTimeTrendVO;
 import com.ruoyi.cms.stat.properties.BaiduTjAccessTokenProperty;
 import com.ruoyi.cms.stat.service.ICmsStatService;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
-
+import com.ruoyi.system.security.AdminUserType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 百度统计数据
@@ -32,7 +30,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cms/stat/baidu")

@@ -1,26 +1,5 @@
 package com.ruoyi.exmodel.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.ruoyi.exmodel.CmsExtendMetaModelType;
-import com.ruoyi.exmodel.domain.CmsExtendModelData;
-import com.ruoyi.xmodel.core.impl.MetaControlType_Checkbox;
-import com.ruoyi.xmodel.service.IModelDataService;
-import com.ruoyi.xmodel.util.XModelUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
@@ -32,21 +11,30 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.exmodel.CmsExtendMetaModelType;
+import com.ruoyi.exmodel.domain.dto.XModelFieldDataDTO;
 import com.ruoyi.exmodel.permission.EXModelPriv;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
+import com.ruoyi.xmodel.core.impl.MetaControlType_Checkbox;
 import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.domain.XModelField;
 import com.ruoyi.xmodel.dto.XModelDTO;
-import com.ruoyi.xmodel.dto.XModelFieldDTO;
-import com.ruoyi.exmodel.domain.dto.XModelFieldDataDTO;
+import com.ruoyi.xmodel.service.IModelDataService;
 import com.ruoyi.xmodel.service.IModelFieldService;
 import com.ruoyi.xmodel.service.IModelService;
-
+import com.ruoyi.xmodel.util.XModelUtils;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -115,7 +103,7 @@ public class EXModelController extends BaseRestController {
 		return R.ok();
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/data")
 	public R<?> getModelData(@RequestParam @LongId Long modelId,
 							 @RequestParam String dataType,

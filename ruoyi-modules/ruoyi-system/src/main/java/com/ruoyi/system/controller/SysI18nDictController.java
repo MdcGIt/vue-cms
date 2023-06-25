@@ -1,21 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
@@ -33,13 +17,19 @@ import com.ruoyi.system.domain.SysI18nDict;
 import com.ruoyi.system.fixed.dict.I18nDictType;
 import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.service.ISysDictTypeService;
 import com.ruoyi.system.service.ISysI18nDictService;
-
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * 国际化配置控制器
@@ -90,7 +80,7 @@ public class SysI18nDictController extends BaseRestController {
 		return R.ok(this.i18nDictService.getById(i18nDictId));
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping(value = "/langKey/{langKey}")
 	public R<?> listByLangKey(@PathVariable @NotEmpty String langKey) {
 		LambdaQueryWrapper<SysI18nDict> q = new LambdaQueryWrapper<SysI18nDict>()

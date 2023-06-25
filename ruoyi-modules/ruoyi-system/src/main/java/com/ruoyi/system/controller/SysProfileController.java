@@ -7,6 +7,7 @@ import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.SecurityUtils;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
@@ -19,7 +20,7 @@ import com.ruoyi.system.domain.vo.DashboardUserVO;
 import com.ruoyi.system.domain.vo.ShortcutVO;
 import com.ruoyi.system.domain.vo.UserProfileVO;
 import com.ruoyi.system.enums.MenuType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.*;
 import com.ruoyi.system.user.preference.ShortcutUserPreference;
@@ -50,7 +51,7 @@ public class SysProfileController extends BaseRestController {
 
 	private final ISysPermissionService permissionService;
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping
 	public R<?> profile() {
 		LoginUser loginUser = StpAdminUtil.getLoginUser();
@@ -61,7 +62,7 @@ public class SysProfileController extends BaseRestController {
 		return R.ok(new UserProfileVO(user, roleGroup, postGroup));
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@PutMapping
 	@Log(title = "个人中心", businessType = BusinessType.UPDATE)
 	public R<?> updateProfile(@RequestBody SysUser user) {
@@ -90,7 +91,7 @@ public class SysProfileController extends BaseRestController {
 		return R.fail();
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@Log(title = "个人中心", businessType = BusinessType.UPDATE, isSaveRequestData = false)
 	@PutMapping("/updatePwd")
 	public R<?> updatePwd(String oldPassword, String newPassword) {
@@ -111,7 +112,7 @@ public class SysProfileController extends BaseRestController {
 		return update ? R.ok() : R.fail();
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@Log(title = "个人中心", businessType = BusinessType.UPDATE)
 	@PostMapping("/avatar")
 	public R<?> avatar(@RequestParam("avatarfile") MultipartFile file) throws Exception {
@@ -130,7 +131,7 @@ public class SysProfileController extends BaseRestController {
 	/**
 	 * 首页用户信息
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/homeInfo")
 	public R<?> getHomeInfo() {
 		LoginUser loginUser = StpAdminUtil.getLoginUser();
@@ -149,7 +150,7 @@ public class SysProfileController extends BaseRestController {
 		return R.ok(vo);
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/shortcuts")
 	public R<?> getHomeShortcuts() {
 		SysUser user = this.userService.getById(StpAdminUtil.getLoginIdAsLong());

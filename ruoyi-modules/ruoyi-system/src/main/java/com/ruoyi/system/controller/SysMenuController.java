@@ -15,7 +15,6 @@ import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.enums.MenuType;
 import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysPermissionService;
@@ -69,7 +68,7 @@ public class SysMenuController extends BaseRestController {
 	/**
 	 * 获取菜单下拉框树结构数据
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/treeselect")
 	public R<?> treeselect(SysMenu menu) {
 		List<SysMenu> menus = this.menuService.lambdaQuery()
@@ -82,7 +81,7 @@ public class SysMenuController extends BaseRestController {
 		return R.ok(buildMenuTreeSelect);
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/userTreeselect")
 	public R<?> userTreeselect() {
 		List<SysMenu> menus = this.menuService.lambdaQuery().ne(SysMenu::getMenuType, MenuType.Button.value())

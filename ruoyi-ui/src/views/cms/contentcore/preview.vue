@@ -37,6 +37,7 @@
   </div>
 </template>
 <script>
+import { getToken } from '@/utils/auth'
 import { getPublishPipeSelectData } from "@/api/contentcore/publishpipe";
 
 export default {
@@ -58,11 +59,12 @@ export default {
       getPublishPipeSelectData().then(response => {
         this.publishPipes = response.data.rows;
         this.selectedPublishPipe = response.data.rows[0].pipeCode;
-        this.previewUrl = process.env.VUE_APP_BASE_API + "/cms/preview/" + this.type + "/" + this.dataId + "?pp=" + this.selectedPublishPipe;
+        this.handlePublishPipeChange();
       });
     },
     handlePublishPipeChange () {
-      this.previewUrl = process.env.VUE_APP_BASE_API + "/cms/preview/" + this.type + "/" + this.dataId + "?pp=" + this.selectedPublishPipe;
+      this.previewUrl = process.env.VUE_APP_BASE_API + "/cms/preview/" + this.type + "/" + this.dataId 
+        + "?pp=" + this.selectedPublishPipe+ "&Authorization=Bearer " + getToken();
     },
     handleRefresh () {
       document.querySelector('iframe').contentWindow.location.reload();
