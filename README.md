@@ -85,12 +85,18 @@ services:
 
 - [Wiki-快速上手](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
 - [WiKi-常用配置](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E)
+- [WiKi-Docker部署说明](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/Docker%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E)
+- [WiKi-站点访问配置](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E7%AB%99%E7%82%B9%E8%AE%BF%E9%97%AE%E9%85%8D%E7%BD%AE)
+- [WiKi-常见问题](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+- [WiKi-版权声明](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E7%89%88%E6%9D%83%E5%A3%B0%E6%98%8E)
+- [WiKi-免责声明](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E)
+- [WiKi-版本变更日志](https://gitee.com/liweiyi/RuoYi-Vue-CMS/wikis/%E7%89%88%E6%9C%AC%E5%8F%98%E6%9B%B4%E6%97%A5%E5%BF%97)
 
 ### 功能模块
 
 
 | 模块 | 简介 |
-|  | --- |
+| --- | --- |
 | 站点管理 | 多站点，支持图片水印、标题查重、扩展模型等扩展配置 |
 | 栏目管理 | 普通栏目+链接栏目，扩展配置优先级高于站点扩展配置 |
 | 内容管理 | 内容类型：文章+图片集+音视频集，页面部件：动态自定义区块+广告，内容回收站 |
