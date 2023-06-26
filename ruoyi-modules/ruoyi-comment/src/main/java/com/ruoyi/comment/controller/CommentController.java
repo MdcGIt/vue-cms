@@ -54,7 +54,6 @@ public class CommentController extends BaseRestController {
 				.eq(IdUtils.validate(sourceId), Comment::getSourceId, sourceId).eq(Comment::getParentId, 0)
 				.eq(IdUtils.validate(uid), Comment::getUid, uid)
 				.eq(Objects.nonNull(auditStatus), Comment::getAuditStatus, auditStatus)
-				.ne(Comment::getDelFlag, CommentConsts.DELETE_FLAG)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 
 		return this.bindDataTable(page);

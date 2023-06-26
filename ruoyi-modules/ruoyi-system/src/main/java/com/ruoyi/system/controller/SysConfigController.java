@@ -1,18 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
@@ -30,13 +17,16 @@ import com.ruoyi.system.fixed.FixedConfigUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysConfigService;
-
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 参数配置 信息操作处理
@@ -96,7 +86,7 @@ public class SysConfigController extends BaseRestController {
 	/**
 	 * 根据参数键名查询参数值
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping(value = "/configKey/{configKey}")
 	public R<?> getConfigKey(@PathVariable String configKey) {
 		return R.ok(configService.selectConfigByKey(configKey));

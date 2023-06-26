@@ -1,33 +1,32 @@
 package com.ruoyi.xmodel.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.domain.R;
+import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.log.annotation.Log;
+import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
+import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.security.AdminUserType;
+import com.ruoyi.system.security.StpAdminUtil;
+import com.ruoyi.system.validator.LongId;
 import com.ruoyi.xmodel.core.IMetaControlType;
 import com.ruoyi.xmodel.core.IMetaModelType;
+import com.ruoyi.xmodel.domain.XModel;
+import com.ruoyi.xmodel.dto.XModelDTO;
+import com.ruoyi.xmodel.service.IModelService;
 import com.ruoyi.xmodel.util.XModelUtils;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ruoyi.common.domain.R;
-import com.ruoyi.common.exception.CommonErrorCode;
-import com.ruoyi.common.log.annotation.Log;
-import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
-import com.ruoyi.system.security.StpAdminUtil;
-import com.ruoyi.system.validator.LongId;
-import com.ruoyi.xmodel.domain.XModel;
-import com.ruoyi.xmodel.dto.XModelDTO;
-import com.ruoyi.xmodel.service.IModelService;
-
-import jakarta.validation.constraints.NotEmpty;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -37,7 +36,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/xmodel")

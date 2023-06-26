@@ -1,6 +1,8 @@
 package com.ruoyi.word.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
@@ -70,5 +72,11 @@ public class ErrorProneWordController extends BaseRestController {
 	public R<String> remove(@RequestBody @NotEmpty List<Long> errorProneWordIds) {
 		this.errorProneWordService.removeByIds(errorProneWordIds);
 		return R.ok();
+	}
+
+	@PostMapping("/check")
+	public R<?> check(@RequestBody String text) {
+		Map<String, String> map = this.errorProneWordService.check(text);
+		return R.ok(map.entrySet().stream().map(e -> Map.of("w", e.getKey(), "r", e.getValue())).toList());
 	}
 }

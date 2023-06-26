@@ -37,7 +37,7 @@ public class SensitiveWordTester {
 		System.out.println(p.getWordDFAModel().getRoot().toString());
 		
 		String text = "妈的逼加大拉家带口中国拉市解放路卡士大夫七风妈的拉克丝七副风经理中国人拉三等奖七风发斯蒂芬艹妈的逼拉屎的发生看到了上游行业拉萨到付款啦草";
-		List<String> wordList = p.listWords(text);
+		Set<String> wordList = p.listWords(text);
 		for (String string : wordList) {
 			System.out.println(string);
 		}

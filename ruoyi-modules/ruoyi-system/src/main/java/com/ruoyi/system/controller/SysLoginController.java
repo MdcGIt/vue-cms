@@ -3,6 +3,7 @@ package com.ruoyi.system.controller;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.i18n.I18nUtils;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
@@ -12,7 +13,7 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.dto.LoginBody;
 import com.ruoyi.system.fixed.dict.LoginLogType;
 import com.ruoyi.system.fixed.dict.SuccessOrFail;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.security.SysLoginService;
 import com.ruoyi.system.service.ISysLogininforService;
@@ -85,7 +86,7 @@ public class SysLoginController extends BaseRestController {
 	 * 
 	 * @return 用户信息
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("getInfo")
 	public R<?> getInfo() {
 		LoginUser loginUser = StpAdminUtil.getLoginUser();
@@ -103,7 +104,7 @@ public class SysLoginController extends BaseRestController {
 	 * 
 	 * @return 路由信息
 	 */
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("getRouters")
 	public R<?> getRouters() {
 		List<SysMenu> menus = this.menuService.lambdaQuery().orderByAsc(SysMenu::getOrderNum).list();

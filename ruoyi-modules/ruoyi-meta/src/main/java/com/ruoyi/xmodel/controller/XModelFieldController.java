@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.fixed.dict.YesOrNo;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
 import com.ruoyi.xmodel.core.MetaModel;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/xmodel/field")

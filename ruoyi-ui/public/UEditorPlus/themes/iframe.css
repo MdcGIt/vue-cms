@@ -61,3 +61,10 @@ img {
 .edui-quick-operate-active {
     background: #E6ECFF;
 }
+
+/* 警告提示样式 */
+span.warning_tip {
+  border-top: 1px dashed #ffba00;
+  border-bottom: 1px dashed #ffba00;
+  background-color: #ffba005c;
+}

@@ -131,7 +131,7 @@ public class SensitiveWordProcessor {
 	 * @param text
 	 * @param matchType
 	 */
-	public List<String> listWords(final String text, MatchType matchType) {
+	public Set<String> listWords(final String text, MatchType matchType) {
 		List<MatchFlag> matchList = new ArrayList<>();
 		char[] charText = text.toCharArray();
 		for (int i = 0; i < charText.length; i++) {
@@ -144,13 +144,7 @@ public class SensitiveWordProcessor {
 			}
 			i = flag.index + flag.length - 1;
 		}
-		return matchList.stream().map(flag -> {
-			StringBuilder sb = new StringBuilder();
-			for (int i = flag.index; i < flag.index + flag.length; i++) {
-				sb.append(charText[i]);
-			}
-			return sb.toString();
-		}).toList();
+		return matchList.stream().map(flag -> text.substring(flag.index, flag.index + flag.length)).collect(Collectors.toSet());
 	}
 
 	/**
@@ -158,7 +152,7 @@ public class SensitiveWordProcessor {
 	 *
 	 * @param text
 	 */
-	public List<String> listWords(final String text) {
+	public Set<String> listWords(final String text) {
 		return this.listWords(text, MatchType.MAX);
 	}
 	

@@ -1,26 +1,8 @@
 package com.ruoyi.contentcore.controller;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.ruoyi.system.SysConstants;
-import com.ruoyi.system.security.StpAdminUtil;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -38,14 +20,20 @@ import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.system.domain.SysPermission;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
+import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysPermissionService;
 import com.ruoyi.system.validator.LongId;
-
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 站点/栏目/内容权限
@@ -53,7 +41,7 @@ import lombok.Setter;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/perms")

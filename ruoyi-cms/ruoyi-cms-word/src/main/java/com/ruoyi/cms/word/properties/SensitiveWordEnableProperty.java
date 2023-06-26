@@ -30,7 +30,7 @@ public class SensitiveWordEnableProperty implements IProperty {
 
 	@Override
 	public String getName() {
-		return "是否开启敏感词";
+		return "是否开启文章保存敏感词替换";
 	}
 	
 	@Override

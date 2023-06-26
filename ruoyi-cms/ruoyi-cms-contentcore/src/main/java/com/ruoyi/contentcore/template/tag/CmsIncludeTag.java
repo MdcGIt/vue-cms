@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ruoyi.contentcore.properties.EnableSSI;
+import com.ruoyi.contentcore.properties.EnableSSIProperty;
 import com.ruoyi.contentcore.util.TemplateUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -100,7 +100,7 @@ public class CmsIncludeTag extends AbstractTag {
 		long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
 		CmsSite site = this.siteService.getSite(siteId);
 
-		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
+		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSIProperty.getValue(site.getConfigProps()));
 		boolean virtual = Boolean.valueOf(attrs.get(TagAttr_VIRTUAL));
 
 		String includeTemplateKey = SiteUtils.getTemplateKey(site, context.getPublishPipeCode(), file);

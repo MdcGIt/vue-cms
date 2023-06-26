@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ruoyi.comment.CommentConsts;
 
+import com.ruoyi.common.db.DBConstants;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -81,11 +82,11 @@ public class Comment implements Serializable {
 	 * 评论时间
 	 */
 	private LocalDateTime commentTime;
-	
+
 	/**
-	 * 删除标识（0=未删除，1=已删除）
+	 * 逻辑删除标识
 	 */
-	private Integer delFlag;
+	private Integer deleted;
 	
 	/**
 	 * IP
@@ -115,6 +116,6 @@ public class Comment implements Serializable {
 	private List<Comment> replyList;
 	
 	public boolean isDeleted() {
-		return CommentConsts.DELETE_FLAG == this.delFlag;
+		return deleted == DBConstants.DELETED_YES;
 	}
 }

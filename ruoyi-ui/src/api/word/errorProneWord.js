@@ -31,3 +31,11 @@ export function deleteErrorProneWord(data) {
     data: data
   })
 }
+
+export function checkFallibleWords(text) {
+  return request({
+    url: '/word/errorproneword/check',
+    method: 'post',
+    data: { text: text }
+  })
+}

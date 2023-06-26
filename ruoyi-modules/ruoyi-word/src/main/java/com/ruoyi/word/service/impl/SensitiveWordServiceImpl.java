@@ -32,6 +32,11 @@ public class SensitiveWordServiceImpl extends ServiceImpl<SensitiveWordMapper, S
 	private final SensitiveWordProcessor processor;
 
 	@Override
+	public Set<String> check(String text) {
+		return this.processor.listWords(text);
+	}
+
+	@Override
 	public String replaceSensitiveWords(String text, String replacement) {
 		if (StringUtils.isBlank(text)) {
 			return text;

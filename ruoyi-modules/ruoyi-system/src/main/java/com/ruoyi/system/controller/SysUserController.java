@@ -1,27 +1,5 @@
 package com.ruoyi.system.controller;
 
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -45,7 +23,6 @@ import com.ruoyi.system.domain.dto.UserImportData;
 import com.ruoyi.system.domain.vo.UserInfoVO;
 import com.ruoyi.system.permission.SysMenuPriv;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysPostService;
@@ -54,12 +31,20 @@ import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.impl.SysUserServiceImpl.SysUserReadListener;
 import com.ruoyi.system.user.preference.IUserPreference;
 import com.ruoyi.system.validator.LongId;
-
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.StringWriter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 用户信息
@@ -245,14 +230,14 @@ public class SysUserController extends BaseRestController {
 
 	private final List<IUserPreference> userPreferenceList;
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/getPreferences")
 	public R<?> getPreferences() {
 		SysUser user = this.userService.getById(StpAdminUtil.getLoginIdAsLong());
 		return R.ok(Objects.isNull(user.getPreferences()) ? Map.of() : user.getPreferences());
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/preference")
 	public R<?> getUserPreference(@RequestParam("id") @NotEmpty String id) {
 		LoginUser loginUser = StpAdminUtil.getLoginUser();
@@ -269,7 +254,7 @@ public class SysUserController extends BaseRestController {
 		return R.ok(value);
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@PutMapping("/savePreferences")
 	public R<?> saveUserPreferences(@RequestBody @NotNull Map<String, Object> userPreferences) throws Exception {
 		SysUser user = this.userService.getById(StpAdminUtil.getLoginIdAsLong());

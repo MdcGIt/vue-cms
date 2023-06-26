@@ -1,37 +1,28 @@
 package com.ruoyi.search.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.search.domain.DictWord;
 import com.ruoyi.search.domain.dto.DictWordDTO;
 import com.ruoyi.search.service.IDictWordService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -40,7 +31,7 @@ public class DictWordController extends BaseRestController {
 
 	private final IDictWordService dictWordService;
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -51,7 +42,7 @@ public class DictWordController extends BaseRestController {
 	}
 
 	@Log(title = "新增检索词", businessType = BusinessType.UPDATE)
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@PostMapping
 	public R<?> add(@RequestBody @Validated DictWordDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -60,7 +51,7 @@ public class DictWordController extends BaseRestController {
 	}
 
 	@Log(title = "删除检索词", businessType = BusinessType.DELETE)
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@DeleteMapping
 	public R<String> delete(@RequestBody @NotEmpty List<Long> dictWordIds) {
 		this.dictWordService.removeByIds(dictWordIds);

@@ -102,14 +102,14 @@ public class ConfigPropertyUtils {
 	public static String getStringValue(String propertyKey, Map<String, String> firstProps,
 			Map<String, String> secondProps) {
 		IProperty prop = getConfigProperty(propertyKey);
+		String v = null;
 		if (prop != null) {
-			String v = MapUtils.getString(firstProps, prop.getId());
-			if (StringUtils.isNotEmpty(v)) {
-				return v;
+			v = MapUtils.getString(firstProps, prop.getId());
+			if (StringUtils.isEmpty(v)) {
+				v = MapUtils.getString(secondProps, prop.getId());
 			}
-			v = MapUtils.getString(secondProps, prop.getId());
 		}
-		return null;
+		return v;
 	}
 
 	/**
@@ -133,16 +133,18 @@ public class ConfigPropertyUtils {
 	 */
 	public static int getIntValue(String propertyKey, Map<String, String> firstProps, Map<String, String> secondProps) {
 		IProperty prop = getConfigProperty(propertyKey);
+		int intV = 0;
 		if (prop != null) {
 			String v = MapUtils.getString(firstProps, prop.getId());
 			if (NumberUtils.isCreatable(v)) {
-				return NumberUtils.toInt(v);
-			}
-			v = MapUtils.getString(secondProps, prop.getId());
-			if (NumberUtils.isCreatable(v)) {
-				return NumberUtils.toInt(v);
+				intV = NumberUtils.toInt(v);
+			} else {
+				v = MapUtils.getString(secondProps, prop.getId());
+				if (NumberUtils.isCreatable(v)) {
+					intV = NumberUtils.toInt(v);
+				}
 			}
 		}
-		return 0;
+		return intV;
 	}
 }

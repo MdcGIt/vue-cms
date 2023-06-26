@@ -1,24 +1,10 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
@@ -29,14 +15,19 @@ import com.ruoyi.system.domain.dto.ScheduledTaskDTO;
 import com.ruoyi.system.domain.vo.ScheduledTaskVO;
 import com.ruoyi.system.mapper.SysScheduledTaskLogMapper;
 import com.ruoyi.system.schedule.ScheduledTask;
-import com.ruoyi.system.security.SaAdminCheckLogin;
+import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISysScheduledTaskService;
 import com.ruoyi.system.validator.LongId;
 import com.xxl.job.core.handler.IJobHandler;
-
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 定时任务 控制器
@@ -44,7 +35,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/monitor/task")

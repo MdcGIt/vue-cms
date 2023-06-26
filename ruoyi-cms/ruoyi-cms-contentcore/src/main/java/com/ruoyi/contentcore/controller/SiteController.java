@@ -34,7 +34,6 @@ import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
 import freemarker.template.TemplateException;
@@ -78,7 +77,7 @@ public class SiteController extends BaseRestController {
      * @return
      * @apiNote 读取request.header['CurrentSite']中的siteId，如果无header或无站点则取数据库第一条站点数据
      */
-    @SaAdminCheckLogin
+    @Priv(type = AdminUserType.TYPE)
     @GetMapping("/getCurrentSite")
     public R<Map<String, Object>> getCurrentSite() {
         CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -147,7 +146,7 @@ public class SiteController extends BaseRestController {
         return R.ok(dto);
     }
 
-    @SaAdminCheckLogin
+    @Priv(type = AdminUserType.TYPE)
     @GetMapping("/options")
     public R<?> getSiteOptions() {
         LoginUser loginUser = StpAdminUtil.getLoginUser();
@@ -324,7 +323,7 @@ public class SiteController extends BaseRestController {
      * @param dto
      * @return
      */
-    @SaAdminCheckLogin
+    @Priv(type = AdminUserType.TYPE)
     @Log(title = "应用默认模板", businessType = BusinessType.UPDATE)
     @PostMapping("/apply_default_template")
     public R<?> applyDefaultTemplateToCatalog(@RequestBody @Validated SiteDefaultTemplateDTO dto) {

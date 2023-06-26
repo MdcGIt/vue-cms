@@ -1,7 +1,10 @@
 package com.ruoyi.customform;
 
 import com.ruoyi.common.utils.ReflectASMUtils;
+import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.fixed.config.SiteApiUrl;
+import com.ruoyi.contentcore.properties.SiteApiUrlProperty;
+import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.customform.domain.CmsCustomForm;
 
 import java.util.Map;
@@ -18,9 +21,13 @@ public class CustomFormConsts {
 
     public static final String TemplateVariable_CustomForm = "CustomForm";
 
-    public static Map<String, Object> getCustomFormVariables(CmsCustomForm form) {
+    public static String getCustomFormActionUrl(CmsSite site, String publishPipeCode) {
+        return SiteApiUrlProperty.getValue(site, publishPipeCode) + "api/customform/submit";
+    }
+
+    public static Map<String, Object> getCustomFormVariables(CmsCustomForm form, CmsSite site, String publishPipeCode) {
         Map<String, Object> map = ReflectASMUtils.beanToMap(form);
-        map.put("action", SiteApiUrl.getValue() + "api/customform/submit");
+        map.put("action", getCustomFormActionUrl(site, publishPipeCode));
         return map;
     }
 }

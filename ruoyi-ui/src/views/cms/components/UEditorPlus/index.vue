@@ -37,6 +37,8 @@ import CMSCatalogSelector from "@/views/cms/contentcore/catalogSelector";
 import CMSContentSelector from "@/views/cms/contentcore/contentSelector";
 import CMSResourceDialog from "@/views/cms/contentcore/resourceDialog";
 import CMSUeditorThirdVideo from "./thrid-video";
+import { checkSensitiveWords } from "@/api/word/sensitiveWord";
+import { checkFallibleWords } from "@/api/word/errorProneWord"
 
 const UE_HOME = '/UEditorPlus/';
 
@@ -56,6 +58,10 @@ export default {
     editorId: {
       type: String,
       default: "ueditor"
+    },
+    configs: {
+      type: Object,
+      default: () => ({})
     }
   },
   components: {
@@ -164,6 +170,7 @@ export default {
             "rowspacingbottom",    // 段后距
             "lineheight",          // 行间距
             "|",
+            "emotion",             // 表情
             "customstyle",         // 自定义标题
             "paragraph",           // 段落格式
             "fontfamily",          // 字体
@@ -190,11 +197,11 @@ export default {
             "imageright",          // 图片右浮动
             "imagecenter",         // 图片居中
             "|",
-            "emotion",             // 表情
             // "scrawl",              // 涂鸦
+            "xy-third-video",         // 视频
             'xy-resource',
             'xy-content',
-            "xy-third-video",         // 视频
+            "xy-check-word",
             // "insertframe",         // 插入Iframe
             "insertcode",          // 插入代码
             "pagebreak",           // 分页
@@ -243,6 +250,7 @@ export default {
       this.addXyContentButton(editorId)
       this.addXyResourceButton(editorId)
       this.addThirdVideoButton(editorId)
+      this.addXyWordCheckButton(editorId)
     },
     handleReady(editorInstance) {
       // console.log('ueditor-plus.ready: ' + editorInstance.key, editorInstance)
@@ -464,19 +472,19 @@ export default {
           }
         const items = [
           {
-            label: "栏目链接",
+            label: that.$t('CMS.UEditor.InsertCatalogLink'),
             value: "catalog",
             theme: editor.options.theme,
             onclick: _onMenuClick
           },
           {
-            label: "内容链接",
+            label: that.$t('CMS.UEditor.InsertContentLink'),
             value: "content",
             theme: editor.options.theme,
             onclick: _onMenuClick
           },
           {
-            label: "组图",
+            label: that.$t('CMS.UEditor.InsertImageGroup'),
             value: "img_group",
             theme: editor.options.theme,
             onclick: _onMenuClick
@@ -485,7 +493,7 @@ export default {
         const ui = new UE.ui.MenuButton({
           editor: editor,
           className: "edui-for-" + uiName,
-          title: "插入内容",
+          title: that.$t('CMS.UEditor.InsertContentLink'),
           items: items,
           onbuttonclick: function() {
             editor.execCommand(uiName, that.contentType);
@@ -633,6 +641,117 @@ export default {
         editor.execCommand("insertHTML", result);
       }
     },
+    addXyWordCheckButton(eidtorId) {
+      const that = this
+      window.UE.registerUI('xy-check-word', function (editor, uiName) {
+        editor.registerCommand(uiName,{
+          execCommand:function(cmdName,value){
+            if (value == 'sensitive') {
+              const txt = editor.getContentTxt();
+              if (!txt || txt.length == 0) {
+                return;
+              }
+              checkSensitiveWords(editor.getContentTxt()).then(response => {
+                if (response.data.length == 0) {
+                  that.$modal.msgSuccess(that.$t('CMS.UEditor.NoSensitiveWord'));
+                } else {
+                  that.$prompt(response.data.join("<br/>"), that.$t('CMS.UEditor.FoundSensitiveWord'), {
+                    confirmButtonText: that.$t('CMS.UEditor.ReplaceWord'),
+                    cancelButtonText: that.$t('CMS.UEditor.HighlightWord'),
+                    inputPlaceholder: that.$t('CMS.UEditor.InputReplacement'),
+                    inputValue: "*",
+                    dangerouslyUseHTMLString: true,
+                    distinguishCancelAndClose: true
+                  }).then(({ value }) => {
+                    editor.execCommand('xy-replace-word2', response.data, value);
+                  }).catch(() => {
+                    editor.execCommand('xy-highlight-word', response.data);
+                  });
+                }
+              })
+            } else if (value == 'fallible') {
+              checkFallibleWords(editor.getContentTxt()).then(response => {
+                if (response.data.length == 0) {
+                  that.$modal.msgSuccess(that.$t('CMS.UEditor.NoFallibleWord'));
+                } else {
+                  const str = response.data.map(item => item.w + " > " + item.r).join("<br/>");
+                  that.$confirm(str, that.$t('CMS.UEditor.FoundFallibleWord'), {
+                    confirmButtonText: that.$t('CMS.UEditor.ReplaceWord'),
+                    cancelButtonText: that.$t('CMS.UEditor.HighlightWord'),
+                    dangerouslyUseHTMLString: true,
+                    distinguishCancelAndClose: true
+                  }).then(() => {
+                    editor.execCommand('xy-replace-word', response.data)
+                  }).catch(() => {  
+                    editor.execCommand('xy-highlight-word', response.data.map(item => item.w))
+                  });
+                }
+              })
+            }
+          }
+        });
+        editor.registerCommand('xy-highlight-word',{
+          execCommand:function(cmdName, words){
+            let html = editor.getContent();
+            // 先去掉可能存在的高亮标签
+            html = html.replace(new RegExp("<span class=\"warning_tip\">([^<]*)</span>", "ig"), '$1');
+            words.forEach(word => {
+              html = html.replace(new RegExp(word, "ig"), '<span class="warning_tip">' + word + '</span>')
+            })
+            editor.setContent(html)
+          }
+        });
+        editor.registerCommand('xy-replace-word',{
+          execCommand:function(cmdName, list){
+            let html = editor.getContent();
+            // 先去掉可能存在的高亮标签
+            html = html.replace(new RegExp("<span class=\"warning_tip\">([^<]*)</span>", "ig"), '$1');
+            list.forEach(item => {
+              html = html.replace(new RegExp(item.w, "ig"), item.r)
+            })
+            editor.setContent(html)
+          }
+        });
+        editor.registerCommand('xy-replace-word2',{
+          execCommand:function(cmdName, words, replacement){
+            let html = editor.getContent();
+            // 先去掉可能存在的高亮标签
+            html = html.replace(new RegExp("<span class=\"warning_tip\">([^<]*)</span>", "ig"), '$1');
+            words.forEach(word => {
+              html = html.replace(new RegExp(word, "ig"), replacement)
+            })
+            editor.setContent(html)
+          }
+        });
+        const _onMenuClick = function() {
+            editor.execCommand(uiName, this.value);
+          }
+        const items = [
+          {
+            label: that.$t('CMS.UEditor.SensitiveWordCheck'),
+            value: "sensitive",
+            theme: editor.options.theme,
+            onclick: _onMenuClick
+          },
+          {
+            label: that.$t('CMS.UEditor.FallibleWordCheck'),
+            value: "fallible",
+            theme: editor.options.theme,
+            onclick: _onMenuClick
+          }
+        ];
+        const ui = new UE.ui.MenuButton({
+          editor: editor,
+          className: "edui-for-" + uiName,
+          title: "Check Word",
+          items: items,
+          onbuttonclick: function() {
+            editor.execCommand(uiName, that.contentType);
+          }
+        });
+        return ui;
+      });
+    }
   },
 };
 </script>
@@ -646,5 +765,8 @@ export default {
 }
 .edui-for-xy-content .edui-menubutton-body .edui-icon {
   background-image: url('./images/content.png') !important;
+}
+.edui-for-xy-check-word .edui-menubutton-body .edui-icon {
+  background-image: url('./images/word.png') !important;
 }
 </style>

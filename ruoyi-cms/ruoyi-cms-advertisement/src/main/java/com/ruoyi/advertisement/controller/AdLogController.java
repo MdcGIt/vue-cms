@@ -1,20 +1,5 @@
 package com.ruoyi.advertisement.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.advertisement.domain.CmsAdClickLog;
@@ -25,17 +10,26 @@ import com.ruoyi.advertisement.mapper.CmsAdHourStatMapper;
 import com.ruoyi.advertisement.mapper.CmsAdViewLogMapper;
 import com.ruoyi.advertisement.service.IAdvertisementService;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.system.security.SaAdminCheckLogin;
-
+import com.ruoyi.system.security.AdminUserType;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@SaAdminCheckLogin
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Priv(type = AdminUserType.TYPE)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/ad/stat")

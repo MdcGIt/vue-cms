@@ -33,7 +33,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 	 */
 	@Override
 	public void deleteComments(List<Long> commentIds) {
-		this.lambdaUpdate().set(Comment::getDelFlag, CommentConsts.DELETE_FLAG).in(Comment::getCommentId, commentIds)
-				.update();
+		this.deleteComments(commentIds);
 	}
 }

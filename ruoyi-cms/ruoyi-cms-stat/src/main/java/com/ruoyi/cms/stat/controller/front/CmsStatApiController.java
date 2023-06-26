@@ -1,18 +1,17 @@
 package com.ruoyi.cms.stat.controller.front;
 
-import java.time.LocalDateTime;
-
+import com.ruoyi.cms.stat.domain.CmsSiteVisitLog;
+import com.ruoyi.common.security.anno.Priv;
+import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.system.security.AdminUserType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.cms.stat.domain.CmsSiteVisitLog;
-import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.system.security.SaAdminCheckLogin;
-
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
 
 /**
  * 统计数据
@@ -20,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@SaAdminCheckLogin
+@Priv(type = AdminUserType.TYPE)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/site/visit")

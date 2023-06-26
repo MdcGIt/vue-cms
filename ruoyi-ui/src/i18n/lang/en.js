@@ -800,7 +800,19 @@ export default {
           Code: "Cannot be empty.",
           IframeSrc: "The video code <iframe>  attribtue `src` is missing!"
         }
-      }
+      },
+      InsertContentLink: "Content Link",
+      InsertCatalogLink: "Catalog Link",
+      InsertImageGroup: "Image Group",
+      ReplaceWord: "Replace", 
+      HighlightWord: "Highlight",
+      InputReplacement: "Input replacement",
+      FoundSensitiveWord: "Found Sensitive Word",
+      FoundFallibleWord: "Found Fallible Word",
+      SensitiveWordCheck: "Sensitive Word",
+      FallibleWordCheck: "Fallible Word",
+      NoSensitiveWord: "No sensitive word.",
+      NoFallibleWord: "No fallible word."
     },
     Site: {
       SiteId: "Site ID",
@@ -872,8 +884,8 @@ export default {
         WatermarkRatio: "Ratio",
         WatermarkRatioTip: "The ratio of the watermark and watermark should be at least 20 width/height.",
         WordConfCardTitle: "Words",
-        SensitiveWordEnable: "Sensitive Word",
-        ErrorProneWordEnable: "Error Prone Word",
+        SensitiveWordEnable: "Replace Sensitive Word On Save Article",
+        ErrorProneWordEnable: "Replace Fallible Word On Save Article",
         HotWordGroup: "Hot Word Group",
         StatConfCardTitle: "Statistics",
         BaiduApiKey: "Baidu ApiKey",

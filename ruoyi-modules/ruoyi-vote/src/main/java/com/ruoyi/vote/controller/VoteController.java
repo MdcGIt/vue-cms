@@ -1,20 +1,5 @@
 package com.ruoyi.vote.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -26,17 +11,21 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.security.SaAdminCheckLogin;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.vote.core.IVoteItemType;
 import com.ruoyi.vote.core.IVoteUserType;
 import com.ruoyi.vote.domain.Vote;
 import com.ruoyi.vote.permission.VotePriv;
 import com.ruoyi.vote.service.IVoteService;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -67,7 +56,6 @@ public class VoteController extends BaseRestController {
 		return R.ok(vote);
 	}
 
-	@SaAdminCheckLogin
 	@Priv(type = AdminUserType.TYPE, value = VotePriv.View)
 	@GetMapping("/userTypes")
 	public R<?> getVoteUserTypes() {
@@ -76,7 +64,7 @@ public class VoteController extends BaseRestController {
 		return R.ok(list);
 	}
 
-	@SaAdminCheckLogin
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/item/types")
 	public R<?> getVoteItemTypes() {
 		List<Map<String, String>> list = this.itemTypes.stream()

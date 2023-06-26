@@ -9,6 +9,7 @@ import com.ruoyi.customform.CmsCustomFormMetaModelType;
 import com.ruoyi.customform.domain.CmsCustomForm;
 import com.ruoyi.customform.service.ICustomFormService;
 import com.ruoyi.member.security.StpMemberUtil;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.xmodel.service.IModelDataService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class CustomFormApiController extends BaseRestController {
 
 	private final IModelDataService modelDataService;
 
+	@IgnoreDemoMode
 	@PostMapping("/submit")
 	public R<?> submitForm(@RequestBody @Validated Map<String, Object> formData) {
 		Long formId = MapUtils.getLong(formData, "formId");

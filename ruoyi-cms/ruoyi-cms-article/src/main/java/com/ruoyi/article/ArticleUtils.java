@@ -9,7 +9,7 @@ import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsPageWidget;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.properties.EnableSSI;
+import com.ruoyi.contentcore.properties.EnableSSIProperty;
 import com.ruoyi.contentcore.service.*;
 import com.ruoyi.contentcore.template.tag.CmsIncludeTag;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
@@ -68,7 +68,7 @@ public class ArticleUtils {
                         // 获取预览内容
                         placeholderImgTag = publishService.getContentExPageData(_content, publishPipeCode, true);
                     } else {
-                        boolean ssiEnabled = EnableSSI.getValue(site.getConfigProps());
+                        boolean ssiEnabled = EnableSSIProperty.getValue(site.getConfigProps());
                         if (catalog.isStaticize() && ssiEnabled) {
                             String staticFilePath = ContentUtils.getContentExPath(site, catalog, _content, publishPipeCode);
                             placeholderImgTag = StringUtils.messageFormat(CmsIncludeTag.SSI_INCLUDE_TAG, "/" + staticFilePath);
@@ -128,7 +128,7 @@ public class ArticleUtils {
                                 1, pw.getPublishPipeCode(), true, null));
                         placeholderImgTag = pageData;
                     } else {
-                        boolean ssiEnabled = EnableSSI.getValue(site.getConfigProps());
+                        boolean ssiEnabled = EnableSSIProperty.getValue(site.getConfigProps());
                         if (catalog.isStaticize() && ssiEnabled) {
                             String staticFileName = PageWidgetUtils.getStaticFileName(pw, site.getStaticSuffix(pw.getPublishPipeCode()));
                             String staticFilePath = pw.getPath() + staticFileName;

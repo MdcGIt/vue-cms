@@ -109,7 +109,6 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		comment.setContent(dto.getContent()); // TODO 敏感词过滤
 		comment.setCommentTime(LocalDateTime.now());
 		comment.setAuditStatus(CommentAuditStatus.PASSED);
-		comment.setDelFlag(0);
 		comment.setLikeCount(0);
 		comment.setParentId(dto.getCommentId());
 		comment.setReplyCount(0);
@@ -167,25 +166,8 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		Assert.notNull(comment, CommentErrorCode.API_COMMENT_NOT_FOUND::exception);
 		Assert.isTrue(comment.getUid() == userId, CommentErrorCode.API_ACCESS_DENY::exception);
 		// 直接评论且存在未删除回复的不直接删除，标记为删除状态
-		if (comment.getParentId() == 0) {
-			if (comment.getReplyCount() > 0) {
-				List<Comment> list = this.commentService.lambdaQuery().eq(Comment::getParentId, comment.getCommentId())
-						.list();
-				long actReplyCount = list.stream().filter(c -> !c.isDeleted()).count();
-				if (actReplyCount > 0) {
-					comment.setDelFlag(CommentConsts.DELETE_FLAG);
-					this.commentService.updateById(comment);
-				} else {
-					this.commentService.removeById(comment.getCommentId());
-					if (list.size() > 0) {
-						this.commentService.removeByIds(list);
-					}
-				}
-			} else {
-				this.commentService.removeById(comment.getCommentId());
-			}
-		} else {
-			this.commentService.removeById(comment);
+		this.commentService.removeById(comment.getCommentId());
+		if (IdUtils.validate(comment.getParentId())) {
 			// 修改上级评论回复数
 			this.decrCommentReplyCount(comment.getParentId());
 		}
