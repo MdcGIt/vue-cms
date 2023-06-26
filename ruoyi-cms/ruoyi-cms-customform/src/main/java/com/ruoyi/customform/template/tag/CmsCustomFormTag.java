@@ -9,7 +9,7 @@ import com.ruoyi.common.staticize.tag.TagAttr;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.properties.EnableSSI;
+import com.ruoyi.contentcore.properties.EnableSSIProperty;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
 import com.ruoyi.contentcore.template.tag.CmsIncludeTag;
@@ -99,7 +99,7 @@ public class CmsCustomFormTag extends AbstractTag {
 		File templateFile = this.templateService.findTemplateFile(site, template, context.getPublishPipeCode());
 		Assert.notNull(templateFile, () -> new TemplateException(StringUtils.messageFormat("自定义表单[{0}]模板[{1}]不存在", code, template), env));
 
-		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
+		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSIProperty.getValue(site.getConfigProps()));
 		String templateKey = SiteUtils.getTemplateKey(site, context.getPublishPipeCode(), template);
 		if (context.isPreview()) {
 			env.getOut().write(this.processTemplate(env, form, site, context.getPublishPipeCode(), templateKey));

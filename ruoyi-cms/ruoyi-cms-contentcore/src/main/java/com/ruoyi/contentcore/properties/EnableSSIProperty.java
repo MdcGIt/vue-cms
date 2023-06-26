@@ -11,8 +11,8 @@ import java.util.Map;
 /**
  * 是否支持SSI
  */
-@Component(IProperty.BEAN_NAME_PREFIX + EnableSSI.ID)
-public class EnableSSI implements IProperty {
+@Component(IProperty.BEAN_NAME_PREFIX + EnableSSIProperty.ID)
+public class EnableSSIProperty implements IProperty {
 
 	public final static String ID = "SSIEnabled";
 	

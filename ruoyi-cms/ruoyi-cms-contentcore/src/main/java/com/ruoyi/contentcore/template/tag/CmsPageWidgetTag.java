@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ruoyi.contentcore.properties.EnableSSI;
+import com.ruoyi.contentcore.properties.EnableSSIProperty;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
@@ -98,7 +98,7 @@ public class CmsPageWidgetTag extends AbstractTag {
 		File templateFile = this.templateService.findTemplateFile(site, pw.getTemplate(), context.getPublishPipeCode());
 		Assert.notNull(templateFile, () -> new TemplateException(StringUtils.messageFormat("页面部件[{0}]指定模板[{1}]不存在", code, pw.getTemplate()), env));
 
-		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
+		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSIProperty.getValue(site.getConfigProps()));
 		String templateKey = SiteUtils.getTemplateKey(site, pw.getPublishPipeCode(), pw.getTemplate());
 		if (context.isPreview()) {
 			env.getOut().write(this.processTemplate(env, context, templateKey));
