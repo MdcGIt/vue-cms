@@ -31,3 +31,11 @@ export function deleteSensitiveWord(data) {
     data: data
   })
 }
+
+export function checkSensitiveWords(text) {
+  return request({
+    url: '/word/sensitiveword/check',
+    method: 'post',
+    data: { text: text }
+  })
+}

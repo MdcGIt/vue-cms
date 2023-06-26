@@ -89,7 +89,7 @@
         </template>
       </el-table-column>
       <el-table-column 
-        label="创建时间"
+        :label="$t('Common.CreateTime')"
         align="center"
         prop="createTime"
         width="180">

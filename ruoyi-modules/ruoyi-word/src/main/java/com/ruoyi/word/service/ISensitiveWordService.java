@@ -1,6 +1,7 @@
 package com.ruoyi.word.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.word.domain.SensitiveWord;
@@ -40,4 +41,11 @@ public interface ISensitiveWordService extends IService<SensitiveWord> {
 	 */
 	void deleteWord(List<Long> wordIds);
 
+	/**
+	 * 查找指定内容中的敏感词
+	 *
+	 * @param text
+	 * @return
+	 */
+	Set<String> check(String text);
 }

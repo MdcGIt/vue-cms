@@ -800,7 +800,19 @@ export default {
           Code: "不能为空",
           IframeSrc: "嵌入代码的<iframe>标签缺少src属性！"
         }
-      }
+      },
+      InsertContentLink: "插入内容链接",
+      InsertCatalogLink: "插入栏目链接",
+      InsertImageGroup: "插入组图",
+      ReplaceWord: "一键替换", 
+      HighlightWord: "高亮显示",
+      InputReplacement: "输入替换字符",
+      FoundSensitiveWord: "发现敏感词",
+      FoundFallibleWord: "发现易错词",
+      SensitiveWordCheck: "敏感词校验",
+      FallibleWordCheck: "易错词校验",
+      NoSensitiveWord: "未发现敏感词",
+      NoFallibleWord: "未发现易错词"
     },
     Site: {
       SiteId: "站点ID",
@@ -872,8 +884,8 @@ export default {
         WatermarkRatio: "占比",
         WatermarkRatioTip: "水印占目标图片的比例，水印宽高至少20",
         WordConfCardTitle: "词汇配置",
-        SensitiveWordEnable: "开启敏感词替换",
-        ErrorProneWordEnable: "开启易错词替换",
+        SensitiveWordEnable: "开启文章保存敏感词替换",
+        ErrorProneWordEnable: "开启文章保存易错词替换",
         HotWordGroup: "热词分组",
         StatConfCardTitle: "统计配置",
         BaiduApiKey: "百度统计ApiKey",

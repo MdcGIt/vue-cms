@@ -26,7 +26,13 @@ public class DFAModel<T> {
 	public Map<String, DFANode<T>> getRoot() {
 		return this.root;
 	}
-	
+
+
+
+	protected void addWord(String word, T data) {
+		this.addWords(Set.of(word), data);
+	}
+
 	protected void addWords(Set<String> wordList, T data) {
 		Map<String, DFANode<T>> current = null;
         for (String key : wordList) {

@@ -1,6 +1,8 @@
 package com.ruoyi.word.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
@@ -76,5 +78,11 @@ public class SensitiveWordController extends BaseRestController {
 	public R<?> remove(@RequestBody @NotEmpty List<Long> sensitiveWordIds) {
 		this.sensitiveWordService.deleteWord(sensitiveWordIds);
 		return R.ok();
+	}
+
+	@PostMapping("/check")
+	public R<?> check(@RequestBody String text) {
+		Set<String> words = this.sensitiveWordService.check(text);
+		return R.ok(words);
 	}
 }

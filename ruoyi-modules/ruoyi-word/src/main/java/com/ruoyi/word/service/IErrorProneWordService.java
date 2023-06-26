@@ -1,6 +1,7 @@
 package com.ruoyi.word.service;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.word.domain.ErrorProneWord;
@@ -43,4 +44,12 @@ public interface IErrorProneWordService extends IService<ErrorProneWord> {
 	 * @param errorProneWord
 	 */
 	void updateErrorProneWord(ErrorProneWord errorProneWord);
+
+	/**
+	 * 查找指定文本内容中的易错词
+	 *
+	 * @param text
+	 * @return
+	 */
+    Map<String, String> check(String text);
 }

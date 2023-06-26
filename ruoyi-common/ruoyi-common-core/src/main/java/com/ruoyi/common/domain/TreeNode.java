@@ -61,11 +61,10 @@ public class TreeNode<T> implements Serializable {
 	 * 
 	 * @param <T>
 	 * @param list
-	 * @param emptyChild 是否将叶子结点的children设置为空集合
 	 * @return
 	 */
 	public static <T> List<TreeNode<T>> build(List<TreeNode<T>> list) {
-		Map<T, List<TreeNode<T>>> mapChildren = list.parallelStream().filter(n -> !n.isRoot)
+		Map<T, List<TreeNode<T>>> mapChildren = list.stream().filter(n -> !n.isRoot)
 				.collect(Collectors.groupingBy(TreeNode::getParentId));
 		List<TreeNode<T>> result = new ArrayList<>();
 		list.forEach(n -> {

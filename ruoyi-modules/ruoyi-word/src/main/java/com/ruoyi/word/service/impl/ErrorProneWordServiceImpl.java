@@ -1,10 +1,15 @@
 package com.ruoyi.word.service.impl;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.word.domain.SensitiveWord;
+import com.ruoyi.word.sensitive.ErrorProneWordProcessor;
+import com.ruoyi.word.sensitive.SensitiveWordProcessor;
+import com.ruoyi.word.sensitive.SensitiveWordType;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,7 +27,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ErrorProneWordServiceImpl extends ServiceImpl<ErrorProneWordMapper, ErrorProneWord>
-		implements IErrorProneWordService {
+		implements IErrorProneWordService, CommandLineRunner {
+
+	private final ErrorProneWordProcessor processor;
 
 	private static final String CACHE_KEY = "err_prone_word:";
 
@@ -30,7 +37,7 @@ public class ErrorProneWordServiceImpl extends ServiceImpl<ErrorProneWordMapper,
 
 	/**
 	 * 查找置顶文本中的易错词
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -41,13 +48,13 @@ public class ErrorProneWordServiceImpl extends ServiceImpl<ErrorProneWordMapper,
 	}
 
 	@Override
+	public Map<String, String> check(String text) {
+		return this.processor.listWords(text);
+	}
+
+	@Override
 	public String replaceErrorProneWords(String text) {
-		Map<String, String> map = this.getErrorProneWords();
-		for (Iterator<Entry<String, String>> iterator = map.entrySet().iterator(); iterator.hasNext();) {
-			Entry<String, String> e = iterator.next();
-			text = text.replaceAll(e.getKey(), e.getValue());
-		}
-		return text;
+		return this.processor.replace(text, ErrorProneWordProcessor.MatchType.MAX);
 	}
 
 	@Override
@@ -64,6 +71,7 @@ public class ErrorProneWordServiceImpl extends ServiceImpl<ErrorProneWordMapper,
 
 		word.setWordId(IdUtils.getSnowflakeId());
 		this.save(word);
+		this.processor.addWord(word.getWord(), word.getReplaceWord());
 	}
 
 	@Override
@@ -75,10 +83,22 @@ public class ErrorProneWordServiceImpl extends ServiceImpl<ErrorProneWordMapper,
 				.ne(ErrorProneWord::getWordId, word.getWordId()).count();
 		Assert.isTrue(count == 0, () -> WordErrorCode.CONFLIECT_ERROR_PRONE_WORD.exception(word.getWord()));
 
+		String oldWord = db.getWord();
+
 		db.setWord(word.getWord());
 		db.setReplaceWord(word.getReplaceWord());
 		db.setRemark(word.getRemark());
 		db.updateBy(word.getUpdateBy());
 		this.updateById(db);
+		this.processor.removeWord(oldWord);
+		this.processor.addWord(db.getWord(), db.getReplaceWord());
+	}
+
+	@Override
+	public void run(String... args) {
+		List<ErrorProneWord> wordList = this.lambdaQuery()
+				.select(ErrorProneWord::getWord, ErrorProneWord::getReplaceWord).list();
+		this.processor.addWords(wordList.stream().collect(Collectors
+				.toMap(ErrorProneWord::getWord, ErrorProneWord::getReplaceWord)));
 	}
 }

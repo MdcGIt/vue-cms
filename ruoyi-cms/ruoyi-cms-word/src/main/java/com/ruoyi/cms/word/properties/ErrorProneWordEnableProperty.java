@@ -30,7 +30,7 @@ public class ErrorProneWordEnableProperty implements IProperty {
 
 	@Override
 	public String getName() {
-		return "是否开启易错词";
+		return "开启文章保存易错词替换";
 	}
 	
 	@Override
