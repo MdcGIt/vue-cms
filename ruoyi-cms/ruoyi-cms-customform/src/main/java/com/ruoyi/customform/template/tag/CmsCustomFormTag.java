@@ -102,7 +102,7 @@ public class CmsCustomFormTag extends AbstractTag {
 		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSI.getValue(site.getConfigProps()));
 		String templateKey = SiteUtils.getTemplateKey(site, context.getPublishPipeCode(), template);
 		if (context.isPreview()) {
-			env.getOut().write(this.processTemplate(env, form, templateKey));
+			env.getOut().write(this.processTemplate(env, form, site, context.getPublishPipeCode(), templateKey));
 		} else {
 			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
 			String staticFileName = form.getCode() + "." + site.getStaticSuffix(context.getPublishPipeCode());
@@ -110,7 +110,7 @@ public class CmsCustomFormTag extends AbstractTag {
 			// 读取自定义表单静态化内容
 			String staticContent = templateService.getTemplateStaticContentCache(templateKey);
 			if (Objects.isNull(staticContent) || !new File(siteRoot + staticFilePath).exists()) {
-				staticContent = this.processTemplate(env, form, templateKey);
+				staticContent = this.processTemplate(env, form, site, context.getPublishPipeCode(), templateKey);
 				FileUtils.writeStringToFile(new File(siteRoot + staticFilePath), staticContent, StandardCharsets.UTF_8);
 				this.templateService.setTemplateStaticContentCache(templateKey, staticContent);
 			}
@@ -123,14 +123,14 @@ public class CmsCustomFormTag extends AbstractTag {
 		return null;
 	}
 
-	private String processTemplate(Environment env, CmsCustomForm form, String templateName)
+	private String processTemplate(Environment env, CmsCustomForm form, CmsSite site, String publishPipeCode, String templateName)
 			throws TemplateException, IOException {
 		Writer out = env.getOut();
 		try (StringWriter writer = new StringWriter()) {
 			env.setOut(writer);
 			Template includeTemplate = env.getTemplateForInclusion(templateName,
 					StandardCharsets.UTF_8.displayName(), true);
-			Map<String, Object> customFormVariables = CustomFormConsts.getCustomFormVariables(form);
+			Map<String, Object> customFormVariables = CustomFormConsts.getCustomFormVariables(form, site, publishPipeCode);
 			FreeMarkerUtils.setVariables(env, Map.of(CustomFormConsts.TemplateVariable_CustomForm,
 					this.wrap(env, customFormVariables)));
 			env.include(includeTemplate);

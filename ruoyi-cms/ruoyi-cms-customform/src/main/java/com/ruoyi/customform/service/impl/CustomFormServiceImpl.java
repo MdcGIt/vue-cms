@@ -187,7 +187,7 @@ public class CustomFormServiceImpl extends ServiceImpl<CustomFormMapper, CmsCust
 			ITemplateType templateType = this.templateService.getTemplateType(SiteTemplateType.TypeId);
 			templateType.initTemplateData(form.getSiteId(), templateContext);
 			templateContext.getVariables().put(CustomFormConsts.TemplateVariable_CustomForm,
-					CustomFormConsts.getCustomFormVariables(form));
+					CustomFormConsts.getCustomFormVariables(form, site, publishPipeCode));
 			// 静态化文件地址
 			String siteRoot = SiteUtils.getSiteRoot(site, publishPipeCode);
 			templateContext.setDirectory(siteRoot + CustomFormConsts.STATICIZE_DIRECTORY);
