@@ -52,13 +52,12 @@
           </el-card>
         </el-header>
         <el-main>
-          <el-table v-loading="loading" :data="fileList" @selection-change="handleSelectionChange">
+          <el-table v-loading="loading" :data="fileList" @selection-change="handleSelectionChange" size="mini">
             <el-table-column type="selection" width="50" align="center" />
             <el-table-column :label="$t('CMS.File.FileName')" align="left" prop="fileName">
               <template slot-scope="scope">
-                <i v-if="scope.row.isDirectory" class="el-icon-folder"></i>
-                <el-button v-if="scope.row.isDirectory" type="text" @click="handleDirectoryClick(scope.row)">{{ scope.row.fileName }}</el-button>
-                <span v-else>{{ scope.row.fileName }}</span>
+                <i v-if="scope.row.isDirectory" class="el-icon-folder"></i> <el-button v-if="scope.row.isDirectory" type="text" @click="handleDirectoryClick(scope.row)">{{ scope.row.fileName }}</el-button>
+                <span v-else><svg-icon :icon-class="scope.row.iconClass" /> {{ scope.row.fileName }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('CMS.File.FileSize')" align="center" width="160" prop="fileSize"/>
@@ -79,22 +78,26 @@
                     slot="reference" 
                     type="text"
                     icon="el-icon-edit"
+                    size="small"
                   >{{ $t('CMS.File.Rename') }}</el-button>
                 </el-popover>
                 <el-button
                   v-if="scope.row.canEdit"
                   type="text"
                   icon="el-icon-edit"
+                  size="small"
                   @click="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-button>
                 <!-- <el-button
                           v-if="scope.row.isImage"
                           type="text"
                           icon="el-icon-crop"
+                          size="small"
                           @click="handleCrop(scope.row)">{{ $t('CMS.Resource.Cut') }}</el-button> -->
                 <el-button
                   v-if="!disableAdd"
                   type="text"
                   icon="el-icon-delete"
+                  size="small"
                   @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
               </template>
             </el-table-column>
@@ -161,7 +164,7 @@
 </template>
 <script>
 import { getToken } from "@/utils/auth";
-import { isImage } from "@/utils/ruoyi";
+import { isImage, getFileSvgIconClass } from "@/utils/ruoyi";
 import { getDirectoryTreeData, getFileList, renameFile, addFile, deleteFile } from "@/api/contentcore/file";
 
 export default {
@@ -277,6 +280,7 @@ export default {
         this.fileList = response.data;
         this.fileList.forEach(f => {
             f.isImage = isImage(f.fileName);
+            f.iconClass = getFileSvgIconClass(f.fileName);
         });
         this.loading = false;
       });

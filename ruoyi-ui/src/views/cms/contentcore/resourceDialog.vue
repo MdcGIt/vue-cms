@@ -113,7 +113,8 @@
               </el-header>
               <el-main v-loading="loadingList">
                 <el-card shadow="never" v-for="(r, index) in resourceList" :key="r.resourceId">
-                  <el-image fit="scale-down" :src="r.src" @click="handleResourceChecked(index)"></el-image>
+                  <el-image v-if="isImageResource(r.src)" class="item-img" fit="scale-down" :src="r.src" @click="handleResourceChecked(index)"></el-image>
+                  <svg-icon v-else :icon-class="getResourceFileIconClass(r.path)" class="item-svg" />
                   <div class="r-name" :title="r.name"><el-checkbox v-model="r.selected">{{ r.name }}</el-checkbox></div>
                 </el-card>
               </el-main>
@@ -137,6 +138,7 @@
   </div>
 </template>
 <script>
+import { isImage, getFileSvgIconClass } from "@/utils/ruoyi";
 import { getToken } from "@/utils/auth";
 import { getResrouceList, getResourceTypes } from "@/api/contentcore/resource";
 export default {
@@ -225,6 +227,12 @@ export default {
     }
   },
   methods: {
+    isImageResource(src) {
+      return isImage(src);
+    },
+    getResourceFileIconClass(path) {
+      return getFileSvgIconClass(path)
+    },
     handleTabClick (tab, event) {
       if (this.activeName == "resources" && !this.resourcesLoaded) {
         this.loadResources();
@@ -442,11 +450,18 @@ export default {
   line-height: 28px;
   overflow: hidden;
 }
-.resource-dialog .el-card .el-image {
+.resource-dialog .el-card .item-img {
   width: 120px;
   height: 120px;
   background-color: #f7f7f7;
   cursor: pointer;
+}
+.resource-dialog .el-card .item-svg {
+  width: 120px;
+  height: 120px;
+  background-color: #f7f7f7;
+  cursor: pointer;
+  padding: 20px;
 }
 .resource-dialog .el-tag {
   margin-right: 10px;
