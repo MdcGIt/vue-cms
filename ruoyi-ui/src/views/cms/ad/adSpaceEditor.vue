@@ -220,7 +220,9 @@ export default {
         pageSize: 10,
         adSpaceId: this.$route.query.id,
         name: undefined
-      }
+      },
+      initDataStr: "",
+      publishAfterSave: false,
     };
   },
   computed: {
@@ -247,7 +249,11 @@ export default {
       getPageWidget(this.pageWidgetId).then(response => {
         this.form = response.data;
         this.dataList = this.form.content ? JSON.parse(this.form.content) : [];
+        this.initDataStr = JSON.stringify(this.form);
       });
+    },
+    isFormChanged() {
+      return JSON.stringify(this.form) != this.initDataStr;
     },
     handleSave () {
       this.$refs["form"].validate(valid => {
@@ -256,7 +262,12 @@ export default {
           this.form.content = JSON.stringify(this.dataList);
           if (this.pageWidgetId) {
             editPageWidget(this.form).then(response => {
-              this.$modal.msgSuccess(response.msg);
+              this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
+              this.initDataStr = JSON.stringify(this.form);
+              if (this.publishAfterSave) {
+                this.publishAfterSave = false;
+                this.handlePublish();
+              }
             });
           } else {
             addPageWidget(this.form).then(response => {
@@ -278,11 +289,14 @@ export default {
       this.openTemplateSelector = false;
     },
     handlePublish() {
+      if (this.isFormChanged()) {
+        this.publishAfterSave = true;
+        this.handleSave(this.handlePublish);
+        return;
+      }
       const pageWidgetIds = [ this.pageWidgetId ];
       publishPageWidgets(pageWidgetIds).then(response => {
-        if (response.code === 200) {
-          this.$modal.msgSuccess(response.msg);
-        }
+        this.$modal.msgSuccess(this.$t('CMS.ContentCore.PublishSuccess'));
       });
     },
     handlePreview() {

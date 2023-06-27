@@ -89,7 +89,7 @@
         ref="form"
         :model="form"
         :rules="rules"
-        label-width="80px">
+        label-width="120px">
         <el-form-item :label="$t('CMS.PageWidget.Name')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
