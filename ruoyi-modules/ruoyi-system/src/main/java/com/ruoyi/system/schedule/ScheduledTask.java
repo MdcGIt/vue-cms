@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.function.Consumer;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -75,11 +76,11 @@ public abstract class ScheduledTask implements Runnable {
 	 * 中断标识
 	 */
 	private boolean interrupt = false;
-	
+
 	private ScheduledFuture<?> future;
-	
+
 	private ISysScheduledTaskService taskService;
-	
+
 	public ScheduledTask(ISysScheduledTaskService taskService) {
 		this.taskService = taskService;
 	}
@@ -104,10 +105,12 @@ public abstract class ScheduledTask implements Runnable {
 			}
 			this.setPercent(100);
 			e.printStackTrace();
+		} finally {
+			this.onTaskEnded();
 		}
 		this.taskService.addTaskLog(this);
 	}
-	
+
 
 	public abstract void run0() throws Exception;
 
@@ -156,7 +159,7 @@ public abstract class ScheduledTask implements Runnable {
 
 	/**
 	 * 检查中断标识，抛出异常中断任务执行，需要run0中自行调用中断任务。
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	public void checkInterrupt() throws InterruptedException {
@@ -272,5 +275,17 @@ public abstract class ScheduledTask implements Runnable {
 
 	public void setFuture(ScheduledFuture<?> future) {
 		this.future = future;
+	}
+
+	public void setEndEvent(Consumer<ScheduledTask> consumer) {
+		this.endEvent = consumer;
+	}
+
+	private Consumer<ScheduledTask> endEvent;
+
+	private void onTaskEnded() {
+		if (this.endEvent != null) {
+			this.endEvent.accept(this);
+		}
 	}
 }

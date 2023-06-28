@@ -206,6 +206,7 @@ public class SysScheduledTaskServiceImpl extends ServiceImpl<SysScheduledTaskMap
 					SysErrorCode.SCHEDULED_TASK_REMOVE_ERR::exception);
 		}
 		this.removeByIds(list);
+		list.forEach(task -> this.removeScheduledTask(task.getTaskId()));
 	}
 
 	@Override
@@ -233,14 +234,18 @@ public class SysScheduledTaskServiceImpl extends ServiceImpl<SysScheduledTaskMap
 		if (EnableOrDisable.isDisable(dbTask.getStatus())) {
 			return;
 		}
+		dbTask.setStatus(EnableOrDisable.DISABLE);
+		this.updateById(dbTask);
+		this.removeScheduledTask(dbTask.getTaskId());
+	}
+
+	private void removeScheduledTask(Long taskId) {
 		ScheduledTask scheduledTask = this.taskMap.get(taskId);
 		if (scheduledTask != null) {
 			scheduledTask.interrupt();
 			scheduledTask.getFuture().cancel(false);
 			this.taskMap.remove(taskId);
 		}
-		dbTask.setStatus(EnableOrDisable.DISABLE);
-		this.updateById(dbTask);
 	}
 
 	@Override
@@ -274,9 +279,10 @@ public class SysScheduledTaskServiceImpl extends ServiceImpl<SysScheduledTaskMap
 		};
 		scheduledTask.setTaskId(task.getTaskId());
 		scheduledTask.setType(task.getTaskType());
-		this.taskMap.put(task.getTaskId(), scheduledTask);
 		scheduledTask.ready();
+		scheduledTask.setEndEvent(t -> this.taskMap.remove(task.getTaskId()));
 
+		this.taskMap.put(task.getTaskId(), scheduledTask);
 		threadPoolTaskScheduler.schedule(scheduledTask, Instant.now());
 	}
 
