@@ -3,9 +3,11 @@ package com.ruoyi.contentcore.core;
 import java.io.IOException;
 import java.util.Map;
 
+import cn.dev33.satoken.config.SaTokenConfig;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 
+import com.ruoyi.system.security.StpAdminUtil;
 import freemarker.template.TemplateException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -40,6 +42,12 @@ public interface IInternalDataType {
 		String path = "cms/preview/" + type + "/" + id + "?pp=" + publishPipeCode;
 		if (pageIndex > 1) {
 			path += "&pi=" + pageIndex;
+		}
+		if (StpAdminUtil.isLogin()) {
+			SaTokenConfig config = StpAdminUtil.getStpLogic().getConfig();
+			path = path + "&" + config.getTokenName() + "="
+					+ (StringUtils.isNotEmpty(config.getTokenPrefix()) ? config.getTokenPrefix() + " " : "")
+					+ StpAdminUtil.getTokenValue();
 		}
 		return path;
 	}

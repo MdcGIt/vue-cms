@@ -141,7 +141,7 @@
       <el-col :span="24" class="card-box">
         <el-card>
           <div slot="header">
-            <span>{{ $t('Monitor.Server.Dist') }}</span>
+            <span>{{ $t('Monitor.Server.Disk') }}</span>
           </div>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;">

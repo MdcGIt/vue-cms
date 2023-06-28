@@ -20,4 +20,6 @@ public class SiteStatVO {
 	private Long resourceCount;
 	
 	private Map<String, Long> resourceDetails;
+
+	private Long templateCount;
 }

@@ -30,14 +30,14 @@
           <span class="node-tool">
             <el-button
               type="text"
-              size="mini"
+              size="small"
               title="编辑"
               icon="el-icon-edit"
               @click="handleEdit(data)">
             </el-button>
             <el-button
               type="text"
-              size="mini"
+              size="small"
               title="删除"
               icon="el-icon-delete"
               @click="handleDelete(data)">

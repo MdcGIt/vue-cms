@@ -83,11 +83,11 @@
       <el-table-column :label="$t('CMS.Resource.Type')" prop="resourceTypeName" width="80" />
       <el-table-column :label="$t('CMS.Resource.Name')" prop="name" align="left">
         <template slot-scope="scope">
-          <el-link type="primary" target="_blank" :href="scope.row.src">{{ scope.row.name }}</el-link>
+          <svg-icon :icon-class="scope.row.iconClass" /> <el-link type="primary" target="_blank" :href="scope.row.src">{{ scope.row.name }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('CMS.Resource.StorageType')" prop="storageType" align="center" width="80" />
-      <el-table-column :label="$t('CMS.Resource.FileSize')" prop="fileSizeName" align="center" width="80" />
+      <el-table-column :label="$t('CMS.Resource.StorageType')" prop="storageType" align="center" width="120" />
+      <el-table-column :label="$t('CMS.Resource.FileSize')" prop="fileSizeName" align="center" width="120" />
       <el-table-column :label="$t('Common.CreateTime')" prop="createTime" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -100,12 +100,12 @@
         class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
@@ -165,6 +165,7 @@
   </div>
 </template>
 <script>
+import { getFileSvgIconClass } from "@/utils/ruoyi";
 import { getToken } from "@/utils/auth";
 import { getResourceTypes, getResrouceList, getResourceDetail, delResource } from "@/api/contentcore/resource";
 
@@ -239,6 +240,7 @@ export default {
       }
       getResrouceList(this.queryParams).then(response => {
         this.resourceList = response.data.rows;
+        this.resourceList.forEach(r => r.iconClass = getFileSvgIconClass(r.name))
         this.total = parseInt(response.data.total);
         this.loading = false;
       });

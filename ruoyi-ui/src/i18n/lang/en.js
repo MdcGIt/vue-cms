@@ -364,7 +364,8 @@ export default {
         MenuName: "Menu cannot be empty.",
         Sort: "Menu sort cannot be empty.",
         RouterLink: "Router link cannot be empty."
-      }
+      },
+      Shortcut: "Shortcut"
     },
     Dept: {
       DeptName: "Dept Name",
@@ -653,7 +654,7 @@ export default {
       PeriodicDelaySeconds: "Initial Delay (s)",
       ExecResult: "Result",
       ErrMsg: "Error",
-      AddTtitle: "Add Scheduled Task",
+      AddTitle: "Add Scheduled Task",
       EditTitle: "Edit Scheduled Task",
       LogDialogTitle: "Scheduled Task Logs"
     },
@@ -912,6 +913,13 @@ export default {
         ContentDetail: " Detail Template",
         SelectCatalogFirst: "Please select catalog first.",
         CustomForm: "Custom Form Template",
+      },
+      Dashboard: {
+        DataCountCard: "Statistical Data",
+        Catalog: "Catalog",
+        Content: "Content",
+        Resource: "Resource",
+        Template: "Template"
       }
     },
     Catalog: {

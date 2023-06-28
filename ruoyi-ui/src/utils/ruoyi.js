@@ -256,6 +256,65 @@ export function isImage(filename) {
   if (!filename || filename.indexOf('.') < 0) {
     return false;
   }
-  let suffix = filename.substring(filename.indexOf('.') + 1);
-  return ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'tiff'].indexOf(suffix) > -1
+  let suffix = filename.substring(filename.lastIndexOf('.'));
+  return ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff'].indexOf(suffix) > -1
+}
+
+export function getFileSvgIconClass(path) {
+  if (path && path.indexOf(".") > -1) {
+    const suffix = path.substring(path.lastIndexOf('.'));
+    switch(suffix) {
+      case ".7z": return "file-7z";
+      case ".aac": return "file-aac";
+      case ".ai": return "file-ai";
+      case ".archive": return "file-archive";
+      case ".arj": return "file-arj";
+      case ".avi": return "file-avi";
+      case ".css": return "file-css";
+      case ".csv": return "file-csv";
+      case ".dbf": return "file-dbf";
+      case ".doc": return "file-doc";
+      case ".docx": return "file-doc";
+      case ".dwg": return "file-dwg";
+      case ".exe": return "file-exe";
+      case ".fla": return "file-fla";
+      case ".flac": return "file-flac";
+      case ".gif": return "file-gif";
+      case ".html": return "file-html";
+      case ".iso": return "file-iso";
+      case ".jpg": return "file-jpg";
+      case ".js": return "file-js";
+      case ".json": return "file-json";
+      case ".mdf": return "file-mdf";
+      case ".mp2": return "file-mp2";
+      case ".mp3": return "file-mp3";
+      case ".mp4": return "file-mp4";
+      case ".mxf": return "file-mxf";
+      case ".nrg": return "file-nrg";
+      case ".pdf": return "file-pdf";
+      case ".png": return "file-png";
+      case ".ppt": return "file-ppt";
+      case ".pptx": return "file-ppt";
+      case ".psd": return "file-psd";
+      case ".rar": return "file-rar";
+      case ".rtf": return "file-rtf";
+      case ".svg": return "file-svg";
+      case ".text": return "file-text";
+      case ".tiff": return "file-tiff";
+      case ".txt": return "file-txt";
+      case ".wav": return "file-wav";
+      case ".wma": return "file-wma";
+      case ".xls": return "file-xls";
+      case ".xlsx": return "file-xls";
+      case ".xml": return "file-xml";
+      case ".zip": return "file-zip";
+    }
+    if (suffix == ".ogg" || suffix == ".aiff" || suffix == ".mid") {
+      return "file-audio";
+    }
+    if (suffix == ".mpg" || suffix == ".mpeg" || suffix == ".rmvb" || suffix == ".rm" || suffix == ".wmv" || suffix == ".mov") {
+      return "file-video";
+    }
+  }
+  return "file-unknown";
 }

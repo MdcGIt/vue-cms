@@ -169,20 +169,20 @@
           <template slot-scope="scope" v-if="scope.row.roleId !== 1">
             <el-button
             v-if="scope.row.auditStatus==0||scope.row.auditStatus==2"
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-circle-check"
               @click="handleAuditPass(scope.row)"
             >{{ $t('Comment.AuditPass') }}</el-button>
             <el-button
             v-if="scope.row.auditStatus==0||scope.row.auditStatus==1"
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-circle-close"
               @click="handleAuditNotPass(scope.row)"
             >{{ $t('Comment.AuditNotPass') }}</el-button>
             <el-button
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"

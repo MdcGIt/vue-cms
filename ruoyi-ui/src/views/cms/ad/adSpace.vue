@@ -54,6 +54,7 @@
             <el-button  
               type="text"
               icon="el-icon-s-promotion"
+              size="small"
               @click="handlePublish(scope.row)">{{ $t('CMS.ContentCore.Publish') }}</el-button>
             <el-button
               type="text"
@@ -63,10 +64,12 @@
             <el-button 
               type="text"
               icon="el-icon-edit"
+              size="small"
               @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
+              size="small"
               @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
           </template>
         </el-table-column>
@@ -89,7 +92,7 @@
         ref="form"
         :model="form"
         :rules="rules"
-        label-width="80px">
+        label-width="120px">
         <el-form-item :label="$t('CMS.PageWidget.Name')" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>

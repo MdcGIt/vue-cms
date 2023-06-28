@@ -69,7 +69,7 @@ export default {
             name: key,
             smooth: false, // 平滑曲线
             type: 'line',
-            stack: 'Total',
+            // stack: 'Total',
             data: arr,
             animationDuration: 2800,
             animationEasing: 'quadraticOut',

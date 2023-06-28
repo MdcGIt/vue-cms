@@ -365,6 +365,7 @@ export default {
         Sort: "菜单顺序不能为空",
         RouterLink: "路由地址不能为空"
       },
+      Shortcut: "快捷方式"
     },
     Dept: {
       DeptName: "部门名称",
@@ -653,7 +654,7 @@ export default {
       PeriodicDelaySeconds: "首次执行延时（秒）",
       ExecResult: "执行结果",
       ErrMsg: "错误信息",
-      AddTtitle: "添加任务",
+      AddTitle: "添加任务",
       EditTitle: "编辑任务信息",
       LogDialogTitle: "任务执行记录"
     },
@@ -912,6 +913,13 @@ export default {
         ContentDetail: "详情页模板",
         SelectCatalogFirst: "请先选择栏目",
         CustomForm: "自定义表单模板",
+      },
+      Dashboard: {
+        DataCountCard: "数据统计",
+        Catalog: "栏目数",
+        Content: "内容数",
+        Resource: "资源数",
+        Template: "模板数"
       }
     },
     Catalog: {

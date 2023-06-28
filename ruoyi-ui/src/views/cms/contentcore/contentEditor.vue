@@ -315,7 +315,8 @@ export default {
       summaryInputSize: { minRows: 3, maxRows: 6 },
       openTemplateSelector: false, // 模板选择弹窗
       publishPipeActiveName: "",
-      selectExTemplate: false
+      selectExTemplate: false,
+      publishAfterSave: false,
     };
   },
   created() {
@@ -464,12 +465,24 @@ export default {
       });
     },
     handlePublish () {
+      if (this.opType == 'ADD' || this.isFormChanged()) {
+        this.handleSave();
+        this.publishAfterSave = true;
+        return;
+      }
+      this.doPublishContent();
+    },
+    doPublishContent() {
       publishContent([ this.form.contentId ]).then(response => {
           this.$modal.msgSuccess(this.$t('CMS.ContentCore.PublishSuccess'));
       });
     },
     handleProgressClose (result) {
       if (result.status == 'SUCCESS') {
+        if (this.publishAfterSave) {
+          this.publishAfterSave = false;
+          this.doPublishContent();
+        }
         if (this.opType == 'ADD') {
           if (this.openEditorW) {
             let routeData = this.$router.resolve({
@@ -480,9 +493,11 @@ export default {
           } else {
             this.opType = 'UPDATE';
             this.$router.push({ path: "/cms/content/editor", query: { type: this.contentType, catalogId: this.catalogId, id: this.contentId } });
+            this.initData();
           }
+        } else {
+          this.initDataStr = JSON.stringify(this.form);
         }
-        this.initData();
       }
     },
     handlePreview () {

@@ -76,7 +76,7 @@
                         class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button 
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>

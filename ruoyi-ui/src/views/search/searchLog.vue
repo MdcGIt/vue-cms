@@ -74,12 +74,12 @@
                         class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button 
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-plus"
               @click="handleToDictWord('WORD', scope.row)">添加为扩展词</el-button>
             <el-button 
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-plus"
               @click="handleToDictWord('STOP', scope.row)">添加为停用词</el-button>

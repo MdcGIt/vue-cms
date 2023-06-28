@@ -57,14 +57,14 @@
       <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             v-hasPermi="[ $p('Site:Edit:{0}', [ scope.row.siteId ]) ]"
             @click="handleEdit(scope.row)"
           >{{ $t("Common.Edit") }}</el-button>
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             v-hasPermi="[ $p('Site:Edit:{0}', [ scope.row.siteId ]) ]"
