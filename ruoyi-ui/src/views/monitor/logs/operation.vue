@@ -121,7 +121,7 @@
       <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-view"
             @click="handleView(scope.row,scope.index)"

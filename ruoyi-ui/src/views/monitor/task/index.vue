@@ -84,41 +84,41 @@
         <template slot-scope="scope">
           <el-button 
             v-if="scope.row.status=='1'"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-circle-check"
             @click="handleEnable(scope.row)"
           >{{ $t('Common.Enable') }}</el-button>
           <el-button 
             v-if="scope.row.status=='0'"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-circle-close"
             @click="handleDisable(scope.row)"
           >{{ $t('Common.Disable') }}</el-button>
           <el-button 
             v-if="scope.row.status=='1'"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-video-play"
             @click="handleExecOnce(scope.row)"
           >{{ $t('Monitor.ScheduledTask.ExecOnce') }}</el-button>
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-time"
             @click="handleShowLogs(scope.row)"
           >{{ $t('Monitor.ScheduledTask.Logs') }}</el-button>
           <el-button 
             v-if="scope.row.status=='1'"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >{{ $t('Common.Edit') }}</el-button>
           <el-button 
             v-if="scope.row.status=='1'"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"

@@ -100,12 +100,12 @@
         class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>

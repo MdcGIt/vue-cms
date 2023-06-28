@@ -74,14 +74,14 @@
       <el-table-column :label="$t('Common.Operation')" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:dept:edit']"
           >{{ $t('Common.Edit') }}</el-button>
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
@@ -89,7 +89,7 @@
           >{{ $t('Common.Add') }}</el-button>
           <el-button
             v-if="scope.row.parentId != 0"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"

@@ -48,14 +48,14 @@
       <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button 
-            size="mini"
             type="text"
             icon="el-icon-edit"
+            size="small"
             @click="handleUpdate(scope.row)">{{ $t("Common.Edit") }}</el-button>
           <el-button 
-            size="mini"
             type="text"
             icon="el-icon-delete"
+            size="small"
             @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>

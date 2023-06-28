@@ -99,11 +99,13 @@
               <el-button 
                 type="text"
                 icon="el-icon-edit"
+                size="small"
                 v-hasPermi="[ 'cms:friendlink:add', 'cms:friendlink:edit' ]"
                 @click="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-button>
               <el-button 
                 type="text"
                 icon="el-icon-delete"
+                size="small"
                 v-hasPermi="[ 'cms:friendlink:delete' ]"
                 @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
             </template>

@@ -47,7 +47,7 @@
       <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width" width="80">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleForceLogout(scope.row)"

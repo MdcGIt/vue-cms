@@ -135,23 +135,23 @@
             <template slot-scope="scope">
               <el-button 
                 v-if="scope.row.state==='1'"
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-switch-button"
                 @click="handleEnableAdvertisements(scope.row)">{{ $t('Common.Enable') }}</el-button>
               <el-button 
                 v-if="scope.row.state==='0'"
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-switch-button"
                 @click="handleDisableAdvertisements(scope.row)">{{ $t('Common.Disable') }}</el-button>
               <el-button 
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-edit"
                 @click="handleEditAdvertisement(scope.row)">{{ $t("Common.Edit") }}</el-button>
               <el-button 
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDeleteAdvertisements(scope.row)">{{ $t("Common.Delete") }}</el-button>

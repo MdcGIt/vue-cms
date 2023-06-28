@@ -104,28 +104,28 @@
         class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-setting"
             @click="handleFields(scope.row)">{{ $t("CMS.CustomForm.Fields") }}</el-button>
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-s-promotion"
             @click="handlePublish(scope.row)">{{ $t("CMS.CustomForm.Publish") }}</el-button>
           <el-button
             v-show="scope.row.status==10"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-download"
             @click="handleOffline(scope.row)">{{ $t("CMS.CustomForm.Offline") }}</el-button>
           <el-button 
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>

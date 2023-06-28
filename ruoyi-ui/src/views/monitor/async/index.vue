@@ -81,11 +81,11 @@
         <template slot-scope="scope">
           <el-button 
             v-if="scope.row.status=='READY'||scope.row.status=='RUNNING'"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-stop"
             @click="handleStop(scope.row)">{{ $t('Monitor.Async.Stop') }}</el-button>
-          <el-button size="mini"
+          <el-button size="small"
                       type="text"
                       icon="el-icon-delete"
                       @click="handleDelete(scope.row)">{{ $t('Common.Delete') }}</el-button>

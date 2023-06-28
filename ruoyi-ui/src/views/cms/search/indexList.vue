@@ -87,10 +87,12 @@
           <el-button 
             type="text"
             icon="el-icon-search"
+            size="small"
             @click="handleShowDetail(scope.row)">{{ $t("Common.Details") }}</el-button>
           <el-button 
             type="text"
             icon="el-icon-delete"
+            size="small"
             @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
         </template>
       </el-table-column>

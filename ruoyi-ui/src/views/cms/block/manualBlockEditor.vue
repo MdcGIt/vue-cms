@@ -420,8 +420,12 @@ export default {
 .block-manual-container .row {
   line-height: 36px;
 }
+.block-manual-container .row .el-link {
+  font-size: 12px;
+}
 .block-manual-container .item-data .item-op .el-link {
   margin-left: 2px;
+  font-size: 16px;
 }
 .block-manual-container .item-op-add {
   color: #1890ff;

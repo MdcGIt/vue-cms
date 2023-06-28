@@ -120,17 +120,21 @@
               <el-button 
                 type="text"
                 icon="el-icon-edit"
+                size="small"
                 @click="handleRename(scope.row)">{{ $t('CMS.Template.Rename') }}</el-button>
               <el-button
                 type="text"
                 icon="el-icon-edit"
+                size="small"
                 @click="handleEdit(scope.row)">{{ $t("Common.Edit") }}</el-button>
               <el-button
                 type="text"
                 icon="el-icon-delete"
+                size="small"
                 @click="handleDelete(scope.row)">{{ $t("Common.Delete") }}</el-button>
               <el-button
                 type="text"
+                size="small"
                 icon="el-icon-remove-outline"
                 @click="handleClearIncludeCache(scope.row)">{{ $t("CMS.Template.ClearIncludeCache") }}</el-button>
             </template>

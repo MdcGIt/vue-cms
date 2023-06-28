@@ -153,21 +153,21 @@
           >
             <template slot-scope="scope" v-if="scope.row.userId !== 1">
               <el-button
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
                 v-hasPermi="['system:user:edit']"
               >{{ $t('Common.Edit') }}</el-button>
               <el-button
-                size="mini"
+                size="small"
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['system:user:remove']"
               >{{ $t('Common.Delete') }}</el-button>
-              <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
-                <el-button size="mini" type="text" icon="el-icon-d-arrow-right">{{ $t('Common.More') }}</el-button>
+              <el-dropdown size="small" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
+                <el-button size="small" type="text" icon="el-icon-d-arrow-right">{{ $t('Common.More') }}</el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
                     v-hasPermi="['system:user:resetPwd']">{{ $t('System.User.ResetPwd') }}</el-dropdown-item>
