@@ -653,7 +653,7 @@ export default {
       PeriodicDelaySeconds: "首次执行延时（秒）",
       ExecResult: "执行结果",
       ErrMsg: "错误信息",
-      AddTtitle: "添加任务",
+      AddTitle: "添加任务",
       EditTitle: "编辑任务信息",
       LogDialogTitle: "任务执行记录"
     },

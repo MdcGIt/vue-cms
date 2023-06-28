@@ -653,7 +653,7 @@ export default {
       PeriodicDelaySeconds: "Initial Delay (s)",
       ExecResult: "Result",
       ErrMsg: "Error",
-      AddTtitle: "Add Scheduled Task",
+      AddTitle: "Add Scheduled Task",
       EditTitle: "Edit Scheduled Task",
       LogDialogTitle: "Scheduled Task Logs"
     },
