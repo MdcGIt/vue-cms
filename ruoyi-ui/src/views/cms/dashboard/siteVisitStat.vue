@@ -1,70 +1,66 @@
 <template>
-  <div class="bdsite-container mt10">
-    <el-row :gutter="15" class="mt10">
-      <el-card v-loading="loading" shadow="hover">
-        <div slot="header" class="clearfix">
-          <span>{{ $t("Stat.Site.VisitTrend") }}</span>
-          <el-row :gutter="10" class="mb8" style="float:right;">
-            <el-col :span="1.5">
-              <el-select v-model="queryParams.bdSiteId" size="small">
-                <el-option
-                  v-for="site in siteOptions"
-                  :key="site.site_id"
-                  :label="site.domain"
-                  :value="site.site_id"
-                />
-              </el-select>
-            </el-col>
-            <el-col :span="1.5">
-              <el-date-picker
-                v-model="dateRange"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                type="daterange"
-                size="small"
-                unlink-panels
-                range-separator="-"
-                :clearable="false"
-                :picker-options="pickerOptions"
-                style="width:235px"
-              ></el-date-picker>
-            </el-col>
-            <el-col :span="1.5">
-              <el-button 
-                type="primary"
-                icon="el-icon-search"
-                size="small"
-                @click="handleQuery">{{ $t("Common.Search") }}</el-button>
-            </el-col>
-          </el-row>
-        </div>
-        <line-chart :chart-data="lineChartData" />
-      </el-card>
-    </el-row>
-    <el-row :gutter="15" class="mt10">
-      <el-card shadow="hover">
-        <div slot="header" class="clearfix">
-          <span>{{ $t("Stat.Site.VisitLocation") }}</span>
-        </div>
-        <el-table v-loading="loadingDistrict" :data="districtList" height="274" size="mini">
-          <el-table-column 
-            :label="$t('Stat.Site.Location')"
-            align="center"
-            prop="name" />
-          <el-table-column 
-            label="PV"
-            align="center"
-            prop="pv_count" />
-          <el-table-column 
-            :label="$t('Stat.Site.Ratio')"
-            align="center"
-            prop="ratio">
-            <template slot-scope="scope">
-              {{ scope.row.ratio }} %
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-    </el-row>
+  <div class="bdsite-container">
+    <el-card v-loading="loading" shadow="hover" class="mb10">
+      <div slot="header" class="clearfix">
+        <span>{{ $t("Stat.Site.VisitTrend") }}</span>
+        <el-row :gutter="10" class="mb8" style="float:right;">
+          <el-col :span="1.5">
+            <el-select v-model="queryParams.bdSiteId" size="small">
+              <el-option
+                v-for="site in siteOptions"
+                :key="site.site_id"
+                :label="site.domain"
+                :value="site.site_id"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="1.5">
+            <el-date-picker
+              v-model="dateRange"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="daterange"
+              size="small"
+              unlink-panels
+              range-separator="-"
+              :clearable="false"
+              :picker-options="pickerOptions"
+              style="width:235px"
+            ></el-date-picker>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button 
+              type="primary"
+              icon="el-icon-search"
+              size="small"
+              @click="handleQuery">{{ $t("Common.Search") }}</el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <line-chart :chart-data="lineChartData" />
+    </el-card>
+    <el-card shadow="hover">
+      <div slot="header" class="clearfix">
+        <span>{{ $t("Stat.Site.VisitLocation") }}</span>
+      </div>
+      <el-table v-loading="loadingDistrict" :data="districtList" height="274" size="mini">
+        <el-table-column 
+          :label="$t('Stat.Site.Location')"
+          align="center"
+          prop="name" />
+        <el-table-column 
+          label="PV"
+          align="center"
+          prop="pv_count" />
+        <el-table-column 
+          :label="$t('Stat.Site.Ratio')"
+          align="center"
+          prop="ratio">
+          <template slot-scope="scope">
+            {{ scope.row.ratio }} %
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
   </div>
 </template>
 <style scoped>
@@ -176,6 +172,7 @@ export default {
           this.lineChartData.datas.visitor_count.forEach(v => this.sum.uv+=v);
           this.lineChartData.datas.avg_visit_time.forEach(v => this.sum.avgVisitTime+=v);
           this.sum.avgVisitTime = Math.round(this.sum.avgVisitTime / this.lineChartData.datas.avg_visit_time.length);
+          console.log(this.lineChartData)
           this.loading = false;
       });
     },

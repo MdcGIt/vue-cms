@@ -1,20 +1,16 @@
 <template>
   <div class="dashboard-editor-container">
-    <el-row :gutter="20">
+    <el-row :gutter="10">
       <el-col :span="24">
         <user-info></user-info>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :span="24">
-        <shortcut></shortcut>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
+    <el-row :gutter="10">
       <el-col :span="12">
         <cms-site-visit-stat></cms-site-visit-stat>
       </el-col>
       <el-col :span="12">
+        <shortcut></shortcut>
         <cms-site-data-stat></cms-site-data-stat>
         <el-card shadow="hover" class="mt10">
           <div slot="header" class="clearfix">

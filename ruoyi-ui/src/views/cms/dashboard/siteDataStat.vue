@@ -1,49 +1,70 @@
 <template>
   <div class="site-container mt10">
-    <el-row :gutter="15" class="mt10">
-      <el-col :span="8">
-        <el-card shadow="hover" v-loading="siteStatLoading">
-          <el-row>
-            <el-col :span="8">
-              <svg-icon icon-class="tree-table" class-name="cc-card-panel-icon" />
-            </el-col>
-            <el-col :span="16">
-              <el-statistic title="栏目">
-                <template slot="formatter"> {{ siteStat.catalogCount }} </template>
-              </el-statistic>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="hover" v-loading="siteStatLoading">
-          <el-row>
-            <el-col :span="8">
-              <svg-icon icon-class="documentation" class-name="cc-card-panel-icon" />
-            </el-col>
-            <el-col :span="16">
-              <el-statistic title="内容">
-                <template slot="formatter"> {{ siteStat.contentCount }} </template>
-              </el-statistic>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="hover" v-loading="siteStatLoading">
-          <el-row>
-            <el-col :span="8">
-              <svg-icon icon-class="example" class-name="cc-card-panel-icon" />
-            </el-col>
-            <el-col :span="16">
-              <el-statistic title="资源">
-                <template slot="formatter"> {{ siteStat.resourceCount }} </template>
-              </el-statistic>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+    <el-card shadow="hover">
+      <div slot="header" class="clearfix">
+        <span>{{ $t('CMS.Site.Dashboard.DataCountCard') }}</span>
+      </div>
+      <div class="body">
+        <el-row :gutter="15" class="mt10">
+          <el-col :span="6">
+            <el-card shadow="hover" v-loading="siteStatLoading">
+              <el-row>
+                <el-col :span="8">
+                  <svg-icon icon-class="catalog" class-name="cc-card-panel-icon" />
+                </el-col>
+                <el-col :span="16">
+                  <el-statistic :title="$t('CMS.Site.Dashboard.Catalog')">
+                    <template slot="formatter"> {{ siteStat.catalogCount }} </template>
+                  </el-statistic>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="hover" v-loading="siteStatLoading">
+              <el-row>
+                <el-col :span="8">
+                  <svg-icon icon-class="content" class-name="cc-card-panel-icon" />
+                </el-col>
+                <el-col :span="16">
+                  <el-statistic :title="$t('CMS.Site.Dashboard.Content')">
+                    <template slot="formatter"> {{ siteStat.contentCount }} </template>
+                  </el-statistic>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="hover" v-loading="siteStatLoading">
+              <el-row>
+                <el-col :span="8">
+                  <svg-icon icon-class="resource" class-name="cc-card-panel-icon" />
+                </el-col>
+                <el-col :span="16">
+                  <el-statistic :title="$t('CMS.Site.Dashboard.Resource')">
+                    <template slot="formatter"> {{ siteStat.resourceCount }} </template>
+                  </el-statistic>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card shadow="hover" v-loading="siteStatLoading">
+              <el-row>
+                <el-col :span="8">
+                  <svg-icon icon-class="template" class-name="cc-card-panel-icon" />
+                </el-col>
+                <el-col :span="16">
+                  <el-statistic :title="$t('CMS.Site.Dashboard.Template')">
+                    <template slot="formatter"> {{ siteStat.templateCount }} </template>
+                  </el-statistic>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+    </el-card>
   </div>
 </template>
 <style scoped>
@@ -60,7 +81,8 @@ export default {
       siteStat: {
         catalogCount: 0,
         contentCount: 0,
-        resourceCount: 0
+        resourceCount: 0,
+        templateCount: 0,
       }
     };
   },
@@ -82,6 +104,7 @@ export default {
 <style lang="scss" scoped>
 .cc-card-panel-icon {
   font-size: 48px;
+  color: #40c9c6
 }
 .panel-group {
   margin-top: 18px;

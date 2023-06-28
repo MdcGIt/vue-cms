@@ -1,11 +1,11 @@
 <template>
   <div class="home-shortcut-container">
-    <el-row :gutter="10">
-      <el-col 
-        v-for="shortcut in shortcuts" 
-        :key="shortcut.router"
-        :span="3">
-        <el-card shadow="hover" :body-style="{ padding: '0px' }">
+    <el-card shadow="hover">
+      <div slot="header" class="clearfix">
+        <span>{{ $t('System.Menu.Shortcut') }}</span>
+      </div>
+      <div class="body">
+        <el-card v-for="shortcut in shortcuts" :key="shortcut.router" shadow="hover" :body-style="{ padding: '0 10px' }" style="float: left;margin-right:10px;margin-bottom:10px;">
           <el-link class="shortcut-link" @click="handleShortcutRedirect(shortcut.router)">
             <svg-icon :icon-class="shortcut.icon" class-name="card-panel-icon"></svg-icon>
             <div class="shortcut-text">
@@ -13,8 +13,9 @@
             </div>
           </el-link>
         </el-card>
-      </el-col>
-    </el-row>
+      </div>
+    </el-card>
+    
   </div>
 </template>
 <script>
@@ -45,8 +46,9 @@ export default {
 <style>
 .home-shortcut-container .shortcut-link {
   display: block;
-  padding: 10px 0px;
+  padding: 10px 10px;
   text-align: center;
+  width: 165px;
 }
 .home-shortcut-container .card-panel-icon {
   width: 36px;
