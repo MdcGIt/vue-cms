@@ -66,6 +66,7 @@ public class CmsCatalogTag extends AbstractListTag {
 		if (!CatalogTagLevel.isRoot(level) && Objects.isNull(catalog)) {
 			throw new CatalogNotFoundException(getTagName(), catalogId, alias, env);
 		}
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
 
 		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<>();
 		q.eq(CmsCatalog::getSiteId, siteId).eq(CmsCatalog::getVisibleFlag, YesOrNo.YES);
@@ -78,6 +79,7 @@ public class CmsCatalogTag extends AbstractListTag {
 		} else if (CatalogTagLevel.isSelf(level)) {
 			q.eq(CmsCatalog::getCatalogId, catalog.getCatalogId());
 		}
+		q.apply(StringUtils.isNotEmpty(condition), condition);
 		q.orderByAsc(CmsCatalog::getSortFlag);
 
 		TemplateContext context = FreeMarkerUtils.getTemplateContext(env);

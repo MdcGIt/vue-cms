@@ -82,6 +82,8 @@ public class CmsContentTag extends AbstractListTag {
 		if (!"Root".equalsIgnoreCase(level) && Objects.isNull(catalog)) {
 			throw new CatalogNotFoundException(getTagName(), catalogId, alias, env);
 		}
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+
 		LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<>();
 		q.eq(CmsContent::getSiteId, siteId).eq(CmsContent::getStatus, ContentStatus.PUBLISHED);
 		if ("Current".equalsIgnoreCase(level)) {
@@ -105,6 +107,7 @@ public class CmsContentTag extends AbstractListTag {
 				q.apply(bit > 0, "attributes&{0}<>{1}", attrTotal, bit);
 			}
 		}
+		q.apply(StringUtils.isNotEmpty(condition), condition);
 		String sortType = MapUtils.getString(attrs, "sort");
 		if ("Recent".equalsIgnoreCase(sortType)) {
 			q.orderByDesc(CmsContent::getPublishDate);

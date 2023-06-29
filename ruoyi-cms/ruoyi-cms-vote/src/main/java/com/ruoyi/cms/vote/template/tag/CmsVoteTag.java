@@ -3,6 +3,8 @@ package com.ruoyi.cms.vote.template.tag;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -43,8 +45,12 @@ public class CmsVoteTag extends AbstractListTag {
 			throws TemplateException {
 		long siteId = MapUtils.getLongValue(attrs, "siteid", FreeMarkerUtils.evalLongVariable(env, "Site.siteId"));
 		String voteSource = this.cmsVoteService.getVoteSource(siteId);
-		Page<Vote> pageResult = this.voteService.lambdaQuery().eq(Vote::getSource, voteSource)
-				.page(new Page<>(pageIndex, size, page));
+		LambdaQueryWrapper<Vote> q = new LambdaQueryWrapper<Vote>().eq(Vote::getSource, voteSource);
+
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+		q.apply(StringUtils.isNotEmpty(condition), condition);
+
+		Page<Vote> pageResult = this.voteService.page(new Page<>(pageIndex, size, page), q);
 		return TagPageData.of(pageResult.getRecords(), pageResult.getTotal());
 	}
 

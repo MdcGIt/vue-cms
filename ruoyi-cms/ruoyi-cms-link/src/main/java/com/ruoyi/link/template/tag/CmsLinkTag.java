@@ -50,9 +50,11 @@ public class CmsLinkTag extends AbstractListTag {
 		if (group == null) {
 			throw new TemplateException("获取分组数据失败：" + code, env);
 		}
-		LambdaQueryWrapper<CmsLink> q = new LambdaQueryWrapper<CmsLink>()
-				.eq(CmsLink::getGroupId, group.getLinkGroupId())
-				.orderByAsc(CmsLink::getSortFlag);
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+		LambdaQueryWrapper<CmsLink> q = new LambdaQueryWrapper<CmsLink>().eq(CmsLink::getGroupId, group.getLinkGroupId());
+		q.apply(StringUtils.isNotEmpty(condition), condition);
+		q.orderByAsc(CmsLink::getSortFlag);
+
 		Page<CmsLink> pageResult = this.linkService.page(new Page<>(pageIndex, size, page), q);
 		return TagPageData.of(pageResult.getRecords(), pageResult.getTotal());
 	}

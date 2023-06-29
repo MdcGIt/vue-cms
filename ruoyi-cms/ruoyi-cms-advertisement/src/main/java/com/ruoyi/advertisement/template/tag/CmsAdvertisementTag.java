@@ -53,10 +53,13 @@ public class CmsAdvertisementTag extends AbstractListTag {
 		if (adSpace == null) {
 			throw new TemplateException(StringUtils.messageFormat("<@{0}>AD place '{1}' not exists.", this.getTagName(), code), env)  ;
 		}
-		Page<CmsAdvertisement> pageResult = this.advertisementService.lambdaQuery()
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+
+		LambdaQueryWrapper<CmsAdvertisement> q = new LambdaQueryWrapper<CmsAdvertisement>()
 				.eq(CmsAdvertisement::getAdSpaceId, adSpace.getPageWidgetId())
-				.eq(CmsAdvertisement::getState, EnableOrDisable.ENABLE)
-				.page(new Page<>(pageIndex, size, page));
+				.eq(CmsAdvertisement::getState, EnableOrDisable.ENABLE);
+		q.apply(StringUtils.isNotEmpty(condition), condition);
+		Page<CmsAdvertisement> pageResult = this.advertisementService.page(new Page<>(pageIndex, size, page), q);
 		if (pageIndex > 1 & pageResult.getRecords().size() == 0) {
 			throw new TemplateException(StringUtils.messageFormat("Page data empty: pageIndex = {0}", pageIndex), env) ;
 		}

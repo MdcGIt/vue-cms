@@ -3,6 +3,8 @@ package com.ruoyi.media.template.tag;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -53,9 +55,13 @@ public class CmsVideoTag extends AbstractListTag {
 		if (ContentCopyType.isMapping(c.getCopyType())) {
 			contentId = c.getCopyId();
 		}
-		Page<CmsVideo> pageResult = this.videoService.lambdaQuery().eq(CmsVideo::getContentId, contentId)
-				.orderByAsc(CmsVideo::getSortFlag)
-				.page(new Page<>(pageIndex, size, page));
+
+		LambdaQueryWrapper<CmsVideo> q = new LambdaQueryWrapper<CmsVideo>().eq(CmsVideo::getContentId, contentId);
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+		q.apply(StringUtils.isNotEmpty(condition), condition);
+		q.orderByAsc(CmsVideo::getSortFlag);
+
+		Page<CmsVideo> pageResult = this.videoService.page(new Page<>(pageIndex, size, page), q);
 		if (pageIndex > 1 & pageResult.getRecords().size() == 0) {
 			throw new TemplateException("内容列表页码超出上限：" + pageIndex, env);
 		}

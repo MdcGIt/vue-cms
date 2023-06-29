@@ -46,11 +46,8 @@ public class CmsLinkGroupTag extends AbstractListTag {
 				.eq(StringUtils.isNotEmpty(code), CmsLinkGroup::getCode, code);
 
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
-		if (StringUtils.isNotEmpty(condition)) {
-			q.last(" AND (" + condition + ") ORDER BY sort_flag ASC");
-		} else {
-			q.orderByAsc(CmsLinkGroup::getSortFlag);
-		}
+		q.apply(StringUtils.isNotEmpty(condition), condition);
+		q.orderByAsc(CmsLinkGroup::getSortFlag);
 
 		 Page<CmsLinkGroup> pageResult = this.linkGroupService.page(new Page<>(pageIndex, size, page), q);
 		return TagPageData.of(pageResult.getRecords(), pageResult.getTotal());
