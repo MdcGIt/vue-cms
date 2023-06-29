@@ -47,7 +47,9 @@ public class CmsXModelDataTag extends AbstractTag {
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = new ArrayList<>();
 		tagAttrs.add(new TagAttr(TagAttr_ModelId, true, TagAttrDataType.INTEGER, "模型ID") );
-		tagAttrs.add(new TagAttr(TagAttr_Data_Type, true, TagAttrDataType.STRING, "模型数据类型") );
+		TagAttr dataTypeAttr = new TagAttr(TagAttr_Data_Type, true, TagAttrDataType.STRING, "模型数据类型");
+		dataTypeAttr.setOptions(Map.of("site", "站点", "catalog", "栏目", "content", "内容"));
+		tagAttrs.add(dataTypeAttr);
 		tagAttrs.add(new TagAttr(TagAttr_Data_ID, true, TagAttrDataType.STRING, "模型数据ID") );
 		return tagAttrs;
 	}
