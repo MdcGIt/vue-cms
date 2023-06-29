@@ -1,4 +1,4 @@
-# RuoYi-Vue-CMS v1.3.3
+# RuoYi-Vue-CMS v1.3.4
 
 ### 系统简介
 
@@ -17,48 +17,6 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。项目基于[RuoYi-Vue](h
 ##### 演示站静态资源
 - 演示站的静态资源已提交到仓库[ruoyi-vue-cms-wwwroot](https://gitee.com/liweiyi/ruoyi-vue-cms-wwwroot)。
 - CMS资源路径配置application.yml中ruoyi.cms.resourceRoot，默认与项目同级的wwwroot_release。
-
-
-#### 本地开发环境部署
-
-##### es和xxl-job开关配置
-- 修改application-prod.yml配置spring.data.elasticsearch.repositories.enabled=true
-- 修改application-dev.yml配置xxl.job.enable=true。
-
-##### docker环境配置文件docker-compose_env.yml在ruoyi-admin/docker目录下。
-- 修改mysql配置root密码与映射端口号，与application-dev.yml保持一致：
-
-```
-services: 
-  cc-mysql:
-    environment:
-      - MYSQL_ROOT_PASSWORD=xxxxxx
-    ports:
-      - '33066:3306'
-```
-
-``
-`- '33066:3306'`
-- 修改redis配置密码和端口，与application-dev.yml保持一致：
-
-```
-services: 
-  cc-redis:
-    command:
-      # 密码也可以在配置文件直接配置
-      redis-server --port 6379 --requirepass "xxxxx" --appendonly yes
-```
-- xxl-job配置数据库访问密码，与上面的mysql配置一致
-
-```
-services:
-  cc-xxl-job-admin:
-    ports:                                                
-      - 18080:8080
-    environment:
-      PARAMS: "--spring.datasource.url=jdbc:mysql://cc-mysql/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai --spring.datasource.username=root --spring.datasource.password=xxxxxx"
-```
-- elasticsearch-ik的镜像构建配置文件在ruoyi-search/docker下。
 
 ### 开发环境
 - JDK17
