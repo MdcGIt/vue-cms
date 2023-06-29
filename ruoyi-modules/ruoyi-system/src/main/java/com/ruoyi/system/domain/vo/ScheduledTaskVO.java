@@ -2,6 +2,7 @@ package com.ruoyi.system.domain.vo;
 
 import java.time.LocalDateTime;
 
+import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.system.domain.SysScheduledTask;
 import com.ruoyi.system.schedule.ScheduledTask;
 
@@ -21,6 +22,8 @@ public class ScheduledTaskVO {
 	 * 任务类型
 	 */
 	private String taskType;
+
+	private String taskTypeName;
 	
 	/**
 	 * 任务状态

@@ -3,6 +3,7 @@ package com.ruoyi.advertisement.job;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.ruoyi.system.schedule.IScheduledHandler;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -23,11 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 广告定时发布下线任务
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class AdvertisementPublishJob extends IJobHandler {
+@Component(IScheduledHandler.BEAN_PREFIX + AdvertisementPublishJob.JOB_NAME)
+public class AdvertisementPublishJob extends IJobHandler implements IScheduledHandler {
 	
 	static final String JOB_NAME = "AdvertisementPublishJob";
 
@@ -38,8 +42,17 @@ public class AdvertisementPublishJob extends IJobHandler {
 	private final IPublishService publishService;
 
 	@Override
-	@XxlJob(JOB_NAME)
-	public void execute() throws Exception {
+	public String getId() {
+		return JOB_NAME;
+	}
+
+	@Override
+	public String getName() {
+		return "{SCHEDULED_TASK." + JOB_NAME + "}";
+	}
+
+	@Override
+	public void exec() throws Exception {
 		log.info("AdvertisementPublishJob start");
 		long s = System.currentTimeMillis();
 		LocalDateTime now = LocalDateTime.now();
@@ -79,5 +92,11 @@ public class AdvertisementPublishJob extends IJobHandler {
 			}
 		}
 		log.info("AdvertisementPublishJob completed, cost: {}ms", System.currentTimeMillis() - s);
+	}
+
+	@Override
+	@XxlJob(JOB_NAME)
+	public void execute() throws Exception {
+		this.exec();
 	}
 }

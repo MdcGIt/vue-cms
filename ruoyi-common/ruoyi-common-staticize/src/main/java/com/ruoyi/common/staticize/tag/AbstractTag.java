@@ -91,13 +91,15 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 	 * 校验标签属性并返回处理过的标签属性
 	 * 
 	 * @param env
-	 * @param attrs
+	 * @param _attrs
 	 * @throws TemplateException
 	 */
-	Map<String, String> validTagAttributes(Environment env, Map<String, TemplateModel> attrs) throws TemplateException {
+	Map<String, String> validTagAttributes(Environment env, Map<String, TemplateModel> _attrs) throws TemplateException {
 		CaseInsensitiveMap<String, String> map = null;
 		List<TagAttr> tagAttrs = this.getTagAttrs();
 		if (tagAttrs != null) {
+			CaseInsensitiveMap<String, TemplateModel> attrs = new CaseInsensitiveMap<>();
+			attrs.putAll(_attrs);
 			map = new CaseInsensitiveMap<>();
 			for (TagAttr tagAttr : tagAttrs) {
 				String attrValue = FreeMarkerUtils.getStringFrom(attrs, tagAttr.getName());

@@ -2,6 +2,7 @@ package com.ruoyi.contentcore.job;
 
 import java.time.LocalDateTime;
 
+import com.ruoyi.system.schedule.IScheduledHandler;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,20 +19,32 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 内容置顶取消任务<br/>
+ * 内容置顶取消任务
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 @Slf4j
 @RequiredArgsConstructor
-@Component(ContentTopCancelJobHandler.JOB_NAME)
-public class ContentTopCancelJobHandler extends IJobHandler {
-	
+@Component(IScheduledHandler.BEAN_PREFIX + ContentTopCancelJobHandler.JOB_NAME)
+public class ContentTopCancelJobHandler extends IJobHandler implements IScheduledHandler {
+
 	static final String JOB_NAME = "ContentTopCancelJobHandler";
-	
+
 	private final IContentService contentService;
 
 	@Override
-	@XxlJob(JOB_NAME)
-	public void execute() throws Exception {
+	public String getId() {
+		return JOB_NAME;
+	}
+
+	@Override
+	public String getName() {
+		return "{SCHEDULED_TASK." + JOB_NAME + "}";
+	}
+
+	@Override
+	public void exec() throws Exception {
 		log.info("Job start: {}", JOB_NAME);
 		long s = System.currentTimeMillis();
 		int pageSize = 500;
@@ -49,5 +62,11 @@ public class ContentTopCancelJobHandler extends IJobHandler {
 			}
 		}
 		log.info("Job '{}' completed, cost: {}ms", JOB_NAME, System.currentTimeMillis() - s);
+	}
+
+	@Override
+	@XxlJob(JOB_NAME)
+	public void execute() throws Exception {
+		this.exec();
 	}
 }

@@ -640,6 +640,7 @@ export default {
     },
     ScheduledTask: {
       Type: "类型",
+      Name: "名称",
       Status: "状态",
       ReadyTime: "准备就绪时间",
       ExecOnce: "执行一次",

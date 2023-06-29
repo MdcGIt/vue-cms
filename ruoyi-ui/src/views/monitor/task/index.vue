@@ -32,8 +32,8 @@
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-    <el-row>
-      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+    <el-row v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true">
         <el-form-item :label="$t('Monitor.ScheduledTask.Status')" prop="status">
           <el-select 
             clearable
@@ -59,6 +59,7 @@
     <el-table v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" width="140" prop="taskId" />
+      <el-table-column :label="$t('Monitor.ScheduledTask.Name')" align="center" prop="taskTypeName" />
       <el-table-column :label="$t('Monitor.ScheduledTask.Type')" align="center" prop="taskType" />
       <el-table-column :label="$t('Monitor.ScheduledTask.Status')" align="center" width="120">
         <template slot-scope="scope">

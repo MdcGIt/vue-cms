@@ -640,6 +640,7 @@ export default {
     },
     ScheduledTask: {
       Type: "Type",
+      Name: "Name",
       Status: "Status",
       ReadyTime: "Ready Time",
       ExecOnce: "Execute Once",

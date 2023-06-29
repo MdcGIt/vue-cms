@@ -69,9 +69,9 @@
               </el-card>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row v-if="xmodelVisible">
             <el-col class="pr10">
-              <el-card v-if="xmodelVisible" shadow="always" class="card-exmodel">
+              <el-card shadow="always" class="card-exmodel">
                 <cms-exmodel-editor 
                   ref="EXModelEditor"
                   :xmodel="form.catalogConfigProps.ContentExtendModel" 

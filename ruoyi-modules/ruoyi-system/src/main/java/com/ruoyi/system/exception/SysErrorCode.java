@@ -165,14 +165,29 @@ public enum SysErrorCode implements ErrorCode {
 	SCHEDULED_TASK_REMOVE_ERR,
 	
 	/**
-	 * 定时任务已存在
+	 * 定时任务“{0}”已存在
 	 */
 	SCHEDULED_TASK_EXISTS,
 	
 	/**
 	 * 只能手动执行停用状态任务
 	 */
-	SCHEDULED_TASK_EXEC_ERR;
+	SCHEDULED_TASK_EXEC_ERR,
+
+	/**
+	 * 不支持的定时任务类型：{0}
+	 */
+	SCHEDULED_TASK_UNSUPPORTED_HANDLER,
+
+	/**
+	 * 任务触发器`{0}`配置错误：{1}
+	 */
+	SCHEDULED_TASK_TRIGGER_ERR,
+
+	/**
+	 * 任务正在运行中
+	 */
+	SCHEDULED_TASK_RUNNING;
 	
 	@Override
 	public String value() {

@@ -33,8 +33,8 @@
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-    <el-row style="text-align: right">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+    <el-row style="text-align: right" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true">
         <el-form-item :label="$t('System.User.UserName')" prop="userName">
           <el-input
             v-model="queryParams.userName"

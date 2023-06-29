@@ -37,8 +37,8 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 			AsyncTaskManager.setTaskPercent(90);
 			contentHtml = this.getArticleService().downloadRemoteImages(contentHtml, this.getSite(),
 					this.getOperator().getUsername());
-			articleDetail.setContentHtml(contentHtml);
 		}
+		articleDetail.setContentHtml(contentHtml);
 		// 正文首图作为logo
 		if (StringUtils.isEmpty(this.getContentEntity().getLogo())
 				&& AutoArticleLogo.getValue(this.getSite().getConfigProps())) {
