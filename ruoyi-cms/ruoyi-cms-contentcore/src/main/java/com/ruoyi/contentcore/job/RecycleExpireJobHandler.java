@@ -9,6 +9,7 @@ import com.ruoyi.contentcore.properties.RecycleKeepDaysProperty;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
+import com.ruoyi.system.schedule.IScheduledHandler;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +21,33 @@ import java.util.List;
 
 /**
  * 回收站内容过期回收
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 @Slf4j
 @RequiredArgsConstructor
-@Component(RecycleExpireJobHandler.JOB_NAME)
-public class RecycleExpireJobHandler extends IJobHandler {
+@Component(IScheduledHandler.BEAN_PREFIX + RecycleExpireJobHandler.JOB_NAME)
+public class RecycleExpireJobHandler extends IJobHandler implements IScheduledHandler {
 
 	static final String JOB_NAME = "RecycleExpireJobHandler";
 
 	private final ISiteService siteService;
 
-	private final IContentService contentService;
-
 	private final CmsContentMapper contentMapper;
 
 	@Override
-	@XxlJob(JOB_NAME)
-	public void execute() throws Exception {
+	public String getId() {
+		return JOB_NAME;
+	}
+
+	@Override
+	public String getName() {
+		return "{SCHEDULED_TASK." + JOB_NAME + "}";
+	}
+
+	@Override
+	public void exec() throws Exception {
 		log.info("Job start: {}", JOB_NAME);
 		long s = System.currentTimeMillis();
 		this.siteService.list().forEach(site -> {
@@ -63,5 +74,11 @@ public class RecycleExpireJobHandler extends IJobHandler {
 			}
 		});
 		log.info("Job '{}' completed, cost: {}ms", JOB_NAME, System.currentTimeMillis() - s);
+	}
+
+	@Override
+	@XxlJob(JOB_NAME)
+	public void execute() throws Exception {
+		this.exec();
 	}
 }

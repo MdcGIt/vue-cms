@@ -35,8 +35,8 @@
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="loadVoteList"></right-toolbar>
     </el-row>
-    <el-row>
-      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true" v-show="showSearch">
+    <el-row v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" size="small" class="el-form-search mb12" :inline="true">
         <el-form-item prop="title">
           <el-input
             v-model="queryParams.title"

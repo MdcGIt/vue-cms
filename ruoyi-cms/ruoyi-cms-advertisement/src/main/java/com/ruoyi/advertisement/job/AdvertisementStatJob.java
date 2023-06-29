@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.ruoyi.system.schedule.IScheduledHandler;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
@@ -25,11 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 广告统计任务
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class AdvertisementStatJob extends IJobHandler {
+@Component(IScheduledHandler.BEAN_PREFIX + AdvertisementStatJob.JOB_NAME)
+public class AdvertisementStatJob extends IJobHandler implements IScheduledHandler {
 
 	static final String JOB_NAME = "AdvertisementStatJob";
 
@@ -39,12 +43,18 @@ public class AdvertisementStatJob extends IJobHandler {
 
 	private final RedisCache redisCache;
 
-	/**
-	 * 更新广告小时点击数和展现数到统计表中
-	 */
 	@Override
-	@XxlJob(JOB_NAME)
-	public void execute() throws Exception {
+	public String getId() {
+		return JOB_NAME;
+	}
+
+	@Override
+	public String getName() {
+		return "{SCHEDULED_TASK." + JOB_NAME + "}";
+	}
+
+	@Override
+	public void exec() throws Exception {
 		log.info("AdvertisementStatJob start");
 		long s = System.currentTimeMillis();
 		try {
@@ -103,5 +113,11 @@ public class AdvertisementStatJob extends IJobHandler {
 			this.redisCache.deleteObject(clickCacheKey);
 			this.redisCache.deleteObject(viewCacheKey);
 		}
+	}
+
+	@Override
+	@XxlJob(JOB_NAME)
+	public void execute() throws Exception {
+		this.exec();
 	}
 }

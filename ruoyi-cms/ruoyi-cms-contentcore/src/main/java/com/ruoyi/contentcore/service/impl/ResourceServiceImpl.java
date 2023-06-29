@@ -6,10 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.ruoyi.contentcore.core.IResourceStat;
 import com.ruoyi.contentcore.util.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -247,11 +246,17 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		Assert.notNull(fileStorageType, () -> StorageErrorCode.UNSUPPORTED_STORAGE_TYPE.exception(type));
 		return fileStorageType;
 	}
+
+	private final List<IResourceStat> resourceStats;
 	
 	/**
 	 * TODO 统计资源引用
 	 */
-	public void statResourlceUsage() {
+	public void statResourceUsage() {
+		Map<Long, Integer> resourceIds = new HashMap<>();
+		this.resourceStats.forEach(rs -> {
+			Map<Long, Integer> quotedResource = rs.findQuotedResource();
+		});
 		// 站点Logo，栏目Logo，内容Logo
 		
 		// 页面部件区块Logo

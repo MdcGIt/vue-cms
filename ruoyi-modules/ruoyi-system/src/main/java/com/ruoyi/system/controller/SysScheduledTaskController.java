@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
@@ -14,6 +15,7 @@ import com.ruoyi.system.domain.SysScheduledTaskLog;
 import com.ruoyi.system.domain.dto.ScheduledTaskDTO;
 import com.ruoyi.system.domain.vo.ScheduledTaskVO;
 import com.ruoyi.system.mapper.SysScheduledTaskLogMapper;
+import com.ruoyi.system.schedule.IScheduledHandler;
 import com.ruoyi.system.schedule.ScheduledTask;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -26,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,13 +48,14 @@ public class SysScheduledTaskController extends BaseRestController {
 
 	private final SysScheduledTaskLogMapper logMapper;
 	
-	private final Map<String, IJobHandler> jobHandlers;
+	private final Map<String, IScheduledHandler> taskHandlers;
 	
 	@GetMapping("/typeOptions")
 	public R<?> getTaskTypeOptions() {
-		List<Map<String, String>> list = this.jobHandlers.entrySet().stream().map(e -> {
-			return Map.of("label", e.getKey(), "value", e.getKey());
-		}).toList();
+		List<Map<String, String>> list = this.taskHandlers.values().stream()
+				.sorted(Comparator.comparing(IScheduledHandler::getId))
+				.map(t -> Map.of("label", I18nUtils.get(t.getName()), "value", t.getId()))
+				.toList();
 		return R.ok(list);
 	}
 	
@@ -64,7 +68,12 @@ public class SysScheduledTaskController extends BaseRestController {
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize()));
 		List<ScheduledTaskVO> list = page.getRecords().stream().map(task -> {
 			ScheduledTask scheduledTask = this.taskService.getScheduledTask(task.getTaskId());
-			return new ScheduledTaskVO(task, scheduledTask);
+			ScheduledTaskVO vo = new ScheduledTaskVO(task, scheduledTask);
+			IScheduledHandler handler = taskHandlers.get(IScheduledHandler.BEAN_PREFIX + task.getTaskType());
+			if (handler != null) {
+				vo.setTaskTypeName(I18nUtils.get(handler.getName()));
+			}
+			return vo;
 		}).toList();
 		return bindDataTable(list, page.getTotal());
 	}
