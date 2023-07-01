@@ -1485,6 +1485,15 @@ export default {
       WordAnalyzePlaceholder: "输入需要测试的文字",
       WordAnalyzeTest: "测试",
       WordAnalyzeResult: "测试结果"
+    },
+    Log: {
+      Word: "搜索词",
+      Location: "地域",
+      Source: "来源",
+      ClientType: "客户端",
+      LogTime: "搜索时间",
+      AddExtWord: "添加到扩展词",
+      AddStopWord: "添加到停用词",
     }
   }
 };

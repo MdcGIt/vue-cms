@@ -35,4 +35,6 @@ public class SearchLogDTO {
     private String referer;
 
     private LocalDateTime logTime;
+
+    private String source;
 }

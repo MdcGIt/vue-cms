@@ -15,5 +15,5 @@ public interface ISearchLogService extends IService<SearchLog> {
 	 */
 	void addSearchLog(SearchLogDTO dto);
 
-	void addSearchLog(String query, HttpServletRequest request);
+	void addSearchLog(String source, String query, HttpServletRequest request);
 }

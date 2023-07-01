@@ -29,12 +29,14 @@ public class SearchLogServiceImpl extends ServiceImpl<SearchLogMapper, SearchLog
 			sLog.setLogTime(dto.getLogTime());
 			sLog.setUserAgent(dto.getUserAgent());
 			sLog.setReferer(dto.getReferer());
+			sLog.setSource(dto.getSource());
+			sLog.setClientType(ServletUtils.getDeviceType(dto.getUserAgent()));
 			this.save(sLog);
 		});
 	}
 
 	@Override
-	public void addSearchLog(String query, HttpServletRequest request) {
+	public void addSearchLog(String source, String query, HttpServletRequest request) {
 		final String userAgent = ServletUtils.getUserAgent(request);
 		final String ip = ServletUtils.getIpAddr(request);
 		final String referer = ServletUtils.getReferer(request);
@@ -46,6 +48,8 @@ public class SearchLogServiceImpl extends ServiceImpl<SearchLogMapper, SearchLog
 			sLog.setLogTime(logTime);
 			sLog.setUserAgent(userAgent);
 			sLog.setReferer(referer);
+			sLog.setClientType(ServletUtils.getDeviceType(userAgent));
+			sLog.setSource(source);
 			this.save(sLog);
 		});
 	}

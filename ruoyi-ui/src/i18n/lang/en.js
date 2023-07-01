@@ -1485,6 +1485,15 @@ export default {
       WordAnalyzePlaceholder: "Enter the text to be tested...",
       WordAnalyzeTest: "Test",
       WordAnalyzeResult: "Result"
+    },
+    Log: {
+      Word: "Word",
+      Location: "Location",
+      Source: "Source",
+      ClientType: "Client Type",
+      LogTime: "Time",
+      AddExtWord: "Add Ext Word",
+      AddStopWord: "Add Stop Word",
     }
   }
 };
