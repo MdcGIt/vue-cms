@@ -1,5 +1,8 @@
 package com.ruoyi.search.controller;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
+import co.elastic.clients.elasticsearch.indices.AnalyzeResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
@@ -7,6 +10,7 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.search.domain.DictWord;
 import com.ruoyi.search.domain.dto.DictWordDTO;
@@ -21,7 +25,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -30,6 +36,8 @@ import java.util.stream.Collectors;
 public class DictWordController extends BaseRestController {
 
 	private final IDictWordService dictWordService;
+
+	private final ElasticsearchClient esClient;
 
 	@Priv(type = AdminUserType.TYPE)
 	@GetMapping
@@ -60,20 +68,20 @@ public class DictWordController extends BaseRestController {
 
 	/**
 	 * 检查词库是否有变更
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 */
 	@RequestMapping(value = "/ik/{type}", method = RequestMethod.HEAD)
 	public void checkDictNewest(@PathVariable("type") @NotEmpty String type, HttpServletRequest request,
-			HttpServletResponse response) {
+								HttpServletResponse response) {
 		String lastModified = this.dictWordService.getLastModified(type);
 		response.setHeader("Last-Modified", StringUtils.isEmpty(lastModified) ? "0" : lastModified);
 	}
 
 	/**
 	 * IK热更词库API
-	 * 
+	 *
 	 * @return 词库字符串，每行一个词
 	 */
 	@RequestMapping(value = "/ik/{type}", method = RequestMethod.GET, produces = { "text/html;charset=utf-8" })
@@ -81,5 +89,21 @@ public class DictWordController extends BaseRestController {
 		String words = this.dictWordService.lambdaQuery().eq(DictWord::getWordType, type).list().stream()
 				.map(DictWord::getWord).collect(Collectors.joining("\n"));
 		return words;
+	}
+
+	/**
+	 * 分词测试
+	 *
+	 * @param text
+	 * @return
+	 */
+	@PostMapping("/analyze")
+	public R<?> wordAnalyze(@RequestBody String text) throws IOException {
+		AnalyzeRequest analyzeRequest = new AnalyzeRequest.Builder().analyzer("ik_smart").text(text).build();
+		AnalyzeResponse analyzeResponse = this.esClient.indices().analyze(analyzeRequest);
+		String result = analyzeResponse.tokens().stream().map(
+				token -> token.token() + "/" + token.type()
+		).collect(Collectors.joining(", "));
+		return R.ok(result);
 	}
 }

@@ -1472,5 +1472,19 @@ export default {
       FieldMappingName: "数据表字段不能为空",
       FieldMappingUsed: "数据表字段已被占用",
     }
+  },
+  Search: {
+    DictWord: {
+      AnalyzeTest: "分词测试",
+      Word: "词语",
+      WordPlaceholder: "每行一个",
+      Type: "类型",
+      AddTitle: "添加字典新词",
+      EditTitle: "编辑字典词",
+      WordAnalyzeTitle: "分词测试",
+      WordAnalyzePlaceholder: "输入需要测试的文字",
+      WordAnalyzeTest: "测试",
+      WordAnalyzeResult: "测试结果"
+    }
   }
 };

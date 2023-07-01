@@ -8,10 +8,14 @@ import com.ruoyi.cms.search.es.doc.ESContent;
 import com.ruoyi.cms.search.vo.ESContentVO;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
+import com.ruoyi.search.domain.dto.SearchLogDTO;
+import com.ruoyi.search.service.ISearchLogService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +39,8 @@ public class SearchApiController extends BaseRestController {
 	private final ICatalogService catalogService;
 
 	private final ElasticsearchClient esClient;
+
+	private final ISearchLogService logService;
 
 	@GetMapping("/query")
 	public R<?> selectDocumentList(
@@ -97,6 +103,8 @@ public class SearchApiController extends BaseRestController {
 			});
 			return vo;
 		}).toList();
+		// 记录搜索日志
+		this.logService.addSearchLog(query, ServletUtils.getRequest());
 		return this.bindDataTable(list, sr.hits().total().value());
 	}
 }

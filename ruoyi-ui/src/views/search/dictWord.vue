@@ -2,17 +2,25 @@
   <div class="app-container">
     <el-row :gutter="24" class="mb12">
       <el-col :span="12">
-        <el-button type="primary"
-                    icon="el-icon-plus"
-                    size="mini"
-                    plain
-                    @click="handleAdd">{{ $t("Common.Add") }}</el-button>
-        <el-button type="danger"
-                    icon="el-icon-delete"
-                    size="mini"
-                    plain
-                    :disabled="selectedIds.length==0"
-                    @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+        <el-button 
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          plain
+          @click="handleAdd">{{ $t("Common.Add") }}</el-button>
+        <el-button 
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          plain
+          :disabled="selectedIds.length==0"
+          @click="handleDelete">{{ $t("Common.Delete") }}</el-button>
+        <el-button 
+          type="success"
+          icon="el-icon-magic-stick"
+          size="mini"
+          plain
+          @click="handleWordAnalyzeTest">{{ $t('Search.DictWord.AnalyzeTest') }}</el-button>
       </el-col>
       <el-col :span="12" style="text-align:right">
         <el-form 
@@ -22,7 +30,7 @@
           size="mini"
           class="el-form-search">
           <el-form-item prop="query">
-            <el-input v-model="queryParams.query" placeholder="请输入词语">
+            <el-input v-model="queryParams.query">
             </el-input>
           </el-form-item>
           <el-form-item>
@@ -40,39 +48,32 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-table v-loading="loading"
-                :data="wordList"
-                @selection-change="handleSelectionChange">
-        <el-table-column type="selection"
-                        width="50"
-                        align="center" />
-        <el-table-column type="index"
-                        label="序号"
-                        align="center"
-                        width="100" />
-      <el-table-column label="类型" align="center" prop="wordType" width="100">
+      <el-table 
+        v-loading="loading"
+        :data="wordList"
+        @selection-change="handleSelectionChange">
+        <el-table-column 
+          type="selection"
+          width="50"
+          align="center" />
+        <el-table-column 
+          type="index"
+          :label="$t('Common.RowNo')"
+          align="center"
+          width="100" />
+      <el-table-column :label="$t('Search.DictWord.Type')" align="center" prop="wordType" width="100">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.SearchDictWordType" :value="scope.row.wordType"/>
         </template>
       </el-table-column>
-        <el-table-column label="词语"
-                        align="left"
-                        prop="word" />
-        <el-table-column label="添加时间"
-                          align="center"
-                          width="160">
+        <el-table-column :label="$t('Search.DictWord.Word')" align="left" prop="word" />
+        <el-table-column :label="$t('Common.CreateTime')" align="center" width="160">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="添加人"
-                        align="center"
-                        width="160"
-                        prop="createBy" />
-        <el-table-column :label="$t('Common.Operation')"
-                        align="center"
-                        width="180" 
-                        class-name="small-padding fixed-width">
+        <el-table-column :label="$t('Common.CreateBy')" align="center" width="160" prop="createBy" />
+        <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button 
               size="small"
@@ -91,17 +92,19 @@
       />
     </el-row>
     <!-- 添加弹窗 -->
-    <el-dialog title="添加词库新词"
-               :visible.sync="open"
-               :close-on-click-modal="false"
-               width="500px"
-               append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="40px">
+    <el-dialog 
+      :title="$t('Search.DictWord.AddTitle')"
+      :visible.sync="open"
+      :close-on-click-modal="false"
+      width="500px"
+      append-to-body>
+      <el-form 
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="40px">
         <el-form-item 
-          label="类型"
+          :label="$t('Search.DictWord.Type')"
           prop="wordType">
           <el-select v-model="form.wordType" clearable>
             <el-option
@@ -113,9 +116,9 @@
           </el-select>
         </el-form-item>
         <el-form-item 
-          label="词"
+          :label="$t('Search.DictWord.Word')"
           prop="wordStr">
-          <el-input type="textarea" :rows="5" v-model="form.wordStr" placeholder="每行一个" />
+          <el-input type="textarea" :rows="5" v-model="form.wordStr" :placeholder="$t('Search.DictWord.WordPlaceholder')" />
         </el-form-item>
       </el-form>
       <div slot="footer"
@@ -124,12 +127,38 @@
         <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
+    <!-- 分词测试弹窗 -->
+    <el-dialog 
+      :title="$t('Search.DictWord.WordAnalyzeTitle')"
+      :visible.sync="openAnalyze"
+      :close-on-click-modal="false"
+      width="500px"
+      label-position="top"
+      append-to-body>
+      <el-form 
+        ref="formAnalyze"
+        v-loading="loadingAnalyze"
+        :model="formAnalyze"
+        :rules="rulesAnalyze">
+        <el-form-item prop="text">
+          <el-input type="textarea" :rows="3" v-model="formAnalyze.text" :placeholder="$t('Search.DictWord.WordAnalyzePlaceholder')" />
+        </el-form-item>
+        <el-form-item :label="$t('Search.DictWord.WordAnalyzeResult')" prop="result">
+          <el-input type="textarea" :rows="10" v-model="analyzeResult" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer"
+           class="dialog-footer">
+        <el-button type="primary" @click="handleWordAnalyze">{{ $t('Search.DictWord.WordAnalyzeTest') }}</el-button>
+        <el-button @click="openAnalyze=false">{{ $t("Common.Close") }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <style scoped>
 </style>
 <script>
-import { getDictWords, addDictWord, deleteDictWords } from "@/api/search/dictword";
+import { getDictWords, addDictWord, deleteDictWords, wordAnalyze } from "@/api/search/dictword";
 
 export default {
   name: "SearchDictWord",
@@ -149,15 +178,38 @@ export default {
       form: {},
       rules: {
         word: [
-          { required: true, message: "新词不能为空", trigger: "blur" }
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ]
-      }
+      },
+      loadingAnalyze: false,
+      openAnalyze: false,
+      formAnalyze: {},
+      rulesAnalyze: {
+        text: [
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
+        ]
+      },
+      analyzeResult: ""
     };
   },
   created () {
     this.loadWordList();
   },
   methods: {
+    handleWordAnalyzeTest() {
+      this.openAnalyze = true;
+    },
+    handleWordAnalyze() {
+      this.$refs["formAnalyze"].validate(valid => {
+        if (valid) {
+          this.loadingAnalyze = true
+          wordAnalyze(this.formAnalyze.text).then(response => {
+            this.loadingAnalyze = false
+            this.analyzeResult = response.data;
+          });
+        }
+      });''
+    },
     loadWordList () {
       this.loading = true;
       getDictWords(this.queryParams).then(response => {
@@ -203,7 +255,7 @@ export default {
     },
     handleDelete (row) {
       const wordIds = row.wordId ? [ row.wordId ] : this.selectedIds;
-      this.$modal.confirm('是否确认删除?').then(function() {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function() {
         return deleteDictWords(wordIds);
       }).then((response) => {
         this.$modal.msgSuccess(response.msg);
