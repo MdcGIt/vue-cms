@@ -41,7 +41,6 @@ public class SearchLog implements Serializable {
 	 */
 	private String ip;
 
-	@TableField(exist = false)
 	private String location;
 
 	/**

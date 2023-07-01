@@ -3,6 +3,7 @@ package com.ruoyi.search.service.impl;
 import java.time.LocalDateTime;
 
 import com.ruoyi.common.async.AsyncTaskManager;
+import com.ruoyi.common.utils.IP2RegionUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class SearchLogServiceImpl extends ServiceImpl<SearchLogMapper, SearchLog
 			SearchLog sLog = new SearchLog();
 			sLog.setWord(dto.getWord());
 			sLog.setIp(dto.getIp());
+			sLog.setLocation(IP2RegionUtils.ip2Region(dto.getIp()));
 			sLog.setLogTime(dto.getLogTime());
 			sLog.setUserAgent(dto.getUserAgent());
 			sLog.setReferer(dto.getReferer());
@@ -45,6 +47,7 @@ public class SearchLogServiceImpl extends ServiceImpl<SearchLogMapper, SearchLog
 			SearchLog sLog = new SearchLog();
 			sLog.setWord(query);
 			sLog.setIp(ip);
+			sLog.setLocation(IP2RegionUtils.ip2Region(ip));
 			sLog.setLogTime(logTime);
 			sLog.setUserAgent(userAgent);
 			sLog.setReferer(referer);

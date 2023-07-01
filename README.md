@@ -1,8 +1,8 @@
-# RuoYi-Vue-CMS v1.3.4
+# RuoYi-Vue-CMS v1.3.5
 
 ### 系统简介
 
-RuoYi-Vue-CMS是前后端分离的内容管理系统。项目基于[RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue)重构，集成[SaToken](https://gitee.com/dromara/sa-token)用户权限，[xxl-job](https://gitee.com/xuxueli0323/xxl-job)任务调度。支持站群管理、多平台静态化、元数据模型扩展、轻松组织各种复杂内容形态、多语言、全文检索。
+RuoYi-Vue-CMS是前后端分离的企业级内容管理系统。项目基于[RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue)重构，集成[SaToken](https://gitee.com/dromara/sa-token)用户权限，[xxl-job](https://gitee.com/xuxueli0323/xxl-job)任务调度。支持站群管理、多平台静态化、元数据模型扩展、轻松组织各种复杂内容形态、多语言、全文检索。
 
 ### 系统预览
 
@@ -65,7 +65,7 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。项目基于[RuoYi-Vue](h
 | 词汇管理 | 热词、TAG词、敏感词、易错词 |
 | 内容索引 | 默认支持ElasticSearch+IK创建内容索引，支持标题内容全文检索 |
 | 检索词库 | 自定义检索词库，支持扩展词和停用词动态扩展 |
-| 检索日志 | 就是用户搜索的日志记录啦，支持一键加入扩展词库，检索词分析 |
+| 检索日志 | 用户搜索的日志记录，支持一键加入扩展词库 |
 | 友链管理 | 友情链接 |
 | 广告管理 | 广告基于页面部件扩展的简单广告功能，支持权重及上下线时间配置，支持广告点击/展现日志统计 |
 | 评论管理 | 基础功能模块 |
