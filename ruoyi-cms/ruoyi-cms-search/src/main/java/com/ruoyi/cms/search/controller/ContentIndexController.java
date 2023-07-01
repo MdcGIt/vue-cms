@@ -66,16 +66,18 @@ public class ContentIndexController extends BaseRestController {
 
 	private final ElasticsearchClient esClient;
 
-	@Value("${spring.data.elasticsearch.repositories.enabled:true}")
+	@Value("${spring.elasticsearch.enabled:true}")
 	private boolean elasticSearchEnable;
+
+	private void checkElasticSearchEnabled() {
+		Assert.isTrue(elasticSearchEnable, () -> new RuntimeException("ElasticSearch not enabled."));
+	}
 
 	@GetMapping("/contents")
 	public R<?> selectDocumentList(@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "onlyTitle", required = false ,defaultValue = "false") Boolean onlyTitle,
 			@RequestParam(value = "contentType", required = false) String contentType) throws ElasticsearchException, IOException {
-		if (!elasticSearchEnable) {
-			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
-		}
+		this.checkElasticSearchEnabled();
 		PageRequest pr = this.getPageRequest();
 
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -130,9 +132,7 @@ public class ContentIndexController extends BaseRestController {
 
 	@GetMapping("/content/{contentId}")
 	public R<?> selectDocumentDetail(@PathVariable(value = "contentId") @LongId Long contentId) throws ElasticsearchException, IOException {
-		if (!elasticSearchEnable) {
-			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
-		}
+		this.checkElasticSearchEnabled();
 		ESContent source = this.searchService.getContentIndexDetail(contentId);
 		return R.ok(source);
 	}
@@ -140,9 +140,7 @@ public class ContentIndexController extends BaseRestController {
 	@Log(title = "删除索引", businessType = BusinessType.DELETE)
 	@DeleteMapping("/contents")
 	public R<?> deleteDocuments(@RequestBody @NotEmpty List<Long> contentIds) throws ElasticsearchException, IOException {
-		if (!elasticSearchEnable) {
-			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
-		}
+		this.checkElasticSearchEnabled();
 		this.searchService.deleteContentIndex(contentIds);
 		return R.ok();
 	}
@@ -150,9 +148,7 @@ public class ContentIndexController extends BaseRestController {
 	@Log(title = "重建内容索引", businessType = BusinessType.UPDATE)
 	@PostMapping("/build/{contentId}")
 	public R<?> buildContentIndex(@PathVariable("contentId") @LongId Long contentId) {
-		if (!elasticSearchEnable) {
-			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
-		}
+		this.checkElasticSearchEnabled();
 		CmsContent content = this.contentService.getById(contentId);
 		Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
 		
@@ -164,10 +160,8 @@ public class ContentIndexController extends BaseRestController {
 
 	@Log(title = "重建全站索引", businessType = BusinessType.UPDATE)
 	@PostMapping("/rebuild")
-	public R<?> rebuildAllIndex() {	
-		if (!elasticSearchEnable) {
-			return R.fail("Spring.data.elasticsearch.repositories.enabled is false.");
-		}
+	public R<?> rebuildAllIndex() {
+		this.checkElasticSearchEnabled();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		AsyncTask task = this.searchService.rebuildAllIndex(site);
 		return R.ok(task.getTaskId());

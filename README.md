@@ -10,8 +10,6 @@ RuoYi-Vue-CMS是前后端分离的内容管理系统。项目基于[RuoYi-Vue](h
 
 账号：demo / a123456
 
-服务器内存不太够，未部署es和xxl-job。
-
 前台网站地址：<http://www.swikoon.com>
 
 ##### 演示站静态资源
