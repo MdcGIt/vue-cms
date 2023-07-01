@@ -33,7 +33,6 @@ public class SearchLogController extends BaseRestController {
 				.like(StringUtils.isNotEmpty(query), SearchLog::getWord, query)
 				.orderByDesc(SearchLog::getLogId)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
-		page.getRecords().forEach(log -> log.setLocation(IP2RegionUtils.ip2Region(log.getIp())));
 		return this.bindDataTable(page);
 	}
 

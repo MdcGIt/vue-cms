@@ -13,14 +13,10 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
-import com.ruoyi.search.domain.dto.SearchLogDTO;
 import com.ruoyi.search.service.ISearchLogService;
-import com.ruoyi.system.annotation.IgnoreDemoMode;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +40,6 @@ public class SearchApiController extends BaseRestController {
 
 	private final ISearchLogService logService;
 
-	@IgnoreDemoMode
 	@GetMapping("/query")
 	public R<?> selectDocumentList(
 			@RequestParam(value = "sid") Long siteId,
