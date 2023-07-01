@@ -3,6 +3,7 @@ package com.ruoyi.cms.image.template.tag;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -54,7 +55,10 @@ public class CmsImageTag extends AbstractListTag {
 		if (ContentCopyType.isMapping(c.getCopyType())) {
 			contentId = c.getCopyId();
 		}
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+
 		LambdaQueryWrapper<CmsImage> q = new LambdaQueryWrapper<CmsImage>().eq(CmsImage::getContentId, contentId);
+		q.apply(StringUtils.isNotEmpty(condition), condition);
 		Page<CmsImage> pageResult = this.imageService.page(new Page<>(pageIndex, size, page), q);
 		if (pageIndex > 1 & pageResult.getRecords().size() == 0) {
 			throw new TemplateException("内容列表页码超出上限：" + pageIndex, env);

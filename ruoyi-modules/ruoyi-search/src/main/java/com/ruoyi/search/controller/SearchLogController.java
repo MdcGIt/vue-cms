@@ -6,6 +6,7 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.IP2RegionUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.search.domain.SearchLog;
 import com.ruoyi.search.service.ISearchLogService;
@@ -30,6 +31,7 @@ public class SearchLogController extends BaseRestController {
 		PageRequest pr = this.getPageRequest();
 		Page<SearchLog> page = this.searchLogService.lambdaQuery()
 				.like(StringUtils.isNotEmpty(query), SearchLog::getWord, query)
+				.orderByDesc(SearchLog::getLogId)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
 		return this.bindDataTable(page);
 	}

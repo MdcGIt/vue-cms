@@ -1472,5 +1472,28 @@ export default {
       FieldMappingName: "Table column name cannot be empty.",
       FieldMappingUsed: "The table column alreay used.",
     }
+  },
+  Search: {
+    DictWord: {
+      AnalyzeTest: "Word Analyze",
+      Word: "Word",
+      WordPlaceholder: "One world per line",
+      Type: "Type",
+      AddTitle: "Add Dictionary Word",
+      EditTitle: "Edit Dictionary Word",
+      WordAnalyzeTitle: "Word Analyze Test",
+      WordAnalyzePlaceholder: "Enter the text to be tested...",
+      WordAnalyzeTest: "Test",
+      WordAnalyzeResult: "Result"
+    },
+    Log: {
+      Word: "Word",
+      Location: "Location",
+      Source: "Source",
+      ClientType: "Client Type",
+      LogTime: "Time",
+      AddExtWord: "Add Ext Word",
+      AddStopWord: "Add Stop Word",
+    }
   }
 };

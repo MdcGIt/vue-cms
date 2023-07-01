@@ -109,7 +109,7 @@
       :visible.sync="open"
       width="960px"
       append-to-body>
-      <el-row class="data_row" v-for="(value, key, index) in showData" :key="index">
+      <el-row :gutter="15" class="data_row" v-for="(value, key, index) in showData" :key="index">
         <el-col :span="4" class="data_row_left">
           {{ key }}
         </el-col>
@@ -258,7 +258,7 @@ export default {
 </script>
 <style scoped>
 .data_row {
-  line-height: 30px;
+  line-height: 28px;
 }
 .data_row_left {
   font-weight: 600;

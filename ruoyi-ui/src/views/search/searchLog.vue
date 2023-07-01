@@ -17,7 +17,7 @@
           size="mini"
           class="el-form-search">
           <el-form-item prop="query">
-            <el-input v-model="queryParams.query" placeholder="请输入搜索词">
+            <el-input v-model="queryParams.query">
             </el-input>
           </el-form-item>
           <el-form-item>
@@ -38,51 +38,31 @@
       <el-table v-loading="loading"
                 :data="logList"
                 @selection-change="handleSelectionChange">
-        <el-table-column type="selection"
-                        width="50"
-                        align="center" />
-        <el-table-column type="index"
-                        label="序号"
-                        align="center"
-                        width="100" />
-        <el-table-column label="搜索词"
-                        align="left"
-                        prop="word"
-                        show-overflow-tooltip />
-        <el-table-column label="IP"
-                        align="left"
-                        width="100"
-                        prop="ip" />
-        <el-table-column label="客户端类型"
-                        align="left"
-                        width="100"
-                        prop="clientType" />
-        <el-table-column label="来源"
-                        align="left"
-                        prop="referer"
-                        show-overflow-tooltip />
-        <el-table-column label="搜索时间"
-                          align="center"
-                          width="160">
+        <el-table-column type="selection" width="50" align="center" />
+        <el-table-column type="index" :label="$t('Common.RowNo')" align="center" width="100" />
+        <el-table-column :label="$t('Search.Log.Word')" align="left" prop="word" show-overflow-tooltip />
+        <el-table-column :label="$t('Search.Log.ClientType')" align="left" width="140" prop="clientType" />
+        <el-table-column :label="$t('Search.Log.Location')" align="left" width="140" prop="location" show-overflow-tooltip />
+        <el-table-column label="IP" align="left" width="100" prop="ip" />
+        <el-table-column label="Referer" align="left" prop="referer" show-overflow-tooltip />
+        <el-table-column :label="$t('Search.Log.Source')" align="left" prop="source" width="200" show-overflow-tooltip />
+        <el-table-column :label="$t('Search.Log.LogTime')" align="center" width="160">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.logTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('Common.Operation')"
-                        align="center"
-                        width="220" 
-                        class-name="small-padding fixed-width">
+        <el-table-column :label="$t('Common.Operation')" align="center" width="220" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button 
               size="small"
               type="text"
               icon="el-icon-plus"
-              @click="handleToDictWord('WORD', scope.row)">添加为扩展词</el-button>
+              @click="handleToDictWord('WORD', scope.row)">{{ $t('Search.Log.AddExtWord') }}</el-button>
             <el-button 
               size="small"
               type="text"
               icon="el-icon-plus"
-              @click="handleToDictWord('STOP', scope.row)">添加为停用词</el-button>
+              @click="handleToDictWord('STOP', scope.row)">{{ $t('Search.Log.AddStopWord') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -144,7 +124,7 @@ export default {
     },
     handleDelete (row) {
       const logIds = row.logId ? [ row.logId ] : this.selectedIds;
-      this.$modal.confirm('是否确认删除选中的搜索日志?').then(function() {
+      this.$modal.confirm(this.$t('Common.ConfirmDelete')).then(function() {
         return deleteSearchLogs(logIds);
       }).then((response) => {
         this.$modal.msgSuccess(response.msg);

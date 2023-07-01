@@ -69,7 +69,7 @@
               </el-card>
             </el-col>
           </el-row>
-          <el-row v-if="xmodelVisible">
+          <el-row v-if="xmodelVisible" class="mb10">
             <el-col class="pr10">
               <el-card shadow="always" class="card-exmodel">
                 <cms-exmodel-editor 

@@ -25,3 +25,12 @@ export function deleteDictWords(dictWordIds) {
     data: dictWordIds
   })
 }
+
+// 分词测试
+export function wordAnalyze(text) {
+  return request({
+    url: '/search/dict/analyze',
+    method: 'post',
+    data: text
+  })
+}

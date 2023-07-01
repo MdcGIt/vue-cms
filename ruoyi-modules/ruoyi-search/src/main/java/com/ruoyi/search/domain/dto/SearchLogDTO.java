@@ -1,8 +1,11 @@
 package com.ruoyi.search.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,9 +26,15 @@ public class SearchLogDTO {
      * IP地址
      */
     private String ip;
+
+    private String location;
     
     /**
      * Header:Referer
      */
     private String referer;
+
+    private LocalDateTime logTime;
+
+    private String source;
 }

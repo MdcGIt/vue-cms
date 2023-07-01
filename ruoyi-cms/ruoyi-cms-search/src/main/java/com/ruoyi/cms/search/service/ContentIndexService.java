@@ -5,6 +5,9 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.indices.DeleteIndexRequest;
+import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +36,6 @@ import com.ruoyi.system.fixed.dict.YesOrNo;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
-import co.elastic.clients.elasticsearch.core.GetResponse;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,27 +55,23 @@ public class ContentIndexService {
 
 	private final ElasticsearchClient esClient;
 
-	@Value("${spring.data.elasticsearch.repositories.enabled:true}")
-	private boolean elasticSearchEnable;
-
 	/**
 	 * 创建内容索引
 	 */
 	public void createContentIndex(IContent<?> content) {
-		if (!elasticSearchEnable) {
-			log.warn("Create content index failed: spring.data.elasticsearch.repositories.enabled is false.");
-			return;
-		}
 		// 判断栏目/站点配置是否生成索引
 		String enableIndex = EnableIndexProperty.getValue(content.getCatalog().getConfigProps(),
 				content.getSite().getConfigProps());
 		if (YesOrNo.isNo(enableIndex)) {
 			return;
 		}
-		// 新增索引
+		// 创建/更新索引
 		try {
-			esClient.create(co -> co.index(ESContent.INDEX_NAME)
-					.id(content.getContentEntity().getContentId().toString()).document(newESContent(content)));
+			esClient.update(fn -> fn
+					.index(ESContent.INDEX_NAME)
+					.id(content.getContentEntity().getContentId().toString())
+					.doc(newESContent(content))
+					.docAsUpsert(true), ESContent.class);
 		} catch (ElasticsearchException | IOException e) {
 			AsyncTaskManager.addErrMessage(e.getMessage());
 			e.printStackTrace();
@@ -108,20 +106,12 @@ public class ContentIndexService {
 	 * @throws ElasticsearchException
 	 */
 	public void deleteContentIndex(List<Long> contentIds) throws ElasticsearchException, IOException {
-		if (!elasticSearchEnable) {
-			log.warn("Delete content index failed: spring.data.elasticsearch.repositories.enabled is false.");
-			return;
-		}
 		List<BulkOperation> bulkOperationList = contentIds.stream().map(contentId -> BulkOperation
 				.of(b -> b.delete(dq -> dq.index(ESContent.INDEX_NAME).id(contentId.toString())))).toList();
 		this.esClient.bulk(bulk -> bulk.operations(bulkOperationList));
 	}
 
 	public void rebuildCatalogIndex(CmsCatalog catalog, boolean includeChild) {
-		if (!elasticSearchEnable) {
-			log.warn("Rebuild catalog index failed: spring.data.elasticsearch.repositories.enabled is false.");
-			return;
-		}
 		CmsSite site = this.siteService.getSite(catalog.getSiteId());
 		String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
 		if (YesOrNo.isYes(enableIndex)) {
@@ -148,8 +138,13 @@ public class ContentIndexService {
 			if (YesOrNo.isYes(enableIndex)) {
 				IContentType contentType = ContentCoreUtils.getContentType(xContent.getContentType());
 				IContent<?> icontent = contentType.loadContent(xContent);
-				BulkOperation bulkOperation = BulkOperation.of(b -> b.create(co -> co.index(ESContent.INDEX_NAME)
-						.id(xContent.getContentId().toString()).document(newESContent(icontent))));
+				BulkOperation bulkOperation = BulkOperation.of(b ->
+						b.update(up -> up.index(ESContent.INDEX_NAME)
+									.id(xContent.getContentId().toString())
+									.action(action -> action.docAsUpsert(true).doc(newESContent(icontent))))
+//						b.create(co -> co.index(ESContent.INDEX_NAME)
+//						.id(xContent.getContentId().toString()).document(newESContent(icontent)))
+				);
 				bulkOperationList.add(bulkOperation);
 			}
 		}
@@ -168,14 +163,14 @@ public class ContentIndexService {
 	 * @return
 	 */
 	public AsyncTask rebuildAllIndex(CmsSite site) {
-		if (!elasticSearchEnable) {
-			log.warn("Rebuild all index failed: spring.data.elasticsearch.repositories.enabled is false.");
-			return null;
-		}
 		AsyncTask asyncTask = new AsyncTask() {
 
 			@Override
 			public void run0() throws Exception {
+				// 先删除索引
+				esClient.indices().delete(fn -> fn.index(ESContent.INDEX_NAME)
+						.allowNoIndices(true).ignoreUnavailable(true));
+				// 重建索引
 				List<CmsCatalog> catalogs = catalogService.list();
 				for (CmsCatalog catalog : catalogs) {
 					String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
@@ -215,10 +210,6 @@ public class ContentIndexService {
 	 * @throws IOException
 	 */
 	public ESContent getContentIndexDetail(Long contentId) throws ElasticsearchException, IOException {
-		if (!elasticSearchEnable) {
-			log.warn("Get index failed: spring.data.elasticsearch.repositories.enabled is false.");
-			return null;
-		}
 		GetResponse<ESContent> res = this.esClient.get(qb -> qb.index(ESContent.INDEX_NAME).id(contentId.toString()),
 				ESContent.class);
 		return res.source();

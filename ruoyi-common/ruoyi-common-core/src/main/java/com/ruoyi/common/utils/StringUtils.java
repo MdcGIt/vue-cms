@@ -707,4 +707,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		sb.append(str.substring(lastIndex));
 		return sb.toString();
 	}
+
+    public static String nullToEmpty(String str) {
+		if (str == null) {
+			return EMPTY;
+		}
+		return str;
+    }
 }

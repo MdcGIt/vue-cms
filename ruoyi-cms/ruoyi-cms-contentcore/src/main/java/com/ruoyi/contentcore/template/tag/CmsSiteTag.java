@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -70,6 +71,8 @@ public class CmsSiteTag extends AbstractListTag {
 		} else if (SiteTagLevel.isChild(level)) {
 			q.eq(CmsSite::getParentId, site.getSiteId());
 		}
+		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+		q.apply(StringUtils.isNotEmpty(condition), condition);
 		q.orderByAsc(CmsSite::getSortFlag);
 
 		TemplateContext context = FreeMarkerUtils.getTemplateContext(env);

@@ -62,13 +62,12 @@ spring:
       enabled: false
   freemarker:
     check-template-location: false
+  elasticsearch:
+    uris: http://cc-elasticsearch:9200
+    username: elastic
+    password: hello1234
   # redis 配置
   data:
-    elasticsearch: 
-      repositories:
-        enabled: false
-      cluster-name: docker-cluster-01
-      cluster-nodes: 127.0.0.1:9300
     redis:
       # 地址
       host: cc-redis
