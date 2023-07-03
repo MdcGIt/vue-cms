@@ -46,7 +46,7 @@ public class InternalDataType_Resource implements IInternalDataType {
 		String storageType = MapUtils.getString(internalUrl.getParams(), InternalUrl_Param_StorageType,
 				LocalFileStorageType.TYPE);
 		if (LocalFileStorageType.TYPE.equals(storageType)) {
-			return SiteUtils.getResourcePrefix(site) + internalUrl.getPath();
+			return SiteUtils.getResourcePrefix(site, isPreview) + internalUrl.getPath();
 		}
 		FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
 		return fileStorageArgs.getDomain() + internalUrl.getPath();
@@ -54,7 +54,7 @@ public class InternalDataType_Resource implements IInternalDataType {
 
 	/**
 	 * 资源文件内部链接比较特殊，很多地方使用，路径不会变化且不缓存，不适合每次解析都从数据库读取资源信息，因此直接将路径放到内部链接上，后续解析仅需添加上站点资源地址前缀即可。
-	 * 
+	 *
 	 * @param resource
 	 * @return
 	 */

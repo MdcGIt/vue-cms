@@ -66,12 +66,11 @@ public class SiteUtils {
      * @param isPreview
      * @return
      */
-    public static String getResourcePrefix(CmsSite site) {
-    	String prefix = site.getResourceUrl();
-    	if (StringUtils.isEmpty(prefix)) {
-    		prefix = CMSConfig.getResourcePreviewPrefix() + getSiteResourcePath(site.getPath());
-    	}
-        return prefix;
+    public static String getResourcePrefix(CmsSite site, boolean isPreview) {
+        if (isPreview || StringUtils.isEmpty(site.getResourceUrl())) {
+            return CMSConfig.getResourcePreviewPrefix() + getSiteResourcePath(site.getPath());
+        }
+        return site.getResourceUrl();
     }
 
     /**

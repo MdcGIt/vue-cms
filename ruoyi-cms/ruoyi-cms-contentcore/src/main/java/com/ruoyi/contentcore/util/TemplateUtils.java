@@ -128,7 +128,7 @@ public class TemplateUtils {
 		// 发布通道静态化文件访问前缀
 		context.getVariables().put(TemplateVariable_Prefix, SiteUtils.getPublishPipePrefix(site, context.getPublishPipeCode(), context.isPreview()));
 		// 资源文件访问前缀
-		context.getVariables().put(TemplateVariable_ResourcePrefix, SiteUtils.getResourcePrefix(site));
+		context.getVariables().put(TemplateVariable_ResourcePrefix, SiteUtils.getResourcePrefix(site, context.isPreview()));
 		// 添加站点数据
 		addSiteVariables(site, context);
 	}
