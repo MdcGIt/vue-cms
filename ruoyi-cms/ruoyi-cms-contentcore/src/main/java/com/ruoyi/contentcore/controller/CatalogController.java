@@ -257,7 +257,7 @@ public class CatalogController extends BaseRestController {
 		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(),
 				UseType.Catalog);
 		configProps.put("siteId", catalog.getSiteId());
-		configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(this.siteService.getSite(catalog.getSiteId())));
+		configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(this.siteService.getSite(catalog.getSiteId()), true));
 		return R.ok(configProps);
 	}
 
