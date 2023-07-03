@@ -1,4 +1,4 @@
-# RuoYi-Vue-CMS v1.3.5
+# RuoYi-Vue-CMS v1.3.6
 
 ### 系统简介
 
