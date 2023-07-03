@@ -217,7 +217,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 				return domain + resource.getPath();
 			}
 		}
-		return SiteUtils.getResourcePrefix(site) + resource.getPath();
+		return SiteUtils.getResourcePrefix(site, isPreview) + resource.getPath();
 	}
 	
 	@Override

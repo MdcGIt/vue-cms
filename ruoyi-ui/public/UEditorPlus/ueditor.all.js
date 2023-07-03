@@ -19717,15 +19717,15 @@ UE.plugins["autofloat"] = function() {
       domUtils.on(window, ["scroll", "resize"], updateFloating);
       me.addListener("keydown", defer_updateFloating);
 
-      me.addListener("beforefullscreenchange", function(t, enabled) {
-        if (enabled) {
+      me.addListener("beforefullscreenchange", function(t, fullscreen) {
+        // if (fullscreen) {
           unsetFloating();
-        }
+        // }
       });
-      me.addListener("fullscreenchanged", function(t, enabled) {
-        if (!enabled) {
+      me.addListener("fullscreenchanged", function(t, fullscreen) {
+        // if (!fullscreen) {
           updateFloating();
-        }
+        // }
       });
       me.addListener("sourcemodechanged", function(t, enabled) {
         setTimeout(function() {
@@ -32480,7 +32480,7 @@ UE.ui = baidu.editor.ui = {};
           document.documentElement.style.overflow = "hidden";
           //修复，滚动条不收起的问题
 
-          window.scrollTo(0, window.scrollY);
+          window.scrollTo(0, 0);
           this._bakCssText = this.getDom().style.cssText;
           this._bakCssText1 = this.getDom("iframeholder").style.cssText;
           editor.iframe.parentNode.style.width = "";
