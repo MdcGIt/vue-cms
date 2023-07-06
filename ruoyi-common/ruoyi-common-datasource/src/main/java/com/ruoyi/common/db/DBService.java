@@ -1,12 +1,12 @@
 package com.ruoyi.common.db;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.ruoyi.common.mybatisplus.db.DBTable;
-import com.ruoyi.common.mybatisplus.db.DBTableColumn;
+import com.ruoyi.common.db.domain.DBTable;
+import com.ruoyi.common.db.domain.DBTableColumn;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DBService {
 
-    private final DruidDataSource dataSource;
+    private final DataSource dataSource;
 
     /**
      * 获取数据库表元数据信息
@@ -32,7 +32,7 @@ public class DBService {
     public List<DBTable> listTables(@Nullable String tableName) {
         List<DBTable> tables = new ArrayList<>();
         try {
-            Connection connection = dataSource.getConnection().getConnection();
+            Connection connection = dataSource.getConnection();
             DatabaseMetaData metaData = connection.getMetaData();
 
             ResultSet rs = metaData.getTables(connection.getCatalog(), null, tableName, null);

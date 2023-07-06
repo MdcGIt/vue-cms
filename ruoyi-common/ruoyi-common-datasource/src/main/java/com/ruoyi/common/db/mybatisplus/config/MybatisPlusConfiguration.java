@@ -1,30 +1,19 @@
 package com.ruoyi.common.db.mybatisplus.config;
 
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
-import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.ruoyi.common.utils.JacksonUtils;
-import com.ruoyi.common.utils.StringUtils;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.ruoyi.**.mapper")
+@MapperScan("${mybatis-plus.mapperPackage}")
 public class MybatisPlusConfiguration {
 
 	static {

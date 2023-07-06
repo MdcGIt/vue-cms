@@ -1,4 +1,4 @@
-package com.ruoyi.common.mybatisplus.db;
+package com.ruoyi.common.db.domain;
 
 import lombok.Getter;
 import lombok.Setter;
