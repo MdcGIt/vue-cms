@@ -82,7 +82,6 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 内容列表
 	 */
-	@DS("slave")
 	@GetMapping("/list")
 	public R<?> listData(@RequestParam(name = "catalogId", required = false) Long catalogId,
 			@RequestParam(name = "title", required = false, defaultValue = "") String title,
