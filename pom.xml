@@ -16,11 +16,11 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
-		<lombok.version>1.18.20</lombok.version>
+		<lombok.version>1.18.26</lombok.version>
 		<mysql.version>8.0.33</mysql.version>
-		<spring-boot.version>3.1.0</spring-boot.version>
-		<druid.version>1.2.18</druid.version>
+		<spring-boot.version>3.1.1</spring-boot.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+		<dynamic-datasource.version>4.0.0</dynamic-datasource.version>
 		<redisson.version>3.22.0</redisson.version>
 		<commons.io.version>2.13.0</commons.io.version>
 		<commons.text.version>1.10.0</commons.text.version>
@@ -57,7 +57,7 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<scope>provided</scope>
-				<version>${lombok.version}</version> <!--$NO-MVN-MAN-VER$ -->
+				<version>${lombok.version}</version>
 			</dependency>
 
 			<!-- Mysql驱动包 -->
@@ -90,32 +90,11 @@
 			    <version>${redisson.version}</version>
 			</dependency>
 
-			<!-- 阿里数据库连接池 -->
-			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>druid-spring-boot-starter</artifactId>
-				<version>${druid.version}</version>
-			</dependency>
-
 			<!-- Servlet -->
 			<dependency>
 				<groupId>jakarta.servlet</groupId>
 				<artifactId>jakarta.servlet-api</artifactId>
 				<version>${jakarta-servlet.version}</version>
-			</dependency>
-			
-			<!-- flyway -->
-			<dependency>
-			    <groupId>org.flywaydb</groupId>
-			    <artifactId>flyway-core</artifactId>
-			    <version>${flyway.version}</version>
-			</dependency>
-			
-			<!-- flyway-mysql -->
-			<dependency>
-			    <groupId>org.flywaydb</groupId>
-			    <artifactId>flyway-mysql</artifactId>
-			    <version>${flyway.version}</version>
 			</dependency>
 
 			<!-- SaToken -->
@@ -191,6 +170,13 @@
 				<groupId>org.apache.velocity</groupId>
 				<artifactId>velocity-engine-core</artifactId>
 				<version>${velocity.version}</version>
+			</dependency>
+
+			<!-- dynamic-datasource 多数据源-->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+				<version>${dynamic-datasource.version}</version>
 			</dependency>
 
 			<dependency>
@@ -317,17 +303,10 @@
 				<version>${ruoyi.version}</version>
 			</dependency>
 
-			<!-- 多数据源 -->
-			<dependency>
-				<groupId>com.ruoyi</groupId>
-				<artifactId>ruoyi-common-datasource</artifactId>
-				<version>${ruoyi.version}</version>
-			</dependency>
-
 			<!-- mybatisplus -->
 			<dependency>
 				<groupId>com.ruoyi</groupId>
-				<artifactId>ruoyi-common-mybatisplus</artifactId>
+				<artifactId>ruoyi-common-datasource</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
 
