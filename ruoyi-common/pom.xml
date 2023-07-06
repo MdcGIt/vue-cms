@@ -16,7 +16,6 @@
 	<module>ruoyi-common-core</module>
 	<module>ruoyi-common-redis</module>
 	<module>ruoyi-common-datasource</module>
-	<module>ruoyi-common-mybatisplus</module>
 	<module>ruoyi-common-staticize</module>
 	<module>ruoyi-common-storage</module>
 	<module>ruoyi-common-security</module>

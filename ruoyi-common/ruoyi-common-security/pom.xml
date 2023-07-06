@@ -37,7 +37,7 @@
 		
 		<dependency>
 			<groupId>com.ruoyi</groupId>
-			<artifactId>ruoyi-common-mybatisplus</artifactId>
+			<artifactId>ruoyi-common-datasource</artifactId>
 		</dependency>
 	</dependencies>
 

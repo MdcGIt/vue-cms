@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.db.DBService;
 import com.ruoyi.common.exception.CommonErrorCode;
-import com.ruoyi.common.mybatisplus.db.DBTable;
+import com.ruoyi.common.db.domain.DBTable;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;

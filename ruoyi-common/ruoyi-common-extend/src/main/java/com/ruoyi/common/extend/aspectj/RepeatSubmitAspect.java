@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.common.utils.ServletUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -42,20 +43,22 @@ public class RepeatSubmitAspect {
 		StringBuffer sb = new StringBuffer();
 		sb.append(ExtendConstants.REPEAT_SUBMIT_KEY).append(targetClass.getName()).append(".").append(method.getName())
 				.append(".");
-		// 获取用户token作为缓存key组成部分
-		String token = null;
-		for (IUserType ut : userTypes) {
-			StpLogic stpLogic = SaManager.getStpLogic(ut.getType());
-			if (stpLogic.isLogin()) {
-				token = stpLogic.getTokenValue();
-				break;
+		// 获取用户唯一标识作为缓存key组成部分，默认取前端参数uuid，无参数时尝试获取用户登录token。
+		String uuid = ServletUtils.getParameter("uuid");
+		if (StringUtils.isEmpty(uuid)) {
+			for (IUserType ut : userTypes) {
+				StpLogic stpLogic = SaManager.getStpLogic(ut.getType());
+				if (stpLogic.isLogin()) {
+					uuid = stpLogic.getTokenValue();
+					break;
+				}
 			}
 		}
-		if (StringUtils.isEmpty(token)) {
-			log.warn("Method '{0}' annotation by @RepeatSubmit, but no @Priv/@SaCheckLogin.", sb.toString());
+		if (StringUtils.isEmpty(uuid)) {
+			log.warn("Method '{0}' annotation by @RepeatSubmit, but no parameter `uuid` or no login user.", sb.toString());
 			return;
 		}
-		sb.append(token);
+		sb.append(uuid);
 		String cacheKey = sb.toString();
 		if (this.redisCache.hasKey(cacheKey)) {
 			throw RepeatSubmitErrorCode.REPEAT_ERR.exception();

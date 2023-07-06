@@ -11,25 +11,22 @@
 
 	<artifactId>ruoyi-common-datasource</artifactId>
 
-	<description>Druid</description>
+	<description>MyBatis-Plus</description>
 
 	<dependencies>
-		<!-- SpringBoot 拦截器 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
-		
-		<!-- SpringBoot JDBC-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		
-		<!-- 阿里数据库连接池 -->
+
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
 		</dependency>
 		
 		<dependency>
@@ -37,5 +34,4 @@
 			<artifactId>ruoyi-common-core</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>

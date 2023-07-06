@@ -44,14 +44,6 @@ public interface GenTableMapper extends BaseMapper<GenTable> {
 	 *            表名称组
 	 * @return 数据库表集合
 	 */
-	@Select({ "<script>",
-			"select table_name, table_comment, create_time, update_time from information_schema.tables",
-			" where table_name NOT LIKE 'qrtz_%' and table_name NOT LIKE 'gen_%' and table_schema = (select database())",
-			" and table_name in ",
-			"<foreach collection=\"tableNames\" item=\"name\" open=\"(\" separator=\",\" close=\")\">",
-            "#{name}",
-            "</foreach>",
-			"</script>"})
 	public List<GenTable> selectDbTableListByNames(String[] tableNames);
 
 	/**

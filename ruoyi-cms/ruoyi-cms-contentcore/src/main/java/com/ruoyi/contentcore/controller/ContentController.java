@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.controller;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -81,6 +82,7 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 内容列表
 	 */
+	@DS("slave")
 	@GetMapping("/list")
 	public R<?> listData(@RequestParam(name = "catalogId", required = false) Long catalogId,
 			@RequestParam(name = "title", required = false, defaultValue = "") String title,
