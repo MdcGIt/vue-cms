@@ -124,6 +124,14 @@ export function offlineContent(data) {
   })
 }
 
+export function toPublishContent(contentIds) {
+  return request({
+    url: '/cms/content/to_publish',
+    method: 'post',
+    data: contentIds
+  })
+}
+
 export function archiveContent(data) {
   return request({
     url: '/cms/content/archive',
