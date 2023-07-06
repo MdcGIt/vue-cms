@@ -4,6 +4,7 @@
       <el-col :span="24">
         <div class="grid-btn-bar bg-purple-white">
           <el-button plain type="success" size="mini" icon="el-icon-edit" @click="handleSave">{{ $t("Common.Save") }}</el-button>
+          <el-button plain type="primary" size="mini" icon="el-icon-timer" @click="handleToPublish">{{ $t('CMS.ContentCore.ToPublish') }}</el-button>
           <el-button plain type="primary" size="mini" icon="el-icon-s-promotion" @click="handlePublish">{{ $t('CMS.ContentCore.Publish') }}</el-button>
           <el-button plain type="primary" size="mini" @click="handlePreview"><svg-icon icon-class="eye-open" class="mr5"></svg-icon>{{ $t('CMS.ContentCore.Preview') }}</el-button>
           <el-button plain type="warning" v-if="isLock" size="mini" icon="el-icon-unlock" @click="handleChangeLockState">{{ $t('CMS.Content.Unlock') }}</el-button>
@@ -228,7 +229,7 @@
   </div>
 </template>
 <script>
-import { getInitContentEditorData, addContent, saveContent, publishContent, lockContent, unLockContent, moveContent } from "@/api/contentcore/content";
+import { getInitContentEditorData, addContent, saveContent, toPublishContent, publishContent, lockContent, unLockContent, moveContent } from "@/api/contentcore/content";
 import Sticky from '@/components/Sticky'
 // import CKEditor5 from '@/components/CKEditor5';
 import UEditor from '@/views/cms/components/UEditorPlus'
@@ -317,6 +318,7 @@ export default {
       publishPipeActiveName: "",
       selectExTemplate: false,
       publishAfterSave: false,
+      toPublishAfterSave: false,
     };
   },
   created() {
@@ -464,6 +466,19 @@ export default {
         }
       });
     },
+    handleToPublish() {
+      if (this.opType == 'ADD' || this.isFormChanged()) {
+        this.handleSave();
+        this.toPublishAfterSave = true;
+        return;
+      }
+      this.doToPublishContent();
+    },
+    doToPublishContent() {
+      toPublishContent([ this.form.contentId ]).then(response => {
+          this.$modal.msgSuccess(this.$t('CMS.ContentCore.ToPublishSuccess'));
+      });
+    },
     handlePublish () {
       if (this.opType == 'ADD' || this.isFormChanged()) {
         this.handleSave();
@@ -482,6 +497,10 @@ export default {
         if (this.publishAfterSave) {
           this.publishAfterSave = false;
           this.doPublishContent();
+        }
+        if (this.toPublishAfterSave) {
+          this.toPublishAfterSave = false;
+          this.doToPublishContent();
         }
         if (this.opType == 'ADD') {
           if (this.openEditorW) {

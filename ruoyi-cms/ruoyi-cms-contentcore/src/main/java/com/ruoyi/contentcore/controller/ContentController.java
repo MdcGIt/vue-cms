@@ -82,7 +82,6 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 内容列表
 	 */
-	@DS("slave")
 	@GetMapping("/list")
 	public R<?> listData(@RequestParam(name = "catalogId", required = false) Long catalogId,
 			@RequestParam(name = "title", required = false, defaultValue = "") String title,
@@ -277,6 +276,16 @@ public class ContentController extends BaseRestController {
 	@PostMapping("/offline")
 	public R<?> offline(@RequestBody @NotEmpty List<Long> contentIds) {
 		this.contentService.offline(contentIds, StpAdminUtil.getLoginUser());
+		return R.ok();
+	}
+
+	/**
+	 * 待发布
+	 */
+	@Log(title = "待发布内容", businessType = BusinessType.UPDATE)
+	@PostMapping("/to_publish")
+	public R<?> toPublish(@RequestBody @NotEmpty List<Long> contentIds) {
+		this.contentService.toPublish(contentIds, StpAdminUtil.getLoginUser());
 		return R.ok();
 	}
 

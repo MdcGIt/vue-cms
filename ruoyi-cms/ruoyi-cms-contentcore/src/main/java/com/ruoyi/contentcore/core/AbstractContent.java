@@ -348,6 +348,13 @@ public abstract class AbstractContent<T> implements IContent<T> {
 	}
 
 	@Override
+	public void toPublish() {
+		this.getContentEntity().setStatus(ContentStatus.TO_PUBLISHED);
+		this.getContentEntity().updateBy(this.getOperator().getUsername());
+		this.getContentService().updateById(this.getContentEntity());
+	}
+
+	@Override
 	public void archive() {
 		// TODO 归档
 	}

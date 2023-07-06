@@ -338,6 +338,18 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void toPublish(List<Long> contentIds, LoginUser operator) {
+		List<CmsContent> contents = this.listByIds(contentIds);
+		for (CmsContent c : contents) {
+			IContentType ct = ContentCoreUtils.getContentType(c.getContentType());
+			IContent<?> content = ct.loadContent(c);
+			content.setOperator(operator);
+			content.toPublish();
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void archive(List<Long> contentIds, LoginUser operator) {
 
 	}
