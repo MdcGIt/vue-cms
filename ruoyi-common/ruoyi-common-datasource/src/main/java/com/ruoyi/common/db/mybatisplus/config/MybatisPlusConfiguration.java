@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("${mybatis-plus.mapperPackage}")
+@MapperScan("com.ruoyi.**.mapper")
 public class MybatisPlusConfiguration {
 
 	static {
