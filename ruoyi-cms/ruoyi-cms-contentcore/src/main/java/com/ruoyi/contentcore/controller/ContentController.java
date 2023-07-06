@@ -280,6 +280,16 @@ public class ContentController extends BaseRestController {
 	}
 
 	/**
+	 * 待发布
+	 */
+	@Log(title = "待发布内容", businessType = BusinessType.UPDATE)
+	@PostMapping("/to_publish")
+	public R<?> toPublish(@RequestBody @NotEmpty List<Long> contentIds) {
+		this.contentService.toPublish(contentIds, StpAdminUtil.getLoginUser());
+		return R.ok();
+	}
+
+	/**
 	 * 归档
 	 */
 	@Log(title = "归档内容", businessType = BusinessType.UPDATE)

@@ -172,4 +172,12 @@ public interface IContentService extends IService<CmsContent> {
 	public void deleteRecycleContents(List<Long> backupIds);
 
     CmsContentMapper getContentMapper();
+
+	/**
+	 * 待发布指定内容
+	 *
+	 * @param contentIds
+	 * @param loginUser
+	 */
+    void toPublish(List<Long> contentIds, LoginUser loginUser);
 }
