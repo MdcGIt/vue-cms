@@ -208,7 +208,7 @@ export default {
         perms: this.catalogPrivs
       };
       saveCatalogPermissions(data).then(response => {
-        this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
+        this.$modal.notifySuccess(this.$t('Common.SaveSuccess'));
       });
     },
     getPermissionKeys(arr, permissions) {

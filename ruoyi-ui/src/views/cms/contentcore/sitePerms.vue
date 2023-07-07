@@ -133,7 +133,7 @@ export default {
         perms: this.sitePrivs
       };
       saveSitePermissions(data).then(response => {
-        this.$modal.msgSuccess(this.$t("Common.SaveSuccess"));
+        this.$modal.notifySuccess(this.$t('Common.SaveSuccess'));
       });
     }
   }

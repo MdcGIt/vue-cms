@@ -110,7 +110,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width" width="180">
+      <el-table-column :label="$t('Common.Operation')" align="center" class-name="small-padding fixed-width" width="280">
         <template slot-scope="scope" v-if="scope.row.roleId !== 1">
           <el-button
             size="small"
@@ -126,15 +126,20 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:role:remove']"
           >{{ $t('Common.Delete') }}</el-button>
-          <el-dropdown size="small" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:role:edit']">
-            <el-button size="small" type="text" icon="el-icon-d-arrow-right">{{ $t('Common.More') }}</el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="handleGrantPerms" icon="el-icon-circle-check"
-                v-hasPermi="['system:role:edit']">{{ $t('System.Role.PermissionSetting') }}</el-dropdown-item>
-              <el-dropdown-item command="handleAuthUser" icon="el-icon-user"
-                v-hasPermi="['system:role:edit']">{{ $t('System.Role.UserSetting') }}</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <el-button
+            size="small"
+            type="text"
+            icon="el-icon-circle-check"
+            @click="handleGrantPerms(scope.row)"
+            v-hasPermi="['system:role:edit']"
+          >{{ $t('System.Role.PermissionSetting') }}</el-button>
+          <el-button
+            size="small"
+            type="text"
+            icon="el-icon-user"
+            @click="handleAuthUser(scope.row)"
+            v-hasPermi="['system:role:edit']"
+          >{{ $t('System.Role.UserSetting') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -312,19 +317,6 @@ export default {
       this.ids = selection.map(item => item.roleId)
       this.single = selection.length!=1
       this.multiple = !selection.length
-    },
-    // 更多操作触发
-    handleCommand(command, row) {
-      switch (command) {
-        case "handleGrantPerms":
-          this.handleGrantPerms(row);
-          break;
-        case "handleAuthUser":
-          this.handleAuthUser(row);
-          break;
-        default:
-          break;
-      }
     },
     handleGrantPerms(row) {
       this.openPermissionDialog = true;
