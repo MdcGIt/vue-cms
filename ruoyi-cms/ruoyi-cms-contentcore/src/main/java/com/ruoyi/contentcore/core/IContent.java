@@ -137,6 +137,11 @@ public interface IContent<T> {
 	void offline();
 
 	/**
+	 * 待发布
+	 */
+	void toPublish();
+
+	/**
 	 * 归档
 	 * @return
 	 */

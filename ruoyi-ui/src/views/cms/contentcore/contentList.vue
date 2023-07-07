@@ -164,6 +164,11 @@
             type="text"
             icon="el-icon-sort"
             @click="handleSort(scope.row)">{{ $t('Common.Sort') }}</el-button>
+          <el-button 
+            size="small"
+            type="text"
+            icon="el-icon-timer"
+            @click="handleToPublish(scope.row)">{{ $t('CMS.ContentCore.ToPublish') }}</el-button>
           <el-button
             size="small"
             type="text"
@@ -236,7 +241,7 @@ import { getContentTypes } from "@/api/contentcore/catalog";
 import { 
   getContentList, delContent, publishContent, createIndexes, 
   copyContent, moveContent, setTopContent, cancelTopContent, sortContent, 
-  offlineContent, archiveContent 
+  offlineContent, archiveContent, toPublishContent
 } from "@/api/contentcore/content";
 import CMSCatalogSelector from "@/views/cms/contentcore/catalogSelector";
 import CMSContentSort from "@/views/cms/contentcore/contentSortDialog";
@@ -419,6 +424,7 @@ export default {
       this.$modal.loading("Loading...");
       publishContent(contentIds).then(response => {
         this.$modal.closeLoading();
+        this.$modal.msgSuccess(this.$t('CMS.ContentCore.PublishSuccess'))
         this.loadContentList();
       }).catch(() => {
         this.$modal.closeLoading();
@@ -514,7 +520,7 @@ export default {
       this.$refs["top_form"].validate(valid => {
         if (valid) {
           setTopContent({ contentIds: contentIds, topEndTime: this.topForm.topEndTime }).then(response => {
-            this.$modal.msgSuccess(response.msg);
+            this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
             this.topDialogVisible = false;
             this.topForm.topEndTime = undefined;
             this.loadContentList();
@@ -525,7 +531,7 @@ export default {
     handleCancelTop(row) {
       const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(item => item.contentId);
       cancelTopContent(contentIds).then(response => {
-        this.$modal.msgSuccess(response.msg);
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         this.loadContentList();
       });
     },
@@ -547,7 +553,7 @@ export default {
     doSort(targetContentId) {
       const data = { contentId: this.selectedRows[0].contentId, targetContentId: targetContentId };
       sortContent(data).then(response => {
-        this.$modal.msgSuccess(response.msg);
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         this.openContentSortDialog = false;
         this.loadContentList();
       });
@@ -555,14 +561,21 @@ export default {
     handleOffline(row) {
       const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(item => item.contentId);
       offlineContent(contentIds).then(response => {
-        this.$modal.msgSuccess(response.msg);
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
+        this.loadContentList();
+      });
+    },
+    handleToPublish(row) {
+      const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(item => item.contentId);
+      toPublishContent(contentIds).then(response => {
+        this.$modal.msgSuccess(this.$t('CMS.ContentCore.ToPublishSuccess'));
         this.loadContentList();
       });
     },
     handleArchive(row) {
       const contentIds = row.contentId ? [ row.contentId ] : this.selectedRows.map(item => item.contentId);
       archiveContent(contentIds).then(response => {
-        this.$modal.msgSuccess(response.msg);
+        this.$modal.msgSuccess(this.$t('Common.OpSuccess'));
         this.loadContentList();
       });
     }
