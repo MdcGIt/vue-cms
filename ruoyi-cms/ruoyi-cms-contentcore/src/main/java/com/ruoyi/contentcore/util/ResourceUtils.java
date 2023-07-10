@@ -4,12 +4,10 @@ import com.ruoyi.common.storage.local.LocalFileStorageType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IResourceType;
 import com.ruoyi.contentcore.core.impl.ResourceType_File;
-import com.ruoyi.contentcore.domain.CmsResource;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.properties.FileStorageArgsProperty;
 
 import java.util.List;
-import java.util.Map;
 
 public class ResourceUtils {
 
