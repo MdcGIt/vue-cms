@@ -345,17 +345,17 @@ export default {
       this.reset();
       const taskId = row.taskId || this.ids
       getTask(taskId).then(response => {
-        this.form = response.data;
         const args = JSON.parse(response.data.triggerArgs);
         if (this.form.taskTrigger == 'Cron') {
-          this.form.cron = args.cron
+          response.data.cron = args.cron
         } else if (this.form.taskTrigger == 'Periodic') {
-          this.form.fixedRate = args.fixedRate ? 'Y' : 'N'
-          this.form.seconds = args.seconds
-          this.form.delaySeconds = args.delaySeconds
+          response.data.fixedRate = args.fixedRate ? 'Y' : 'N'
+          response.data.seconds = args.seconds
+          response.data.delaySeconds = args.delaySeconds
         }
+        this.form = response.data;
         this.open = true;
-        this.title = $t('Monitor.ScheduledTask.EditTitle');
+        this.title = this.$t('Monitor.ScheduledTask.EditTitle');
       });
     },
     submitForm: function() {
