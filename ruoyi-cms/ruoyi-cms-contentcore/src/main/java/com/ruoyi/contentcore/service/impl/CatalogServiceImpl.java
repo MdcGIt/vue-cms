@@ -8,6 +8,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.ruoyi.contentcore.fixed.dict.StaticSuffix;
+import com.ruoyi.contentcore.perms.CatalogPermissionType;
+import com.ruoyi.contentcore.perms.SitePermissionType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -83,7 +85,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	private final CmsCatalogMapper catalogMapper;
 
 	private final CmsContentMapper contentMapper;
-	
+
 	private final ISysPermissionService permissionService;
 
 	private final AsyncTaskManager asyncTaskManager;
@@ -148,6 +150,7 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public CmsCatalog addCatalog(CatalogAddDTO dto) throws IOException {
 		boolean checkCatalogUnique = this.checkCatalogUnique(dto.getSiteId(), null, dto.getName(), dto.getAlias(),
 				dto.getPath());
@@ -197,17 +200,19 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 			permission.setOwner(dto.getOperator().getUserId().toString());
 			permission.createBy(dto.getOperator().getUsername());
 		}
-		CmsPrivUtils.grantBitSetPermission(catalog.getCatalogId().toString(), CatalogPrivItem.values(), permission);
+		CmsPrivUtils.grantBitSetPermission(CatalogPermissionType.ID, catalog.getCatalogId().toString(),
+				CatalogPrivItem.values(), permission);
 		this.permissionService.saveOrUpdate(permission);
 		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return catalog;
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public CmsCatalog editCatalog(CatalogUpdateDTO dto) throws IOException {
 		CmsCatalog catalog = this.getById(dto.getCatalogId());
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
-		
+
 		boolean checkCatalogUnique = this.checkCatalogUnique(catalog.getSiteId(), catalog.getCatalogId(), dto.getName(),
 				dto.getAlias(), dto.getPath());
 		Assert.isTrue(checkCatalogUnique, ContentCoreErrorCode.CONFLICT_CATALOG::exception);
