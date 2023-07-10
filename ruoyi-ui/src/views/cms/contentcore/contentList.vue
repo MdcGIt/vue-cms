@@ -418,7 +418,7 @@ export default {
     handlePublish (row) {
       const contentIds = row ? [ row.contentId ] : this.selectedRows.map(item => { return item.contentId });
       if (contentIds.length == 0) {
-        this.$modal.msgWarn(this.$t('CMS.Content.SelectRowFirst'));
+        this.$modal.msgWarning(this.$t('CMS.Content.SelectRowFirst'));
         return;
       }
       this.$modal.loading("Loading...");
@@ -437,7 +437,7 @@ export default {
       } else if (this.selectedRows.length > 0) {
         contentId = this.selectedRows[0].contentId;
       } else {
-        this.$modal.msgWarn(this.$t('CMS.Content.SelectRowFirst'));
+        this.$modal.msgWarning(this.$t('CMS.Content.SelectRowFirst'));
         return;
       }
       let routeData = this.$router.resolve({
@@ -514,7 +514,7 @@ export default {
     handleTopDialogOk() {
       const contentIds = this.selectedRows.map(item => item.contentId);
       if (contentIds.length == 0) {
-        this.$modal.msgWarn(this.$t('CMS.Content.SelectRowFirst'));
+        this.$modal.msgWarning(this.$t('CMS.Content.SelectRowFirst'));
         return;
       }
       this.$refs["top_form"].validate(valid => {
