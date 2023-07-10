@@ -207,17 +207,8 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	@Override
 	public String getResourceLink(CmsResource resource, boolean isPreview) {
 		CmsSite site = this.siteService.getSite(resource.getSiteId());
-		if (!LocalFileStorageType.TYPE.equals(resource.getStorageType())) {
-			FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
-			if (fileStorageArgs != null && StringUtils.isNotEmpty(fileStorageArgs.getDomain())) {
-				String domain = fileStorageArgs.getDomain();
-				if (!domain.endsWith("/")) {
-					domain += "/";
-				}
-				return domain + resource.getPath();
-			}
-		}
-		return SiteUtils.getResourcePrefix(site, isPreview) + resource.getPath();
+		String prefix = ResourceUtils.getResourcePrefix(resource.getStorageType(), site, isPreview);
+		return prefix + resource.getPath();
 	}
 	
 	@Override
