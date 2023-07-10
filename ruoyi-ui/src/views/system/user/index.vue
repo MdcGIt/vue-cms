@@ -212,7 +212,7 @@
         <el-form-item :label="$t('System.User.Email')" prop="email">
           <el-input v-model="form.email" :placeholder="$t('System.User.Placeholder.Email')" maxlength="50" />
         </el-form-item>
-        <el-form-item :label="$t('System.User.Gender')">
+        <el-form-item :label="$t('System.User.Gender')" prop="sex">
           <el-select v-model="form.sex" :placeholder="$t('System.User.Placeholder.Gender')">
             <el-option
               v-for="dict in dict.type.Gender"
@@ -222,7 +222,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('System.User.Status')">
+        <el-form-item :label="$t('System.User.Status')" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in dict.type.SysUserStatus"
@@ -231,7 +231,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('System.User.Post')">
+        <el-form-item :label="$t('System.User.Post')" prop="postIds">
           <el-select v-model="form.postIds" multiple :placeholder="$t('System.User.Placeholder.Post')">
             <el-option
               v-for="item in postOptions"
@@ -242,7 +242,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('Common.Remark')">
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
           <el-input v-model="form.remark" type="textarea"></el-input>
         </el-form-item>
       </el-form>
@@ -429,6 +429,9 @@ export default {
         ],
         password: [
           { required: true, message: this.$t('System.User.RuleTips.Password1'), trigger: "blur" }
+        ],
+        sex: [
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         email: [
           {
