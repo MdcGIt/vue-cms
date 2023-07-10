@@ -20,7 +20,7 @@
               @remove="handleCatalogDelete"
             ></cms-catalog-info>
           </el-tab-pane>
-          <el-tab-pane :label="$t('CMS.Catalog.Tab.Extend')" name="extend">
+          <el-tab-pane :label="$t('CMS.Catalog.Tab.Extend')" name="extend" :disabled="!selectedCatalog">
             <cms-catalog-extend v-if="this.activeName=='extend'" :cid="selectedCatalogId"></cms-catalog-extend>
           </el-tab-pane>
         </el-tabs>
@@ -49,6 +49,11 @@ export default {
   watch: {
     filterCatalogName(val) {
       this.$refs.tree.filter(val);
+    }
+  },
+  computed: {
+    selectedCatalog() {
+      return this.selectedCatalogId && this.selectedCatalogId.length > 0
     }
   },
   methods: {
