@@ -254,7 +254,7 @@ public class CatalogController extends BaseRestController {
 		CmsCatalog catalog = this.catalogService.getCatalog(catalogId);
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", catalogId));
 
-		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(),
+		Map<String, Object> configProps = ConfigPropertyUtils.parseConfigProps(catalog.getConfigProps(),
 				UseType.Catalog);
 		configProps.put("siteId", catalog.getSiteId());
 		configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(this.siteService.getSite(catalog.getSiteId()), true));
