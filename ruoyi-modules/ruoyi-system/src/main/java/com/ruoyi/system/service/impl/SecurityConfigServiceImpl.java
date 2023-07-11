@@ -68,7 +68,8 @@ public class SecurityConfigServiceImpl extends ServiceImpl<SysSecurityConfigMapp
 
 		config.updateBy(config.getOperator().getUsername());
 		this.updateById(config);
-		this.redisCache.setCacheObject(CACHE_KEY_CONFIG, config);
+		// 清除安全配置缓存，实际使用的时候重新缓存
+		this.redisCache.deleteObject(CACHE_KEY_CONFIG);
 	}
 
 	@Override
@@ -91,6 +92,8 @@ public class SecurityConfigServiceImpl extends ServiceImpl<SysSecurityConfigMapp
 		}
 		config.setStatus(config.isEnable() ? EnableOrDisable.DISABLE : EnableOrDisable.ENABLE);
 		this.updateById(config);
+		// 清除安全配置缓存，实际使用的时候重新缓存
+		redisCache.deleteObject(CACHE_KEY_CONFIG);
 	}
 
 	@Override
