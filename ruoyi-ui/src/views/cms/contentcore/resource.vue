@@ -213,7 +213,7 @@ export default {
         // 是否禁用上传
         isUploading: false,
         // 设置上传的请求头部
-        headers: { Authorization: "Bearer " + getToken() },
+        headers: { Authorization: "Bearer " + getToken(), CurrentSite: this.$cache.local.get("CurrentSite") },
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + "/cms/resource",
         // 上传的文件列表

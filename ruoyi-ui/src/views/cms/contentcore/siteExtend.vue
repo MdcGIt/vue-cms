@@ -297,7 +297,7 @@
 <script>
 import { saveSiteExtends, getSiteExtends  } from "@/api/contentcore/site";
 import { getHotWordGroupOptions } from "@/api/word/hotWord";
-import { listXModel } from "@/api/contentcore/exmodel";
+import { listXModelOptions } from "@/api/contentcore/exmodel";
 import { refreshBdTongjiToken } from "@/api/stat/baidu";
 import CMSSimpleImageViewer from '@/views/cms/components/SimpleImageViewer';
 
@@ -367,7 +367,7 @@ export default {
       });
     },
     loadEXModelList() {
-      listXModel().then(response => {
+      listXModelOptions().then(response => {
         this.exmodelOptions = response.data.rows.map(m => {
           return { label: m.name, value: m.modelId };
         });

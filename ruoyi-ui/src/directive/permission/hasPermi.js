@@ -18,14 +18,30 @@ function fn (el, binding) {
     })
 
     if (!hasPermissions) {
-      el.parentNode && el.parentNode.removeChild(el)
-      if (el.cacheParentElement != null) {
-        el.cacheParentElement.style.display = 'none'; 
+      if (el.cacheParentElement && el.cacheParentElement.className.split(' ').indexOf('el-dropdown') > -1) {
+          el.cacheParentElement.parentNode.removeChild(el.cacheParentElement)
+          el.cacheParentElement.parentNode.style.display = 'none'; 
+      } else if (el.className.indexOf('el-button') > -1) {
+        el.parentNode && el.parentNode.removeChild(el)
+        if (el.cacheParentElement != null) {
+          el.cacheParentElement.style.display = 'none'; 
+        }
+      } else if (el.className.indexOf('el-dropdown-menu__item') > -1) {
+        el.cacheElement.style.display = 'none';
       }
     } else {
-      el.cacheParentElement && el.cacheParentElement.appendChild(el.cacheElement)
-      if (el.cacheParentElement != null) {
-        el.cacheParentElement.style.display = 'block'; 
+      if (el.cacheParentElement && el.cacheParentElement.className.split(' ').indexOf('el-dropdown') > -1) {
+          el.cacheParentElement.parentNode.appendChild(el.cacheElement.parentNode)
+          el.cacheParentElement.parentNode.style.display = ''; 
+      } else if (el.className.indexOf('el-button') > -1) {
+        if (el.cacheParentElement) {
+          el.cacheParentElement.appendChild(el.cacheElement)
+          el.cacheParentElement.style.display = ''; 
+        }
+      } else if (el.className.indexOf('el-dropdown-menu__item') > -1) {
+        if (el.cacheElement) {
+          el.cacheElement.style.display = '';
+        }
       }
       // 有权限则追加之前缓存的 dom 元素
       // el.cacheParentElement && el.cacheParentElement.appendChild(el.cacheElement)

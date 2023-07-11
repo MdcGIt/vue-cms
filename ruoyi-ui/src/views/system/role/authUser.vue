@@ -177,12 +177,12 @@ export default {
     /** 取消授权 */
     cancelAuthUser(row) {
       const roleId = this.queryParams.roleId;
-      const userIds = row ? [ row.userId ] : this.userIds;
-      if (!this.userIds || this.userIds.length == 0) {
+      const _userIds = row.userId ? [ row.userId ] : this.userIds;
+      if (!_userIds || _userIds.length == 0) {
         return;
       }
       this.$modal.confirm(this.$t('System.Role.ConfirmRemoveUser')).then(function() {
-        return authUserCancel({ roleId: roleId, userIds: userIds });
+        return authUserCancel({ roleId: roleId, userIds: _userIds });
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess(this.$t('Common.Success'));

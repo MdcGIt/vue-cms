@@ -37,7 +37,6 @@
               icon="el-icon-plus"
               size="small"
               @click="handleAdd"
-              v-hasPermi="['system:user:add']"
             >{{ $t('Common.Add') }}</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -48,7 +47,6 @@
               size="small"
               :disabled="single"
               @click="handleUpdate"
-              v-hasPermi="['system:user:edit']"
             >{{ $t('Common.Edit') }}</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -59,7 +57,6 @@
               size="small"
               :disabled="multiple"
               @click="handleDelete"
-              v-hasPermi="['system:user:remove']"
             >{{ $t('Common.Delete') }}</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -69,7 +66,6 @@
               icon="el-icon-upload2"
               size="small"
               @click="handleImport"
-              v-hasPermi="['system:user:import']"
             >{{ $t('Common.Import') }}</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -79,7 +75,6 @@
               icon="el-icon-download"
               size="small"
               @click="handleExport"
-              v-hasPermi="['system:user:export']"
             >{{ $t('Common.Export') }}</el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -130,7 +125,7 @@
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column :label="$t('System.User.UserId')" align="center" key="userId" prop="userId" width="100" v-if="columns[0].visible" />
+          <el-table-column :label="$t('System.User.UserId')" align="center" key="userId" prop="userId" width="140" v-if="columns[0].visible" />
           <el-table-column :label="$t('System.User.UserName')" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
           <el-table-column :label="$t('System.User.NickName')" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
           <el-table-column :label="$t('System.User.Dept')" align="center" key="deptName" prop="deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
@@ -148,7 +143,7 @@
           <el-table-column
             :label="$t('Common.Operation')"
             align="center"
-            width="180"
+            width="200"
             class-name="small-padding fixed-width"
           >
             <template slot-scope="scope" v-if="scope.row.userId !== 1">
@@ -166,8 +161,8 @@
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['system:user:remove']"
               >{{ $t('Common.Delete') }}</el-button>
-              <el-dropdown size="small" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
-                <el-button size="small" type="text" icon="el-icon-d-arrow-right">{{ $t('Common.More') }}</el-button>
+              <el-dropdown size="small" @command="(command) => handleCommand(command, scope.row)">
+                <el-button size="small" type="text" icon="el-icon-d-arrow-right" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">{{ $t('Common.More') }}</el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
                     v-hasPermi="['system:user:resetPwd']">{{ $t('System.User.ResetPwd') }}</el-dropdown-item>
@@ -212,7 +207,7 @@
         <el-form-item :label="$t('System.User.Email')" prop="email">
           <el-input v-model="form.email" :placeholder="$t('System.User.Placeholder.Email')" maxlength="50" />
         </el-form-item>
-        <el-form-item :label="$t('System.User.Gender')">
+        <el-form-item :label="$t('System.User.Gender')" prop="sex">
           <el-select v-model="form.sex" :placeholder="$t('System.User.Placeholder.Gender')">
             <el-option
               v-for="dict in dict.type.Gender"
@@ -222,7 +217,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('System.User.Status')">
+        <el-form-item :label="$t('System.User.Status')" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in dict.type.SysUserStatus"
@@ -231,7 +226,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('System.User.Post')">
+        <el-form-item :label="$t('System.User.Post')" prop="postIds">
           <el-select v-model="form.postIds" multiple :placeholder="$t('System.User.Placeholder.Post')">
             <el-option
               v-for="item in postOptions"
@@ -242,7 +237,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('Common.Remark')">
+        <el-form-item :label="$t('Common.Remark')" prop="remark">
           <el-input v-model="form.remark" type="textarea"></el-input>
         </el-form-item>
       </el-form>
@@ -429,6 +424,9 @@ export default {
         ],
         password: [
           { required: true, message: this.$t('System.User.RuleTips.Password1'), trigger: "blur" }
+        ],
+        sex: [
+          { required: true, message: this.$t('Common.RuleTips.NotEmpty'), trigger: "blur" }
         ],
         email: [
           {

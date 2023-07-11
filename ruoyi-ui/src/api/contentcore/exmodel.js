@@ -9,6 +9,13 @@ export function listXModel(query) {
   })
 }
 
+export function listXModelOptions() {
+  return request({
+    url: '/cms/exmodel/options',
+    method: 'get'
+  })
+}
+
 // 查询扩展模型数据保存表字段
 export function listXModelTableFields(params) {
   return request({

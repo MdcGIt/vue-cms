@@ -146,7 +146,7 @@ export default {
         permissions: permissions
       };
       savePermissions(data).then(response => {
-        this.$modal.msgSuccess("保存成功");
+        this.$modal.notifySuccess(this.$t('Common.SaveSuccess'));
       });
     }
   }

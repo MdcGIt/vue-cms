@@ -55,7 +55,7 @@ public class AdvertisementStatJob extends IJobHandler implements IScheduledHandl
 
 	@Override
 	public void exec() throws Exception {
-		log.info("AdvertisementStatJob start");
+		log.info("Job start: {}", JOB_NAME);
 		long s = System.currentTimeMillis();
 		try {
 			// 数据更新
@@ -68,7 +68,7 @@ public class AdvertisementStatJob extends IJobHandler implements IScheduledHandl
 			e.printStackTrace();
 			throw e;
 		}
-		log.info("AdvertisementPublishJob completed, cost: {}ms", System.currentTimeMillis() - s);
+		log.info("Job '{}' completed, cost: {}ms", JOB_NAME, System.currentTimeMillis() - s);
 	}
 
 	private void saveToDb(String hour, boolean deleteCache) {

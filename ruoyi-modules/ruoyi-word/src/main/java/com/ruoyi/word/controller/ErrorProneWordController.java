@@ -37,7 +37,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/word/errorproneword")
@@ -45,6 +44,7 @@ public class ErrorProneWordController extends BaseRestController {
 
 	private final IErrorProneWordService errorProneWordService;
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -54,6 +54,7 @@ public class ErrorProneWordController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PostMapping
 	public R<?> add(@RequestBody @Validated ErrorProneWord errorProneWord) {
 		errorProneWord.createBy(StpAdminUtil.getLoginUser().getUsername());
@@ -61,6 +62,7 @@ public class ErrorProneWordController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PutMapping
 	public R<String> edit(@RequestBody @Validated ErrorProneWord errorProneWord) {
 		errorProneWord.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -68,12 +70,14 @@ public class ErrorProneWordController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@DeleteMapping
 	public R<String> remove(@RequestBody @NotEmpty List<Long> errorProneWordIds) {
 		this.errorProneWordService.removeByIds(errorProneWordIds);
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE)
 	@PostMapping("/check")
 	public R<?> check(@RequestBody String text) {
 		Map<String, String> map = this.errorProneWordService.check(text);

@@ -53,7 +53,7 @@ public class AdvertisementPublishJob extends IJobHandler implements IScheduledHa
 
 	@Override
 	public void exec() throws Exception {
-		log.info("AdvertisementPublishJob start");
+		log.info("Job start: {}", JOB_NAME);
 		long s = System.currentTimeMillis();
 		LocalDateTime now = LocalDateTime.now();
 		List<CmsPageWidget> list = this.pageWidgetService.list(new LambdaQueryWrapper<CmsPageWidget>()
@@ -91,7 +91,7 @@ public class AdvertisementPublishJob extends IJobHandler implements IScheduledHa
 				this.publishService.pageWidgetStaticize(pwt.loadPageWidget(adSpace));
 			}
 		}
-		log.info("AdvertisementPublishJob completed, cost: {}ms", System.currentTimeMillis() - s);
+		log.info("Job '{}' completed, cost: {}ms", JOB_NAME, System.currentTimeMillis() - s);
 	}
 
 	@Override

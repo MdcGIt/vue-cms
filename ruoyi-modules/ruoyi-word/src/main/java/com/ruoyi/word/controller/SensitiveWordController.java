@@ -40,7 +40,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/word/sensitiveword")
@@ -48,6 +47,7 @@ public class SensitiveWordController extends BaseRestController {
 
 	private final ISensitiveWordService sensitiveWordService;
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -57,6 +57,7 @@ public class SensitiveWordController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PostMapping
 	public R<?> add(@RequestBody @Validated SensitiveWord sensitiveWord) {
 		sensitiveWord.setCreateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -64,6 +65,7 @@ public class SensitiveWordController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PutMapping
 	public R<?> edit(@RequestBody @Validated SensitiveWord sensitiveWord) {
 		Assert.isTrue(IdUtils.validate(sensitiveWord.getWordId()),
@@ -74,12 +76,14 @@ public class SensitiveWordController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@DeleteMapping
 	public R<?> remove(@RequestBody @NotEmpty List<Long> sensitiveWordIds) {
 		this.sensitiveWordService.deleteWord(sensitiveWordIds);
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE)
 	@PostMapping("/check")
 	public R<?> check(@RequestBody String text) {
 		Set<String> words = this.sensitiveWordService.check(text);

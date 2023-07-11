@@ -30,14 +30,14 @@ import java.util.List;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/system/security/config")
 public class SysSecurityController extends BaseRestController {
 
 	private final ISecurityConfigService securityConfigService;
-	
+
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 	@GetMapping
 	public R<?> listConfigs() {
 		PageRequest pr = this.getPageRequest();
@@ -47,6 +47,7 @@ public class SysSecurityController extends BaseRestController {
 		return bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 	@GetMapping("/{id}")
 	public R<?> getConfig(@PathVariable Long id) {
 		SysSecurityConfig securityConfig = securityConfigService.getById(id);
@@ -65,6 +66,7 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok(securityConfig);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 	@Log(title = "安全配置", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<?> addConfig(@Validated @RequestBody SysSecurityConfig config) {
@@ -73,6 +75,7 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 	@Log(title = "安全配置", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<?> saveConfig(@Validated @RequestBody SysSecurityConfig config) {
@@ -81,6 +84,7 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 	@Log(title = "安全配置", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> delConfig(@RequestBody @NotEmpty List<Long> configIds) {
@@ -88,6 +92,7 @@ public class SysSecurityController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = SysMenuPriv.SysSecurityList)
 	@Log(title = "安全配置", businessType = BusinessType.UPDATE)
 	@PutMapping("/changeStatus/{id}")
 	public R<?> changeConfigStatus(@PathVariable @LongId Long id) {
