@@ -36,7 +36,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/word/tagword/group")
@@ -44,6 +43,7 @@ public class TagWordGroupController extends BaseRestController {
 
 	private final ITagWordGroupService tagWordGroupService;
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -53,6 +53,7 @@ public class TagWordGroupController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@GetMapping("/treedata")
 	public R<?> getTreeData() {
 		List<TagWordGroup> groups = this.tagWordGroupService.list();
@@ -60,12 +61,14 @@ public class TagWordGroupController extends BaseRestController {
 		return R.ok(treeData);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PostMapping
 	public R<?> add(@RequestBody @Validated TagWordGroup group) {
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
 		return R.ok(this.tagWordGroupService.addTagWordGroup(group));
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PutMapping
 	public R<?> edit(@RequestBody @Validated TagWordGroup group) {
 		group.updateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -73,6 +76,7 @@ public class TagWordGroupController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@DeleteMapping
 	public R<?> remove(@RequestBody @NotEmpty List<Long> groupIds) {
 		this.tagWordGroupService.deleteTagWordGroups(groupIds);
