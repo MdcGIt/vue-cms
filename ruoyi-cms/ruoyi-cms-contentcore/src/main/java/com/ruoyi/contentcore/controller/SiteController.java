@@ -255,7 +255,7 @@ public class SiteController extends BaseRestController {
         CmsSite site = this.siteService.getSite(siteId);
         Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 
-        Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(site.getConfigProps(), UseType.Site);
+        Map<String, Object> configProps = ConfigPropertyUtils.parseConfigProps(site.getConfigProps(), UseType.Site);
         configProps.put("PreviewPrefix", SiteUtils.getResourcePrefix(site, true));
         return R.ok(configProps);
     }
