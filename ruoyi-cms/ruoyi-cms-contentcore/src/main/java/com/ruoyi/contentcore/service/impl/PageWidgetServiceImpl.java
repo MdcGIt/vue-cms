@@ -82,7 +82,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
         CmsPageWidget pageWidget = this.getById(pw.getPageWidgetEntity().getPageWidgetId());
         Assert.notNull(pageWidget, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("pagewidgetId",
                 pw.getPageWidgetEntity().getPageWidgetId()));
-        PermissionUtils.checkPermission(PageWidgetPrivItem.Edit.getPermissionKey(pageWidget.getPageWidgetId()), pw.getOperator());
+//        PermissionUtils.checkPermission(PageWidgetPrivItem.Edit.getPermissionKey(pageWidget.getPageWidgetId()), pw.getOperator());
 
         boolean checkCodeUnique = checkCodeUnique(pw.getPageWidgetEntity().getSiteId(),
                 pw.getPageWidgetEntity().getCode(), pw.getPageWidgetEntity().getPageWidgetId());

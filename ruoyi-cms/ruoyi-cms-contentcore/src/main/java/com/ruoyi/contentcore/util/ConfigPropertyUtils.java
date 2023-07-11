@@ -45,7 +45,7 @@ public class ConfigPropertyUtils {
 		return ConfigProperties.values().stream().filter(p -> p.checkUseType(useType)).collect(Collectors.toList());
 	}
 	
-	public static Map<String, Object> paseConfigProps(Map<String, String> configProps, UseType useType) {
+	public static Map<String, Object> parseConfigProps(Map<String, String> configProps, UseType useType) {
 		Map<String, Object> map = new HashMap<>();
 		List<IProperty> props = ConfigPropertyUtils.getConfigPropertiesByUseType(useType);
 		for (IProperty prop : props) {
