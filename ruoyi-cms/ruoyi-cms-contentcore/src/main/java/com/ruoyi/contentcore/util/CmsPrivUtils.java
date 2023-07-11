@@ -3,7 +3,6 @@ package com.ruoyi.contentcore.util;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.contentcore.perms.BitSetPrivItem;
-import com.ruoyi.contentcore.perms.SitePermissionType;
 import com.ruoyi.system.domain.SysPermission;
 
 import java.util.*;
@@ -77,16 +76,16 @@ public class CmsPrivUtils {
      * @param privItems
      * @param permission
      */
-    public static <T> void grantBitSetPermission(String key, BitSetPrivItem[] privItems, SysPermission permission) {
+    public static <T> void grantBitSetPermission(String permissionType, String key, BitSetPrivItem[] privItems, SysPermission permission) {
         BitSet bitSet = new BitSet(privItems.length);
         for (BitSetPrivItem item : privItems) {
             bitSet.set(item.bitIndex());
         }
-        String json = permission.getPermissions().get(SitePermissionType.ID);
-        Map<String, BitSet> sitePrivs = deserializeBitSetPermission(json);
-        sitePrivs.put(key, bitSet);
-        json = serializeBitSetPermission(sitePrivs);
-        permission.getPermissions().put(SitePermissionType.ID, json);
+        String json = permission.getPermissions().get(permissionType);
+        Map<String, BitSet> privs = deserializeBitSetPermission(json);
+        privs.put(key, bitSet);
+        json = serializeBitSetPermission(privs);
+        permission.getPermissions().put(permissionType, json);
     }
 
     /**

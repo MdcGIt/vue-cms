@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ruoyi.common.security.domain.LoginUser;
+import com.ruoyi.contentcore.perms.SitePermissionType;
 import com.ruoyi.system.permission.PermissionUtils;
 import com.ruoyi.system.security.StpAdminUtil;
 import org.springframework.beans.BeanUtils;
@@ -131,7 +132,7 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 			permission.setOwner(dto.getOperator().getUserId().toString());
 			permission.createBy(dto.getOperator().getUsername());
 		}
-		CmsPrivUtils.grantBitSetPermission(site.getSiteId().toString(), SitePrivItem.values(), permission);
+		CmsPrivUtils.grantBitSetPermission(SitePermissionType.ID, site.getSiteId().toString(), SitePrivItem.values(), permission);
 		this.permissionService.updateById(permission);
 		this.permissionService.resetLoginUserPermissions(dto.getOperator());
 		return site;

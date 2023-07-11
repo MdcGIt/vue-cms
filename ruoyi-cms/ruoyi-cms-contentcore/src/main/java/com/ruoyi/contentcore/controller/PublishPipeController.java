@@ -45,7 +45,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
 @RestController
 @RequestMapping("/cms/publishpipe")
 @RequiredArgsConstructor
@@ -60,6 +59,7 @@ public class PublishPipeController extends BaseRestController {
 	 * 
 	 * @return
 	 */
+    @Priv(type = AdminUserType.TYPE)
     @GetMapping("/selectData")
     public R<?> bindSelectData() {
     	CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -74,6 +74,7 @@ public class PublishPipeController extends BaseRestController {
      * 
      * @return
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
     @GetMapping("/list")
     public R<?> list() {
 	    PageRequest pr = this.getPageRequest();
@@ -89,6 +90,7 @@ public class PublishPipeController extends BaseRestController {
      * @param publishPipeId 发布通道ID
      * @return
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
     @GetMapping(value = "/{publishPipeId}")
     public R<?> getInfo(@PathVariable @LongId Long publishPipeId) {
         CmsPublishPipe publishPipe = publishPipeService.getById(publishPipeId);
@@ -103,6 +105,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
 	@Log(title = "新增发布通道", businessType = BusinessType.INSERT)
     @PostMapping
     public R<?> addSave(@RequestBody @Validated CmsPublishPipe publishPipe) throws IOException {
@@ -120,6 +123,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
 	@Log(title = "编辑发布通道", businessType = BusinessType.UPDATE)
     @PutMapping
     public R<?> editSave(@RequestBody @Validated CmsPublishPipe publishPipe) throws IOException {
@@ -135,6 +139,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
 	@Log(title = "删除发布通道", businessType = BusinessType.DELETE)
     @DeleteMapping
     public R<String> remove(@RequestBody @NotEmpty List<Long> publishPipeIds) throws IOException {
@@ -149,6 +154,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
 	@Log(title = "启用发布通道", businessType = BusinessType.UPDATE)
     @PostMapping("/enable/{publishPipeId}")
     public R<String> enable(@PathVariable("publishPipeId") @LongId Long publishPipeId) throws IOException {
@@ -168,6 +174,7 @@ public class PublishPipeController extends BaseRestController {
      * @return
      * @throws IOException
      */
+    @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.PublishPipeView)
 	@Log(title = "禁用发布通道", businessType = BusinessType.UPDATE)
     @PostMapping("/disable/{publishPipeId}")
     public R<String> disable(@PathVariable("publishPipeId") Long publishPipeId) throws IOException {

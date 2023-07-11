@@ -97,7 +97,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	@Override
 	public CmsResource addResource(ResourceUploadDTO dto)
 			throws IOException {
-		String suffix = FileExUtils.getExtension(dto.getFile().getOriginalFilename());
+		String suffix = FileExUtils.getExtension(Objects.requireNonNull(dto.getFile().getOriginalFilename()));
 		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
 		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
 
@@ -207,17 +207,8 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 	@Override
 	public String getResourceLink(CmsResource resource, boolean isPreview) {
 		CmsSite site = this.siteService.getSite(resource.getSiteId());
-		if (!LocalFileStorageType.TYPE.equals(resource.getStorageType())) {
-			FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
-			if (fileStorageArgs != null && StringUtils.isNotEmpty(fileStorageArgs.getDomain())) {
-				String domain = fileStorageArgs.getDomain();
-				if (!domain.endsWith("/")) {
-					domain += "/";
-				}
-				return domain + resource.getPath();
-			}
-		}
-		return SiteUtils.getResourcePrefix(site, isPreview) + resource.getPath();
+		String prefix = ResourceUtils.getResourcePrefix(resource.getStorageType(), site, isPreview);
+		return prefix + resource.getPath();
 	}
 	
 	@Override

@@ -70,6 +70,18 @@ public class EXModelController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE)
+	@GetMapping("/options")
+	public R<?> getModelOptions() {
+		PageRequest pr = this.getPageRequest();
+		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
+		LambdaQueryWrapper<XModel> q = new LambdaQueryWrapper<XModel>()
+				.eq(XModel::getOwnerType, CmsExtendMetaModelType.TYPE)
+				.eq(XModel::getOwnerId, site.getSiteId());
+		Page<XModel> page = this.modelService.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true), q);
+		return this.bindDataTable(page);
+	}
+
 	@Log(title = "新增扩展模型", businessType = BusinessType.INSERT)
 	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.Add)
 	@PostMapping
