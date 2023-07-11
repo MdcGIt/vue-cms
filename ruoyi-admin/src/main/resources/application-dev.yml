@@ -151,7 +151,7 @@ spring:
     admin:
       client:
         # 增加客户端开关
-        enabled: true
+        enabled: false
         # Admin Server URL
         url: http://127.0.0.1:8090/admin
         instance:
