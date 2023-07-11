@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.ruoyi.common.security.anno.Priv;
+import com.ruoyi.member.security.MemberUserType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,7 +18,6 @@ import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.member.domain.MemberSignInLog;
 import com.ruoyi.member.domain.dto.MemberComplementHistoryDTO;
-import com.ruoyi.member.security.SaMemberCheckLogin;
 import com.ruoyi.member.security.StpMemberUtil;
 import com.ruoyi.member.service.IMemberSignInLogService;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -33,7 +34,7 @@ public class MemberSignInApiController extends BaseRestController {
 	/**
 	 * 获取会员指定月份签到数据，默认：当前月份
 	 */
-	@SaMemberCheckLogin
+	@Priv(type = MemberUserType.TYPE)
 	@GetMapping
 	public R<?> getMonthSignInLog(@RequestParam(value = "year", required = false) Integer year,
 			@RequestParam(value = "month", required = false) Integer month) {
@@ -62,7 +63,7 @@ public class MemberSignInApiController extends BaseRestController {
 	/**
 	 * 签到
 	 */
-	@SaMemberCheckLogin
+	@Priv(type = MemberUserType.TYPE)
 	@PostMapping
 	public R<?> signIn() {
 		this.memberSignInLogService.doSignIn(StpMemberUtil.getLoginUser());
@@ -72,7 +73,7 @@ public class MemberSignInApiController extends BaseRestController {
 	/**
 	 * 补签
 	 */
-	@SaMemberCheckLogin
+	@Priv(type = MemberUserType.TYPE)
 	@PutMapping
 	public R<?> complementHistory(@RequestBody MemberComplementHistoryDTO dto) {
 		dto.setOperator(StpAdminUtil.getLoginUser());
