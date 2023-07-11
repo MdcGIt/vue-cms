@@ -1,7 +1,11 @@
 package com.ruoyi.contentcore.util;
 
+import com.ruoyi.common.storage.local.LocalFileStorageType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IResourceType;
 import com.ruoyi.contentcore.core.impl.ResourceType_File;
+import com.ruoyi.contentcore.domain.CmsSite;
+import com.ruoyi.contentcore.properties.FileStorageArgsProperty;
 
 import java.util.List;
 
@@ -19,5 +23,21 @@ public class ResourceUtils {
             return list.stream().filter(rt -> !rt.getId().equals(ResourceType_File.ID)).findFirst().get();
         }
         return list.get(0);
+    }
+
+    public static String getResourcePrefix(String storageType, CmsSite site, boolean isPreview) {
+        if (LocalFileStorageType.TYPE.equals(storageType)) {
+            return SiteUtils.getResourcePrefix(site, isPreview);
+        }
+        FileStorageArgsProperty.FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
+        if (fileStorageArgs != null && StringUtils.isNotEmpty(fileStorageArgs.getDomain())) {
+            String domain = fileStorageArgs.getDomain();
+            if (!domain.endsWith("/")) {
+                domain += "/";
+            }
+            return domain;
+        }
+        // 无法获取到对象存储访问地址时默认使用站点资源域名
+        return site.getResourceUrl();
     }
 }

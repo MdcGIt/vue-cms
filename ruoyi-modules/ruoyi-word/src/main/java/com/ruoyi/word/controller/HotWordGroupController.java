@@ -38,7 +38,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/word/hotword/group")
@@ -46,6 +45,7 @@ public class HotWordGroupController extends BaseRestController {
 
 	private final IHotWordGroupService hotWordGroupService;
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@GetMapping
 	public R<?> getPageList(@RequestParam(value = "query", required = false) String query) {
 		PageRequest pr = this.getPageRequest();
@@ -55,6 +55,7 @@ public class HotWordGroupController extends BaseRestController {
 		return this.bindDataTable(page);
 	}
 
+	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/options")
 	public R<?> getOptions() {
 		List<HotWordGroup> list = this.hotWordGroupService.list();
@@ -65,6 +66,7 @@ public class HotWordGroupController extends BaseRestController {
 		return this.bindDataTable(options);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@GetMapping("/treedata")
 	public R<?> getTreeData() {
 		List<HotWordGroup> groups = this.hotWordGroupService.list();
@@ -80,12 +82,14 @@ public class HotWordGroupController extends BaseRestController {
 		return R.ok(treeData);
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PostMapping
 	public R<?> add(@RequestBody @Validated HotWordGroup group) {
 		group.createBy(StpAdminUtil.getLoginUser().getUsername());
 		return R.ok(this.hotWordGroupService.addHotWordGroup(group));
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@PutMapping
 	public R<String> edit(@RequestBody @Validated HotWordGroup group) {
 		group.setUpdateBy(StpAdminUtil.getLoginUser().getUsername());
@@ -93,6 +97,7 @@ public class HotWordGroupController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(type = AdminUserType.TYPE, value = WordPriv.View)
 	@DeleteMapping
 	public R<?> remove(@RequestBody @NotEmpty List<Long> groupIds) {
 		this.hotWordGroupService.deleteHotWordGroups(groupIds);

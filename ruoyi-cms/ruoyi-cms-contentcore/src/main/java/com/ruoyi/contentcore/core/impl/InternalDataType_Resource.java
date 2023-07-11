@@ -1,5 +1,7 @@
 package com.ruoyi.contentcore.core.impl;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.contentcore.util.ResourceUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -42,14 +44,10 @@ public class InternalDataType_Resource implements IInternalDataType {
 	public String getLink(InternalURL internalUrl, int pageIndex, String publishPipeCode, boolean isPreview) {
 		long siteId = MapUtils.getLongValue(internalUrl.getParams(), InternalUrl_Param_SiteId);
 		CmsSite site = this.siteService.getSite(siteId);
-		// 存储方式，非本地存储读取配置域名
-		String storageType = MapUtils.getString(internalUrl.getParams(), InternalUrl_Param_StorageType,
-				LocalFileStorageType.TYPE);
-		if (LocalFileStorageType.TYPE.equals(storageType)) {
-			return SiteUtils.getResourcePrefix(site, isPreview) + internalUrl.getPath();
-		}
-		FileStorageArgs fileStorageArgs = FileStorageArgsProperty.getValue(site.getConfigProps());
-		return fileStorageArgs.getDomain() + internalUrl.getPath();
+		String storageType = MapUtils.getString(internalUrl.getParams(), InternalUrl_Param_StorageType, LocalFileStorageType.TYPE);
+
+		String prefix = ResourceUtils.getResourcePrefix(storageType, site, isPreview);
+		return prefix + internalUrl.getPath();
 	}
 
 	/**

@@ -70,7 +70,7 @@ public class TemplateUtils {
 		// 站点属性
 		Map<String, Object> mapSite = ReflectASMUtils.beanToMap(site);
 		// 扩展属性
-		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(site.getConfigProps(), UseType.Site);
+		Map<String, Object> configProps = ConfigPropertyUtils.parseConfigProps(site.getConfigProps(), UseType.Site);
 		if (Objects.nonNull(configProps)) {
 			configProps.entrySet().forEach(e -> {
 				mapSite.put(ContentCoreConsts.ConfigPropFieldPrefix + e.getKey(), e.getValue());
@@ -97,7 +97,7 @@ public class TemplateUtils {
 	public static void addCatalogVariables(CmsSite site, CmsCatalog catalog, TemplateContext context) {
 		Map<String, Object> mapCatalog = ReflectASMUtils.beanToMap(catalog);
 		// 扩展属性
-		Map<String, Object> configProps = ConfigPropertyUtils.paseConfigProps(catalog.getConfigProps(), UseType.Catalog);
+		Map<String, Object> configProps = ConfigPropertyUtils.parseConfigProps(catalog.getConfigProps(), UseType.Catalog);
 		if (Objects.nonNull(configProps)) {
 			configProps.entrySet().forEach(e -> {
 				mapCatalog.put(ContentCoreConsts.ConfigPropFieldPrefix + e.getKey(), e.getValue());

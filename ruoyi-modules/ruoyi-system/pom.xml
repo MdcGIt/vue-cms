@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ruoyi-modules</artifactId>
         <groupId>com.ruoyi</groupId>
-        <version>1.3.7</version>
+        <version>1.3.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -52,5 +52,11 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common-storage</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

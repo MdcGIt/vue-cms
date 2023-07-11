@@ -31,8 +31,7 @@ public class DBService {
      */
     public List<DBTable> listTables(@Nullable String tableName) {
         List<DBTable> tables = new ArrayList<>();
-        try {
-            Connection connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
 
             ResultSet rs = metaData.getTables(connection.getCatalog(), null, tableName, null);
