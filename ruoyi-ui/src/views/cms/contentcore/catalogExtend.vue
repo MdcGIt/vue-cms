@@ -114,7 +114,7 @@
 <script>
 import { getCatalogExtends, saveCatalogExtends, applyConfigPropsToChildren } from "@/api/contentcore/catalog";
 import { getHotWordGroupOptions } from "@/api/word/hotWord";
-import { listXModel } from "@/api/contentcore/exmodel";
+import { listXModelOptions } from "@/api/contentcore/exmodel";
 import CMSCatalogSelector from "@/views/cms/contentcore/catalogSelector";
 
 export default {
@@ -171,7 +171,7 @@ export default {
       });
     },
     loadEXModelList() {
-      listXModel().then(response => {
+      listXModelOptions().then(response => {
         this.exmodelOptions = response.data.rows.map(m => {
           return { label: m.name, value: m.modelId };
         });
