@@ -72,16 +72,17 @@
           <el-tag :type="statusTagType(scope.row.status)">{{ statusFormat(scope.row, 'status') }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('CMS.Content.PublishDate')" align="center" prop="_publishDate" width="180">
+      <el-table-column :label="$t('CMS.Content.PublishDate')" align="center" prop="publishDateInstance" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row._publishDate) }}</span>
+          <span>{{ parseTime(scope.row.publishDateInstance) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Common.CreateTime')" align="center" prop="_createTime" width="180">
+      <el-table-column :label="$t('Common.CreateTime')" align="center" prop="createTimeInstance" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row._createTime) }}</span>
+          <span>{{ parseTime(scope.row.createTimeInstance) }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="_score" align="left" prop="hitScore" width="180" />
       <el-table-column :label="$t('Common.Operation')" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button 
@@ -162,6 +163,9 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
+        contentType: "",
+        query: "",
+        onlyTitle: false,
         pageNum: 1,
         pageSize: 10,
       },

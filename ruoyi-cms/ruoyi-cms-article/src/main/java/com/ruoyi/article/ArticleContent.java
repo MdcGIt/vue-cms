@@ -116,7 +116,7 @@ public class ArticleContent extends AbstractContent<CmsArticleDetail> {
 
 	@Override
 	public String getFullText() {
-		return super.getFullText() + " " + HtmlUtils.clean(this.getExtendEntity().getContentHtml());
+		return super.getFullText() + StringUtils.SPACE + HtmlUtils.clean(this.getExtendEntity().getContentHtml());
 	}
 
 	public IArticleService getArticleService() {

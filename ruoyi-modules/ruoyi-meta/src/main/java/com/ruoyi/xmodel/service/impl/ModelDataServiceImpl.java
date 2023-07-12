@@ -201,7 +201,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 		mmt.getFixedFields().forEach(f -> fieldNameToCode.put(f.getFieldName(), f.getCode()));
 
 		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName())
-				.where().eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId());
+				.where().eq(IMetaModelType.MODEL_ID_FIELD_NAME, model.getModel().getModelId());
 		consumer.accept(sqlBuilder);
 
 		List<Map<String, Object>> list = sqlBuilder.selectList().stream().map(data -> {
@@ -222,7 +222,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 		mmt.getFixedFields().forEach(f -> fieldNameToCode.put(f.getFieldName(), f.getCode()));
 
 		SqlBuilder sqlBuilder = new SqlBuilder().selectAll().from(model.getModel().getTableName())
-				.where().eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId());
+				.where().eq(IMetaModelType.MODEL_ID_FIELD_NAME, model.getModel().getModelId());
 		consumer.accept(sqlBuilder);
 
 		IPage<Map<String, Object>> pageData = sqlBuilder.selectPage(page);

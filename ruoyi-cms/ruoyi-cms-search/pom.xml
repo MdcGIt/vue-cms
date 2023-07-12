@@ -14,10 +14,9 @@
 	<description>内容全文检索模块</description>
 
 	<dependencies>
-		<!-- 内容核心 -->
 		<dependency>
 			<groupId>com.ruoyi</groupId>
-			<artifactId>ruoyi-cms-contentcore</artifactId>
+			<artifactId>ruoyi-cms-exmodel</artifactId>
 		</dependency>
 		<!-- 检索基础模块 -->
 		<dependency>

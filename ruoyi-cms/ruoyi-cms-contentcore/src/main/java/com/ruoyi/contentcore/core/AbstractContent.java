@@ -361,9 +361,18 @@ public abstract class AbstractContent<T> implements IContent<T> {
 
 	@Override
 	public String getFullText() {
-		return this.content.getTitle()
-				+ " " + StringUtils.nullToEmpty(this.content.getSubTitle())
-				+ " " + StringUtils.nullToEmpty(this.content.getShortTitle());
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.content.getTitle());
+		if (StringUtils.isNotEmpty(this.content.getSubTitle())) {
+			sb.append(StringUtils.SPACE).append(this.content.getSubTitle());
+		}
+		if (StringUtils.isNotEmpty(this.content.getShortTitle())) {
+			sb.append(StringUtils.SPACE).append(this.content.getShortTitle());
+		}
+		if (StringUtils.isNotEmpty(this.content.getKeywords())) {
+			sb.append(StringUtils.SPACE).append(StringUtils.join(this.content.getKeywords(), StringUtils.SPACE));
+		}
+		return sb.toString();
 	}
 
 	@Override

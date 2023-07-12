@@ -4,15 +4,18 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ruoyi.cms.search.es.doc.ESContent;
 import com.ruoyi.cms.search.vo.ESContentVO;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
+import com.ruoyi.search.SearchConsts;
 import com.ruoyi.search.service.ISearchLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,9 +52,9 @@ public class SearchApiController extends BaseRestController {
 			@RequestParam(value = "ct", required = false) String contentType,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) throws ElasticsearchException, IOException {
 		int pageSize = 10;
-		SearchResponse<ESContentVO> sr = esClient.search(s -> {
+		SearchResponse<ObjectNode> sr = esClient.search(s -> {
 			s.index(ESContent.INDEX_NAME) // 索引
-				.query(q -> 
+				.query(q ->
 					q.bool(b -> {
 						b.must(must -> must.term(tq -> tq.field("siteId").value(siteId)));
 						if (StringUtils.isNotEmpty(contentType)) {
@@ -59,9 +62,21 @@ public class SearchApiController extends BaseRestController {
 						}
 						if (StringUtils.isNotEmpty(query)) {
 							if (onlyTitle) {
-								b.must(must -> must.simpleQueryString(sqs -> sqs.fields("title").query(query)));
+								b.must(must -> must
+										.match(match -> match
+												.analyzer(SearchConsts.IKAnalyzeType_Smart)
+												.field("title")
+												.query(query)
+										)
+								);
 							} else {
-								b.must(must -> must.simpleQueryString(sqs -> sqs.fields("title^10", "fullText^1").query(query))); // title权重更高
+								b.must(must -> must
+										.multiMatch(match -> match
+												.analyzer(SearchConsts.IKAnalyzeType_Smart)
+												.fields("title^10", "fullText^1")
+												.query(query)
+										)
+								);
 							}
 						}	
 						return b;
@@ -77,11 +92,13 @@ public class SearchApiController extends BaseRestController {
 //			s.source(source -> source.filter(f -> f.excludes("fullText"))); // 过滤字段
 			s.from(page * pageSize).size(pageSize);  // 分页
 			return s;
-		}, ESContentVO.class);
+		}, ObjectNode.class);
 		List<ESContentVO> list = sr.hits().hits().stream().map(hit -> {
-			ESContentVO vo = hit.source();
-			vo.set_publishDate(LocalDateTime.ofEpochSecond(vo.getPublishDate(), 0, ZoneOffset.UTC));
-			vo.set_createTime(LocalDateTime.ofEpochSecond(vo.getCreateTime(), 0, ZoneOffset.UTC));
+			ObjectNode source = hit.source();
+			ESContentVO vo = JacksonUtils.getObjectMapper().convertValue(source, ESContentVO.class);
+			vo.setHitScore(hit.score());
+			vo.setPublishDateInstance(LocalDateTime.ofEpochSecond(vo.getPublishDate(), 0, ZoneOffset.UTC));
+			vo.setCreateTimeInstance(LocalDateTime.ofEpochSecond(vo.getCreateTime(), 0, ZoneOffset.UTC));
 			CmsCatalog catalog = this.catalogService.getCatalog(vo.getCatalogId());
 			if (Objects.nonNull(catalog)) {
 				vo.setCatalogName(catalog.getName());

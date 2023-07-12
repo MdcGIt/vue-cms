@@ -27,6 +27,7 @@ import com.ruoyi.xmodel.service.IModelService;
 import com.ruoyi.xmodel.util.XModelUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implements IModelService {
+public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel>
+		implements IModelService, CommandLineRunner {
 
 	private static final String CACHE_PREFIX = "xmodel:";
 
@@ -153,7 +155,7 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 				this.removeById(model.getModel().getModelId());
 				// 移除模型数据表数据
 				new SqlBuilder().delete().from(model.getModel().getTableName()).where()
-						.eq(IMetaModelType.FIELD_MODEL_ID.getFieldName(), model.getModel().getModelId())
+						.eq(IMetaModelType.MODEL_ID_FIELD_NAME, model.getModel().getModelId())
 						.executeDelete();
 				// 清理缓存
 				this.clearMetaModelCache(model.getModel().getModelId());
@@ -172,5 +174,10 @@ public class ModelServiceImpl extends ServiceImpl<XModelMapper, XModel> implemen
 			return List.of();
 		}
 		return dbTables.get(0).getColumns().stream().map(DBTableColumn::getName).toList();
+	}
+
+	@Override
+	public void run(String... args) {
+		XModelUtils.validateMetaModelTypes();
 	}
 }

@@ -41,11 +41,11 @@ public class ESContentVO {
 
 	private Long publishDate;
 
-	private LocalDateTime _publishDate;
+	private LocalDateTime publishDateInstance;
 
 	private Long createTime;
 
-	private LocalDateTime _createTime;
+	private LocalDateTime createTimeInstance;
 	
-	private Double _score;
+	private Double hitScore;
 }
