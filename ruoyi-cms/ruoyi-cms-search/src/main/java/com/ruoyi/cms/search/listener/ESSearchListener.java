@@ -28,7 +28,7 @@ public class ESSearchListener {
 	public void afterContentDelete(AfterContentDeleteEvent event) {
 		log.debug("Delete escontent index: " + event.getContent().getContentEntity().getTitle());
 		try {
-			this.searchService.deleteContentIndex(List.of(event.getContent().getContentEntity().getContentId()));
+			this.searchService.deleteContentDoc(List.of(event.getContent().getContentEntity().getContentId()));
 		} catch (ElasticsearchException | IOException e) {
 			e.printStackTrace();
 		}
@@ -38,14 +38,14 @@ public class ESSearchListener {
 	public void afterContentPublish(AfterContentPublishEvent event) {
 		log.debug("Create escontent index: " + event.getContent().getContentEntity().getTitle());
 		IContent<?> content = event.getContent();
-		this.searchService.createContentIndex(content);
+		this.searchService.createContentDoc(content);
 	}
 
 	@EventListener
 	public void afterContentOfflineEvent(AfterContentOfflineEvent event) {
 		log.debug("Delete escontent index: " + event.getContent().getContentEntity().getTitle());
 		try {
-			this.searchService.deleteContentIndex(List.of(event.getContent().getContentEntity().getContentId()));
+			this.searchService.deleteContentDoc(List.of(event.getContent().getContentEntity().getContentId()));
 		} catch (ElasticsearchException | IOException e) {
 			e.printStackTrace();
 		}
@@ -54,6 +54,6 @@ public class ESSearchListener {
 	@EventListener
 	public void afterCatalogMoveEvent(AfterCatalogMoveEvent event) {
 		log.debug("Rebuild escontent after catalog move: " + event.getFromCatalog().getName());
-		this.searchService.rebuildCatalogIndex(event.getFromCatalog(), true);
+		this.searchService.rebuildCatalog(event.getFromCatalog(), true);
 	}
 }

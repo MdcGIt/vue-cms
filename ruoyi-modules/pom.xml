@@ -5,7 +5,7 @@
     <parent>
 		<groupId>com.ruoyi</groupId>
 		<artifactId>ruoyi</artifactId>
-		<version>1.3.9</version>
+		<version>1.3.10</version>
 	</parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,5 +22,6 @@
 		<module>ruoyi-comment</module>
 		<module>ruoyi-vote</module>
 		<module>ruoyi-word</module>
-	</modules>
+        <module>ruoyi-monitor</module>
+    </modules>
 </project>

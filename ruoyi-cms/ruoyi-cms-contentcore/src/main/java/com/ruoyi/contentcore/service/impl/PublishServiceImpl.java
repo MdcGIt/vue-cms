@@ -134,7 +134,10 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 						for (CmsContent xContent : page.getRecords()) {
 							this.setProgressInfo((int) (count++ * 100 / total),
 									"正在发布内容：" + catalog.getName() + "[" + count + " / " + total + "]");
-							contentStaticize(xContent);
+							IContentType contentType = ContentCoreUtils.getContentType(xContent.getContentType());
+							IContent<?> content = contentType.newContent();
+							content.setContentEntity(xContent);
+							content.publish();
 							this.checkInterrupt(); // 允许中断
 						}
 					}
@@ -278,7 +281,10 @@ public class PublishServiceImpl implements IPublishService, ApplicationContextAw
 						for (CmsContent xContent : page.getRecords()) {
 							this.setProgressInfo((int) (count++ * 100 / total),
 									"正在发布内容：" + catalog.getName() + "[" + count + " / " + total + "]");
-							contentStaticize(xContent);
+							IContentType contentType = ContentCoreUtils.getContentType(xContent.getContentType());
+							IContent<?> content = contentType.newContent();
+							content.setContentEntity(xContent);
+							content.publish();
 							this.checkInterrupt(); // 允许中断
 						}
 					}

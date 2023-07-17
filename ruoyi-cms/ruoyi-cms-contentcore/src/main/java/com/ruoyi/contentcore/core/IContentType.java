@@ -54,6 +54,8 @@ public interface IContentType extends Comparable<IContentType> {
         return this.getOrder() - o.getOrder();
     }
 
+	IContent<?> newContent();
+
 	/**
 	 * 加载内容数据，根据cmsContent.contentId拉取内容扩展表数据
 	 * 

@@ -89,6 +89,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		return content;
 	}
 
+	@Override
 	public void setContentEntity(CmsContent content) {
 		this.content = content;
 	}
@@ -191,8 +192,9 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		if (content.getPublishDate() == null) {
 			content.setPublishDate(LocalDateTime.now());
 			update = true;
-		} else if (content.getPublishDate().isAfter(LocalDateTime.now())) {
-			return false; // 指定了发布时间的内容未到发布时间直接跳过
+		} else if (content.getPublishDate().isAfter(LocalDateTime.now())
+				&& ContentStatus.isToPublish(content.getStatus())) {
+			return false; // 待发布内容并且指定了发布时间的未到发布时间直接跳过
 		}
 		if (!ContentStatus.isPublished(content.getStatus())) {
 			content.setStatus(ContentStatus.PUBLISHED);
@@ -361,9 +363,18 @@ public abstract class AbstractContent<T> implements IContent<T> {
 
 	@Override
 	public String getFullText() {
-		return this.content.getTitle()
-				+ " " + StringUtils.nullToEmpty(this.content.getSubTitle())
-				+ " " + StringUtils.nullToEmpty(this.content.getShortTitle());
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.content.getTitle());
+		if (StringUtils.isNotEmpty(this.content.getSubTitle())) {
+			sb.append(StringUtils.SPACE).append(this.content.getSubTitle());
+		}
+		if (StringUtils.isNotEmpty(this.content.getShortTitle())) {
+			sb.append(StringUtils.SPACE).append(this.content.getShortTitle());
+		}
+		if (StringUtils.isNotEmpty(this.content.getKeywords())) {
+			sb.append(StringUtils.SPACE).append(StringUtils.join(this.content.getKeywords(), StringUtils.SPACE));
+		}
+		return sb.toString();
 	}
 
 	@Override

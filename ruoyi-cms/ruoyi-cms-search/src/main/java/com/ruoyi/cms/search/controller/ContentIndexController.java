@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.ruoyi.common.utils.JacksonUtils;
+import com.ruoyi.search.SearchConsts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,11 +61,11 @@ import lombok.RequiredArgsConstructor;
 public class ContentIndexController extends BaseRestController {
 
 	private final ISiteService siteService;
-	
+
 	private final ICatalogService catalogService;
-	
+
 	private final IContentService contentService;
-	
+
 	private final ContentIndexService searchService;
 
 	private final ElasticsearchClient esClient;
@@ -75,45 +79,59 @@ public class ContentIndexController extends BaseRestController {
 
 	@GetMapping("/contents")
 	public R<?> selectDocumentList(@RequestParam(value = "query", required = false) String query,
-			@RequestParam(value = "onlyTitle", required = false ,defaultValue = "false") Boolean onlyTitle,
-			@RequestParam(value = "contentType", required = false) String contentType) throws ElasticsearchException, IOException {
+								   @RequestParam(value = "onlyTitle", required = false ,defaultValue = "false") Boolean onlyTitle,
+								   @RequestParam(value = "contentType", required = false) String contentType) throws ElasticsearchException, IOException {
 		this.checkElasticSearchEnabled();
 		PageRequest pr = this.getPageRequest();
 
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		SearchResponse<ESContentVO> sr = esClient.search(s -> {
+		SearchResponse<ObjectNode> sr = esClient.search(s -> {
 			s.index(ESContent.INDEX_NAME) // 索引
-				.query(q -> 
-					q.bool(b -> {
-						b.must(must -> must.term(tq -> tq.field("siteId").value(site.getSiteId())));
-						if (StringUtils.isNotEmpty(contentType)) {
-							b.must(must -> must.term(tq -> tq.field("contentType").value(contentType)));
-						}
-						if (StringUtils.isNotEmpty(query)) {
-							if (onlyTitle) {
-								b.must(must -> must.simpleQueryString(sqs -> sqs.fields("title").query(query)));
-							} else {
-								b.must(must -> must.simpleQueryString(sqs -> sqs.fields("title^10", "fullText^1").query(query))); // title权重更高
-							}
-						}	
-						return b;
-					})
-				);
+					.query(q ->
+							q.bool(b -> {
+								b.must(must -> must.term(tq -> tq.field("siteId").value(site.getSiteId())));
+								if (StringUtils.isNotEmpty(contentType)) {
+									b.must(must -> must.term(tq -> tq.field("contentType").value(contentType)));
+								}
+								if (StringUtils.isNotEmpty(query)) {
+									if (onlyTitle) {
+										b.must(must -> must
+												.match(match -> match
+														.analyzer(SearchConsts.IKAnalyzeType_Smart)
+														.field("title")
+														.query(query)
+												)
+										);
+									} else {
+										b.must(must -> must
+												.multiMatch(match -> match
+														.analyzer(SearchConsts.IKAnalyzeType_Smart)
+														.fields("title^10", "fullText^1")
+														.query(query)
+												)
+										);
+									}
+								}
+								return b;
+							})
+					);
 			if (StringUtils.isNotEmpty(query)) {
-				s.highlight(h ->  
-					h.fields("title", f -> f.preTags("<font color='red'>").postTags("</font>"))
-						.fields("fullText", f -> f.preTags("<font color='red'>").postTags("</font>")));
+				s.highlight(h ->
+						h.fields("title", f -> f.preTags("<font color='red'>").postTags("</font>"))
+								.fields("fullText", f -> f.preTags("<font color='red'>").postTags("</font>")));
 			}
 			s.sort(sort -> sort.field(f -> f.field("_score").order(SortOrder.Desc)));
 			s.sort(sort -> sort.field(f -> f.field("publishDate").order(SortOrder.Desc))); // 排序: _score:desc + publishDate:desc
 //			s.source(source -> source.filter(f -> f.excludes("fullText"))); // 过滤字段
 			s.from((pr.getPageNumber() - 1) * pr.getPageSize()).size(pr.getPageSize());  // 分页
 			return s;
-		}, ESContentVO.class);
+		}, ObjectNode.class);
 		List<ESContentVO> list = sr.hits().hits().stream().map(hit -> {
-			ESContentVO vo = hit.source();
-			vo.set_publishDate(LocalDateTime.ofEpochSecond(vo.getPublishDate(), 0, ZoneOffset.UTC));
-			vo.set_createTime(LocalDateTime.ofEpochSecond(vo.getCreateTime(), 0, ZoneOffset.UTC));
+			ObjectNode source = hit.source();
+			ESContentVO vo = JacksonUtils.getObjectMapper().convertValue(source, ESContentVO.class);
+			vo.setHitScore(hit.score());
+			vo.setPublishDateInstance(LocalDateTime.ofEpochSecond(vo.getPublishDate(), 0, ZoneOffset.UTC));
+			vo.setCreateTimeInstance(LocalDateTime.ofEpochSecond(vo.getCreateTime(), 0, ZoneOffset.UTC));
 			CmsCatalog catalog = this.catalogService.getCatalog(vo.getCatalogId());
 			if (Objects.nonNull(catalog)) {
 				vo.setCatalogName(catalog.getName());
@@ -133,7 +151,7 @@ public class ContentIndexController extends BaseRestController {
 	@GetMapping("/content/{contentId}")
 	public R<?> selectDocumentDetail(@PathVariable(value = "contentId") @LongId Long contentId) throws ElasticsearchException, IOException {
 		this.checkElasticSearchEnabled();
-		ESContent source = this.searchService.getContentIndexDetail(contentId);
+		ESContent source = this.searchService.getContentDocDetail(contentId);
 		return R.ok(source);
 	}
 
@@ -141,7 +159,7 @@ public class ContentIndexController extends BaseRestController {
 	@DeleteMapping("/contents")
 	public R<?> deleteDocuments(@RequestBody @NotEmpty List<Long> contentIds) throws ElasticsearchException, IOException {
 		this.checkElasticSearchEnabled();
-		this.searchService.deleteContentIndex(contentIds);
+		this.searchService.deleteContentDoc(contentIds);
 		return R.ok();
 	}
 
@@ -151,10 +169,10 @@ public class ContentIndexController extends BaseRestController {
 		this.checkElasticSearchEnabled();
 		CmsContent content = this.contentService.getById(contentId);
 		Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
-		
+
 		IContentType ct = ContentCoreUtils.getContentType(content.getContentType());
 		IContent<?> icontent = ct.loadContent(content);
-		this.searchService.createContentIndex(icontent);
+		this.searchService.createContentDoc(icontent);
 		return R.ok();
 	}
 
@@ -163,7 +181,7 @@ public class ContentIndexController extends BaseRestController {
 	public R<?> rebuildAllIndex() {
 		this.checkElasticSearchEnabled();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		AsyncTask task = this.searchService.rebuildAllIndex(site);
+		AsyncTask task = this.searchService.rebuildAll(site);
 		return R.ok(task.getTaskId());
 	}
 }

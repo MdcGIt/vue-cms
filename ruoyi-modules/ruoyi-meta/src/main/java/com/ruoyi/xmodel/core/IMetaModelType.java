@@ -1,11 +1,5 @@
 package com.ruoyi.xmodel.core;
 
-import com.ruoyi.xmodel.core.impl.MetaControlType_Input;
-import com.ruoyi.xmodel.dto.FieldOptions;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
 /**
@@ -17,6 +11,11 @@ import java.util.List;
 public interface IMetaModelType {
 
     String BEAN_PREFIX = "MetaModelType_";
+
+    /**
+     * 数据表必须包含的字段
+     */
+    String MODEL_ID_FIELD_NAME = "model_id";
 
     /**
      * 类型唯一标识
@@ -36,13 +35,5 @@ public interface IMetaModelType {
     /**
      * 模型数据表固定字段
      */
-    default List<MetaModelField> getFixedFields() {
-        return List.of(FIELD_MODEL_ID);
-    }
-
-    /**
-     * 数据表必须包含的字段
-     */
-    MetaModelField FIELD_MODEL_ID = new MetaModelField("模型ID", "modelId",
-            "model_id", false, true, MetaControlType_Input.TYPE);
+    List<MetaModelField> getFixedFields();
 }

@@ -3,12 +3,16 @@ package com.ruoyi.cms.search.service;
 import java.io.IOException;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch.core.*;
-import co.elastic.clients.elasticsearch.indices.DeleteIndexRequest;
-import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
-import org.springframework.beans.factory.annotation.Value;
+import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import com.ruoyi.common.utils.Assert;
+import com.ruoyi.exmodel.service.ExModelService;
+import com.ruoyi.search.SearchConsts;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -55,22 +59,56 @@ public class ContentIndexService {
 
 	private final ElasticsearchClient esClient;
 
+	private final ExModelService extendModelService;
+
+	public void recreateIndex(CmsSite site) throws IOException {
+		// 先删除
+		esClient.indices().delete(fn -> fn.index(ESContent.INDEX_NAME)
+				.allowNoIndices(true).ignoreUnavailable(true));
+		// 判断栏目/站点配置是否生成索引
+		String enableIndex = EnableIndexProperty.getValue(site.getConfigProps(), null);
+		if (YesOrNo.isNo(enableIndex)) {
+			return;
+		}
+		// 创建索引
+		Map<String, Property> properties = new HashMap<>();
+		properties.put("catalogAncestors", Property.of(fn -> fn.keyword(b -> b
+				.ignoreAbove(500) // 指定字符串字段的最大长度。超过该长度的字符串将被截断或忽略。
+		)));
+		properties.put("contentType", Property.of(fn -> fn.keyword(b -> b
+				.ignoreAbove(20)
+		)));
+		properties.put("logo", Property.of(fn -> fn.keyword(b -> b
+				.ignoreAbove(256)
+		)));
+		properties.put("title", Property.of(fn -> fn.text(b -> b
+				.store(true) // 是否存储在索引中
+				.analyzer(SearchConsts.IKAnalyzeType_Smart)
+		)));
+		properties.put("fullText", Property.of(fn -> fn.text(b -> b
+				.analyzer(SearchConsts.IKAnalyzeType_Smart)
+		)));
+		CreateIndexResponse response = esClient.indices().create(fn -> fn
+				.index(ESContent.INDEX_NAME)
+				.mappings(mb -> mb.properties(properties)));
+		Assert.isTrue(response.acknowledged(), () -> new RuntimeException("Create Index[cms_content] failed."));
+	}
+
 	/**
-	 * 创建内容索引
+	 * 创建/更新内容索引Document
 	 */
-	public void createContentIndex(IContent<?> content) {
+	public void createContentDoc(IContent<?> content) {
 		// 判断栏目/站点配置是否生成索引
 		String enableIndex = EnableIndexProperty.getValue(content.getCatalog().getConfigProps(),
 				content.getSite().getConfigProps());
 		if (YesOrNo.isNo(enableIndex)) {
 			return;
 		}
-		// 创建/更新索引
 		try {
 			esClient.update(fn -> fn
 					.index(ESContent.INDEX_NAME)
 					.id(content.getContentEntity().getContentId().toString())
-					.doc(newESContent(content))
+					.doc(newESContentDoc(content))
 					.docAsUpsert(true), ESContent.class);
 		} catch (ElasticsearchException | IOException e) {
 			AsyncTaskManager.addErrMessage(e.getMessage());
@@ -78,75 +116,29 @@ public class ContentIndexService {
 		}
 	}
 
-	private ESContent newESContent(IContent<?> content) {
-		ESContent esContent = new ESContent();
-		esContent.setContentId(content.getContentEntity().getContentId());
-		esContent.setContentType(content.getContentEntity().getContentType());
-		esContent.setSiteId(content.getContentEntity().getSiteId());
-		esContent.setCatalogId(content.getContentEntity().getCatalogId());
-		esContent.setCatalogAncestors(content.getContentEntity().getCatalogAncestors());
-		esContent.setAuthor(content.getContentEntity().getAuthor());
-		esContent.setEditor(content.getContentEntity().getEditor());
-		esContent.setKeywords(StringUtils.join(content.getContentEntity().getKeywords()));
-		esContent.setTags(StringUtils.join(content.getContentEntity().getTags()));
-		esContent.setCreateTime(content.getContentEntity().getCreateTime().toEpochSecond(ZoneOffset.UTC));
-		esContent.setLogo(content.getContentEntity().getLogo());
-		esContent.setStatus(content.getContentEntity().getStatus());
-		esContent.setPublishDate(content.getContentEntity().getPublishDate().toEpochSecond(ZoneOffset.UTC));
-		esContent.setLink(InternalUrlUtils.getInternalUrl(InternalDataType_Content.ID, esContent.getContentId()));
-		esContent.setTitle(content.getContentEntity().getTitle());
-		esContent.setFullText(content.getFullText());
-		return esContent;
-	}
-
-	/**
-	 * 删除内容索引
-	 * 
-	 * @throws IOException
-	 * @throws ElasticsearchException
-	 */
-	public void deleteContentIndex(List<Long> contentIds) throws ElasticsearchException, IOException {
-		List<BulkOperation> bulkOperationList = contentIds.stream().map(contentId -> BulkOperation
-				.of(b -> b.delete(dq -> dq.index(ESContent.INDEX_NAME).id(contentId.toString())))).toList();
-		this.esClient.bulk(bulk -> bulk.operations(bulkOperationList));
-	}
-
-	public void rebuildCatalogIndex(CmsCatalog catalog, boolean includeChild) {
-		CmsSite site = this.siteService.getSite(catalog.getSiteId());
-		String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
-		if (YesOrNo.isYes(enableIndex)) {
-			LambdaQueryChainWrapper<CmsContent> q = this.contentService.lambdaQuery()
-					.ne(CmsContent::getCopyType, ContentCopyType.Mapping)
-					.eq(CmsContent::getStatus, ContentStatus.PUBLISHED)
-					.eq(!includeChild, CmsContent::getCatalogId, catalog.getCatalogId())
-					.likeRight(includeChild, CmsContent::getCatalogAncestors, catalog.getAncestors());
-			Long total = q.count();
-			int pageSize = 200;
-			for (int i = 0; i * pageSize < total; i++) {
-				Page<CmsContent> page = contentService.page(new Page<>(i, pageSize, false), q);
-				batchContentIndex(site, catalog, page.getRecords());
-			}
+	private void batchContentDoc(CmsSite site, CmsCatalog catalog, List<CmsContent> contents) {
+		if (contents.isEmpty()) {
+			return;
 		}
-	}
-
-	private void batchContentIndex(CmsSite site, CmsCatalog catalog, List<CmsContent> contents) {
 		List<BulkOperation> bulkOperationList = new ArrayList<>(contents.size());
 		for (CmsContent xContent : contents) {
 			// 判断栏目/站点配置是否生成索引
-			String enableIndex = EnableIndexProperty.getValue(
-					catalogService.getCatalog(xContent.getCatalogId()).getConfigProps(), site.getConfigProps());
+			String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
 			if (YesOrNo.isYes(enableIndex)) {
 				IContentType contentType = ContentCoreUtils.getContentType(xContent.getContentType());
 				IContent<?> icontent = contentType.loadContent(xContent);
 				BulkOperation bulkOperation = BulkOperation.of(b ->
-						b.update(up -> up.index(ESContent.INDEX_NAME)
-									.id(xContent.getContentId().toString())
-									.action(action -> action.docAsUpsert(true).doc(newESContent(icontent))))
+								b.update(up -> up.index(ESContent.INDEX_NAME)
+										.id(xContent.getContentId().toString())
+										.action(action -> action.docAsUpsert(true).doc(newESContentDoc(icontent))))
 //						b.create(co -> co.index(ESContent.INDEX_NAME)
 //						.id(xContent.getContentId().toString()).document(newESContent(icontent)))
 				);
 				bulkOperationList.add(bulkOperation);
 			}
+		}
+		if (bulkOperationList.isEmpty()) {
+			return;
 		}
 		// 批量新增索引
 		try {
@@ -158,38 +150,59 @@ public class ContentIndexService {
 	}
 
 	/**
-	 * 重建指定站点所有内容索引
-	 * 
-	 * @return
+	 * 删除内容索引
 	 */
-	public AsyncTask rebuildAllIndex(CmsSite site) {
+	public void deleteContentDoc(List<Long> contentIds) throws ElasticsearchException, IOException {
+		List<BulkOperation> bulkOperationList = contentIds.stream().map(contentId -> BulkOperation
+				.of(b -> b.delete(dq -> dq.index(ESContent.INDEX_NAME).id(contentId.toString())))).toList();
+		this.esClient.bulk(bulk -> bulk.operations(bulkOperationList));
+	}
+
+	public void rebuildCatalog(CmsCatalog catalog, boolean includeChild) {
+		CmsSite site = this.siteService.getSite(catalog.getSiteId());
+		String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
+		if (YesOrNo.isYes(enableIndex)) {
+			LambdaQueryChainWrapper<CmsContent> q = this.contentService.lambdaQuery()
+					.ne(CmsContent::getCopyType, ContentCopyType.Mapping)
+					.eq(CmsContent::getStatus, ContentStatus.PUBLISHED)
+					.eq(!includeChild, CmsContent::getCatalogId, catalog.getCatalogId())
+					.likeRight(includeChild, CmsContent::getCatalogAncestors, catalog.getAncestors());
+			long total = q.count();
+			long pageSize = 200;
+			for (int i = 0; i * pageSize < total; i++) {
+				Page<CmsContent> page = contentService.page(new Page<>(i, pageSize, false), q);
+				batchContentDoc(site, catalog, page.getRecords());
+			}
+		}
+	}
+
+	/**
+	 * 重建指定站点所有内容索引
+	 */
+	public AsyncTask rebuildAll(CmsSite site) {
 		AsyncTask asyncTask = new AsyncTask() {
 
 			@Override
 			public void run0() throws Exception {
-				// 先删除索引
-				esClient.indices().delete(fn -> fn.index(ESContent.INDEX_NAME)
-						.allowNoIndices(true).ignoreUnavailable(true));
-				// 重建索引
+				// 先重建索引
+				recreateIndex(site);
+
 				List<CmsCatalog> catalogs = catalogService.list();
 				for (CmsCatalog catalog : catalogs) {
-					String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
-					if (YesOrNo.isYes(enableIndex)) {
-						LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<CmsContent>()
-								.eq(CmsContent::getSiteId, site.getSiteId())
-								.ne(CmsContent::getCopyType, ContentCopyType.Mapping)
-								.eq(CmsContent::getStatus, ContentStatus.PUBLISHED)
-								.eq(CmsContent::getCatalogId, catalog.getCatalogId());
-						long total = contentService.count(q);
-						int pageSize = 200;
-						int count = 1;
-						for (int i = 0; i * pageSize < total; i++) {
-							this.setProgressInfo((int) (count++ * 100 / total),
-									"正在重建栏目【" + catalog.getName() + "】内容索引");
-							Page<CmsContent> page = contentService.page(new Page<>(i, pageSize, false), q);
-							batchContentIndex(site, catalog, page.getRecords());
-							AsyncTaskManager.checkInterrupt(); // 允许中断
-						}
+					LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<CmsContent>()
+							.eq(CmsContent::getSiteId, site.getSiteId())
+							.ne(CmsContent::getCopyType, ContentCopyType.Mapping)
+							.eq(CmsContent::getStatus, ContentStatus.PUBLISHED)
+							.eq(CmsContent::getCatalogId, catalog.getCatalogId());
+					long total = contentService.count(q);
+					int pageSize = 200;
+					int count = 1;
+					for (int i = 0; (long) i * pageSize < total; i++) {
+						this.setProgressInfo((int) (count++ * 100 / total),
+								"正在重建栏目【" + catalog.getName() + "】内容索引");
+						Page<CmsContent> page = contentService.page(new Page<>(i, pageSize, false), q);
+						batchContentDoc(site, catalog, page.getRecords());
+						AsyncTaskManager.checkInterrupt(); // 允许中断
 					}
 				}
 				this.setProgressInfo(100, "重建全站索引完成");
@@ -203,15 +216,38 @@ public class ContentIndexService {
 
 	/**
 	 * 获取指定内容索引详情
-	 * 
-	 * @param contentId
-	 * @return
-	 * @throws ElasticsearchException
-	 * @throws IOException
+	 *
+	 * @param contentId 内容ID
+	 * @return 索引Document详情
 	 */
-	public ESContent getContentIndexDetail(Long contentId) throws ElasticsearchException, IOException {
+	public ESContent getContentDocDetail(Long contentId) throws ElasticsearchException, IOException {
 		GetResponse<ESContent> res = this.esClient.get(qb -> qb.index(ESContent.INDEX_NAME).id(contentId.toString()),
 				ESContent.class);
 		return res.source();
+	}
+
+	private Map<String, Object> newESContentDoc(IContent<?> content) {
+		Map<String, Object> data = new HashMap<>();
+		data.put("contentId", content.getContentEntity().getContentId());
+		data.put("contentType", content.getContentEntity().getContentType());
+		data.put("siteId", content.getSiteId());
+		data.put("catalogId", content.getCatalogId());
+		data.put("catalogAncestors", content.getContentEntity().getCatalogAncestors());
+		data.put("author", content.getContentEntity().getAuthor());
+		data.put("editor", content.getContentEntity().getEditor());
+		data.put("keywords", StringUtils.join(content.getContentEntity().getKeywords()));
+		data.put("tags", StringUtils.join(content.getContentEntity().getTags()));
+		data.put("createTime", content.getContentEntity().getCreateTime().toEpochSecond(ZoneOffset.UTC));
+		data.put("logo", content.getContentEntity().getLogo());
+		data.put("status", content.getContentEntity().getStatus());
+		data.put("publishDate", content.getContentEntity().getPublishDate().toEpochSecond(ZoneOffset.UTC));
+		data.put("link", InternalUrlUtils.getInternalUrl(InternalDataType_Content.ID, content.getContentEntity().getContentId()));
+		data.put("title", content.getContentEntity().getTitle());
+		data.put("fullText", content.getFullText());
+		// 扩展模型数据
+		this.extendModelService.getModelData(content.getContentEntity()).forEach(fd -> {
+			data.put(fd.getFieldName(), fd.getValue());
+		});
+		return data;
 	}
 }

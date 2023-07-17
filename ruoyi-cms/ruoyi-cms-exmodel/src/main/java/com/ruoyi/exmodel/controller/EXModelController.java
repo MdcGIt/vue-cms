@@ -14,27 +14,20 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.exmodel.CmsExtendMetaModelType;
 import com.ruoyi.exmodel.domain.dto.XModelFieldDataDTO;
 import com.ruoyi.exmodel.permission.EXModelPriv;
+import com.ruoyi.exmodel.service.ExModelService;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
-import com.ruoyi.xmodel.core.impl.MetaControlType_Checkbox;
 import com.ruoyi.xmodel.domain.XModel;
-import com.ruoyi.xmodel.domain.XModelField;
 import com.ruoyi.xmodel.dto.XModelDTO;
-import com.ruoyi.xmodel.service.IModelDataService;
-import com.ruoyi.xmodel.service.IModelFieldService;
 import com.ruoyi.xmodel.service.IModelService;
-import com.ruoyi.xmodel.util.XModelUtils;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.MapUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -51,11 +44,9 @@ public class EXModelController extends BaseRestController {
 
 	private final IModelService modelService;
 
-	private final IModelFieldService modelFieldService;
-
-	private final IModelDataService modelDataService;
-
 	private final ISiteService siteService;
+
+	private final ExModelService extendModelService;
 
 	@Priv(type = AdminUserType.TYPE, value = EXModelPriv.View)
 	@GetMapping
@@ -120,29 +111,7 @@ public class EXModelController extends BaseRestController {
 	public R<?> getModelData(@RequestParam @LongId Long modelId,
 							 @RequestParam String dataType,
 							 @RequestParam(required = false, defaultValue = "") String dataId) {
-		Map<String, Object> data = this.modelDataService.getModelDataByPkValue(modelId,
-				Map.of(
-						CmsExtendMetaModelType.FIELD_MODEL_ID.getCode(), modelId,
-						CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), dataType,
-						CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
-				));
-
-		List<XModelFieldDataDTO> list = new ArrayList<>();
-		List<XModelField> fields = this.modelFieldService.lambdaQuery().eq(XModelField::getModelId, modelId).list();
-		for (XModelField f : fields) {
-			String fv = MapUtils.getString(data, f.getCode(), f.getDefaultValue());
-			XModelFieldDataDTO dto = XModelFieldDataDTO.newInstance(f, fv);
-			dto.setOptions(XModelUtils.getOptions(f.getOptions()));
-			if (MetaControlType_Checkbox.TYPE.equals(dto.getControlType())) {
-				if (dto.getValue() == null || StringUtils.isBlank(dto.getValue().toString())) {
-					dto.setValue(new String[0]);
-				} else {
-					String[] value = StringUtils.split(dto.getValue().toString(), StringUtils.COMMA);
-					dto.setValue(value);
-				}
-			}
-			list.add(dto);
-		}
-		return R.ok(list);
+		List<XModelFieldDataDTO> data = extendModelService.getModelData(modelId, dataType, dataId);
+		return R.ok(data);
 	}
 }
