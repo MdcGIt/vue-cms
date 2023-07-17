@@ -72,6 +72,11 @@ public class AudioContentType implements IContentType {
 	}
 
 	@Override
+	public IContent<?> newContent() {
+		return new AudioContent();
+	}
+
+	@Override
 	public IContent<?> loadContent(CmsContent xContent) {
 		AudioContent audioContent = new AudioContent();
 		audioContent.setContentEntity(xContent);

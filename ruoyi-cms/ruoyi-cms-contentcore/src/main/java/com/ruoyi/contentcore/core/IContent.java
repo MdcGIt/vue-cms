@@ -45,6 +45,8 @@ public interface IContent<T> {
 	 * 获取内容Entity
 	 */
 	CmsContent getContentEntity();
+
+	void setContentEntity(CmsContent contentEntity);
 	
 	/**
 	 * 获取内容扩展Entitiy

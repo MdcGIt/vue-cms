@@ -42,6 +42,10 @@ public class ContentStatus extends FixedDictType {
 	public static boolean isPublished(String v) {
 		return PUBLISHED.equals(v);
 	}
+
+	public static boolean isToPublish(String v) {
+		return TO_PUBLISHED.equals(v);
+	}
 	
 	public static boolean isToPublishOrPublished(String v) {
 		return PUBLISHED.equals(v) || TO_PUBLISHED.equals(v);

@@ -365,4 +365,10 @@ public class SiteController extends BaseRestController {
             return R.fail(e.getMessage());
         }
     }
+
+    @Priv(type = AdminUserType.TYPE)
+    @PostMapping("/export")
+    public void exportSiteZipFile() {
+
+    }
 }

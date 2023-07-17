@@ -67,6 +67,11 @@ public class ArticleContentType implements IContentType {
     }
 
     @Override
+    public IContent<?> newContent() {
+        return new ArticleContent();
+    }
+
+    @Override
     public IContent<?> loadContent(CmsContent xContent) {
         ArticleContent articleContent = new ArticleContent();
         articleContent.setContentEntity(xContent);

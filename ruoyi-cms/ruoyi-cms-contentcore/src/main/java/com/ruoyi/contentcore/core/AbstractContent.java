@@ -89,6 +89,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		return content;
 	}
 
+	@Override
 	public void setContentEntity(CmsContent content) {
 		this.content = content;
 	}
@@ -191,8 +192,9 @@ public abstract class AbstractContent<T> implements IContent<T> {
 		if (content.getPublishDate() == null) {
 			content.setPublishDate(LocalDateTime.now());
 			update = true;
-		} else if (content.getPublishDate().isAfter(LocalDateTime.now())) {
-			return false; // 指定了发布时间的内容未到发布时间直接跳过
+		} else if (content.getPublishDate().isAfter(LocalDateTime.now())
+				&& ContentStatus.isToPublish(content.getStatus())) {
+			return false; // 待发布内容并且指定了发布时间的未到发布时间直接跳过
 		}
 		if (!ContentStatus.isPublished(content.getStatus())) {
 			content.setStatus(ContentStatus.PUBLISHED);

@@ -72,6 +72,11 @@ public class ImageContentType implements IContentType {
 	}
 
 	@Override
+	public IContent<?> newContent() {
+		return new ImageContent();
+	}
+
+	@Override
 	public IContent<?> loadContent(CmsContent xContent) {
 		ImageContent imageContent = new ImageContent();
 		imageContent.setContentEntity(xContent);

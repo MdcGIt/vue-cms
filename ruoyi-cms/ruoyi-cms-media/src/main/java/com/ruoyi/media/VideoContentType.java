@@ -72,6 +72,11 @@ public class VideoContentType implements IContentType {
 	}
 
 	@Override
+	public IContent<?> newContent() {
+		return new VideoContent();
+	}
+
+	@Override
 	public IContent<?> loadContent(CmsContent xContent) {
 		VideoContent videoContent = new VideoContent();
 		videoContent.setContentEntity(xContent);
