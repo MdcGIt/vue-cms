@@ -1,6 +1,6 @@
 package com.ruoyi.contentcore.controller;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
+import cn.dev33.satoken.annotation.SaMode;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,6 +34,7 @@ import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.user.preference.IncludeChildContentPreference;
 import com.ruoyi.contentcore.user.preference.ShowContentSubTitlePreference;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.system.permission.PermissionUtils;
@@ -63,7 +64,11 @@ import java.util.Objects;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
+@Priv(
+	type = AdminUserType.TYPE,
+	value = { ContentCorePriv.CatalogView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+	mode = SaMode.AND
+)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/content")
@@ -133,7 +138,6 @@ public class ContentController extends BaseRestController {
 	/**
 	 * 内容编辑数据初始化
 	 */
-	@Priv(type = AdminUserType.TYPE, value = "Catalog:View:${#catalogId}")
 	@GetMapping("/init/{catalogId}/{contentType}/{contentId}")
 	public R<ContentVO> initContentEditor(@PathVariable("catalogId") @LongId Long catalogId,
 			@PathVariable("contentType") String contentType, @PathVariable("contentId") Long contentId) {

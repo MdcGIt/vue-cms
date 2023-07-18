@@ -3,6 +3,8 @@ package com.ruoyi.contentcore.controller;
 import java.io.IOException;
 import java.util.List;
 
+import cn.dev33.satoken.annotation.SaMode;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +40,11 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.FileView)
+@Priv(
+	type = AdminUserType.TYPE,
+	value = { ContentCorePriv.FileView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+	mode = SaMode.AND
+)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/file")

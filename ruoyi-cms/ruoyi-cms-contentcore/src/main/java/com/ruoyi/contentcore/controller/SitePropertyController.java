@@ -3,6 +3,8 @@ package com.ruoyi.contentcore.controller;
 import java.io.IOException;
 import java.util.List;
 
+import cn.dev33.satoken.annotation.SaMode;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +41,6 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
 @RestController
 @RequestMapping("/cms/site/prop")
 @RequiredArgsConstructor
@@ -56,6 +57,7 @@ public class SitePropertyController extends BaseRestController {
 	 *            属性名称/编码
 	 * @return
 	 */
+	@Priv(type = AdminUserType.TYPE, value = "Site:View:${#siteId}")
 	@GetMapping("/list")
 	public R<?> list(@RequestParam("siteId") String siteId,
 			@RequestParam(value = "query", required = false) String query) {
@@ -75,6 +77,7 @@ public class SitePropertyController extends BaseRestController {
 	 *            属性ID
 	 * @return
 	 */
+	@Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
 	@GetMapping(value = "/{siteId}")
 	public R<?> getInfo(@PathVariable @LongId Long propertyId) {
 		CmsSiteProperty siteProperty = sitePropertyService.getById(propertyId);
@@ -91,6 +94,7 @@ public class SitePropertyController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
 	@Log(title = "新增站点属性", businessType = BusinessType.INSERT)
 	@PostMapping
 	public R<String> addSiteProperty(@RequestBody @Validated CmsSiteProperty siteProperty) throws IOException {
@@ -105,6 +109,7 @@ public class SitePropertyController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
 	@Log(title = "编辑站点属性", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public R<String> editSiteProperty(@RequestBody @Validated CmsSiteProperty siteProperty) throws IOException {
@@ -120,6 +125,7 @@ public class SitePropertyController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
 	@Log(title = "删除站点属性", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<String> removeSiteProperties(@RequestBody @NotEmpty List<Long> propertyIds) throws IOException {

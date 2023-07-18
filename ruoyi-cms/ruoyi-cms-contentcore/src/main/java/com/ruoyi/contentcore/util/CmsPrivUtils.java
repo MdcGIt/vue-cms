@@ -3,6 +3,7 @@ package com.ruoyi.contentcore.util;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.contentcore.perms.BitSetPrivItem;
+import com.ruoyi.contentcore.perms.SitePermissionType;
 import com.ruoyi.system.domain.SysPermission;
 
 import java.util.*;
@@ -14,6 +15,14 @@ import java.util.*;
  * @email 190785909@qq.com
  */
 public class CmsPrivUtils {
+
+    /**
+     * 注解`@Priv`权限验证判断站点权限用
+     */
+    public static final String PRIV_SITE_VIEW_PLACEHOLDER = SitePermissionType.ID + ":View:${#_header['CurrentSite']}";
+
+    public static final String PRIV_SITE_EDIT_PLACEHOLDER = SitePermissionType.ID + ":Edit:${#_header['CurrentSite']}";
+
 
     /**
      * BitSet权限序列化

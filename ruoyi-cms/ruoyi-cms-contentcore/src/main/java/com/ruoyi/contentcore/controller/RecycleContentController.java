@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.controller;
 
+import cn.dev33.satoken.annotation.SaMode;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.log.annotation.Log;
@@ -13,6 +14,7 @@ import com.ruoyi.contentcore.mapper.CmsContentMapper;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,7 +30,11 @@ import java.util.List;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
+@Priv(
+	type = AdminUserType.TYPE,
+	value = { ContentCorePriv.ContentView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+	mode = SaMode.AND
+)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/content/recycle")
