@@ -133,4 +133,9 @@ public class ContentAttribute extends FixedDictType {
 				.collect(Collectors.toMap(SysDictData::getDictValue, d -> Integer.valueOf(d.getRemark())));
 		return map.get(attr);
 	}
+
+    public static boolean hasAttribute(int attributes, String attrStr) {
+		ArrayList<Integer> binaryList = NumberUtils.getBinaryList(attributes);
+		return binaryList.contains(bit(attrStr));
+    }
 }

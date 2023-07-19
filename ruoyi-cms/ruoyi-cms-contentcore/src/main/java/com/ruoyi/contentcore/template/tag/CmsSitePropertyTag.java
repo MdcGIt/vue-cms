@@ -54,6 +54,7 @@ public class CmsSitePropertyTag extends AbstractListTag {
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
 
 		LambdaQueryWrapper<CmsSiteProperty> q = new LambdaQueryWrapper<CmsSiteProperty>()
+				.eq(CmsSiteProperty::getSiteId, siteId)
 				.eq(StringUtils.isNotEmpty(code), CmsSiteProperty::getPropCode, code);
 		q.apply(StringUtils.isNotEmpty(condition), condition);
 		Page<CmsSiteProperty> pageResult = this.sitePropertyService.page(new Page<>(pageIndex, size, page), q);

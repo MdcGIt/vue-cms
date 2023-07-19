@@ -63,11 +63,7 @@ public class CmsAdvertisementTag extends AbstractListTag {
 		if (pageIndex > 1 & pageResult.getRecords().size() == 0) {
 			throw new TemplateException(StringUtils.messageFormat("Page data empty: pageIndex = {0}", pageIndex), env) ;
 		}
-		TemplateContext context = FreeMarkerUtils.getTemplateContext(env);
-		 List<AdvertisementVO> list = pageResult.getRecords().stream().map(ad -> new AdvertisementVO(ad)
-				.dealResourcePath(context.getPublishPipeCode(), context.isPreview())
-				.dealRedirectUrl(context.getPublishPipeCode(), context.isPreview()))
-			.toList();
+		List<AdvertisementVO> list = pageResult.getRecords().stream().map(AdvertisementVO::new).toList();
 		return TagPageData.of(list, pageResult.getTotal());
 	}
 

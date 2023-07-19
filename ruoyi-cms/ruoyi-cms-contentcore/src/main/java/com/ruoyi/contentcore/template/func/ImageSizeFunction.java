@@ -1,9 +1,12 @@
 package com.ruoyi.contentcore.template.func;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import freemarker.template.TemplateBooleanModel;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.staticize.FreeMarkerUtils;
@@ -52,7 +55,7 @@ public class ImageSizeFunction extends AbstractFunc {
 
 	@Override
 	public Object exec0(Object... args) throws TemplateModelException {
-		if (args.length != 3) {
+		if (args.length < 3) {
 			return StringUtils.EMPTY;
 		}
 		String iurl = ((SimpleScalar) args[0]).getAsString();
@@ -63,6 +66,10 @@ public class ImageSizeFunction extends AbstractFunc {
 		}
 		if (!InternalUrlUtils.isInternalUrl(iurl)) {
 			return iurl; // 非内部链接直接返回
+		}
+		boolean crop = false; // 是否在缩放后进行居中裁剪，默认：false
+		if (args.length == 4) {
+			crop = ((TemplateBooleanModel) args[3]).getAsBoolean();
 		}
 		TemplateContext context = FreeMarkerUtils.getTemplateContext(Environment.getCurrentEnvironment());
 		InternalURL internalUrl = InternalUrlUtils.parseInternalUrl(iurl);
@@ -75,8 +82,12 @@ public class ImageSizeFunction extends AbstractFunc {
 				String siteResourceRoot = SiteUtils.getSiteResourceRoot(siteService.getSite(resource.getSiteId()));
 				String destPath = StringUtils.substringBeforeLast(resource.getPath(), ".") + "_" + width + "x" + height
 						+ "." + StringUtils.substringAfterLast(resource.getPath(), ".");
-				Thumbnails.of(siteResourceRoot + resource.getPath()).size(width, height)
-						.toFile(siteResourceRoot + destPath);
+				Thumbnails.Builder<File> builder = Thumbnails.of(siteResourceRoot + resource.getPath())
+						.size(width, height);
+				if (crop) {
+					builder.crop(Positions.CENTER);
+				}
+				builder.toFile(siteResourceRoot + destPath);
 				return StringUtils.substringBeforeLast(actualUrl, ".") + "_" + width + "x" + height + "."
 						+ StringUtils.substringAfterLast(actualUrl, ".");
 			}
@@ -90,6 +101,9 @@ public class ImageSizeFunction extends AbstractFunc {
 	public List<FuncArg> getFuncArgs() {
 		return List.of(
 				new FuncArg("图片资源内部路径", FuncArgType.String, true, "仅支持处理内部资源图片(iurl://)"),
-				new FuncArg("宽度", FuncArgType.Int, true, null), new FuncArg("高度", FuncArgType.Int, true, null));
+				new FuncArg("宽度", FuncArgType.Int, true, null),
+				new FuncArg("高度", FuncArgType.Int, true, null),
+				new FuncArg("是否居中裁剪", FuncArgType.Boolean, false, null)
+			);
 	}
 }
