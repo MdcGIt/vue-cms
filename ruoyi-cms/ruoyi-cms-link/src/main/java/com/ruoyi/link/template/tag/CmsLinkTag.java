@@ -3,6 +3,7 @@ package com.ruoyi.link.template.tag;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.staticize.FreeMarkerUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +47,10 @@ public class CmsLinkTag extends AbstractListTag {
 		if (StringUtils.isEmpty(code)) {
 			throw new TemplateException("属性code不能为空", env);
 		}
-		CmsLinkGroup group = this.linkGroupService.getOne(new LambdaQueryWrapper<CmsLinkGroup>().eq(CmsLinkGroup::getCode, code));
+		long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
+		CmsLinkGroup group = this.linkGroupService.getOne(new LambdaQueryWrapper<CmsLinkGroup>()
+				.eq(CmsLinkGroup::getSiteId, siteId)
+				.eq(CmsLinkGroup::getCode, code));
 		if (group == null) {
 			throw new TemplateException("获取分组数据失败：" + code, env);
 		}
