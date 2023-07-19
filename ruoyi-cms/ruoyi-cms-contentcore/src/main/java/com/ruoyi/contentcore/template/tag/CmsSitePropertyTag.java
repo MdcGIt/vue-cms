@@ -38,7 +38,7 @@ public class CmsSitePropertyTag extends AbstractListTag {
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = super.getTagAttrs();
 		tagAttrs.add(new TagAttr(TagAttr_SiteId, false, TagAttrDataType.INTEGER, "站点ID，默认从模板变量中获取${Site.siteId}"));
-		tagAttrs.add(new TagAttr(TagAttr_Code, false, TagAttrDataType.INTEGER, "属性编码"));
+		tagAttrs.add(new TagAttr(TagAttr_Code, false, TagAttrDataType.STRING, "属性编码"));
 		return tagAttrs;
 	}
 
