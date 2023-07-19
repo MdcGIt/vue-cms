@@ -239,7 +239,7 @@ public class CatalogController extends BaseRestController {
 			throw ContentCoreErrorCode.CATALOG_CANNOT_PUBLISH.exception();
 		}
 		AsyncTask task = this.publishService.publishCatalog(catalog, dto.getPublishChild(), dto.getPublishDetail(),
-				dto.getPublishStatus());
+				dto.getPublishStatus(), StpAdminUtil.getLoginUser());
 		return R.ok(task.getTaskId());
 	}
 

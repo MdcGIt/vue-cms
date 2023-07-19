@@ -204,7 +204,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 			this.getContentService().updateById(content);
 		}
 		// 静态化
-		this.getPublishService().contentStaticize(this);
+		this.getPublishService().asyncPublishContent(this);
 		return true;
 	}
 
@@ -341,7 +341,7 @@ public abstract class AbstractContent<T> implements IContent<T> {
 						.split(CatalogUtils.ANCESTORS_SPLITER);
 				for (String catalogId : catalogIds) {
 					this.getPublishService().publishCatalog(this.getCatalogService().getCatalog(Long.valueOf(catalogId)),
-							false, false, null);
+							false, false, null, this.getOperator());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

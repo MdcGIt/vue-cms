@@ -32,18 +32,30 @@ public class AsyncTaskManager {
 	@Resource(name = AsyncConfig.COMMON_EXECUTOR_BEAN)
     private ThreadPoolTaskExecutor taskExecutor;
 
+
+	public void execute(AsyncTask asyncTask) {
+		execute(asyncTask, false);
+	}
+
+	public void executeIgnoreIfExists(AsyncTask asyncTask) {
+		this.execute(asyncTask, true);
+	}
+
     /**
      * 提交异步任务
      * 
      * @param asyncTask 异步任务构造器
      * @return taskInfo
      */
-    public synchronized void execute(AsyncTask asyncTask) {
+    public synchronized void execute(AsyncTask asyncTask, boolean ignoreExists) {
     	if (StringUtils.isEmpty(asyncTask.getTaskId())) {
     		asyncTask.setTaskId(this.generateTaskId());
     	}
     	AsyncTask task = this.asyncTaskMap.get(asyncTask.getTaskId());
     	if (task != null && task.isAlive()) {
+			if (ignoreExists) {
+				return;
+			}
     		throw CommonErrorCode.ASYNC_TASK_RUNNING.exception(asyncTask.getTaskId());
     	}
         this.asyncTaskMap.put(asyncTask.getTaskId(), asyncTask);
