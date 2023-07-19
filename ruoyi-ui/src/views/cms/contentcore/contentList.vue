@@ -116,13 +116,11 @@
       :height="tableHeight"
       :max-height="tableMaxHeight"
       @row-click="handleRowClick"
+      @cell-dblclick="handleEdit"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column :label="$t('CMS.Content.Title')" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <el-link type="primary" @click="handleEdit(scope.row)" class="link-type">
-            <span>{{ scope.row.title }}</span>
-          </el-link>
           <span class="content_attr" v-if="scope.row.topFlag>0" :title="$t('CMS.Content.SetTop')">[<svg-icon icon-class="top" />]</span>
           <span 
             v-for="dict in dict.type.CMSContentAttribute"
@@ -130,6 +128,10 @@
             :title="dict.label">
             <span class="content_attr" v-if="scope.row.attributes.indexOf(dict.value)>-1">[<svg-icon :icon-class="dict.value" />]</span>
           </span>
+          {{ scope.row.title }}
+          <!-- <el-link type="primary" @click="handleEdit(scope.row)" :title="scope.row.title" class="link-type">
+            {{ scope.row.title }}
+          </el-link> -->
         </template>
       </el-table-column>
       <el-table-column :label="$t('CMS.Content.ContentType')" width="110" align="center" prop="contentType" :formatter="contentTypeFormat" />
@@ -149,6 +151,11 @@
         width="300"
         class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="small"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-button>
           <el-button 
             size="small"
             type="text"
@@ -159,11 +166,6 @@
             type="text"
             icon="el-icon-view"
             @click="handlePreview(scope.row)">{{ $t('CMS.ContentCore.Preview') }}</el-button>
-          <el-button
-            size="small"
-            type="text"
-            icon="el-icon-sort"
-            @click="handleSort(scope.row)">{{ $t('Common.Sort') }}</el-button>
           <el-button 
             size="small"
             type="text"
@@ -177,8 +179,8 @@
           <el-dropdown size="small">
             <el-link :underline="false" class="row-more-btn" icon="el-icon-more"></el-link>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-edit" @click.native="handleEdit(scope.row)">{{ $t('Common.Edit') }}</el-dropdown-item>
               <el-dropdown-item icon="el-icon-delete" @click.native="handleDelete(scope.row)">{{ $t('Common.Delete') }}</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-sort" @click.native="handleSort(scope.row)">{{ $t('Common.Sort') }}</el-dropdown-item>
               <el-dropdown-item v-show="scope.row.topFlag<=0" icon="el-icon-top" @click.native="handleSetTop(scope.row)">{{ $t('CMS.Content.SetTop') }}</el-dropdown-item>
               <el-dropdown-item v-show="scope.row.topFlag>0" icon="el-icon-bottom" @click.native="handleCancelTop(scope.row)">{{ $t('CMS.Content.CancelTop') }}</el-dropdown-item>
               <el-dropdown-item icon="el-icon-document-copy" @click.native="handleCopy(scope.row)">{{ $t('Common.Copy') }}</el-dropdown-item>
