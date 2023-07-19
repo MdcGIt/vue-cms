@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.controller;
 
+import cn.dev33.satoken.annotation.SaMode;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
@@ -21,6 +22,7 @@ import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.IResourceService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.system.security.AdminUserType;
@@ -47,7 +49,11 @@ import java.util.Map;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ResourceView)
+@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.ResourceView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+)
 @RestController
 @RequestMapping("/cms/resource")
 @RequiredArgsConstructor

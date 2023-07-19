@@ -7,9 +7,11 @@ import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.strategy.SaStrategy;
 import com.ruoyi.common.security.IUserType;
 import com.ruoyi.common.security.SecurityService;
+import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.exception.SecurityErrorCode;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.ServletUtils;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -90,7 +92,7 @@ public class SaCheckAspect {
 
             StpLogic stpLogic = SaManager.getStpLogic(priv.type(), false);
             stpLogic.checkLogin();
-            if (priv.value().length > 0) {
+            if (!SecurityUtils.isSuperAdmin(stpLogic.getLoginIdAsLong()) && priv.value().length > 0) {
                 String[] perms = this.parsePerms(priv.value(), joinPoint.getTarget(), method, joinPoint.getArgs());
                 if (priv.mode() == SaMode.AND) {
                     stpLogic.checkPermissionAnd(perms);
@@ -139,6 +141,8 @@ public class SaCheckAspect {
     private String[] parsePerms(String[] perms, Object rootObj, Method method, Object... args) {
         MethodBasedEvaluationContext evaluationContext = new MethodBasedEvaluationContext(rootObj,
                 method, args, AuthEvaluator.PARAMETER_NAME_DISCOVERER);
+        evaluationContext.setVariable("_header", ServletUtils.getHeaderCaseInsensitiveMap(ServletUtils.getRequest()));
+        evaluationContext.setVariable("_cookie", ServletUtils.getCookieValues(ServletUtils.getRequest()));
         for (int i = 0; i < perms.length; i++) {
             Expression expression = this.authEvaluator.parseExpression(perms[i]);
             if (expression != null) {

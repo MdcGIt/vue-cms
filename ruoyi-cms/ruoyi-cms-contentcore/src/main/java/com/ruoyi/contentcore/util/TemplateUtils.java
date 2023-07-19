@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
+import com.ruoyi.contentcore.properties.SiteApiUrlProperty;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.staticize.core.TemplateContext;
@@ -34,6 +35,11 @@ public class TemplateUtils {
 	 * 模板变量：资源文件访问前缀
 	 */
 	public final static String TemplateVariable_ResourcePrefix = "ResourcePrefix";
+
+	/**
+	 * 模板变量：站点API访问前缀
+	 */
+	public final static String TemplateVariable_ApiPrefix = "ApiPrefix";
 
 	/**
 	 * 模板变量：站点信息
@@ -129,6 +135,8 @@ public class TemplateUtils {
 		context.getVariables().put(TemplateVariable_Prefix, SiteUtils.getPublishPipePrefix(site, context.getPublishPipeCode(), context.isPreview()));
 		// 资源文件访问前缀
 		context.getVariables().put(TemplateVariable_ResourcePrefix, SiteUtils.getResourcePrefix(site, context.isPreview()));
+		// 站点API访问前缀
+		context.getVariables().put(TemplateVariable_ApiPrefix, SiteApiUrlProperty.getValue(site, context.getPublishPipeCode()));
 		// 添加站点数据
 		addSiteVariables(site, context);
 	}

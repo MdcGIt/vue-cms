@@ -236,7 +236,7 @@ public class SiteController extends BaseRestController {
         Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
 
         if (!dto.isPublishIndex()) {
-            AsyncTask task = publishService.publishAll(site, dto.getContentStatus());
+            AsyncTask task = publishService.publishAll(site, dto.getContentStatus(), StpAdminUtil.getLoginUser());
             return R.ok(task.getTaskId());
         }
         publishService.publishSiteIndex(site);

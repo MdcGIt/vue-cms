@@ -32,6 +32,7 @@ import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
@@ -238,7 +239,7 @@ public class CatalogController extends BaseRestController {
 			throw ContentCoreErrorCode.CATALOG_CANNOT_PUBLISH.exception();
 		}
 		AsyncTask task = this.publishService.publishCatalog(catalog, dto.getPublishChild(), dto.getPublishDetail(),
-				dto.getPublishStatus());
+				dto.getPublishStatus(), StpAdminUtil.getLoginUser());
 		return R.ok(task.getTaskId());
 	}
 

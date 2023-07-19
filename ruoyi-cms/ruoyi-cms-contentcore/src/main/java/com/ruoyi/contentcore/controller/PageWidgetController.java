@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.dev33.satoken.annotation.SaMode;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +58,11 @@ import lombok.RequiredArgsConstructor;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.ContentView)
+@Priv(
+	type = AdminUserType.TYPE,
+	value = { ContentCorePriv.ContentView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+	mode = SaMode.AND
+)
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cms/pagewidget")

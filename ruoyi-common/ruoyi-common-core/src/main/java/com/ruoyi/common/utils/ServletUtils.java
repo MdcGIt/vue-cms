@@ -10,12 +10,12 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -75,7 +75,7 @@ public class ServletUtils {
 	public static boolean isHttpUrl(String url) {
 		return StringUtils.startsWithIgnoreCase(url, HTTP) || StringUtils.startsWithIgnoreCase(url, HTTPS);
 	}
-	
+
 	public static String getAcceptLanaguage(HttpServletRequest request) {
 		return getHeader(request, HEADER_ACCEPT_LANGUAGE);
 	}
@@ -98,7 +98,7 @@ public class ServletUtils {
 
 	/**
 	 * 读取指定name的Header值
-	 * 
+	 *
 	 * @param request
 	 * @param name
 	 * @return
@@ -113,7 +113,7 @@ public class ServletUtils {
 
 	/**
 	 * 读取所有Header值
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -129,13 +129,22 @@ public class ServletUtils {
 		return headerMap;
 	}
 
+	public static CaseInsensitiveMap<String, String> getHeaderCaseInsensitiveMap(HttpServletRequest request) {
+		final CaseInsensitiveMap<String, String> headerMap = new CaseInsensitiveMap<>();
+		final Enumeration<String> names = request.getHeaderNames();
+		while (names.hasMoreElements()) {
+			String name = names.nextElement();
+			headerMap.put(name, request.getHeader(name));
+		}
+		return headerMap;
+	}
+
 	/**
 	 * 保存
 	 *
 	 * @param response
 	 * @param key
 	 * @param value
-	 * @param ifRemember
 	 */
 	public static void setCookie(HttpServletResponse response, String key, String value) {
 		setCookie(response, key, value, null, COOKIE_PATH, Integer.MAX_VALUE, true);
@@ -150,7 +159,7 @@ public class ServletUtils {
 	 * @param maxAge
 	 */
 	private static void setCookie(HttpServletResponse response, String key, String value, String domain, String path,
-			int maxAge, boolean isHttpOnly) {
+								  int maxAge, boolean isHttpOnly) {
 		Cookie cookie = new Cookie(key, value);
 		if (domain != null) {
 			cookie.setDomain(domain);
@@ -176,6 +185,16 @@ public class ServletUtils {
 		return null;
 	}
 
+	public static Map<String, String> getCookieValues(HttpServletRequest request) {
+		Cookie[] arr_cookie = request.getCookies();
+		if (arr_cookie == null) {
+			return Map.of();
+		}
+		return Stream.of(arr_cookie)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toMap(c -> c.getName(), c -> c.getValue()));
+	}
+
 	/**
 	 * 查询Cookie
 	 *
@@ -193,6 +212,7 @@ public class ServletUtils {
 		}
 		return null;
 	}
+
 
 	/**
 	 * 删除Cookie
@@ -324,7 +344,7 @@ public class ServletUtils {
 
 	/**
 	 * 将字符串渲染到客户端
-	 * 
+	 *
 	 * @param response 渲染对象
 	 * @param string   待渲染的字符串
 	 */
@@ -368,7 +388,7 @@ public class ServletUtils {
 
 	/**
 	 * 是否是Ajax异步请求
-	 * 
+	 *
 	 * @param request
 	 */
 	public static boolean isAjaxRequest(HttpServletRequest request) {
@@ -393,7 +413,7 @@ public class ServletUtils {
 
 	/**
 	 * 内容编码
-	 * 
+	 *
 	 * @param str 内容
 	 * @return 编码后的内容
 	 */
@@ -407,7 +427,7 @@ public class ServletUtils {
 
 	/**
 	 * 内容解码
-	 * 
+	 *
 	 * @param str 内容
 	 * @return 解码后的内容
 	 */
@@ -421,7 +441,7 @@ public class ServletUtils {
 
 	/**
 	 * 获取客户端IP
-	 * 
+	 *
 	 * @param request 请求对象
 	 * @return IP地址
 	 */
@@ -450,7 +470,7 @@ public class ServletUtils {
 
 	/**
 	 * 获取IP地址
-	 * 
+	 *
 	 * @return 本地IP地址
 	 */
 	public static String getHostIp() {
@@ -463,7 +483,7 @@ public class ServletUtils {
 
 	/**
 	 * 获取主机名
-	 * 
+	 *
 	 * @return 本地主机名
 	 */
 	public static String getHostName() {
@@ -506,7 +526,7 @@ public class ServletUtils {
 
 	/**
 	 * 检查是否为内部IP地址
-	 * 
+	 *
 	 * @param ip IP地址
 	 * @return 结果
 	 */
@@ -517,7 +537,7 @@ public class ServletUtils {
 
 	/**
 	 * 检查是否为内部IP地址
-	 * 
+	 *
 	 * @param addr byte地址
 	 * @return 结果
 	 */
@@ -537,25 +557,25 @@ public class ServletUtils {
 		final byte SECTION_5 = (byte) 0xC0;
 		final byte SECTION_6 = (byte) 0xA8;
 		switch (b0) {
-		case SECTION_1:
-			return true;
-		case SECTION_2:
-			if (b1 >= SECTION_3 && b1 <= SECTION_4) {
+			case SECTION_1:
 				return true;
-			}
-		case SECTION_5:
-			switch (b1) {
-			case SECTION_6:
-				return true;
-			}
-		default:
-			return false;
+			case SECTION_2:
+				if (b1 >= SECTION_3 && b1 <= SECTION_4) {
+					return true;
+				}
+			case SECTION_5:
+				switch (b1) {
+					case SECTION_6:
+						return true;
+				}
+			default:
+				return false;
 		}
 	}
 
 	/**
 	 * 将IPv4地址转换成字节
-	 * 
+	 *
 	 * @param text IPv4地址
 	 * @return byte 字节
 	 */
@@ -570,56 +590,56 @@ public class ServletUtils {
 			long l;
 			int i;
 			switch (elements.length) {
-			case 1:
-				l = Long.parseLong(elements[0]);
-				if ((l < 0L) || (l > 4294967295L)) {
-					return null;
-				}
-				bytes[0] = (byte) (int) (l >> 24 & 0xFF);
-				bytes[1] = (byte) (int) ((l & 0xFFFFFF) >> 16 & 0xFF);
-				bytes[2] = (byte) (int) ((l & 0xFFFF) >> 8 & 0xFF);
-				bytes[3] = (byte) (int) (l & 0xFF);
-				break;
-			case 2:
-				l = Integer.parseInt(elements[0]);
-				if ((l < 0L) || (l > 255L)) {
-					return null;
-				}
-				bytes[0] = (byte) (int) (l & 0xFF);
-				l = Integer.parseInt(elements[1]);
-				if ((l < 0L) || (l > 16777215L)) {
-					return null;
-				}
-				bytes[1] = (byte) (int) (l >> 16 & 0xFF);
-				bytes[2] = (byte) (int) ((l & 0xFFFF) >> 8 & 0xFF);
-				bytes[3] = (byte) (int) (l & 0xFF);
-				break;
-			case 3:
-				for (i = 0; i < 2; ++i) {
-					l = Integer.parseInt(elements[i]);
+				case 1:
+					l = Long.parseLong(elements[0]);
+					if ((l < 0L) || (l > 4294967295L)) {
+						return null;
+					}
+					bytes[0] = (byte) (int) (l >> 24 & 0xFF);
+					bytes[1] = (byte) (int) ((l & 0xFFFFFF) >> 16 & 0xFF);
+					bytes[2] = (byte) (int) ((l & 0xFFFF) >> 8 & 0xFF);
+					bytes[3] = (byte) (int) (l & 0xFF);
+					break;
+				case 2:
+					l = Integer.parseInt(elements[0]);
 					if ((l < 0L) || (l > 255L)) {
 						return null;
 					}
-					bytes[i] = (byte) (int) (l & 0xFF);
-				}
-				l = Integer.parseInt(elements[2]);
-				if ((l < 0L) || (l > 65535L)) {
-					return null;
-				}
-				bytes[2] = (byte) (int) (l >> 8 & 0xFF);
-				bytes[3] = (byte) (int) (l & 0xFF);
-				break;
-			case 4:
-				for (i = 0; i < 4; ++i) {
-					l = Integer.parseInt(elements[i]);
-					if ((l < 0L) || (l > 255L)) {
+					bytes[0] = (byte) (int) (l & 0xFF);
+					l = Integer.parseInt(elements[1]);
+					if ((l < 0L) || (l > 16777215L)) {
 						return null;
 					}
-					bytes[i] = (byte) (int) (l & 0xFF);
-				}
-				break;
-			default:
-				return null;
+					bytes[1] = (byte) (int) (l >> 16 & 0xFF);
+					bytes[2] = (byte) (int) ((l & 0xFFFF) >> 8 & 0xFF);
+					bytes[3] = (byte) (int) (l & 0xFF);
+					break;
+				case 3:
+					for (i = 0; i < 2; ++i) {
+						l = Integer.parseInt(elements[i]);
+						if ((l < 0L) || (l > 255L)) {
+							return null;
+						}
+						bytes[i] = (byte) (int) (l & 0xFF);
+					}
+					l = Integer.parseInt(elements[2]);
+					if ((l < 0L) || (l > 65535L)) {
+						return null;
+					}
+					bytes[2] = (byte) (int) (l >> 8 & 0xFF);
+					bytes[3] = (byte) (int) (l & 0xFF);
+					break;
+				case 4:
+					for (i = 0; i < 4; ++i) {
+						l = Integer.parseInt(elements[i]);
+						if ((l < 0L) || (l > 255L)) {
+							return null;
+						}
+						bytes[i] = (byte) (int) (l & 0xFF);
+					}
+					break;
+				default:
+					return null;
 			}
 		} catch (NumberFormatException e) {
 			return null;
@@ -629,7 +649,7 @@ public class ServletUtils {
 
 	/**
 	 * 根据User-Agent解析客户端类型
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getDeviceType() {
@@ -639,7 +659,7 @@ public class ServletUtils {
 
 	/**
 	 * 根据User-Agent解析客户端类型
-	 * 
+	 *
 	 * @param userAgent
 	 * @return
 	 */

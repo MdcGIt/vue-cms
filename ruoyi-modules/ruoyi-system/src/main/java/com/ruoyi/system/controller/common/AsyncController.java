@@ -1,6 +1,7 @@
 package com.ruoyi.system.controller.common;
 
 import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,11 +46,12 @@ public class AsyncController extends BaseRestController {
 	public R<?> getAsyncTaskList(@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "id", required = false) String taskId) {
 		List<AsyncTask> taskList = this.asyncTaskManager.getTaskList(type);
-		List<AsyncTaskVO> list = taskList.stream().filter(t -> {
-			return (StringUtils.isBlank(type) || t.getType().indexOf(type) > -1)
-					&& (StringUtils.isBlank(taskId) || t.getTaskId().indexOf(taskId) > -1);
-		}).map(AsyncTaskVO::new).sorted((v1, v2) -> v1.getReadyTime().toEpochSecond(ZoneOffset.UTC)
-				- v2.getReadyTime().toEpochSecond(ZoneOffset.UTC) > 0 ? 1 : -1).toList();
+		List<AsyncTaskVO> list = taskList.stream()
+				.filter(t -> (StringUtils.isBlank(type) || t.getType().contains(type))
+					&& (StringUtils.isBlank(taskId) || t.getTaskId().contains(taskId)))
+				.map(AsyncTaskVO::new)
+				.sorted(Comparator.comparing(AsyncTaskVO::getReadyTime).reversed())
+				.toList();
 		return this.bindDataTable(list);
 	}
 

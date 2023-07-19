@@ -3,6 +3,10 @@ package com.ruoyi.contentcore.job;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.ruoyi.contentcore.core.IContent;
+import com.ruoyi.contentcore.core.IContentType;
+import com.ruoyi.contentcore.util.ContentCoreUtils;
+import com.ruoyi.system.SysConstants;
 import com.ruoyi.system.schedule.IScheduledHandler;
 import org.springframework.stereotype.Component;
 

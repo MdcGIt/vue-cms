@@ -57,7 +57,7 @@ public class SiteApiUrlProperty implements IProperty {
 		if (StringUtils.isEmpty(apiUrl)) {
 			apiUrl = site.getUrl(publishPipeCode);
 		}
-		if (!apiUrl.endsWith("/")) {
+		if (StringUtils.isNotEmpty(apiUrl) && !apiUrl.endsWith("/")) {
 			apiUrl += "/";
 		}
 		return apiUrl;

@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.controller;
 
+import cn.dev33.satoken.annotation.SaMode;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -22,6 +23,7 @@ import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
+import com.ruoyi.contentcore.util.CmsPrivUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -33,7 +35,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -43,7 +44,11 @@ import java.util.regex.Pattern;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE, value = ContentCorePriv.TemplateView)
+@Priv(
+	type = AdminUserType.TYPE,
+	value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+	mode = SaMode.AND
+)
 @RestController
 @RequestMapping("/cms/template")
 @RequiredArgsConstructor
