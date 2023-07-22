@@ -111,6 +111,7 @@ public class CoreController extends BaseRestController {
 			@RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex,
 			@RequestParam Map<String, Object> params) {
 		try {
+			// TODO 缓存
 			long s = System.currentTimeMillis();
 			CmsSite site = this.siteService.getSite(siteId);
 			// 模板ID = 通道:站点目录:模板文件名
