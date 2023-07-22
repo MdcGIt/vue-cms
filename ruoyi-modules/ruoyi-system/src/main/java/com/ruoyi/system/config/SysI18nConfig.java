@@ -66,7 +66,7 @@ public class SysI18nConfig {
 	@Bean
 	public LocaleResolver localeResolver() {
 		XyLocaleResolver localeResolver = new XyLocaleResolver();
-		localeResolver.setDefaultLocale(Locale.getDefault());
+		localeResolver.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
 		return localeResolver;
 	}
 
