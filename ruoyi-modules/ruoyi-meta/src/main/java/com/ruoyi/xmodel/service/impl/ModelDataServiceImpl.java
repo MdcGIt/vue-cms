@@ -46,7 +46,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 			MetaModelField pkField = primaryKeys.get(i);
 			Object fieldValue = params.get(pkField.getCode());
 			if (Objects.isNull(fieldValue)) {
-				throw new RuntimeException("Meta model primary key value cannot be null.");
+				throw new RuntimeException("Meta model primary key `" + pkField.getCode() + "` value cannot be null.");
 			}
 			sqlBuilder.eq(pkField.getFieldName(), fieldValue);
 		}
@@ -148,7 +148,7 @@ public class ModelDataServiceImpl implements IModelDataService {
 				MetaModelField pkField = primaryKeys.get(i);
 				String fieldValue = pkValue.get(pkField.getCode());
 				if (Objects.isNull(fieldValue)) {
-					throw new RuntimeException("Primary key cannot be null!");
+					throw new RuntimeException("Primary key `"+pkField.getCode()+"` cannot be null!");
 				}
 				sqlBuilder.eq(pkField.getFieldName(), fieldValue);
 			}

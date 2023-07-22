@@ -57,6 +57,7 @@ public class EXModelEventListener {
 			String dataId = event.getSite().getSiteId().toString();
 			this.modelDataService.deleteModelDataByPkValue(Long.valueOf(modelId),
 					List.of(Map.of(
+							CmsExtendMetaModelType.FIELD_MODEL_ID.getCode(), modelId,
 							CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), ExtendModelDataType.SITE,
 							CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
 					)));
@@ -79,6 +80,7 @@ public class EXModelEventListener {
 			String dataId = event.getCatalog().getCatalogId().toString();
 			this.modelDataService.deleteModelDataByPkValue(Long.valueOf(modelId),
 					List.of(Map.of(
+							CmsExtendMetaModelType.FIELD_MODEL_ID.getCode(), modelId,
 							CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), ExtendModelDataType.CATALOG,
 							CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
 					)));
@@ -103,6 +105,7 @@ public class EXModelEventListener {
 			String dataId = String.valueOf(content.getContentEntity().getContentId());
 			this.modelDataService.deleteModelDataByPkValue(Long.valueOf(modelId),
 					List.of(Map.of(
+							CmsExtendMetaModelType.FIELD_MODEL_ID.getCode(), modelId,
 							CmsExtendMetaModelType.FIELD_DATA_TYPE.getCode(), ExtendModelDataType.CONTENT,
 							CmsExtendMetaModelType.FIELD_DATA_ID.getCode(), dataId
 					)));

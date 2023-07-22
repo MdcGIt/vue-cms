@@ -38,7 +38,7 @@ public class CmsSitePropertyTag extends AbstractListTag {
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = super.getTagAttrs();
 		tagAttrs.add(new TagAttr(TagAttr_SiteId, false, TagAttrDataType.INTEGER, "站点ID，默认从模板变量中获取${Site.siteId}"));
-		tagAttrs.add(new TagAttr(TagAttr_Code, false, TagAttrDataType.INTEGER, "属性编码"));
+		tagAttrs.add(new TagAttr(TagAttr_Code, false, TagAttrDataType.STRING, "属性编码"));
 		return tagAttrs;
 	}
 
@@ -54,6 +54,7 @@ public class CmsSitePropertyTag extends AbstractListTag {
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
 
 		LambdaQueryWrapper<CmsSiteProperty> q = new LambdaQueryWrapper<CmsSiteProperty>()
+				.eq(CmsSiteProperty::getSiteId, siteId)
 				.eq(StringUtils.isNotEmpty(code), CmsSiteProperty::getPropCode, code);
 		q.apply(StringUtils.isNotEmpty(condition), condition);
 		Page<CmsSiteProperty> pageResult = this.sitePropertyService.page(new Page<>(pageIndex, size, page), q);

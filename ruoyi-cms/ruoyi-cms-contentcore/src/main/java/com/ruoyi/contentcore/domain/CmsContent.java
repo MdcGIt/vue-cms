@@ -204,6 +204,26 @@ public class CmsContent extends BaseEntityWithLogicDelete {
     private LocalDateTime offlineDate;
 
     /**
+     * 点赞数
+     */
+    private Long likeCount;
+
+    /**
+     * 评论数
+     */
+    private Long commentCount;
+
+    /**
+     * 收藏数
+     */
+    private Long favoriteCount;
+
+    /**
+     * 文章浏览数
+     */
+    private Long viewCount;
+
+    /**
      * 是否锁定
      */
     private String isLock;

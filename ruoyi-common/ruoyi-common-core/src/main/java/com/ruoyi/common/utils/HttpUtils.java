@@ -1,6 +1,7 @@
 package com.ruoyi.common.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
@@ -32,7 +33,7 @@ public class HttpUtils {
 	 * <p>
 	 * Timeout: 30s
 	 * </p>
-	 * 
+	 *
 	 * @param uri
 	 * @return
 	 */
@@ -58,7 +59,7 @@ public class HttpUtils {
 	 * Timeout: 30s
 	 * Content-Type: application/json
 	 * </p>
-	 * 
+	 *
 	 * @param uri
 	 * @param body
 	 * @return
@@ -82,7 +83,7 @@ public class HttpUtils {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static byte[] syncDownload(String uri) {
 		HttpClient httpClient = HttpClient.newBuilder()
 				.connectTimeout(Duration.ofSeconds(30))
@@ -98,9 +99,28 @@ public class HttpUtils {
 		}
 	}
 
+	public static InputStream syncDownloadInputStream(String uri) {
+		HttpClient httpClient = HttpClient.newBuilder()
+				.connectTimeout(Duration.ofSeconds(30))
+				.followRedirects(Redirect.ALWAYS)
+				.build();
+		HttpRequest httpRequest = HttpRequest.newBuilder(URI.create(uri))
+				.setHeader("User-Agent", randomUserAgent())
+				.GET().build();
+		try {
+			return httpClient.send(httpRequest, BodyHandlers.ofInputStream()).body();
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void main(String[] args) {
+		syncDownload("http://www.liandu24.com/wp-content/uploads/2023/07/2023070513161507784652.png");
+	}
+
 	/**
 	 * 通过丢弃响应体的get请求获取响应头信息，抛弃get响应body
-	 * 
+	 *
 	 * @param uri
 	 * @param headerName
 	 * @return
@@ -108,10 +128,10 @@ public class HttpUtils {
 	public static String getDiscardingContentType(String uri) {
 		return getDiscardingHeader(uri, "content-type");
 	}
-	
+
 	/**
 	 * 通过丢弃响应体的get请求获取响应头信息，抛弃get响应body
-	 * 
+	 *
 	 * @param uri
 	 * @param headerName
 	 * @return
@@ -137,7 +157,7 @@ public class HttpUtils {
 
 	/**
 	 * 下载文件到指定路径
-	 * 
+	 *
 	 * @param uri
 	 * @param destPath
 	 */
@@ -151,7 +171,7 @@ public class HttpUtils {
 				.GET().build();
 		httpClient.sendAsync(httpRequest, BodyHandlers.ofFile(destPath));
 	}
-	
+
 	public static void asyncDownload(String uri, String destPath) {
 		asyncDownload(uri, Path.of(destPath));
 	}

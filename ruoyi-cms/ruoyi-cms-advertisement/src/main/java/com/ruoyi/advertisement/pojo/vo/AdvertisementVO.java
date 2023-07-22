@@ -117,11 +117,4 @@ public class AdvertisementVO {
     	}
     	return this;
     }
-    
-    public AdvertisementVO dealRedirectUrl(String publishPipeCode, boolean isPreview) {
-    	if (StringUtils.isNotEmpty(this.getRedirectUrl())) {
-    		this.setResourceSrc(InternalUrlUtils.getActualUrl(this.getRedirectUrl(), publishPipeCode, isPreview));
-    	}
-    	return this;
-    }
 }

@@ -1,5 +1,5 @@
 #基础镜像
-FROM elasticsearch:8.5.3
+FROM elasticsearch:8.5.2
 
 #es插件目录
 ENV ES_PLUGINS_PATH /usr/share/elasticsearch/plugins

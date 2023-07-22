@@ -53,6 +53,6 @@ public interface IFunction {
 	}
 	
 	public enum FuncArgType {
-		String, Int, Long, Float, Double, DateTime
+		String, Int, Long, Float, Double, DateTime, Boolean
 	}
 }

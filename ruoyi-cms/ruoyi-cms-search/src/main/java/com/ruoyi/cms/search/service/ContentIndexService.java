@@ -65,11 +65,6 @@ public class ContentIndexService {
 		// 先删除
 		esClient.indices().delete(fn -> fn.index(ESContent.INDEX_NAME)
 				.allowNoIndices(true).ignoreUnavailable(true));
-		// 判断栏目/站点配置是否生成索引
-		String enableIndex = EnableIndexProperty.getValue(site.getConfigProps(), null);
-		if (YesOrNo.isNo(enableIndex)) {
-			return;
-		}
 		// 创建索引
 		Map<String, Property> properties = new HashMap<>();
 		properties.put("catalogAncestors", Property.of(fn -> fn.keyword(b -> b
