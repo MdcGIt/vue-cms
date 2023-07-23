@@ -4,14 +4,14 @@
 
 	<groupId>com.ruoyi</groupId>
 	<artifactId>ruoyi</artifactId>
-	<version>1.3.12</version>
+	<version>1.3.13</version>
 	<packaging>pom</packaging>
 
 	<name>RuoYi-Vue-CMS</name>
 	<description>RuoYi-Vue-CMS内容管理系统</description>
 
 	<properties>
-		<ruoyi.version>1.3.12</ruoyi.version>
+		<ruoyi.version>1.3.13</ruoyi.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
