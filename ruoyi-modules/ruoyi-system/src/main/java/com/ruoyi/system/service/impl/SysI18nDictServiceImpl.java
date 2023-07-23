@@ -142,15 +142,16 @@ public class SysI18nDictServiceImpl extends ServiceImpl<SysI18nDictMapper, SysI1
                         resource.getFilename().lastIndexOf("."));
                 langTag = StringUtils.replace(langTag, "_", "-");
             }
+            String cacheKey = CACHE_PREFIX + langTag;
             try (InputStream is = resource.getInputStream()) {
                 List<String> lines = IOUtils.readLines(is, messageSource.getEncoding());
-                Map<String, String> map = lines.stream()
+                lines.stream()
                         .filter(s -> StringUtils.isNotEmpty(s) && s.indexOf("=") > 0)
-                        .collect(Collectors.toMap(
-                                s -> StringUtils.substringBefore(s, "="),
-                                s -> StringUtils.substringAfter(s, "=")
-                        ));
-                redisCache.setCacheMap(CACHE_PREFIX + langTag, map);
+                        .forEach(s -> {
+                            redisCache.setCacheMapValue(cacheKey,
+                                    StringUtils.substringBefore(s, "="),
+                                    StringUtils.substringAfter(s, "="));
+                        });
             }
         }
     }
