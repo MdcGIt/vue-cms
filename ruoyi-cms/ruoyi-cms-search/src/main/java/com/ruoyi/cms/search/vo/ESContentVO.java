@@ -24,6 +24,8 @@ public class ESContentVO {
 	private String logo;
 
 	private String title;
+
+	private String summary;
 	
 	private String link;
 	
