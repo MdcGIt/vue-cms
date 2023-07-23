@@ -16,7 +16,6 @@ import com.ruoyi.search.SearchConsts;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.cms.search.es.doc.ESContent;
 import com.ruoyi.common.async.AsyncTask;
@@ -157,12 +156,12 @@ public class ContentIndexService {
 		CmsSite site = this.siteService.getSite(catalog.getSiteId());
 		String enableIndex = EnableIndexProperty.getValue(catalog.getConfigProps(), site.getConfigProps());
 		if (YesOrNo.isYes(enableIndex)) {
-			LambdaQueryChainWrapper<CmsContent> q = this.contentService.lambdaQuery()
+			LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<CmsContent>()
 					.ne(CmsContent::getCopyType, ContentCopyType.Mapping)
 					.eq(CmsContent::getStatus, ContentStatus.PUBLISHED)
 					.eq(!includeChild, CmsContent::getCatalogId, catalog.getCatalogId())
 					.likeRight(includeChild, CmsContent::getCatalogAncestors, catalog.getAncestors());
-			long total = q.count();
+			long total = this.contentService.count(q);
 			long pageSize = 200;
 			for (int i = 0; i * pageSize < total; i++) {
 				Page<CmsContent> page = contentService.page(new Page<>(i, pageSize, false), q);
@@ -238,6 +237,7 @@ public class ContentIndexService {
 		data.put("publishDate", content.getContentEntity().getPublishDate().toEpochSecond(ZoneOffset.UTC));
 		data.put("link", InternalUrlUtils.getInternalUrl(InternalDataType_Content.ID, content.getContentEntity().getContentId()));
 		data.put("title", content.getContentEntity().getTitle());
+		data.put("summary", content.getContentEntity().getSummary());
 		data.put("fullText", content.getFullText());
 		// 扩展模型数据
 		this.extendModelService.getModelData(content.getContentEntity()).forEach(fd -> {
