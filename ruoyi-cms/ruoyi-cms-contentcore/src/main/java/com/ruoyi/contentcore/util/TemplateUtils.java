@@ -27,6 +27,11 @@ public class TemplateUtils {
 	public final static String TemplateVariable_IsPreview = "IsPreview";
 
 	/**
+	 * 模板变量：发布通道编码
+	 */
+	public final static String TemplateVariable_PublishPipeCode = "PublishPipeCode";
+
+	/**
 	 * 模板变量：发布通道静态化文件访问前缀
 	 */
 	public final static String TemplateVariable_Prefix = "Prefix";
@@ -131,6 +136,7 @@ public class TemplateUtils {
 	 */
 	public static void initGlobalVariables(CmsSite site, TemplateContext context) {
 		context.getVariables().put(TemplateVariable_IsPreview, context.isPreview());
+		context.getVariables().put(TemplateVariable_PublishPipeCode, context.getPublishPipeCode());
 		// 发布通道静态化文件访问前缀
 		context.getVariables().put(TemplateVariable_Prefix, SiteUtils.getPublishPipePrefix(site, context.getPublishPipeCode(), context.isPreview()));
 		// 资源文件访问前缀
