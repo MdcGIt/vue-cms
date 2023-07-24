@@ -44,7 +44,11 @@
         <el-table-column 
           :label="$t('CMS.Template.Name')"
           align="left"
-          prop="path"/>
+          prop="path">
+          <template slot-scope="scope">
+            <span v-html="scope.row.displayPath"></span>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
@@ -124,7 +128,20 @@ export default {
       }
       this.loading = true;
       getTemplateList(this.queryParams).then(response => {
-        this.templateList = response.data.rows;
+        // this.templateList = response.data.rows;
+        this.templateList = response.data.rows.map(item => {
+          let arr = item.path.split("/");
+          if (arr.length > 1) {
+            for(let i = 0; i < arr.length - 1; i++) {
+              item.displayPath = '<span style="color: #1890ff">' + arr[i] + '</span> / ';
+            }
+            item.displayPath += arr[arr.length - 1];
+          } else {
+            item.displayPath = arr[0];
+          }
+          return item;
+        });
+        console.log(this.templateList)
         this.total = parseInt(response.data.total);
         this.selectedTemplate = undefined;
         this.loading = false;
