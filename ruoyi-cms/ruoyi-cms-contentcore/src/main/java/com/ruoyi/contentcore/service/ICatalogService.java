@@ -44,16 +44,15 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	List<TreeNode<String>> buildCatalogTreeData(List<CmsCatalog> catalogs);
 
 	/**
-	 * 校验栏目名称、别名、目录是否重复
+	 * 校验栏目别名、目录是否重复
 	 *
 	 * @param siteId
 	 * @param catalogId
-	 * @param name
 	 * @param alias
 	 * @param path
 	 * @return
 	 */
-	boolean checkCatalogUnique(Long siteId, Long catalogId, String name, String alias, String path);
+	boolean checkCatalogUnique(Long siteId, Long catalogId, String alias, String path);
 
     /**
      * 添加栏目
@@ -61,7 +60,7 @@ public interface ICatalogService extends IService<CmsCatalog> {
      * @param dto
      * @throws IOException 
      */
-	public CmsCatalog addCatalog(CatalogAddDTO dto) throws IOException;
+	CmsCatalog addCatalog(CatalogAddDTO dto);
 
 	/**
 	 * 编辑栏目
@@ -70,7 +69,7 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * @return
 	 * @throws IOException 
 	 */
-	public CmsCatalog editCatalog(CatalogUpdateDTO dto) throws IOException;
+	CmsCatalog editCatalog(CatalogUpdateDTO dto) throws IOException;
 	
 	/**
 	 * 删除栏目
@@ -78,7 +77,7 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * @param catalogId
 	 * @return
 	 */
-	public CmsCatalog deleteCatalog(long catalogId, LoginUser operator);
+	CmsCatalog deleteCatalog(long catalogId, LoginUser operator);
 
 	/**
 	 * 获取栏目链接
@@ -114,7 +113,7 @@ public interface ICatalogService extends IService<CmsCatalog> {
 	 * @param dto
 	 * @return
 	 */
-	public void applySiteDefaultTemplateToCatalog(SiteDefaultTemplateDTO dto);
+	void applySiteDefaultTemplateToCatalog(SiteDefaultTemplateDTO dto);
 
 	/**
 	 * 清理栏目缓存

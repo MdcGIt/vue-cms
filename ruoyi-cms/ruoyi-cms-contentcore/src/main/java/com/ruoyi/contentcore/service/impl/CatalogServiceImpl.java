@@ -1,20 +1,5 @@
 package com.ruoyi.contentcore.service.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import com.ruoyi.contentcore.fixed.dict.StaticSuffix;
-import com.ruoyi.contentcore.perms.CatalogPermissionType;
-import com.ruoyi.contentcore.perms.SitePermissionType;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -30,43 +15,43 @@ import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.SortUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
 import com.ruoyi.contentcore.config.CMSConfig;
-import com.ruoyi.contentcore.core.IInternalDataType;
 import com.ruoyi.contentcore.core.IProperty;
-import com.ruoyi.contentcore.core.impl.CatalogType_Link;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Catalog;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.domain.dto.CatalogAddDTO;
-import com.ruoyi.contentcore.domain.dto.CatalogApplyConfigPropsDTO;
-import com.ruoyi.contentcore.domain.dto.CatalogApplyPublishPipeDTO;
-import com.ruoyi.contentcore.domain.dto.CatalogUpdateDTO;
-import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
-import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
+import com.ruoyi.contentcore.domain.dto.*;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
-import com.ruoyi.contentcore.fixed.config.BackendContext;
 import com.ruoyi.contentcore.listener.event.AfterCatalogDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterCatalogMoveEvent;
 import com.ruoyi.contentcore.listener.event.AfterCatalogSaveEvent;
 import com.ruoyi.contentcore.listener.event.BeforeCatalogDeleteEvent;
 import com.ruoyi.contentcore.mapper.CmsCatalogMapper;
 import com.ruoyi.contentcore.mapper.CmsContentMapper;
+import com.ruoyi.contentcore.perms.CatalogPermissionType;
 import com.ruoyi.contentcore.perms.CatalogPermissionType.CatalogPrivItem;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.contentcore.util.CatalogUtils;
-import com.ruoyi.contentcore.util.CmsPrivUtils;
-import com.ruoyi.contentcore.util.ConfigPropertyUtils;
-import com.ruoyi.contentcore.util.InternalUrlUtils;
-import com.ruoyi.contentcore.util.SiteUtils;
+import com.ruoyi.contentcore.util.*;
 import com.ruoyi.system.domain.SysPermission;
 import com.ruoyi.system.enums.PermissionOwnerType;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.system.service.ISysPermissionService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -122,10 +107,9 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 	}
 
 	@Override
-	public boolean checkCatalogUnique(Long siteId, Long catalogId, String name, String alias, String path) {
+	public boolean checkCatalogUnique(Long siteId, Long catalogId, String alias, String path) {
 		LambdaQueryWrapper<CmsCatalog> q = new LambdaQueryWrapper<CmsCatalog>().eq(CmsCatalog::getSiteId, siteId)
-				.and(wrapper -> wrapper.eq(CmsCatalog::getName, name).or().eq(CmsCatalog::getAlias, alias).or()
-						.eq(CmsCatalog::getPath, path))
+				.and(wrapper -> wrapper.eq(CmsCatalog::getAlias, alias).or().eq(CmsCatalog::getPath, path))
 				.ne(catalogId != null && catalogId > 0, CmsCatalog::getCatalogId, catalogId);
 		return this.count(q) == 0;
 	}
@@ -151,14 +135,14 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public CmsCatalog addCatalog(CatalogAddDTO dto) throws IOException {
-		boolean checkCatalogUnique = this.checkCatalogUnique(dto.getSiteId(), null, dto.getName(), dto.getAlias(),
+	public CmsCatalog addCatalog(CatalogAddDTO dto) {
+		dto.setPath(CatalogUtils.formatCatalogPath(dto.getPath()));
+		Assert.isFalse("/".equals(dto.getPath()), () -> CommonErrorCode.NOT_EMPTY.exception("path"));
+
+		boolean checkCatalogUnique = this.checkCatalogUnique(dto.getSiteId(), null, dto.getAlias(),
 				dto.getPath());
 		Assert.isTrue(checkCatalogUnique, ContentCoreErrorCode.CONFLICT_CATALOG::exception);
 
-		if (!dto.getPath().endsWith("/")) {
-			dto.setPath(dto.getPath() + "/");
-		}
 		if (dto.getParentId() == null) {
 			dto.setParentId(0L);
 		}
@@ -209,11 +193,14 @@ public class CatalogServiceImpl extends ServiceImpl<CmsCatalogMapper, CmsCatalog
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public CmsCatalog editCatalog(CatalogUpdateDTO dto) throws IOException {
+	public CmsCatalog editCatalog(CatalogUpdateDTO dto) {
+		dto.setPath(CatalogUtils.formatCatalogPath(dto.getPath()));
+		Assert.isFalse("/".equals(dto.getPath()), () -> CommonErrorCode.NOT_EMPTY.exception("path"));
+
 		CmsCatalog catalog = this.getById(dto.getCatalogId());
 		Assert.notNull(catalog, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("catalogId", dto.getCatalogId()));
 
-		boolean checkCatalogUnique = this.checkCatalogUnique(catalog.getSiteId(), catalog.getCatalogId(), dto.getName(),
+		boolean checkCatalogUnique = this.checkCatalogUnique(catalog.getSiteId(), catalog.getCatalogId(),
 				dto.getAlias(), dto.getPath());
 		Assert.isTrue(checkCatalogUnique, ContentCoreErrorCode.CONFLICT_CATALOG::exception);
 
