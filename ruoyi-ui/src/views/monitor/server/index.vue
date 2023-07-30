@@ -1,6 +1,26 @@
 <template>
   <div class="app-container">
     <el-row>
+      <el-col :span="24" class="card-box">
+        <el-card>
+          <div slot="header">
+            <span>{{ $t('Monitor.Server.ApplicationInfo') }}</span>
+          </div>
+          <div class="el-table el-table--enable-row-hover el-table--medium">
+            <table cellspacing="0" style="width: 100%;">
+              <tbody>
+                <tr>
+                  <td class="el-table__cell is-leaf"><div class="cell attrname">{{ $t('Monitor.Server.AppName') }}</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell" v-if="server.sys">{{ server.app.name }}</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell attrname">{{ $t('Monitor.Server.AppVersion') }}</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell" v-if="server.sys">{{ server.app.version }}</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </el-card>
+      </el-col>
+
       <el-col :span="12" class="card-box">
         <el-card>
           <div slot="header"><span>{{ $t('Monitor.Server.CPU') }}</span></div>
