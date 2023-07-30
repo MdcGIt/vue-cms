@@ -19,6 +19,7 @@ import com.ruoyi.member.security.StpMemberUtil;
 import com.ruoyi.member.service.IMemberService;
 import com.ruoyi.member.service.IMemberStatDataService;
 import com.ruoyi.member.util.MemberUtils;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.fixed.dict.LoginLogType;
 import com.ruoyi.system.fixed.dict.SuccessOrFail;
 import com.ruoyi.system.security.StpAdminUtil;
@@ -70,6 +71,7 @@ public class MemberLoginApiController extends BaseRestController {
 		return R.ok(memberCache);
 	}
 
+	@IgnoreDemoMode
 	@PostMapping("/login")
 	public R<?> login(@RequestBody MemberLoginDTO dto) {
 		dto.setUserAgent(ServletUtils.getUserAgent());
@@ -78,6 +80,7 @@ public class MemberLoginApiController extends BaseRestController {
 		return R.ok(token);
 	}
 
+	@IgnoreDemoMode
 	@PostMapping("/register")
 	public R<?> resgiter(@RequestBody MemberRegisterDTO dto) {
 		dto.setUserAgent(ServletUtils.getUserAgent());
@@ -86,6 +89,7 @@ public class MemberLoginApiController extends BaseRestController {
 		return R.ok(token);
 	}
 
+	@IgnoreDemoMode
 	@PostMapping("/logout")
 	public R<?> logout() {
 		try {
@@ -101,6 +105,7 @@ public class MemberLoginApiController extends BaseRestController {
 		return R.ok();
 	}
 
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PutMapping("/reset_pwd")
 	public R<?> resetMemberPassword(@RequestBody @Validated ResetMemberPasswordDTO dto) {
@@ -118,6 +123,7 @@ public class MemberLoginApiController extends BaseRestController {
 		return update ? R.ok() : R.fail();
 	}
 
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PutMapping("/change_email")
 	public R<?> changeMemberEmail(@RequestBody @Validated ChangeMemberEmailDTO dto) {
@@ -132,6 +138,7 @@ public class MemberLoginApiController extends BaseRestController {
 		return update ? R.ok() : R.fail();
 	}
 
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PutMapping("/info")
 	public R<?> saveMemberInfo(@RequestBody @Validated MemberInfoDTO dto) {
@@ -155,6 +162,7 @@ public class MemberLoginApiController extends BaseRestController {
 		return R.ok();
 	}
 
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PostMapping("/avatar")
 	public R<?> uploadMemberAvatar(@RequestParam String image,

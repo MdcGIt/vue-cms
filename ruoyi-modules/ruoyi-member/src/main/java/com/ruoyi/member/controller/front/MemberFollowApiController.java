@@ -1,6 +1,5 @@
 package com.ruoyi.member.controller.front;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
@@ -12,6 +11,7 @@ import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.security.StpMemberUtil;
 import com.ruoyi.member.service.IMemberFollowService;
 import com.ruoyi.member.service.IMemberStatDataService;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Priv(type = MemberUserType.TYPE)
 @RequiredArgsConstructor
@@ -46,6 +45,7 @@ public class MemberFollowApiController extends BaseRestController {
 		return R.ok(map);
 	}
 
+	@IgnoreDemoMode
 	@PostMapping("/api/member/follow")
 	public R<?> followMember(@RequestParam Long targetId) {
 		long memberId = StpMemberUtil.getLoginIdAsLong();
@@ -53,6 +53,7 @@ public class MemberFollowApiController extends BaseRestController {
 		return R.ok();
 	}
 
+	@IgnoreDemoMode
 	@PostMapping("/api/member/cancel_follow")
 	public R<?> cancelFollowMember(@RequestParam Long targetId) {
 		long memberId = StpMemberUtil.getLoginIdAsLong();

@@ -8,6 +8,7 @@ import com.ruoyi.member.domain.dto.FavoriteDTO;
 import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.security.StpMemberUtil;
 import com.ruoyi.member.service.IMemberFavoritesService;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.validator.LongId;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class MemberFavoritesApiController extends BaseRestController {
 	/**
 	 * 是否收藏过指定内容
 	 */
+	@IgnoreDemoMode
 	@GetMapping("/check")
 	public R<?> isFavorited(@RequestParam @NotEmpty String dataType, @RequestParam @LongId Long dataId) {
 		long memberId = StpMemberUtil.getLoginIdAsLong();
@@ -45,6 +47,7 @@ public class MemberFavoritesApiController extends BaseRestController {
 	/**
 	 * 收藏内容
 	 */
+	@IgnoreDemoMode
 	@PostMapping
 	public R<?> favorite(@RequestBody @Validated FavoriteDTO dto) {
 		long memberId = StpMemberUtil.getLoginIdAsLong();
@@ -55,6 +58,7 @@ public class MemberFavoritesApiController extends BaseRestController {
 	/**
 	 * 取消收藏
 	 */
+	@IgnoreDemoMode
 	@DeleteMapping
 	public R<?> cancelFavorite(@RequestBody @Validated FavoriteDTO dto) {
 		long memberId = StpMemberUtil.getLoginIdAsLong();

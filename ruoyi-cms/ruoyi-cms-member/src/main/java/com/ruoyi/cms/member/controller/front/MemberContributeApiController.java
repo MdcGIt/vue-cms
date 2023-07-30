@@ -32,6 +32,7 @@ import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.security.StpMemberUtil;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.fixed.dict.YesOrNo;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
@@ -77,6 +78,7 @@ public class MemberContributeApiController extends BaseRestController implements
 	/**
 	 * 投稿
 	 */
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PostMapping
 	public R<?> articleContribute(@RequestBody @Validated ArticleContributeDTO dto) {
@@ -122,6 +124,7 @@ public class MemberContributeApiController extends BaseRestController implements
 		return R.ok();
 	}
 
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PostMapping("/upload_image")
 	public R<?> uploadFile(@RequestParam("file") MultipartFile multipartFile,

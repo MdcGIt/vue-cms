@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.member.security.MemberUserType;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -63,6 +64,7 @@ public class MemberSignInApiController extends BaseRestController {
 	/**
 	 * 签到
 	 */
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PostMapping
 	public R<?> signIn() {
@@ -73,6 +75,7 @@ public class MemberSignInApiController extends BaseRestController {
 	/**
 	 * 补签
 	 */
+	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
 	@PutMapping
 	public R<?> complementHistory(@RequestBody MemberComplementHistoryDTO dto) {

@@ -8,13 +8,12 @@ import com.ruoyi.member.domain.dto.LikeDTO;
 import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.security.StpMemberUtil;
 import com.ruoyi.member.service.IMemberLikeService;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.validator.LongId;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 /**
  * 会员收藏数据API接口
@@ -47,6 +46,7 @@ public class MemberLikeApiController extends BaseRestController {
 	/**
 	 * 点赞内容
 	 */
+	@IgnoreDemoMode
 	@PostMapping
 	public R<?> likeContent(@RequestBody @Validated LikeDTO dto) {
 		long memberId = StpMemberUtil.getLoginIdAsLong();
@@ -57,6 +57,7 @@ public class MemberLikeApiController extends BaseRestController {
 	/**
 	 * 取消收藏
 	 */
+	@IgnoreDemoMode
 	@DeleteMapping
 	public R<?> cancelFavorite(@RequestBody @Validated LikeDTO dto) {
 		long memberId = StpMemberUtil.getLoginIdAsLong();
