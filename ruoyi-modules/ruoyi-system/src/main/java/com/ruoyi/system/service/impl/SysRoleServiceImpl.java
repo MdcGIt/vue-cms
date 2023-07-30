@@ -167,7 +167,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 					.selectCount(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getRoleId, roleId));
 			Assert.isTrue(userCount == 0, () -> SysErrorCode.ROLE_USER_NOT_EMPTY.exception(role.getRoleKey()));
 			if (userCount > 0) {
-				throw new ServiceException(StringUtils.messageFormat("角色'{0}'存在关联用户，请先移除关联用户。", role.getRoleName()));
+				throw new ServiceException(StringUtils.messageFormat("角色`{0}`存在关联用户，请先移除关联用户。", role.getRoleName()));
 			}
 			this.redisCache.deleteObject(SysConstants.CACHE_SYS_POST_KEY + role.getRoleKey());
 		}

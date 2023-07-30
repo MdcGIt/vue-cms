@@ -13,10 +13,10 @@
     <description>CMS会员扩展</description>
 
     <dependencies>
-        <!-- 内容核心 -->
+        <!-- 文章 -->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-cms-contentcore</artifactId>
+            <artifactId>ruoyi-cms-article</artifactId>
         </dependency>
         <!-- 会员基础模块 -->
         <dependency>

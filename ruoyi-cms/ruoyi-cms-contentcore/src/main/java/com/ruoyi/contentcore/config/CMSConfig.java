@@ -16,7 +16,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
 import com.ruoyi.contentcore.config.properties.CMSProperties;
-import com.ruoyi.contentcore.fixed.config.BackendContext;
+import com.ruoyi.system.fixed.config.BackendContext;
 
 import freemarker.cache.FileTemplateLoader;
 import jakarta.annotation.PostConstruct;

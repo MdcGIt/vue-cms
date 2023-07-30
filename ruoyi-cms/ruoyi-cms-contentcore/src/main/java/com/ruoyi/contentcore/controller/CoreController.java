@@ -67,7 +67,7 @@ public class CoreController extends BaseRestController {
 			throws IOException, TemplateException {
 		HttpServletResponse response = ServletUtils.getResponse();
 		response.setCharacterEncoding(Charset.defaultCharset().displayName());
-		response.setHeader("contentType", "text/html; charset=" + Charset.defaultCharset().displayName());
+		response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 		IInternalDataType internalDataType = ContentCoreUtils.getInternalDataType(dataType);
 		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORT_INTERNAL_DATA_TYPE.exception(dataType));
 
@@ -95,7 +95,7 @@ public class CoreController extends BaseRestController {
 		HttpServletResponse response = ServletUtils.getResponse();
 
 		response.setCharacterEncoding(Charset.defaultCharset().displayName());
-		response.setHeader("contentType", "text/html; charset=" + Charset.defaultCharset().displayName());
+		response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 		IInternalDataType internalDataType = ContentCoreUtils.getInternalDataType(dataType);
 		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORT_INTERNAL_DATA_TYPE.exception(dataType));
 

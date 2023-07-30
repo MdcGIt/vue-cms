@@ -8,11 +8,11 @@ import com.ruoyi.contentcore.service.IContentService;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -34,8 +34,6 @@ public class ContentDynamicDataService {
     private final IContentService contentService;
 
     private final RedisCache redisCache;
-
-    private final RedissonClient redissonClient;
 
     private static final ConcurrentHashMap<Long, ContentDynamicDataVO> dynamicUpdates = new ConcurrentHashMap<>();
 
@@ -67,23 +65,42 @@ public class ContentDynamicDataService {
         this.updateContentDynamicData(contentId, ContentDynamicDataVO.DynamicDataType.View, true);
     }
 
+    public List<ContentDynamicDataVO> getContentDynamicDataList(List<String> contentIds) {
+        if (contentIds.isEmpty()) {
+            return List.of();
+        }
+        List<ContentDynamicDataVO> values = new ArrayList<>(contentIds.size());
+        List<String> findContentIds = new ArrayList<>();
+        this.redisCache.getMultiCacheMapValue(CONTENT_DYNAMIC_DATA_CACHE, contentIds).forEach(o -> {
+            if (o != null) {
+                ContentDynamicDataVO vo = (ContentDynamicDataVO) o;
+                values.add(vo);
+                findContentIds.add(vo.getContentId().toString());
+            }
+        });
+        contentIds.forEach(contentId -> {
+            if (!findContentIds.contains(contentId)) {
+                CmsContent content = this.contentService.getById(contentId);
+                if (content != null) {
+                    ContentDynamicDataVO data = new ContentDynamicDataVO(content);
+                    this.redisCache.setCacheMapValue(CONTENT_DYNAMIC_DATA_CACHE, contentId, data);
+                    values.add(data);
+                }
+            }
+        });
+        return values;
+    }
+
     public ContentDynamicDataVO getContentDynamicData(Long contentId) {
+        if (!IdUtils.validate(contentId)) {
+            return null;
+        }
         ContentDynamicDataVO data = this.redisCache.getCacheMapValue(CONTENT_DYNAMIC_DATA_CACHE, contentId.toString());
         if (data == null) {
-            RLock lock = redissonClient.getLock("cms:content:dynamic:" + contentId);
-            lock.lock();
-            try {
-                data = this.redisCache.getCacheMapValue(CONTENT_DYNAMIC_DATA_CACHE, contentId.toString());
-                if (data == null) {
-                    CmsContent content = this.contentService.getById(contentId);
-                    if (content == null) {
-                        return null;
-                    }
-                    data = new ContentDynamicDataVO(content);
-                    this.redisCache.setCacheMapValue(CONTENT_DYNAMIC_DATA_CACHE, contentId.toString(), data);
-                }
-            } finally {
-                lock.unlock();
+            CmsContent content = this.contentService.getById(contentId);
+            if (content != null) {
+                data = new ContentDynamicDataVO(content);
+                this.redisCache.setCacheMapValue(CONTENT_DYNAMIC_DATA_CACHE, contentId.toString(), data);
             }
         }
         return data;

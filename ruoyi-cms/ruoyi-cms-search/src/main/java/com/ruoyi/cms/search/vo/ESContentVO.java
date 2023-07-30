@@ -50,4 +50,12 @@ public class ESContentVO {
 	private LocalDateTime createTimeInstance;
 	
 	private Double hitScore;
+
+	private Long likeCount;
+
+	private Long commentCount;
+
+	private Long favoriteCount;
+
+	private Long viewCount;
 }

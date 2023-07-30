@@ -1,23 +1,27 @@
 package com.ruoyi.member.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import com.ruoyi.common.utils.*;
+import com.ruoyi.member.config.MemberConfig;
+import com.ruoyi.member.core.IMemberStatData;
+import com.ruoyi.member.domain.*;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.security.SecurityUtils;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.CDKeyUtil;
-import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.member.domain.Member;
-import com.ruoyi.member.domain.MemberLevel;
-import com.ruoyi.member.domain.MemberLevelExpLog;
-import com.ruoyi.member.domain.MemberSignInLog;
 import com.ruoyi.member.domain.dto.MemberDTO;
 import com.ruoyi.member.exception.MemberErrorCode;
 import com.ruoyi.member.mapper.MemberLevelExpLogMapper;
@@ -31,14 +35,14 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements IMemberService {
+public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements IMemberService, CommandLineRunner {
 
 	private final MemberLevelMapper memberLevelMapper;
 
 	private final MemberLevelExpLogMapper memberLevelExpLogMapper;
 
 	private final MemberSignInLogMapper memberSignInLogMapper;
-	
+
 	private final ISecurityConfigService securityConfigService;
 
 	@Override
@@ -101,9 +105,6 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
 	/**
 	 * 重置用户密码
-	 * 
-	 * @param user 用户信息
-	 * @return 结果
 	 */
 	@Override
 	public void resetPwd(MemberDTO dto) {
@@ -120,9 +121,6 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
 	/**
 	 * 校验用户名、手机号、邮箱是否已存在
-	 * 
-	 * @param member
-	 * @return
 	 */
 	private void checkMemberUnique(String userName, String phonenumber, String email, Long memberId) {
 		Optional<Member> oneOpt = this.lambdaQuery()
@@ -138,6 +136,36 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 					MemberErrorCode.PHONE_CONFLICT::exception);
 			Assert.isFalse(StringUtils.isNotEmpty(email) && email.equals(member.getEmail()),
 					MemberErrorCode.EMAIL_CONFLICT::exception);
+		}
+	}
+
+	@Override
+	public String uploadAvatarByBase64(Long memberId, String base64Data) throws IOException {
+		if (!base64Data.startsWith("data:image/")) {
+			return null;
+		}
+		String base64Str = StringUtils.substringAfter(base64Data, ",");
+		byte[] imageBytes = Base64.getDecoder().decode(base64Str);
+
+		String suffix = base64Data.substring(11, base64Data.indexOf(";"));
+		String path = "avatar/" + memberId + "." + suffix;
+		FileUtils.writeByteArrayToFile(new File(MemberConfig.getUploadDir() + path), imageBytes);
+
+		this.lambdaUpdate().set(Member::getAvatar, path).eq(Member::getMemberId, memberId).update();
+		return path;
+	}
+
+	private final List<IMemberStatData> memberDataStats;
+
+	@Override
+	public void run(String... args) {
+		Field[] declaredFields = MemberStatData.class.getDeclaredFields();
+		List<String> fieldNames = Stream.of(declaredFields).map(Field::getName).toList();
+		for (IMemberStatData mds : memberDataStats) {
+			if (!fieldNames.contains(mds.getField())) {
+				throw new RuntimeException("Member data stat field `"
+						+ mds.getClass().getSimpleName() + "." + mds.getField() + "` not exists.");
+			}
 		}
 	}
 }

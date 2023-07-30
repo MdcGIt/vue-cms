@@ -2,8 +2,6 @@ package com.ruoyi.contentcore.util;
 
 import java.util.Objects;
 
-import com.ruoyi.common.exception.CommonErrorCode;
-import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.IInternalDataType;
@@ -11,7 +9,7 @@ import com.ruoyi.contentcore.core.impl.CatalogType_Link;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Catalog;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.fixed.config.BackendContext;
+import com.ruoyi.system.fixed.config.BackendContext;
 
 public class CatalogUtils {
 	

@@ -47,7 +47,7 @@ public class FreeMarkerUtils {
 		if (model instanceof AdapterTemplateModel m) {
 			return (TemplateContext) m.getAdaptedObject(TemplateContext.class);
 		}
-		throw new TemplateModelException(StringUtils.messageFormat("Global variable '{0}' not found.", StaticizeConstants.TemplateVariable_TemplateContext));
+		throw new TemplateModelException(StringUtils.messageFormat("Global variable `{0}` not found.", StaticizeConstants.TemplateVariable_TemplateContext));
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class FreeMarkerUtils {
 		} else if (model instanceof TemplateNumberModel m) {
 			return m.getAsNumber().toString();
 		}
-		throw new TemplateModelException(StringUtils.messageFormat("Get string variable failed: '{0}'#'{1}'", name, model.toString()));
+		throw new TemplateModelException(StringUtils.messageFormat("Get string variable failed: {0} = {1}", name, model.toString()));
 	}
 	
 	private static Number parseNumber(TemplateModel model, String name) throws TemplateModelException {
@@ -103,7 +103,7 @@ public class FreeMarkerUtils {
 		} else if (model instanceof TemplateNumberModel m) {
 			return m.getAsNumber();
 		}
-		throw new TemplateModelException(StringUtils.messageFormat("Get number variable failed: '{0}'#'{1}'", name, model.toString()));
+		throw new TemplateModelException(StringUtils.messageFormat("Get number variable failed: {0} = {1}", name, model.toString()));
 	}
 	
 	public static Integer getIntegerVariable(Environment env, String name) throws TemplateModelException {
@@ -152,7 +152,7 @@ public class FreeMarkerUtils {
 				return date;
 			}
 		}
-		throw new TemplateModelException(StringUtils.messageFormat("Get date env variable failed: '{0}'#'{1}'", name, model.toString()));
+		throw new TemplateModelException(StringUtils.messageFormat("Get date env variable failed: {0} = {1}", name, model.toString()));
 	}
 	
 	public static Date getDateVariable(Environment env, String name) throws TemplateModelException {
@@ -177,7 +177,7 @@ public class FreeMarkerUtils {
 				return !("0".equals(s) || "false".equalsIgnoreCase(s) || s.equalsIgnoreCase("f"));
 			}
 		}
-		throw new TemplateModelException(StringUtils.messageFormat("Get boolean env variable failed: '{0}'#'{1}'", name, model.toString()));
+		throw new TemplateModelException(StringUtils.messageFormat("Get boolean env variable failed: {0} = {1}", name, model.toString()));
 	}
 
 	public static Boolean getBoolVariable(Environment env, String name) throws TemplateModelException {

@@ -10,13 +10,16 @@ import java.util.List;
  */
 public interface ISiteExporter {
 
-    public void export(SiteExportData data);
+    void export(SiteExportData data);
 
     /**
      * 站点导出数据，主要包含文件、数据库数据
      */
-    public static class SiteExportData {
+    class SiteExportData {
 
+        /**
+         * 资源数据
+         */
         private List<String> resources;
     }
 }

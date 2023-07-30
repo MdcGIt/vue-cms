@@ -110,15 +110,14 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 				if (tagAttr.getDataType() == TagAttrDataType.INTEGER && StringUtils.isNotEmpty(attrValue)
 						&& !NumberUtils.isCreatable(attrValue)) {
 					throw new TemplateException(
-							StringUtils.messageFormat("The tag <@{0}> attribute '{1}' must be digit, but is: {2}", this.getTagName(), tagAttr.getName(), attrValue),
+							StringUtils.messageFormat("The tag <@{0}> attribute `{1}` must be digit, but is: {2}", this.getTagName(), tagAttr.getName(), attrValue),
 							env);
 				}
 				if (tagAttr.getOptions() != null && StringUtils.isNotEmpty(attrValue)) {
-					String[] optionValues = tagAttr.getOptions().keySet()
-							.toArray(new String[tagAttr.getOptions().size()]);
-					if (!ArrayUtils.contains(optionValues, attrValue)) {
-						throw new TemplateException(StringUtils.messageFormat("The tag <@{0}> attribute '{1}' is invalid, options: {2}", this.getTagName(),
-								tagAttr.getName(), Arrays.toString(optionValues)), env);
+					String[] optionValues = tagAttr.getOptions().keySet().stream().map(String::toLowerCase).toArray(String[]::new);
+					if (!ArrayUtils.contains(optionValues, attrValue.toLowerCase())) {
+						throw new TemplateException(StringUtils.messageFormat("The tag <@{0}> attribute `{1}` = `{2}` is invalid, options: {3}", this.getTagName(),
+								tagAttr.getName(), attrValue, Arrays.toString(optionValues)), env);
 					}
 				}
 				if (StringUtils.isEmpty(attrValue) && StringUtils.isNotEmpty(tagAttr.getDefaultValue())) {

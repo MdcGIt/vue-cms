@@ -979,7 +979,8 @@ export default {
         ContentExModel: "内容扩展模型",
         ContentConfig: "内容配置",
         WordConfig: "词汇配置",
-        HotWordGroup: "热词分组"
+        HotWordGroup: "热词分组",
+        EnableContribute: "是否允许投稿"
       }
     },
     Content: {

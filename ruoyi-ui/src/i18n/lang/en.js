@@ -979,7 +979,8 @@ export default {
         ContentExModel: "Content Ex-Model",
         ContentConfig: "Content Configuration",
         WordConfig: "Word Configuration",
-        HotWordGroup: "Hot Word Group"
+        HotWordGroup: "Hot Word Group",
+        EnableContribute: "Enable Contribute"
       }
     },
     Content: {

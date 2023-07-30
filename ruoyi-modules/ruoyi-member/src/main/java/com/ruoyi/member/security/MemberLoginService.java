@@ -4,6 +4,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ruoyi.common.exception.GlobalException;
+import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.member.domain.dto.MemberLoginDTO;
+import com.ruoyi.member.domain.dto.MemberRegisterDTO;
+import com.ruoyi.member.fixed.dict.MemberStatus;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.async.AsyncTaskManager;
@@ -47,16 +53,16 @@ public class MemberLoginService {
 
 	/**
 	 * 登录验证
-	 * 
-	 * @param username 用户名
-	 * @param password 密码
-	 * @param code     验证码
-	 * @param uuid     唯一标识
+	 *
 	 * @return 结果
 	 */
-	public String login(String username, String password, String code, String uuid) {
+	public String login(MemberLoginDTO dto) {
 		// 查找用户
-		Member member = this.memberService.lambdaQuery().eq(Member::getUserName, username).one();
+		Member member = this.memberService.lambdaQuery()
+				.eq(Member::getUserName, dto.getUsername())
+				.or().eq(Member::getEmail, dto.getUsername())
+				.or().eq(Member::getPhonenumber, dto.getUsername())
+				.one();
 		if (Objects.isNull(member)) {
 			throw MemberErrorCode.MEMBER_NOT_EXISTS.exception();
 		}
@@ -64,7 +70,7 @@ public class MemberLoginService {
 			throw MemberErrorCode.MEMBER_DISABLED.exception();
 		}
 		// 密码校验
-		if (!SecurityUtils.matches(password, member.getPassword())) {
+		if (!SecurityUtils.matches(dto.getPassword(), member.getPassword())) {
 			// 密码错误处理策略
 			this.securityConfigService.processLoginPasswordError(member);
 			// 记录日志
@@ -74,11 +80,11 @@ public class MemberLoginService {
 		}
 		this.securityConfigService.onLoginSuccess(member);
 		// 记录用户最近登录时间和ip地址
-		member.setLastLoginIp(ServletUtils.getIpAddr(ServletUtils.getRequest()));
+		member.setLastLoginIp(dto.getIp());
 		member.setLastLoginTime(LocalDateTime.now());
 		memberService.updateById(member);
 		// 生成token
-		LoginUser loginUser = createLoginUser(member);
+		LoginUser loginUser = createLoginUser(member, dto.getUserAgent());
 		StpMemberUtil.login(member.getUserId(), DeviceType.PC.value());
 		loginUser.setToken(StpMemberUtil.getTokenValueByLoginId(member.getUserId()));
 		StpMemberUtil.getTokenSession().set(SaSession.USER, loginUser);
@@ -88,7 +94,7 @@ public class MemberLoginService {
 		return StpMemberUtil.getTokenValue();
 	}
 
-	private LoginUser createLoginUser(Member member) {
+	private LoginUser createLoginUser(Member member, String userAgent) {
 		LoginUser loginUser = new LoginUser();
 		loginUser.setUserId(member.getMemberId());
 		loginUser.setUserType(MemberUserType.TYPE);
@@ -96,10 +102,55 @@ public class MemberLoginService {
 		loginUser.setLoginTime(Instant.now().toEpochMilli());
 		loginUser.setLoginLocation(IP2RegionUtils.ip2Region(member.getLastLoginIp()));
 		loginUser.setIpaddr(member.getLastLoginIp());
-		UserAgent ua = UserAgent.parseUserAgentString(ServletUtils.getUserAgent());
+		UserAgent ua = UserAgent.parseUserAgentString(userAgent);
 		loginUser.setOs(ua.getOperatingSystem().name());
 		loginUser.setBrowser(ua.getBrowser() + "/" + ua.getBrowserVersion());
 		loginUser.setUser(member);
 		return loginUser;
+	}
+
+	public String register(MemberRegisterDTO dto) {
+		// 查找用户
+		LambdaQueryWrapper<Member> q = new LambdaQueryWrapper<>();
+		if ("email".equals(dto.getType())) {
+			q.eq(Member::getEmail, dto.getUserName());
+		} else if ("phone".equals(dto.getType())) {
+			q.eq(Member::getPhonenumber, dto.getUserName());
+		} else {
+			q.eq(Member::getUserName, dto.getUserName());
+		}
+		Member member = this.memberService.getOne(q);
+		if (Objects.nonNull(member)) {
+			throw new GlobalException("账号已存在");
+		}
+		// 密码规则校验
+		this.securityConfigService.validPassword(null, dto.getPassword());
+
+		member = new Member();
+		member.setMemberId(IdUtils.getSnowflakeId());
+		// TODO 抽象注册类型
+		if ("email".equals(dto.getType())) {
+			member.setEmail(dto.getUserName());
+			member.setUserName(member.getMemberId().toString());
+		} else if ("phone".equals(dto.getType())) {
+			member.setPhonenumber(dto.getUserName());
+			member.setUserName(member.getMemberId().toString());
+		} else {
+			member.setUserName(dto.getUserName());
+		}
+		member.setPassword(SecurityUtils.passwordEncode(dto.getPassword()));
+		member.setStatus(MemberStatus.ENABLE);
+		// 记录用户最近登录时间和ip地址
+		member.setLastLoginIp(dto.getIp());
+		member.setLastLoginTime(LocalDateTime.now());
+		member.createBy(member.getUserName());
+		this.memberService.save(member);
+
+		// 生成token
+		LoginUser loginUser = createLoginUser(member, dto.getUserAgent());
+		StpMemberUtil.login(member.getUserId(), DeviceType.PC.value());
+		loginUser.setToken(StpMemberUtil.getTokenValueByLoginId(member.getUserId()));
+		StpMemberUtil.getTokenSession().set(SaSession.USER, loginUser);
+		return StpMemberUtil.getTokenValue();
 	}
 }

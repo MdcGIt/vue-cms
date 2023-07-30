@@ -135,6 +135,12 @@
 			<groupId>com.ruoyi</groupId>
 			<artifactId>ruoyi-cms-customform</artifactId>
 		</dependency>
+
+		<!-- CMS会员扩展模块 -->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-cms-member</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
