@@ -44,7 +44,7 @@ public class AccountUrlFunction extends AbstractFunc  {
 		}
 		boolean includeBaseArgs = true;
 		if (args.length > 2) {
-			includeBaseArgs = ((TemplateBooleanModel) args[1]).getAsBoolean();
+			includeBaseArgs = ((TemplateBooleanModel) args[2]).getAsBoolean();
 		}
 		long memberId;
 		if (args[0] instanceof  TemplateNumberModel tnm) {
