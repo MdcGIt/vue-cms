@@ -79,7 +79,7 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
 	 */
 	@Override
 	public List<GenTable> selectDbTableList(GenTable genTable) {
-		return genTableMapper.selectDbTableList(genTable);
+		return genTableMapper.selectDbTableList(genTable.getTableName(), genTable.getTableComment());
 	}
 
 	/**
