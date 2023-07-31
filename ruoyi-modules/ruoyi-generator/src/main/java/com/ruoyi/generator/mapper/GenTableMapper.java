@@ -28,14 +28,14 @@ public interface GenTableMapper extends BaseMapper<GenTable> {
 			+ " AND table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'"
 			+ " AND table_name NOT IN (select table_name from gen_table)"
             + "<if test='tableName!=null'>"  
-	    	+ " AND table_name like '%#{genTable.tableName}%'"
+	    	+ " AND table_name like '%#{tableName}%'"
             + "</if>"  
             + "<if test='tableComment!=null'>"  
-	    	+ " AND table_comment like '%#{genTable.tableComment}%'"
+	    	+ " AND table_comment like '%#{tableComment}%'"
             + "</if>"
             + " order by create_time desc"
 			+ "</script>" })
-	public List<GenTable> selectDbTableList(@Param("genTable") GenTable genTable);
+	public List<GenTable> selectDbTableList(@Param("tableName") String tableName, @Param("tableComment") String tableComment);
 
 	/**
 	 * 查询据库列表
