@@ -5,7 +5,6 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
@@ -66,19 +65,19 @@ public class MemberAccountController extends BaseRestController {
 
         CmsSite site = this.siteService.getSite(siteId);
         if (Objects.isNull(site)) {
-            this.catchException(response, new RuntimeException("Site not found: " + siteId));
+            this.catchException("/", response, new RuntimeException("Site not found: " + siteId));
             return;
         }
         MemberCache member = this.memberStatDataService.getMemberCache(memberId);
         if (Objects.isNull(member)) {
-            this.catchException(response, new RuntimeException("Member not found: " + memberId));
+            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, new RuntimeException("Member not found: " + memberId));
             return;
         }
         // 查找动态模板
         final String detailTemplate = "account/account_centre.template.html"; // TODO 站点动态模板配置
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, publishPipeCode);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(response, new RuntimeException("Template not found: " + detailTemplate));
+            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, new RuntimeException("Template not found: " + detailTemplate));
             return;
         }
         long s = System.currentTimeMillis();
@@ -105,7 +104,7 @@ public class MemberAccountController extends BaseRestController {
             this.staticizeService.process(templateContext, response.getWriter());
             log.debug("会员主页模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
         } catch (Exception e) {
-            this.catchException(response, e);
+            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, e);
         }
     }
 
@@ -121,20 +120,20 @@ public class MemberAccountController extends BaseRestController {
 
         CmsSite site = this.siteService.getSite(sid);
         if (Objects.isNull(site)) {
-            this.catchException(response, new RuntimeException("Site not found: " + sid));
+            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
             return;
         }
         long memberId = StpMemberUtil.getLoginIdAsLong();
         Member member = this.memberService.getById(memberId);
         if (Objects.isNull(member)) {
-            this.catchException(response, new RuntimeException("Member not found: " + memberId));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
             return;
         }
         // 查找动态模板
         final String detailTemplate = "account/account_setting.template.html";
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(response, new RuntimeException("Template not found: " + detailTemplate));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
             return;
         }
         long s = System.currentTimeMillis();
@@ -153,7 +152,7 @@ public class MemberAccountController extends BaseRestController {
             this.staticizeService.process(templateContext, response.getWriter());
             log.debug("会员信息设置页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
         } catch (Exception e) {
-            this.catchException(response, e);
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
         }
     }
 
@@ -169,20 +168,20 @@ public class MemberAccountController extends BaseRestController {
 
         CmsSite site = this.siteService.getSite(sid);
         if (Objects.isNull(site)) {
-            this.catchException(response, new RuntimeException("Site not found: " + sid));
+            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
             return;
         }
         long memberId = StpMemberUtil.getLoginIdAsLong();
         Member member = this.memberService.getById(memberId);
         if (Objects.isNull(member)) {
-            this.catchException(response, new RuntimeException("Member not found: " + memberId));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
             return;
         }
         // 查找动态模板
         final String detailTemplate = "account/account_password.template.html";
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(response, new RuntimeException("Template not found: " + detailTemplate));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
             return;
         }
         long s = System.currentTimeMillis();
@@ -201,7 +200,7 @@ public class MemberAccountController extends BaseRestController {
             this.staticizeService.process(templateContext, response.getWriter());
             log.debug("会员信息设置页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
         } catch (Exception e) {
-            this.catchException(response, e);
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
         }
     }
 
@@ -217,20 +216,20 @@ public class MemberAccountController extends BaseRestController {
 
         CmsSite site = this.siteService.getSite(sid);
         if (Objects.isNull(site)) {
-            this.catchException(response, new RuntimeException("Site not found: " + sid));
+            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
             return;
         }
         long memberId = StpMemberUtil.getLoginIdAsLong();
         Member member = this.memberService.getById(memberId);
         if (Objects.isNull(member)) {
-            this.catchException(response, new RuntimeException("Member not found: " + memberId));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
             return;
         }
         // 查找动态模板
         final String detailTemplate = "account/account_change_email.template.html";
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(response, new RuntimeException("Template not found: " + detailTemplate));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
             return;
         }
         long s = System.currentTimeMillis();
@@ -249,7 +248,7 @@ public class MemberAccountController extends BaseRestController {
             this.staticizeService.process(templateContext, response.getWriter());
             log.debug("会员信息设置页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
         } catch (Exception e) {
-            this.catchException(response, e);
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
         }
     }
 
@@ -265,20 +264,20 @@ public class MemberAccountController extends BaseRestController {
 
         CmsSite site = this.siteService.getSite(sid);
         if (Objects.isNull(site)) {
-            this.catchException(response, new RuntimeException("Site not found: " + sid));
+            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
             return;
         }
         long memberId = StpMemberUtil.getLoginIdAsLong();
         Member member = this.memberService.getById(memberId);
         if (Objects.isNull(member)) {
-            this.catchException(response, new RuntimeException("Member not found: " + memberId));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
             return;
         }
         // 查找动态模板
         final String detailTemplate = "account/account_contribute.template.html";
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(response, new RuntimeException("Template not found: " + detailTemplate));
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
             return;
         }
         long s = System.currentTimeMillis();
@@ -297,15 +296,15 @@ public class MemberAccountController extends BaseRestController {
             this.staticizeService.process(templateContext, response.getWriter());
             log.debug("会员投稿页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
         } catch (Exception e) {
-            this.catchException(response, e);
+            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
         }
     }
 
-    private void catchException(HttpServletResponse response, Exception e) throws IOException {
+    private void catchException(String redirectLink, HttpServletResponse response, Exception e) throws IOException {
         if (log.isDebugEnabled()) {
             e.printStackTrace(response.getWriter());
         } else {
-            response.sendRedirect("/500.html"); // TODO 通过发布通道属性配置错误页面
+            response.sendRedirect(redirectLink); // TODO 通过发布通道属性配置错误页面
         }
     }
 }
