@@ -34,7 +34,7 @@ public class StpMemberUtil {
 		// 重写 StpLogic 类下的 `splicingKeyTokenName` 函数，返回一个与 `StpUtil` 不同的token名称, 防止冲突
 		@Override
 		public String splicingKeyTokenName() {
-			return super.splicingKeyTokenName() + "-" + TYPE;
+			return super.splicingKeyTokenName() + "-M";
 		}
 	};
 
