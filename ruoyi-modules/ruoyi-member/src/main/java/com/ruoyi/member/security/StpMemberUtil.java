@@ -70,12 +70,12 @@ public class StpMemberUtil {
 				// 临时处理一下
 				if (StringUtils.isNotEmpty(tokenValue)) {
 					String tokenPrefix = getConfig().getTokenPrefix();
-					if (StringUtils.isNotEmpty(tokenPrefix) && !tokenValue.contains(SaTokenConsts.TOKEN_CONNECTOR_CHAT)) {
+					if (StringUtils.isNotEmpty(tokenPrefix) && !tokenValue.startsWith(tokenPrefix + SaTokenConsts.TOKEN_CONNECTOR_CHAT)) {
 						tokenValue = tokenPrefix + SaTokenConsts.TOKEN_CONNECTOR_CHAT + tokenValue;
 					}
+					System.out.println("---getTokenValueNotCut.cookie: " + tokenValue);
 				}
 			}
-
 			// 5. 返回
 			return tokenValue;
 		}
