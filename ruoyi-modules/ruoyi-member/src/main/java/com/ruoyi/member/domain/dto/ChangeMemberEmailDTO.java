@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 public class ChangeMemberEmailDTO {
 
     @NotEmpty
-    private String password;
+    private String authCode;
 
     @NotEmpty
     @Email

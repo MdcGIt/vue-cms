@@ -63,6 +63,7 @@ public class CmsContentTag extends AbstractListTag {
 		tagAttrs.add(tagAttrSort);
 		tagAttrs.add(new TagAttr("hasattribute", false, TagAttrDataType.STRING, "包含内容属性，多个属性英文逗号分隔，属性定义见数据字典配置[cms_content_attribute]"));
 		tagAttrs.add(new TagAttr("noattribute", false, TagAttrDataType.STRING, "不包含内容属性，多个属性英文逗号分隔，属性定义见数据字典配置[cms_content_attribute]"));
+		tagAttrs.add(new TagAttr("status", false, TagAttrDataType.STRING, "状态，'-1'表示不限制状态，默认：已发布"));
 		return tagAttrs;
 	}
 
@@ -83,9 +84,10 @@ public class CmsContentTag extends AbstractListTag {
 			throw new CatalogNotFoundException(getTagName(), catalogId, alias, env);
 		}
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+		String status = MapUtils.getString(attrs, "status", ContentStatus.PUBLISHED);
 
 		LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<>();
-		q.eq(CmsContent::getSiteId, siteId).eq(CmsContent::getStatus, ContentStatus.PUBLISHED);
+		q.eq(CmsContent::getSiteId, siteId).eq(!"-1".equals(status), CmsContent::getStatus, ContentStatus.PUBLISHED);
 		if ("Current".equalsIgnoreCase(level)) {
 			q.eq(CmsContent::getCatalogId, catalog.getCatalogId());
 		} else if ("Child".equalsIgnoreCase(level)) {

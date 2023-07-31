@@ -19,6 +19,8 @@ import java.util.List;
 @Setter
 public class ArticleContributeDTO {
 
+    private Long contentId;
+
     /**
      * 分类ID
      */

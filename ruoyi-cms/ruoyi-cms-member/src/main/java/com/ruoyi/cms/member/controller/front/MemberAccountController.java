@@ -1,13 +1,24 @@
 package com.ruoyi.cms.member.controller.front;
 
+import com.ruoyi.article.domain.CmsArticleDetail;
+import com.ruoyi.article.service.IArticleService;
+import com.ruoyi.cms.member.domain.vo.ContributeArticleVO;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.staticize.core.TemplateContext;
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.contentcore.core.IContent;
+import com.ruoyi.contentcore.core.IContentType;
+import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
+import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
+import com.ruoyi.contentcore.util.ContentCoreUtils;
+import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.contentcore.util.TemplateUtils;
 import com.ruoyi.member.domain.Member;
@@ -42,6 +53,8 @@ import java.util.Objects;
 public class MemberAccountController extends BaseRestController {
 
     private final ISiteService siteService;
+
+    private final IContentService contentService;
 
     private final StaticizeService staticizeService;
 
@@ -252,10 +265,13 @@ public class MemberAccountController extends BaseRestController {
         }
     }
 
+    private final IArticleService articleService;
+
     @Priv(type = MemberUserType.TYPE)
     @GetMapping("/contribute")
     public void accountContribute(@RequestParam Long sid,
                                   @RequestParam String pp,
+                                  @RequestParam(value = "cid", required = false) Long contentId,
                                   @RequestParam(required = false, defaultValue = "false") Boolean preview,
                                   HttpServletResponse response)
             throws IOException {
@@ -292,6 +308,17 @@ public class MemberAccountController extends BaseRestController {
             templateContext.getVariables().put("Member", member);
             templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(preview));
             templateContext.getVariables().put("Request", ServletUtils.getParameters());
+            if (IdUtils.validate(contentId)) {
+                CmsContent content = this.contentService.getById(contentId);
+                CmsArticleDetail articleDetail = this.articleService.getById(content.getContentId());
+                ContributeArticleVO article = ContributeArticleVO.newInstance(content, articleDetail);
+                if (StringUtils.isNotEmpty(content.getLogo())) {
+                    article.setLogoSrc(InternalUrlUtils.getActualUrl(article.getLogo(), pp, preview));
+                }
+                templateContext.getVariables().put("Article", article);
+            } else {
+                templateContext.getVariables().put("Article", new ContributeArticleVO());
+            }
             // staticize
             this.staticizeService.process(templateContext, response.getWriter());
             log.debug("会员投稿页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);

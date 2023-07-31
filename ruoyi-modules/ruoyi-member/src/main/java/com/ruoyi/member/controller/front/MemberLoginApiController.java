@@ -2,6 +2,7 @@ package com.ruoyi.member.controller.front;
 
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.redis.RedisCache;
 import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
@@ -26,12 +27,17 @@ import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISecurityConfigService;
 import com.ruoyi.system.service.ISysLogininforService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @RestController
@@ -49,6 +55,15 @@ public class MemberLoginApiController extends BaseRestController {
 	private final ISysLogininforService logininforService;
 
 	private final AsyncTaskManager asyncTaskManager;
+
+	private final JavaMailSender javaMailSender;
+
+	private final RedisCache redisCache;
+
+	private static final String SMS_CODE_CACHE_PREFIX = "member:sms_code:";
+
+	@Value("${spring.mail.username:}")
+	private String mailSendUser;
 
 	@GetMapping("/is_login")
 	public R<?> checkLogin(@RequestParam(required = false, defaultValue = "false") Boolean preview) {
@@ -125,12 +140,38 @@ public class MemberLoginApiController extends BaseRestController {
 
 	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
+	@PostMapping("/sms_code")
+	public R<?> sendSmsCode(@RequestParam(required = false, defaultValue = "email") String type) {
+		if (StringUtils.isEmpty(mailSendUser)) {
+			return R.fail("发送失败，请联系管理员！");
+		}
+		try {
+			Member member = this.memberService.getById(StpMemberUtil.getLoginIdAsLong());
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setFrom(mailSendUser);
+			message.setTo(member.getEmail());
+			message.setSubject("邮箱绑定验证");
+			String code = String.valueOf(RandomUtils.nextInt(100000, 999999));
+			message.setText("验证码：" + code);
+			javaMailSender.send(message);
+
+			redisCache.setCacheObject(SMS_CODE_CACHE_PREFIX + member.getMemberId(), code, 600, TimeUnit.SECONDS);
+			return R.ok();
+		} catch (Exception e) {
+			return R.fail("发送失败，请联系管理员！");
+		}
+	}
+
+	@IgnoreDemoMode
+	@Priv(type = MemberUserType.TYPE)
 	@PutMapping("/change_email")
 	public R<?> changeMemberEmail(@RequestBody @Validated ChangeMemberEmailDTO dto) {
-		Member member = this.memberService.getById(StpMemberUtil.getLoginIdAsLong());
-		if (!SecurityUtils.matches(dto.getPassword(), member.getPassword())) {
-			return R.fail("密码错错误");
+		String authCode = this.redisCache.getCacheObject(SMS_CODE_CACHE_PREFIX + StpMemberUtil.getLoginIdAsLong());
+		if (StringUtils.isEmpty(authCode) || !dto.getAuthCode().equals(authCode)) {
+			return R.fail("验证码错误");
 		}
+
+		Member member = this.memberService.getById(StpMemberUtil.getLoginIdAsLong());
 		boolean update = this.memberService.lambdaUpdate()
 				.set(Member::getEmail, dto.getEmail())
 				.eq(Member::getMemberId, member.getMemberId())

@@ -194,6 +194,8 @@ public class ContentDTO {
 	 * 自定义参数
 	 */
 	private Map<String, Object> params;
+
+	private String status;
 	
 	public static ContentDTO newInstance(CmsContent cmsContent) {
 		ContentDTO dto = new ContentDTO();
