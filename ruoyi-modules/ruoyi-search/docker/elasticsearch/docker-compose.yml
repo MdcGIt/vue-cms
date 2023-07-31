@@ -2,10 +2,10 @@ version: '3
 networks:
   default:
 services:
-  qf-elasticsearch:
+  cc-elasticsearch:
     image: {{DOCKER_IMAGE}}
     restart: unless-stopped
-    container_name: qf-elasticsearch
+    container_name: cc-elasticsearch
     healthcheck:
       test: [ "CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1" ]
       interval: 30s

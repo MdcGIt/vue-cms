@@ -1,5 +1,6 @@
 package com.ruoyi.cms.member.controller.front;
 
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.staticize.core.TemplateContext;
@@ -12,6 +13,7 @@ import com.ruoyi.contentcore.util.SiteUtils;
 import com.ruoyi.contentcore.util.TemplateUtils;
 import com.ruoyi.member.domain.Member;
 import com.ruoyi.member.domain.vo.MemberCache;
+import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.service.IMemberService;
 import com.ruoyi.member.service.IMemberStatDataService;
 import com.ruoyi.member.util.MemberUtils;
@@ -106,6 +108,7 @@ public class MemberAccountController extends BaseRestController {
 		}
 	}
 
+	@Priv(type = MemberUserType.TYPE)
 	@GetMapping("/{memberId}/setting")
 	public void accountSetting(@PathVariable("memberId") @LongId Long memberId,
 							   @RequestParam Long sid,
@@ -153,6 +156,7 @@ public class MemberAccountController extends BaseRestController {
 		}
 	}
 
+	@Priv(type = MemberUserType.TYPE)
 	@GetMapping("/{memberId}/password")
 	public void accountPassword(@PathVariable("memberId") @LongId Long memberId,
 								@RequestParam Long sid,
@@ -200,6 +204,7 @@ public class MemberAccountController extends BaseRestController {
 		}
 	}
 
+	@Priv(type = MemberUserType.TYPE)
 	@GetMapping("/{memberId}/change_email")
 	public void accountChangeEmail(@PathVariable("memberId") @LongId Long memberId,
 								   @RequestParam Long sid,
@@ -247,6 +252,7 @@ public class MemberAccountController extends BaseRestController {
 		}
 	}
 
+	@Priv(type = MemberUserType.TYPE)
 	@GetMapping("/{memberId}/contribute")
 	public void accountContribute(@PathVariable("memberId") @LongId Long memberId,
 								   @RequestParam Long sid,
