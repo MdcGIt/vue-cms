@@ -29,7 +29,7 @@ public class CmsMemberUtils {
             }
         }
         if (StringUtils.isNotEmpty(type)) {
-            url += "&type=" + type;
+            url += (url.indexOf("?") > -1 ? "&" : "?") + "type=" + type;
         }
         return url;
     }
