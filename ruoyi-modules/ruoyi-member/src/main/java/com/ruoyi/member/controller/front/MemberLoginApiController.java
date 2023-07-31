@@ -64,9 +64,9 @@ public class MemberLoginApiController extends BaseRestController {
 			memberCache.setAvatar(MemberUtils.getMemberResourcePrefix(preview) + memberCache.getCover());
 		}
 		if (memberCache.getMenus().isEmpty()) {
-			memberCache.getMenus().add(new MemberMenuVO("账号信息", "account/"+memberCache.getMemberId()+"/setting"));
-			memberCache.getMenus().add(new MemberMenuVO("修改密码", "account/"+memberCache.getMemberId()+"/password"));
-			memberCache.getMenus().add(new MemberMenuVO("文章投稿", "account/"+memberCache.getMemberId()+"/contribute"));
+			memberCache.getMenus().add(new MemberMenuVO("账号信息", "account/setting"));
+			memberCache.getMenus().add(new MemberMenuVO("修改密码", "account/password"));
+			memberCache.getMenus().add(new MemberMenuVO("文章投稿", "account/contribute"));
 		}
 		return R.ok(memberCache);
 	}
