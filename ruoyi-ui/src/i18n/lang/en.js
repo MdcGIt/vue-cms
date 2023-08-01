@@ -679,6 +679,9 @@ export default {
       Loading: "Loading...",
       Attribute: "Attribute",
       Value: "Value",
+      ApplicationInfo: "Application Infomation",
+      AppName: "Name",
+      AppVersion: "Version",
       CPU: "CPU",
       CPUCoreNum: "Core Number",
       CPUUserUsage: "User Usage",
@@ -979,7 +982,8 @@ export default {
         ContentExModel: "Content Ex-Model",
         ContentConfig: "Content Configuration",
         WordConfig: "Word Configuration",
-        HotWordGroup: "Hot Word Group"
+        HotWordGroup: "Hot Word Group",
+        EnableContribute: "Enable Contribute"
       }
     },
     Content: {

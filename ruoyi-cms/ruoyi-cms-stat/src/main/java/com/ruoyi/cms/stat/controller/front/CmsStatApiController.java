@@ -2,22 +2,18 @@ package com.ruoyi.cms.stat.controller.front;
 
 import com.ruoyi.cms.stat.core.CmsStat;
 import com.ruoyi.cms.stat.domain.CmsSiteVisitLog;
-import com.ruoyi.contentcore.domain.vo.ContentDynamicDataVO;
-import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.contentcore.domain.CmsContent;
-import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.system.security.AdminUserType;
-import com.ruoyi.system.validator.LongId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 统计数据
@@ -25,10 +21,8 @@ import java.util.Map;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(type = AdminUserType.TYPE)
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/stat/visit")
 public class CmsStatApiController extends BaseRestController {
 
 	private final List<CmsStat> statList;
@@ -41,7 +35,7 @@ public class CmsStatApiController extends BaseRestController {
 	 * @param contentId
 	 * @return
 	 */
-	@GetMapping
+	@GetMapping("/api/stat/visit")
 	public void visitSite(
 			@RequestParam("sid") Long siteId,
 			@RequestParam(value = "cid", required = false, defaultValue = "0") Long catalogId,

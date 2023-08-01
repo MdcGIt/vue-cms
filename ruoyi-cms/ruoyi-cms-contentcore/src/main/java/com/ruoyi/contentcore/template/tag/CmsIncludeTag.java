@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.contentcore.properties.EnableSSIProperty;
 import com.ruoyi.contentcore.util.TemplateUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -63,6 +64,8 @@ public class CmsIncludeTag extends AbstractTag {
 
 	private static final String TagAttr_VIRTUAL = "virtual";
 
+	private static final String TagAttr_CACHE = "cache";
+
 	/**
 	 * <@cms_include file="footer.template.html"></@cms_include>
 	 */
@@ -86,6 +89,8 @@ public class CmsIncludeTag extends AbstractTag {
 		tagAttrs.add(new TagAttr(TagAttr_FILE, true, TagAttrDataType.STRING, "引用模板文件路径（相对模板目录template/）"));
 		tagAttrs.add(new TagAttr(TagAttr_SSI, false, TagAttrDataType.BOOLEAN, "是否启用SSI", "true"));
 		tagAttrs.add(new TagAttr(TagAttr_VIRTUAL, false, TagAttrDataType.BOOLEAN, "是否启用virtual，此模式下区块无法继承当前页面上限文变量，需要通过参数传入需要的变量", "false"));
+		tagAttrs.add(new TagAttr(TagAttr_CACHE, false, TagAttrDataType.BOOLEAN, "是否启用缓存", "true"));
+
 		return tagAttrs;
 	}
 
@@ -101,30 +106,37 @@ public class CmsIncludeTag extends AbstractTag {
 		CmsSite site = this.siteService.getSite(siteId);
 
 		boolean ssi = MapUtils.getBoolean(attrs, TagAttr_SSI, EnableSSIProperty.getValue(site.getConfigProps()));
-		boolean virtual = Boolean.valueOf(attrs.get(TagAttr_VIRTUAL));
+		boolean virtual = Boolean.parseBoolean(attrs.get(TagAttr_VIRTUAL));
+		boolean cache = Boolean.parseBoolean(attrs.get(TagAttr_CACHE));
 
-		String includeTemplateKey = SiteUtils.getTemplateKey(site, context.getPublishPipeCode(), file);
+		String templateFile = StringUtils.substringBefore(file, "?");
+		String params = StringUtils.substringAfter(file, "?");
+
+		String includeTemplateKey = SiteUtils.getTemplateKey(site, context.getPublishPipeCode(), templateFile);
 		if (context.isPreview()) {
 			Template includeTemplate = env.getTemplateForInclusion(includeTemplateKey,
 					StandardCharsets.UTF_8.displayName(), true);
+			env.setVariable("Request", wrap(env, StringUtils.splitToMap(params, "&", "=")));
 			env.include(includeTemplate);
 		} else if (virtual) {
-			String t = file;
-			String params = null;
-			if (file.indexOf("?") > -1) {
-				String[] split = StringUtils.split(file, "?");
-				t = split[0];
-				params = split[1];
-			}
 			// 动态模板
-			String virtualPath = "/cms/ssi/virtual?sid=" + siteId + "&pp=" + context.getPublishPipeCode() + "&t=" + t + "&" + params;
+			String virtualPath = "/cms/ssi/virtual?sid=" + siteId + "&pp=" + context.getPublishPipeCode()
+					+ "&t=" + templateFile + "&" + params;
 			env.getOut().write(StringUtils.messageFormat(SSI_INCLUDE_VIRTUAL_TAG, virtualPath));
 		} else {
+			String cacheKey = includeTemplateKey + (StringUtils.isEmpty(params) ? "" : ("?" + params));
 			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
-			String staticFilePath = TemplateUtils.getIncludeRelativeStaticPath(site, context.getPublishPipeCode(), includeTemplateKey);
-			String staticContent = templateService.getTemplateStaticContentCache(includeTemplateKey);
+			String staticFilePath = TemplateUtils.getIncludeRelativeStaticPath(site,
+					context.getPublishPipeCode(), includeTemplateKey);
+			String staticContent = cache ? templateService.getTemplateStaticContentCache(cacheKey) : null;
 			if (Objects.isNull(staticContent) || !new File(siteRoot + staticFilePath).exists()) {
-				staticContent = this.writeTo(env, context, includeTemplateKey, siteRoot + staticFilePath);
+				staticContent = processTemplate(env, StringUtils.getPathParameterMap(file), includeTemplateKey);
+				if (ssi) {
+					FileUtils.writeStringToFile(new File(siteRoot + staticFilePath), staticContent, StandardCharsets.UTF_8);
+				}
+				if (cache) {
+					this.templateService.setTemplateStaticContentCache(cacheKey, staticContent);
+				}
 			}
 			if (ssi) {
 				env.getOut().write(StringUtils.messageFormat(SSI_INCLUDE_TAG, "/" + staticFilePath));
@@ -136,26 +148,16 @@ public class CmsIncludeTag extends AbstractTag {
 	}
 
 	/**
-	 * 静态化内容写入文件
-	 */
-	private String writeTo(Environment env, TemplateContext context, String includeTemplateName, String staticFilePath)
-			throws TemplateException, IOException {
-		String staticContent = processTemplate(env, context, includeTemplateName);
-		FileUtils.writeStringToFile(new File(staticFilePath), staticContent, StandardCharsets.UTF_8);
-		this.templateService.setTemplateStaticContentCache(includeTemplateName, staticContent);
-		return staticContent;
-	}
-
-	/**
 	 * 生成包含模板静态化内容
 	 */
-	private String processTemplate(Environment env, TemplateContext context, String includeTemplateName)
+	private String processTemplate(Environment env, Map<String, String> params, String includeTemplateName)
 			throws TemplateException, IOException {
 		Writer out = env.getOut();
 		try (StringWriter writer = new StringWriter()) {
 			env.setOut(writer);
 			Template includeTemplate = env.getTemplateForInclusion(includeTemplateName,
 					StandardCharsets.UTF_8.displayName(), true);
+			env.setVariable("Request", wrap(env, params));
 			env.include(includeTemplate);
 			return writer.getBuffer().toString();
 		} finally {

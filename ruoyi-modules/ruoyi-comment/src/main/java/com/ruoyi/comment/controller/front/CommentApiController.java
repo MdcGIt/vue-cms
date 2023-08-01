@@ -1,29 +1,21 @@
 package com.ruoyi.comment.controller.front;
 
-import java.util.List;
-
-import com.ruoyi.common.security.anno.Priv;
-import com.ruoyi.member.security.MemberUserType;
-import com.ruoyi.system.annotation.IgnoreDemoMode;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ruoyi.comment.domain.Comment;
 import com.ruoyi.comment.domain.dto.SubmitCommentDTO;
+import com.ruoyi.comment.domain.vo.CommentVO;
 import com.ruoyi.comment.service.ICommentApiService;
 import com.ruoyi.common.domain.R;
+import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.security.StpMemberUtil;
-
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -41,9 +33,9 @@ public class CommentApiController extends BaseRestController {
 	 */
 	@GetMapping("/{type}/{dataId}")
 	public R<?> getCommentList(@PathVariable("type") String type, @PathVariable("dataId") Long dataId,
-			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
 			@RequestParam(value = "offset", defaultValue = "0") Long offset) {
-		List<Comment> list = this.commentApiService.getCommentList(type, dataId, limit, offset);
+		List<CommentVO> list = this.commentApiService.getCommentList(type, dataId, limit, offset);
 		return R.ok(list);
 	}
 
@@ -65,9 +57,11 @@ public class CommentApiController extends BaseRestController {
 
 	@IgnoreDemoMode
 	@Priv(type = MemberUserType.TYPE)
-	@PostMapping
+	@PostMapping("/submit")
 	public R<?> submitComment(@RequestBody SubmitCommentDTO dto) {
 		dto.setOperator(StpMemberUtil.getLoginUser());
+		dto.setClientIp(ServletUtils.getIpAddr(ServletUtils.getRequest()));
+		dto.setUserAgent(ServletUtils.getUserAgent());
 		this.commentApiService.submitComment(dto);
 		return R.ok();
 	}

@@ -43,7 +43,7 @@ public class CmsContentTag extends AbstractListTag {
 	final static Map<String, String> AttrOptions_Level = Map.of("Root", "所有栏目", "Current", "当前栏目", "Child",
 			"子栏目", "CurrentAndChild", "当前栏目和子栏目");
 
-	final static Map<String, String> AttrOptions_Sort = Map.of("Recent", "发布时间降序", "Default", "（默认）排序字段降序");
+	final static Map<String, String> AttrOptions_Sort = Map.of("Recent", "发布时间降序", "Views", "浏览量降序", "Default", "（默认）排序字段降序");
 
 	private final IContentService contentService;
 
@@ -63,6 +63,7 @@ public class CmsContentTag extends AbstractListTag {
 		tagAttrs.add(tagAttrSort);
 		tagAttrs.add(new TagAttr("hasattribute", false, TagAttrDataType.STRING, "包含内容属性，多个属性英文逗号分隔，属性定义见数据字典配置[cms_content_attribute]"));
 		tagAttrs.add(new TagAttr("noattribute", false, TagAttrDataType.STRING, "不包含内容属性，多个属性英文逗号分隔，属性定义见数据字典配置[cms_content_attribute]"));
+		tagAttrs.add(new TagAttr("status", false, TagAttrDataType.STRING, "状态，'-1'表示不限制状态，默认：已发布"));
 		return tagAttrs;
 	}
 
@@ -83,9 +84,10 @@ public class CmsContentTag extends AbstractListTag {
 			throw new CatalogNotFoundException(getTagName(), catalogId, alias, env);
 		}
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
+		String status = MapUtils.getString(attrs, "status", ContentStatus.PUBLISHED);
 
 		LambdaQueryWrapper<CmsContent> q = new LambdaQueryWrapper<>();
-		q.eq(CmsContent::getSiteId, siteId).eq(CmsContent::getStatus, ContentStatus.PUBLISHED);
+		q.eq(CmsContent::getSiteId, siteId).eq(!"-1".equals(status), CmsContent::getStatus, ContentStatus.PUBLISHED);
 		if ("Current".equalsIgnoreCase(level)) {
 			q.eq(CmsContent::getCatalogId, catalog.getCatalogId());
 		} else if ("Child".equalsIgnoreCase(level)) {
@@ -111,6 +113,8 @@ public class CmsContentTag extends AbstractListTag {
 		String sortType = MapUtils.getString(attrs, "sort");
 		if ("Recent".equalsIgnoreCase(sortType)) {
 			q.orderByDesc(CmsContent::getPublishDate);
+		} else if("Views".equalsIgnoreCase(sortType)) {
+			q.orderByDesc(CmsContent::getViewCount);
 		} else {
 			q.orderByDesc(Arrays.asList(CmsContent::getTopFlag, CmsContent::getSortFlag));
 		}
@@ -125,7 +129,6 @@ public class CmsContentTag extends AbstractListTag {
 			ContentDTO dto = ContentDTO.newInstance(c);
 			dto.setLink(this.contentService.getContentLink(c, 1, context.getPublishPipeCode(), context.isPreview()));
 			dto.setLogoSrc(InternalUrlUtils.getActualUrl(c.getLogo(), context.getPublishPipeCode(), context.isPreview()));
-			dto.setAttributes(ContentAttribute.convertStr(c.getAttributes()));
 			list.add(dto);
 		});
 		return TagPageData.of(list, pageResult.getTotal());

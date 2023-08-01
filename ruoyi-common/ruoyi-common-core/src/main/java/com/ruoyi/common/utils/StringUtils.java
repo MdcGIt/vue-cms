@@ -1,17 +1,11 @@
 package com.ruoyi.common.utils;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.util.AntPathMatcher;
+
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 字符串工具类
@@ -290,28 +284,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 		return list;
 	}
-
-	/**
-	 * 字符串按指定字符分隔转成map
-	 *
-	 * @param str
-	 * @param entrySpliter
-	 * @param kvSpliter
-	 */
-	public static Map<String, String> strToMap(String str, String entrySpliter, String kvSpliter) {
-		Map<String, String> map = new HashMap<>();
-		if (isBlank(str)) {
-			return map;
-		}
-		String[] entries = split(str, entrySpliter);
-		for (String entry : entries) {
-			String[] kv = split(entry, kvSpliter);
-			if (kv.length == 2) {
-				map.put(kv[0], kv[1]);
-			}
-		}
-		return map;
-	}
 	
 	/**
 	 * 判断给定的set列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
@@ -581,6 +553,14 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return map;
 	}
 
+	public static String mapToString(Map<String, Object> map, String entrySpliter, String keySpliter) {
+		if (Objects.isNull(map) || map.isEmpty()) {
+			return EMPTY;
+		}
+		return map.entrySet().stream().map(e -> e.getKey() + keySpliter + (Objects.isNull(e.getValue()) ? EMPTY : e.getValue().toString()))
+				.collect(Collectors.joining(entrySpliter));
+	}
+
 	/**
 	 * 分隔字符串未字符串数据，并且忽略空字符串
 	 * 
@@ -713,5 +693,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return EMPTY;
 		}
 		return str;
+    }
+
+	/**
+	 * 返回url路径后的参数集合
+	 *
+	 * @param path
+	 * @return
+	 */
+    public static Map<String, String> getPathParameterMap(String path) {
+		if (Objects.isNull(path) || !path.contains("?")) {
+			return Map.of();
+		}
+		String str = substringAfter(path, "?");
+		return splitToMap(str, "&", "=");
     }
 }

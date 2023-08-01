@@ -49,7 +49,7 @@ public class CaptchaController {
 	public R<?> getCode(HttpServletResponse response) throws IOException {
 		boolean captchaEnabled = SysCaptchaEnable.isEnable();
 		if (!captchaEnabled) {
-			return R.fail(ImageCaptchaVO.builder().captchaEnabled(false).build());
+			return R.ok(ImageCaptchaVO.builder().captchaEnabled(false).build());
 		}
 
 		// 保存验证码信息

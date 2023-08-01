@@ -57,7 +57,37 @@ public enum MemberErrorCode implements ErrorCode {
 	/**
 	 * 会员用户被封禁
 	 */
-	MEMBER_DISABLED;
+	MEMBER_DISABLED,
+
+	/**
+	 * 已关注过的用户
+	 */
+	FOLLOWED,
+
+	/**
+	 * 已收藏过
+	 */
+	FAVORITED,
+
+	/**
+	 * 未收藏过
+	 */
+	NOT_FAVORITED,
+
+	/**
+	 * 已点赞过
+	 */
+	LIKED,
+
+	/**
+	 * 未点赞过
+	 */
+	NOT_LIKED,
+
+	/**
+	 * 不能关注自己
+	 */
+	CAN_NOT_FOLLOW_SELF;
 	
 	@Override
 	public String value() {

@@ -1,8 +1,28 @@
 package com.ruoyi.comment.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.comment.domain.Comment;
+import com.ruoyi.comment.domain.CommentLike;
+import com.ruoyi.comment.domain.dto.SubmitCommentDTO;
+import com.ruoyi.comment.domain.vo.CommentVO;
+import com.ruoyi.comment.exception.CommentErrorCode;
+import com.ruoyi.comment.fixed.dict.CommentAuditStatus;
+import com.ruoyi.comment.listener.event.AfterCommentSubmitEvent;
+import com.ruoyi.comment.mapper.CommentLikeMapper;
+import com.ruoyi.comment.mapper.CommentMapper;
+import com.ruoyi.comment.member.CommentMemberStatData;
+import com.ruoyi.comment.service.ICommentApiService;
+import com.ruoyi.comment.service.ICommentService;
+import com.ruoyi.common.async.AsyncTaskManager;
+import com.ruoyi.common.db.DBConstants;
+import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IP2RegionUtils;
+import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.member.domain.vo.MemberCache;
+import com.ruoyi.member.service.IMemberStatDataService;
+import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeansException;
@@ -11,25 +31,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ruoyi.comment.CommentConsts;
-import com.ruoyi.comment.domain.Comment;
-import com.ruoyi.comment.domain.CommentLike;
-import com.ruoyi.comment.domain.dto.SubmitCommentDTO;
-import com.ruoyi.comment.exception.CommentErrorCode;
-import com.ruoyi.comment.fixed.dict.CommentAuditStatus;
-import com.ruoyi.comment.listener.event.AfterCommentSubmitEvent;
-import com.ruoyi.comment.mapper.CommentLikeMapper;
-import com.ruoyi.comment.mapper.CommentMapper;
-import com.ruoyi.comment.service.ICommentApiService;
-import com.ruoyi.comment.service.ICommentService;
-import com.ruoyi.common.async.AsyncTaskManager;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IP2RegionUtils;
-import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.ServletUtils;
-
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -44,6 +47,8 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 	private final AsyncTaskManager asyncTaskManager;
 
 	private final RedissonClient redissonClient;
+
+	private final IMemberStatDataService memberStatDataService;
 
 	private ApplicationContext applicationContext;
 
@@ -108,52 +113,95 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		comment.setUid(dto.getOperator().getUserId());
 		comment.setContent(dto.getContent()); // TODO 敏感词过滤
 		comment.setCommentTime(LocalDateTime.now());
-		comment.setAuditStatus(CommentAuditStatus.PASSED);
+		comment.setAuditStatus(CommentAuditStatus.TO_AUDIT);
 		comment.setLikeCount(0);
-		comment.setParentId(dto.getCommentId());
+		comment.setParentId(0L);
 		comment.setReplyCount(0);
-		comment.setReplyUid(dto.getReplyUid());
+		comment.setReplyUid(0L);
 		comment.setIp(dto.getClientIp());
 		comment.setUserAgent(dto.getUserAgent());
 		comment.setLocation(IP2RegionUtils.ip2Region(dto.getClientIp()));
 		comment.setClientType(ServletUtils.getDeviceType(dto.getUserAgent()));
+		if (IdUtils.validate(dto.getCommentId())) {
+			Comment parent = this.commentMapper.selectById(dto.getCommentId());
+			comment.setReplyUid(parent.getUid());
+			comment.setParentId(parent.getCommentId());
+		}
 		this.commentService.save(comment);
 		// 提供扩展点
 		this.applicationContext.publishEvent(new AfterCommentSubmitEvent(this, comment));
 		// 如果是回复，修改父级评论回复数
 		if (comment.getParentId() > 0) {
 			asyncTaskManager.execute(() -> {
+				// 更新评论回复数量
 				incrCommentReplyCount(comment.getParentId());
+				// 更新会员评论数量
+				memberStatDataService.changeMemberStatData(comment.getUid(), CommentMemberStatData.TYPE, 1);
 			});
 		}
-
 	}
 
 	@Override
-	public List<Comment> getCommentList(String type, Long sourceId, Integer limit, Long offset) {
-		List<Comment> list = this.commentService.lambdaQuery().eq(Comment::getSourceType, type)
-				.eq(Comment::getSourceId, sourceId).eq(Comment::getParentId, 0)
-				.eq(Comment::getAuditStatus, CommentAuditStatus.PASSED).gt(Comment::getCommentId, offset)
-				.orderByDesc(Comment::getCommentId).last("limit " + limit).list();
-		list.forEach(comment -> {
-			if (comment.isDeleted()) {
-				comment.setContent(null); // 已删除评论内容不返回
-			}
+	public List<CommentVO> getCommentList(String type, Long sourceId, Integer limit, Long offset) {
+		Page<Comment> page = this.commentService.lambdaQuery().eq(Comment::getSourceType, type)
+				.eq(Comment::getSourceId, sourceId)
+				.eq(Comment::getParentId, 0)
+				.eq(Comment::getAuditStatus, CommentAuditStatus.PASSED)
+				.lt(IdUtils.validate(offset), Comment::getCommentId, offset)
+				.orderByDesc(Comment::getCommentId)
+				.page(new Page<>(1, limit, false));
+		List<Comment> list = page.getRecords();
+		List<CommentVO> comments = list.stream().map(comment -> {
+			CommentVO vo = CommentVO.newInstance(comment);
+			vo.setUser(this.memberStatDataService.getMemberCache(comment.getUid()));
 			if (comment.getReplyCount() > 0) {
-				List<Comment> replyList = this.getCommentReplyList(comment.getCommentId(), 2, 0L);
-				comment.setReplyList(replyList);
+				List<CommentVO> replyList = this.getCommentReplyList(comment.getCommentId(), 2, 0L)
+						.stream().map(reply -> {
+							CommentVO voReply = CommentVO.newInstance(reply);
+							voReply.setUser(this.memberStatDataService.getMemberCache(reply.getUid()));
+							if (reply.getReplyUid() > 0) {
+								voReply.setReplyUser(this.memberStatDataService.getMemberCache(reply.getReplyUid()));
+							}
+							return voReply;
+						}).toList();
+				vo.setReplyList(replyList);
 			}
-		});
-		return list;
+			return vo;
+		}).toList();
+		return comments;
+	}
+
+	@Override
+	public List<CommentVO> getCommentListByMember(String type, Long memberId, Integer limit, Long offset, boolean includeReply) {
+		Page<Comment> page = this.commentService.lambdaQuery().eq(Comment::getSourceType, type)
+				.eq(Comment::getUid, memberId)
+				.eq(!includeReply, Comment::getParentId, 0)
+				.eq(Comment::getAuditStatus, CommentAuditStatus.PASSED)
+				.lt(IdUtils.validate(offset), Comment::getCommentId, offset)
+				.orderByDesc(Comment::getCommentId)
+				.page(new Page<>(1, limit, false));
+		List<Comment> list = page.getRecords();
+		MemberCache memberCache = this.memberStatDataService.getMemberCache(memberId);
+		List<CommentVO> comments = list.stream().map(comment -> {
+			CommentVO vo = CommentVO.newInstance(comment);
+			vo.setUser(memberCache);
+			if (comment.getReplyUid() > 0) {
+				vo.setReplyUser(this.memberStatDataService.getMemberCache(comment.getReplyUid()));
+			}
+			return vo;
+		}).toList();
+		return comments;
 	}
 
 	@Override
 	public List<Comment> getCommentReplyList(Long commentId, Integer limit, Long offset) {
-		List<Comment> list = this.commentService.lambdaQuery().eq(Comment::getParentId, commentId)
-				.eq(Comment::getAuditStatus, CommentAuditStatus.PASSED).gt(Comment::getCommentId, offset)
+		List<Comment> list = this.commentService.lambdaQuery()
+				.eq(Comment::getParentId, commentId)
+				.eq(Comment::getAuditStatus, CommentAuditStatus.PASSED)
+				.lt(IdUtils.validate(offset), Comment::getCommentId, offset)
 				.orderByDesc(Comment::getCommentId).last("limit " + limit).list();
 		list.forEach(comment -> {
-			if (comment.isDeleted()) {
+			if (DBConstants.isDeleted(comment.getDeleted())) {
 				comment.setContent(null); // 已删除的评论内容不返回
 			}
 		});
@@ -175,7 +223,7 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 
 	/**
 	 * 修改评论回复数+1/-1
-	 * 
+	 *
 	 * @param commentId 评论ID
 	 * @param increase  是否增加
 	 */

@@ -12,43 +12,37 @@ import lombok.Setter;
 @Setter
 public class SubmitCommentDTO extends BaseDTO {
 
-	/**
-	 * 评论目标类型
-	 */
-	@NotEmpty
-	private String sourceType;
-		
-	/**
-	 * 评论目标ID
-	 */
-	@NotEmpty
-	private String sourceId;
-	
-	/**
-	 * 回复的评论ID
-	 */
-	@Min(0)
-	private Long commentId;
-	
-	/**
-	 * 回复的用户ID
-	 */
-	@Min(0)
-	private Long replyUid;
-	
-	/**
-	 * 评论内容
-	 */
-	@NotBlank
-	private String content;
-	
-	/**
-	 * IP
-	 */
-	private String clientIp;
-	
-	/**
-	 * UA
-	 */
-	private String userAgent;
+    /**
+     * 评论目标类型
+     */
+    @NotEmpty
+    private String sourceType;
+
+    /**
+     * 评论目标ID
+     */
+    @NotEmpty
+    private String sourceId;
+
+    /**
+     * 回复的评论ID
+     */
+    @Min(0)
+    private Long commentId;
+
+    /**
+     * 评论内容
+     */
+    @NotBlank
+    private String content;
+
+    /**
+     * IP
+     */
+    private String clientIp;
+
+    /**
+     * UA
+     */
+    private String userAgent;
 }

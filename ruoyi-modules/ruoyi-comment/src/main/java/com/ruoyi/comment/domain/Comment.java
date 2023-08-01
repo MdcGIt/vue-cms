@@ -54,7 +54,7 @@ public class Comment implements Serializable {
 	private int replyCount;
 	
 	/**
-	 * 来源分类，例如：cms:contentId
+	 * 来源分类，例如：cms:site_id
 	 */
 	private String sourceType;
 	
@@ -62,6 +62,12 @@ public class Comment implements Serializable {
 	 * 来源唯一标识
 	 */
 	private String sourceId;
+
+	@TableField(exist = false)
+	private String sourceTitle;
+
+	@TableField(exist = false)
+	private String sourceUrl;
 	
 	/**
 	 * 评论内容
@@ -114,8 +120,4 @@ public class Comment implements Serializable {
 	 */
 	@TableField(exist = false)
 	private List<Comment> replyList;
-	
-	public boolean isDeleted() {
-		return deleted == DBConstants.DELETED_YES;
-	}
 }

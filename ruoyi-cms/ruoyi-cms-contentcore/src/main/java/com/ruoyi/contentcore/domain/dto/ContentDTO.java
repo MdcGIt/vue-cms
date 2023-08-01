@@ -140,6 +140,26 @@ public class ContentDTO {
      */
     private LocalDateTime offlineDate;
 
+	/**
+	 * 点赞数
+	 */
+	private Long likeCount;
+
+	/**
+	 * 评论数
+	 */
+	private Long commentCount;
+
+	/**
+	 * 收藏数
+	 */
+	private Long favoriteCount;
+
+	/**
+	 * 文章浏览数
+	 */
+	private Long viewCount;
+
     /**
      * 发布通道
      */
@@ -174,6 +194,8 @@ public class ContentDTO {
 	 * 自定义参数
 	 */
 	private Map<String, Object> params;
+
+	private String status;
 	
 	public static ContentDTO newInstance(CmsContent cmsContent) {
 		ContentDTO dto = new ContentDTO();

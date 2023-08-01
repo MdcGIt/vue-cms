@@ -24,7 +24,7 @@ import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
-import com.ruoyi.contentcore.fixed.config.BackendContext;
+import com.ruoyi.system.fixed.config.BackendContext;
 import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentOfflineEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentSaveEvent;

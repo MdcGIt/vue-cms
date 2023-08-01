@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.comment.domain.Comment;
 import com.ruoyi.comment.domain.dto.SubmitCommentDTO;
+import com.ruoyi.comment.domain.vo.CommentVO;
 
 public interface ICommentApiService {
 
@@ -23,7 +24,9 @@ public interface ICommentApiService {
 	 * @param offset
 	 * @return
 	 */
-	List<Comment> getCommentList(String type, Long dataId, Integer limit, Long offset);
+	List<CommentVO> getCommentList(String type, Long dataId, Integer limit, Long offset);
+
+	List<CommentVO> getCommentListByMember(String type, Long memberId, Integer limit, Long offset, boolean includeReply);
 
 	/**
 	 * 获取评论回复列表

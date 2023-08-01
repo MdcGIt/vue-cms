@@ -39,6 +39,10 @@ public class ContentStatus extends FixedDictType {
 		super.addDictData("{DICT." + TYPE + "." + EDITING + "}", EDITING, 5);
 	}
 
+	public static boolean isDraft(String status) {
+		return DRAFT.equals(status);
+	}
+
 	public static boolean isPublished(String v) {
 		return PUBLISHED.equals(v);
 	}

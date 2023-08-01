@@ -6,7 +6,7 @@ import com.ruoyi.contentcore.config.CMSConfig;
 import com.ruoyi.contentcore.core.IInternalDataType;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Site;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.fixed.config.BackendContext;
+import com.ruoyi.system.fixed.config.BackendContext;
 
 public class SiteUtils {
 

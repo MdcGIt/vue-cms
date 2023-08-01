@@ -127,6 +127,11 @@ public class CmsContent extends BaseEntityWithLogicDelete {
     private String editor;
 
     /**
+     * 投稿会员Id
+     */
+    private Long contributorId;
+
+    /**
      * 摘要
      */
     private String summary;

@@ -1,14 +1,14 @@
 package com.ruoyi.contentcore.domain.dto;
 
-import java.util.List;
-import java.util.Map;
-
 import com.ruoyi.common.security.domain.BaseDTO;
 import com.ruoyi.system.validator.LongId;
-
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -31,11 +31,19 @@ public class CatalogUpdateDTO extends BaseDTO {
      */
     private String logo;
 
-    /*
+    /**
      * 栏目别名
      */
     @NotBlank
+    @Pattern(regexp = "^[A-Za-z0-9_]+$", message = "栏目别名只能使用大小写字母、数字、下划线组合")
     private String alias;
+
+    /**
+     * 栏目目录
+     */
+    @NotBlank
+    @Pattern(regexp = "^[A-Za-z0-9_\\/]+$", message = "栏目路径只能使用大小写字母、数字、下划线组合")
+    private String path;
 
     /*
      * 栏目描述
@@ -47,12 +55,6 @@ public class CatalogUpdateDTO extends BaseDTO {
      */
     @NotBlank
     private String catalogType;
-    
-    /*
-     * 栏目目录
-     */
-    @NotBlank
-    private String path;
     
     /*
      * 标题栏目跳转地址

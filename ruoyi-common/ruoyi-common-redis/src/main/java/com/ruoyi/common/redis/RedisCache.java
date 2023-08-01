@@ -343,7 +343,7 @@ public class RedisCache {
 	 * @param hKeys Hash键集合
 	 * @return Hash对象集合
 	 */
-	public <T> List<T> getMultiCacheMapValue(final String key, final Collection<Object> hKeys) {
+	public <T> List<T> getMultiCacheMapValue(final String key, final Collection<String> hKeys) {
 		return redisTemplate.opsForHash().multiGet(key, hKeys);
 	}
 

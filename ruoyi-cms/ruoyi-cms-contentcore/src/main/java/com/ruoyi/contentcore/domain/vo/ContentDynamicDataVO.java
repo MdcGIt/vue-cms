@@ -5,22 +5,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class ContentDynamicDataVO {
 
-    private long contentId;
+    private Long contentId;
 
-    private long favorites;
+    private Long favorites;
 
-    private long likes;
+    private Long likes;
 
-    private long comments;
+    private Long comments;
 
-    private long views;
+    private Long views;
 
-    private boolean updated;
+    private Long contributorId;
+
+    private Boolean updated;
 
     public ContentDynamicDataVO(CmsContent content) {
         this.contentId = content.getContentId();
@@ -28,6 +33,7 @@ public class ContentDynamicDataVO {
         this.likes = content.getLikeCount();
         this.comments = content.getCommentCount();
         this.views = content.getViewCount();
+        this.contributorId = content.getContributorId();
     }
 
     public void increase(DynamicDataType type) {

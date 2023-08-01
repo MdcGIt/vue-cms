@@ -13,10 +13,13 @@ import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsCatalog;
+import com.ruoyi.contentcore.domain.vo.ContentDynamicDataVO;
 import com.ruoyi.contentcore.service.ICatalogService;
+import com.ruoyi.contentcore.service.impl.ContentDynamicDataService;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.search.SearchConsts;
 import com.ruoyi.search.service.ISearchLogService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
@@ -29,7 +32,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,7 +55,8 @@ public class SearchApiController extends BaseRestController {
 			@RequestParam(value = "q") @Length(max = 50) String query,
 			@RequestParam(value = "ot", required = false ,defaultValue = "false") Boolean onlyTitle,
 			@RequestParam(value = "ct", required = false) String contentType,
-			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) throws ElasticsearchException, IOException {
+			@RequestParam(value = "page", required = false, defaultValue = "1") @Min(1) Integer page,
+			@RequestParam(value = "preview", required = false, defaultValue = "false") Boolean preview) throws ElasticsearchException, IOException {
 		int pageSize = 10;
 		SearchResponse<ObjectNode> sr = esClient.search(s -> {
 			s.index(ESContent.INDEX_NAME) // 索引
@@ -90,7 +96,7 @@ public class SearchApiController extends BaseRestController {
 			s.sort(sort -> sort.field(f -> f.field("_score").order(SortOrder.Desc)));
 			s.sort(sort -> sort.field(f -> f.field("publishDate").order(SortOrder.Desc))); // 排序: _score:desc + publishDate:desc
 //			s.source(source -> source.filter(f -> f.excludes("fullText"))); // 过滤字段
-			s.from(page * pageSize).size(pageSize);  // 分页
+			s.from((page - 1) * pageSize).size(pageSize);  // 分页，0开始
 			return s;
 		}, ObjectNode.class);
 		List<ESContentVO> list = sr.hits().hits().stream().map(hit -> {
@@ -103,23 +109,35 @@ public class SearchApiController extends BaseRestController {
 			if (Objects.nonNull(catalog)) {
 				vo.setCatalogName(catalog.getName());
 			}
-			hit.highlight().entrySet().forEach(e -> {
+			hit.highlight().forEach((key, value) -> {
 				try {
-					if (e.getKey().equals("fullText")) {
-						vo.setFullText(StringUtils.join(e.getValue().toArray(String[]::new)));
-					} else if (e.getKey().equals("title")) {
-						vo.setTitle(StringUtils.join(e.getValue().toArray(String[]::new)));
+					if (key.equals("fullText")) {
+						vo.setFullText(StringUtils.join(value.toArray(String[]::new)));
+					} else if (key.equals("title")) {
+						vo.setTitle(StringUtils.join(value.toArray(String[]::new)));
 					}
-					vo.setLink(InternalUrlUtils.getActualUrl(vo.getLink(), publishPipeCode, false));
-					vo.setLogo(InternalUrlUtils.getActualUrl(vo.getLogo(), publishPipeCode, false));
-				} catch(Exception ex) {
+					vo.setLink(InternalUrlUtils.getActualUrl(vo.getLink(), publishPipeCode, preview));
+					vo.setLogo(InternalUrlUtils.getActualUrl(vo.getLogo(), publishPipeCode, preview));
+				} catch (Exception ex) {
 					log.warn("Search api row parse failed: ", ex);
 				}
 			});
 			return vo;
 		}).toList();
+		List<String> contentIds = list.stream().map(c -> c.getContentId().toString()).toList();
+		Map<Long, ContentDynamicDataVO> map = this.contentDynamicDataService.getContentDynamicDataList(contentIds)
+				.stream().collect(Collectors.toMap(ContentDynamicDataVO::getContentId, i -> i));
+		list.forEach(c -> {
+			ContentDynamicDataVO cdd = map.get(c.getContentId());
+			c.setViewCount(cdd.getViews());
+			c.setFavoriteCount(cdd.getFavorites());
+			c.setLikeCount(cdd.getLikes());
+			c.setCommentCount(cdd.getComments());
+		});
 		// 记录搜索日志
 		this.logService.addSearchLog("site:" + siteId, query, ServletUtils.getRequest());
-		return this.bindDataTable(list, sr.hits().total().value());
+		return this.bindDataTable(list, Objects.isNull(sr.hits().total()) ? 0 : sr.hits().total().value());
 	}
+
+	private final ContentDynamicDataService contentDynamicDataService;
 }

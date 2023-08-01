@@ -228,6 +228,7 @@ export default {
       commentList: [],
       replyList: [],
       replyVisible: false,
+      replyCommentId: "0",
       likeVisible: false,
       likeCommentId: "0",
       // 查询参数
@@ -292,12 +293,14 @@ export default {
       this.replyMultiple = !selection.length
     },
     handleReplyList(row) {
+      this.replyCommentId = row.commentId;
       this.replyVisible = true;
       this.replyQueryParams.pageNum = 1;
       this.loadReplyList(row.commentId);
     },
     handleReplyListClose() {
       this.replyVisible = false;
+      this.replyCommentId = "0";
     },
     handleLikeList(row) {
       this.likeCommentId = row.commentId;
@@ -310,7 +313,7 @@ export default {
       const data = { commentIds: commentIds, auditFlag: auditFlag };
       auditComment(data).then(response => {
           if (this.replyVisible) {
-            this.loadReplyList();
+            this.loadReplyList(this.replyCommentId);
           } else {
             this.loadCommentList();
           }

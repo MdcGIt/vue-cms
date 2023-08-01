@@ -4,7 +4,7 @@ public interface ContentCorePriv {
 
 	String SiteView = "cms:site:view";
 
-	String CatalogView = "cms:content:view";
+	String CatalogView = "cms:catalog:view";
 
 	String ContentView = "cms:content:view";
 

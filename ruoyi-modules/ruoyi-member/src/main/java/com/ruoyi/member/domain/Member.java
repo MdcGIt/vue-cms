@@ -47,7 +47,22 @@ public class Member extends BaseEntity implements ISecurityUser {
 	/**
 	 * 头像
 	 */
-	private Integer avatar; 
+	private String avatar;
+
+	/**
+	 * 个人主页封面图
+	 */
+	private String cover;
+
+	/**
+	 * 个性签名
+	 */
+	private String slogan;
+
+	/**
+	 * 个人简介
+	 */
+	private String description;
 	
 	/**
 	 * 手机号

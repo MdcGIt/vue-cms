@@ -679,6 +679,9 @@ export default {
       Loading: "正在加载服务监控数据，请稍候！",
       Attribute: "属性",
       Value: "值",
+      ApplicationInfo: "应用信息",
+      AppName: "应用名称",
+      AppVersion: "应用版本号",
       CPU: "CPU",
       CPUCoreNum: "核心数",
       CPUUserUsage: "用户使用率",
@@ -979,7 +982,8 @@ export default {
         ContentExModel: "内容扩展模型",
         ContentConfig: "内容配置",
         WordConfig: "词汇配置",
-        HotWordGroup: "热词分组"
+        HotWordGroup: "热词分组",
+        EnableContribute: "是否允许投稿"
       }
     },
     Content: {

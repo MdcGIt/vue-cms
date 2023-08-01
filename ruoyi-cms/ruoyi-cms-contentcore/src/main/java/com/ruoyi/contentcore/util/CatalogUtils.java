@@ -3,12 +3,13 @@ package com.ruoyi.contentcore.util;
 import java.util.Objects;
 
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.IInternalDataType;
 import com.ruoyi.contentcore.core.impl.CatalogType_Link;
 import com.ruoyi.contentcore.core.impl.InternalDataType_Catalog;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.fixed.config.BackendContext;
+import com.ruoyi.system.fixed.config.BackendContext;
 
 public class CatalogUtils {
 	
@@ -16,6 +17,15 @@ public class CatalogUtils {
 	 * 栏目父级ID分隔符
 	 */
 	public static final String ANCESTORS_SPLITER = ":";
+
+	public static String formatCatalogPath(String path) {
+		path = FileExUtils.normalizePath(path);
+
+		if (!path.endsWith("/")) {
+			path += "/";
+		}
+		return path;
+	}
 	
 	/**
 	 * 生成指定栏目的子栏目用的祖级字符串

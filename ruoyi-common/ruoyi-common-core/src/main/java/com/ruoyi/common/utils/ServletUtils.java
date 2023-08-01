@@ -228,6 +228,16 @@ public class ServletUtils {
 		}
 	}
 
+	public static Map<String, String> getParameters() {
+		Map<String, String> params = new HashMap<>();
+		getRequest().getParameterMap().forEach((k, y) -> {
+			if (y.length > 0) {
+				params.put(k, StringUtils.join(y));
+			}
+		});
+		return params;
+	}
+
 	/**
 	 * 获取String参数
 	 */

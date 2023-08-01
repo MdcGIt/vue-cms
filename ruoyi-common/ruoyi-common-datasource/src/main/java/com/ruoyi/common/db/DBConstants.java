@@ -18,4 +18,7 @@ public class DBConstants {
      */
     public static final int DELETED_YES = 1;
 
+    public static boolean isDeleted(Integer deleted) {
+        return deleted != null && deleted.intValue() == DELETED_YES;
+    }
 }

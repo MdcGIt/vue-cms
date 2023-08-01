@@ -2,6 +2,11 @@ package com.ruoyi.member.security;
 
 import java.util.List;
 
+import cn.dev33.satoken.config.SaTokenConfig;
+import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.context.model.SaRequest;
+import cn.dev33.satoken.context.model.SaStorage;
+import cn.dev33.satoken.util.SaTokenConsts;
 import com.ruoyi.common.security.domain.LoginUser;
 
 import cn.dev33.satoken.SaManager;
@@ -13,6 +18,7 @@ import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpLogic;
+import com.ruoyi.common.utils.StringUtils;
 
 /**
  * Sa-Token后台管理用户认证工具类
@@ -29,7 +35,51 @@ public class StpMemberUtil {
 	/**
 	 * 底层的 StpLogic 对象  
 	 */
-	public static StpLogic stpLogic = new StpLogic(TYPE); 
+	public static StpLogic stpLogic = new StpLogic(TYPE) {
+
+		// 重写 StpLogic 类下的 `splicingKeyTokenName` 函数，返回一个与 `StpUtil` 不同的token名称, 防止冲突
+		@Override
+		public String splicingKeyTokenName() {
+			return super.splicingKeyTokenName() + "-M";
+		}
+
+		@Override
+		public String getTokenValueNotCut(){
+			// 0. 获取相应对象
+			SaStorage storage = SaHolder.getStorage();
+			SaRequest request = SaHolder.getRequest();
+			SaTokenConfig config = getConfig();
+			String keyTokenName = getTokenName();
+			String tokenValue = null;
+
+			// 1. 尝试从Storage里读取
+			if(storage.get(splicingKeyJustCreatedSave()) != null) {
+				tokenValue = String.valueOf(storage.get(splicingKeyJustCreatedSave()));
+			}
+			// 2. 尝试从请求体里面读取
+			if(tokenValue == null && config.getIsReadBody()){
+				tokenValue = request.getParam(keyTokenName);
+			}
+			// 3. 尝试从header里读取
+			if(tokenValue == null && config.getIsReadHeader()){
+				tokenValue = request.getHeader(keyTokenName);
+			}
+			// 4. 尝试从cookie里读取
+			if(tokenValue == null && config.getIsReadCookie()){
+				tokenValue = request.getCookieValue(keyTokenName);
+				// 临时处理一下
+				if (StringUtils.isNotEmpty(tokenValue)) {
+					String tokenPrefix = getConfig().getTokenPrefix();
+					if (StringUtils.isNotEmpty(tokenPrefix) && !tokenValue.startsWith(tokenPrefix + SaTokenConsts.TOKEN_CONNECTOR_CHAT)) {
+						tokenValue = tokenPrefix + SaTokenConsts.TOKEN_CONNECTOR_CHAT + tokenValue;
+					}
+					System.out.println("---getTokenValueNotCut.cookie: " + tokenValue);
+				}
+			}
+			// 5. 返回
+			return tokenValue;
+		}
+	};
 
 	/**
 	 * 获取当前 StpLogic 的账号类型

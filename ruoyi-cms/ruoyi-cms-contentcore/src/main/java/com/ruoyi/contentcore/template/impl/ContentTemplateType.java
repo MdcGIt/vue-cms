@@ -6,6 +6,7 @@ import com.ruoyi.common.utils.ReflectASMUtils;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsSite;
+import com.ruoyi.contentcore.fixed.dict.ContentAttribute;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.ISiteService;
@@ -40,6 +41,7 @@ public class ContentTemplateType implements ITemplateType {
 		String link = this.contentService.getContentLink(content, 1,
 				context.getPublishPipeCode(), context.isPreview());
 		contentMap.put(TemplateUtils.TemplateVariable_OBJ_Link, link);
+		contentMap.put("attributes", ContentAttribute.convertStr(content.getAttributes()));
 		context.getVariables().put(TemplateUtils.TemplateVariable_Content, contentMap);
 
 		CmsSite site = this.siteService.getSite(content.getSiteId());

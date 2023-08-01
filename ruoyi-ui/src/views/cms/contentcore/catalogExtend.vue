@@ -82,16 +82,25 @@
           </div>
         </el-form-item>
       </el-card>
-      <!-- <el-card shadow="hover">
+      <el-card shadow="hover">
         <div slot="header" class="clearfix">
           <span>{{ $t('CMS.Catalog.Extend.ContentConfig') }}</span>
         </div>
-        <el-form-item 
+        <!-- <el-form-item 
           label="文章正文图片尺寸">
           宽：<el-input v-model="form_extend.ArticleImageWidth" style="width:100px"></el-input>
           高：<el-input v-model="form_extend.ArticleImageHeight" style="width:100px"></el-input>
+        </el-form-item> -->
+        <el-form-item :label="$t('CMS.Catalog.Extend.EnableContribute')" prop="EnableContribute">
+          <el-switch
+            v-model="form_extend.EnableContribute"
+            :active-text="$t('Common.Yes')"
+            :inactive-text="$t('Common.No')"
+            active-value="Y"
+            inactive-value="N">
+          </el-switch>
         </el-form-item>
-      </el-card> -->
+      </el-card>
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
           <span>{{ $t('CMS.Catalog.Extend.WordConfig') }}</span>

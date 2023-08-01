@@ -51,7 +51,7 @@ public class CmsAdvertisementTag extends AbstractListTag {
 		String code = MapUtils.getString(attrs, TagAttr_Code);
 		CmsPageWidget adSpace = this.pageWidgetService.getOne(new LambdaQueryWrapper<CmsPageWidget>().eq(CmsPageWidget::getCode, code));
 		if (adSpace == null) {
-			throw new TemplateException(StringUtils.messageFormat("<@{0}>AD place '{1}' not exists.", this.getTagName(), code), env)  ;
+			throw new TemplateException(StringUtils.messageFormat("<@{0}>AD place `{1}` not exists.", this.getTagName(), code), env)  ;
 		}
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
 

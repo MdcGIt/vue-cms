@@ -3,16 +3,11 @@ package com.ruoyi.cms.member.exception;
 import com.ruoyi.common.exception.ErrorCode;
 
 public enum CmsMemberErrorCode implements ErrorCode {
-	
-	/**
-	 * 已收藏过的内容
-	 */
-	FAVORITED,
 
 	/**
-	 * 已点赞过的内容
+	 * 无投稿权限
 	 */
-	LIKED;
+	NO_CONTRIBUTE_PRIV;
 
 	@Override
 	public String value() {
