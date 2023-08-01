@@ -132,7 +132,7 @@ public class CmsIncludeTag extends AbstractTag {
 			if (Objects.isNull(staticContent) || !new File(siteRoot + staticFilePath).exists()) {
 				staticContent = processTemplate(env, StringUtils.getPathParameterMap(file), includeTemplateKey);
 				if (ssi) {
-					FileUtils.writeStringToFile(new File(staticFilePath), staticContent, StandardCharsets.UTF_8);
+					FileUtils.writeStringToFile(new File(siteRoot + staticFilePath), staticContent, StandardCharsets.UTF_8);
 				}
 				if (cache) {
 					this.templateService.setTemplateStaticContentCache(cacheKey, staticContent);
