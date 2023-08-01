@@ -124,13 +124,13 @@ public class CmsIncludeTag extends AbstractTag {
 					+ "&t=" + templateFile + "&" + params;
 			env.getOut().write(StringUtils.messageFormat(SSI_INCLUDE_VIRTUAL_TAG, virtualPath));
 		} else {
-			String cacheKey = templateFile + (StringUtils.isEmpty(params) ? "" : ("?" + params));
+			String cacheKey = includeTemplateKey + (StringUtils.isEmpty(params) ? "" : ("?" + params));
 			String siteRoot = SiteUtils.getSiteRoot(site, context.getPublishPipeCode());
 			String staticFilePath = TemplateUtils.getIncludeRelativeStaticPath(site,
 					context.getPublishPipeCode(), includeTemplateKey);
 			String staticContent = cache ? templateService.getTemplateStaticContentCache(cacheKey) : null;
 			if (Objects.isNull(staticContent) || !new File(siteRoot + staticFilePath).exists()) {
-				staticContent = processTemplate(env, StringUtils.getPathParameterMap(file), templateFile);
+				staticContent = processTemplate(env, StringUtils.getPathParameterMap(file), includeTemplateKey);
 				if (ssi) {
 					FileUtils.writeStringToFile(new File(staticFilePath), staticContent, StandardCharsets.UTF_8);
 				}
