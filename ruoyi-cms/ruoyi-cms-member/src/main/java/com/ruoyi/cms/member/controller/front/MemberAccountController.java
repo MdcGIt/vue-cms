@@ -315,6 +315,7 @@ public class MemberAccountController extends BaseRestController {
                 if (StringUtils.isNotEmpty(content.getLogo())) {
                     article.setLogoSrc(InternalUrlUtils.getActualUrl(article.getLogo(), pp, preview));
                 }
+                article.setContentHtml(InternalUrlUtils.dealResourceInternalUrl(article.getContentHtml()));
                 templateContext.getVariables().put("Article", article);
             } else {
                 templateContext.getVariables().put("Article", new ContributeArticleVO());
