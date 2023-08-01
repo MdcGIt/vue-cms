@@ -19,29 +19,29 @@ public interface IPublishPipeProp {
 	/**
 	 * 属性唯一标识键名
 	 */
-	public String getKey();
+	String getKey();
 	
 	/**
 	 * 属性名称
 	 */
-	public String getName();
+	String getName();
 	
 	/**
 	 * 属性应用类型
 	 */
-	public List<PublishPipePropUseType> getUseTypes();
+	List<PublishPipePropUseType> getUseTypes();
 	
 	/**
 	 * 默认值
 	 */
-	default public String getDefaultValue() {
+	default String getDefaultValue() {
 		return StringUtils.EMPTY;
 	}
 	
 	/**
 	 * 应用类型
 	 */
-	public enum PublishPipePropUseType {
+	enum PublishPipePropUseType {
 		Site, Catalog, Content
 	}
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.cms.search.controller.front;
 
+import com.ruoyi.cms.search.publishpipe.PublishPipeProp_SearchTemplate;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
 import com.ruoyi.common.staticize.core.TemplateContext;
@@ -60,8 +61,7 @@ public class CmsSearchController extends BaseRestController {
             this.catchException(response, new RuntimeException("Site not found: " + siteId));
             return;
         }
-        // 查找动态模板
-        final String detailTemplate = "search.template.html"; // TODO 站点动态模板配置
+        final String detailTemplate = PublishPipeProp_SearchTemplate.getValue(publishPipeCode, site.getPublishPipeProps());
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, publishPipeCode);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
             this.catchException(response, new RuntimeException("Template not found: " + detailTemplate));
@@ -77,7 +77,6 @@ public class CmsSearchController extends BaseRestController {
             TemplateUtils.initGlobalVariables(site, templateContext);
             // init templateType data to datamode
             templateContext.getVariables().put("Request", ServletUtils.getParameters());
-
             String link = "_search?q=" + query;
             if (preview) {
                 link += "&sid=" + siteId + "&pp=" + publishPipeCode + "&preview=true";

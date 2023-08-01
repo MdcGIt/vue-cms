@@ -3,6 +3,7 @@ package com.ruoyi.cms.member.controller.front;
 import com.ruoyi.article.domain.CmsArticleDetail;
 import com.ruoyi.article.service.IArticleService;
 import com.ruoyi.cms.member.domain.vo.ContributeArticleVO;
+import com.ruoyi.cms.member.publishpipe.*;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
@@ -87,7 +88,7 @@ public class MemberAccountController extends BaseRestController {
             return;
         }
         // 查找动态模板
-        final String detailTemplate = "account/account_centre.template.html"; // TODO 站点动态模板配置
+        final String detailTemplate = PublishPipeProp_AccountCentreTemplate.getValue(publishPipeCode, site.getPublishPipeProps());
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, publishPipeCode);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
             this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, new RuntimeException("Template not found: " + detailTemplate));
@@ -121,6 +122,87 @@ public class MemberAccountController extends BaseRestController {
         }
     }
 
+    @GetMapping("/login")
+    public void memberLogin(@RequestParam("sid") Long siteId,
+                            @RequestParam("pp") String publishPipeCode,
+                            @RequestParam(required = false, defaultValue = "false") Boolean preview,
+                            HttpServletResponse response)
+            throws IOException {
+        response.setCharacterEncoding(Charset.defaultCharset().displayName());
+        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
+
+        CmsSite site = this.siteService.getSite(siteId);
+        if (Objects.isNull(site)) {
+            this.catchException("/", response, new RuntimeException("Site not found: " + siteId));
+            return;
+        }
+        // 查找动态模板
+        final String template = PublishPipeProp_MemberLoginTemplate.getValue(publishPipeCode, site.getPublishPipeProps());
+        simpleSitePage(template, site, publishPipeCode, preview, response);
+    }
+
+    @GetMapping("/register")
+    public void memberRegister(@RequestParam("sid") Long siteId,
+                            @RequestParam("pp") String publishPipeCode,
+                            @RequestParam(required = false, defaultValue = "false") Boolean preview,
+                            HttpServletResponse response)
+            throws IOException {
+        response.setCharacterEncoding(Charset.defaultCharset().displayName());
+        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
+
+        CmsSite site = this.siteService.getSite(siteId);
+        if (Objects.isNull(site)) {
+            this.catchException("/", response, new RuntimeException("Site not found: " + siteId));
+            return;
+        }
+        // 查找动态模板
+        final String template = PublishPipeProp_MemberRegisterTemplate.getValue(publishPipeCode, site.getPublishPipeProps());
+        simpleSitePage(template, site, publishPipeCode, preview, response);
+    }
+
+    @GetMapping("/forget_password")
+    public void memberResetPassword(@RequestParam("sid") Long siteId,
+                                    @RequestParam("pp") String publishPipeCode,
+                                    @RequestParam(required = false, defaultValue = "false") Boolean preview,
+                                    HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding(Charset.defaultCharset().displayName());
+        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
+
+        CmsSite site = this.siteService.getSite(siteId);
+        if (Objects.isNull(site)) {
+            this.catchException("/", response, new RuntimeException("Site not found: " + siteId));
+            return;
+        }
+        // 查找动态模板
+        final String template = PublishPipeProp_MemberForgetPasswordTemplate.getValue(publishPipeCode, site.getPublishPipeProps());
+        simpleSitePage(template, site, publishPipeCode, preview, response);
+    }
+
+    private void simpleSitePage(String template, CmsSite site, String publishPipeCode, Boolean preview, HttpServletResponse response)
+            throws IOException {
+        File templateFile = this.templateService.findTemplateFile(site, template, publishPipeCode);
+        if (Objects.isNull(templateFile) || !templateFile.exists()) {
+            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, new RuntimeException("Template not found: " + template));
+            return;
+        }
+        long s = System.currentTimeMillis();
+        // 生成静态页面
+        try {
+            // 模板ID = 通道:站点目录:模板文件名
+            String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, template);
+            TemplateContext templateContext = new TemplateContext(templateKey, preview, publishPipeCode);
+            // init template datamode
+            TemplateUtils.initGlobalVariables(site, templateContext);
+            // init templateType data to datamode
+            templateContext.getVariables().put("Request", ServletUtils.getParameters());
+            // staticize
+            this.staticizeService.process(templateContext, response.getWriter());
+            log.debug("会员登录页模板解析，耗时：{} ms", System.currentTimeMillis() - s);
+        } catch (Exception e) {
+            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, e);
+        }
+    }
+
     @Priv(type = MemberUserType.TYPE)
     @GetMapping("/setting")
     public void accountSetting(@RequestParam Long sid,
@@ -143,7 +225,7 @@ public class MemberAccountController extends BaseRestController {
             return;
         }
         // 查找动态模板
-        final String detailTemplate = "account/account_setting.template.html";
+        final String detailTemplate = PublishPipeProp_MemberSettingTemplate.getValue(pp, site.getPublishPipeProps());
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
             this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
@@ -191,7 +273,7 @@ public class MemberAccountController extends BaseRestController {
             return;
         }
         // 查找动态模板
-        final String detailTemplate = "account/account_password.template.html";
+        final String detailTemplate = PublishPipeProp_MemberPasswordTemplate.getValue(pp, site.getPublishPipeProps());
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
             this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
@@ -239,7 +321,7 @@ public class MemberAccountController extends BaseRestController {
             return;
         }
         // 查找动态模板
-        final String detailTemplate = "account/account_change_email.template.html";
+        final String detailTemplate = PublishPipeProp_MemberBindEmailTemplate.getValue(pp, site.getPublishPipeProps());
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
             this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
@@ -290,7 +372,7 @@ public class MemberAccountController extends BaseRestController {
             return;
         }
         // 查找动态模板
-        final String detailTemplate = "account/account_contribute.template.html";
+        final String detailTemplate = PublishPipeProp_MemberContributeTemplate.getValue(pp, site.getPublishPipeProps());
         File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
         if (Objects.isNull(templateFile) || !templateFile.exists()) {
             this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
