@@ -116,7 +116,7 @@ public class CmsIncludeTag extends AbstractTag {
 		if (context.isPreview()) {
 			Template includeTemplate = env.getTemplateForInclusion(includeTemplateKey,
 					StandardCharsets.UTF_8.displayName(), true);
-			env.setVariable("Request", wrap(env, StringUtils.splitToMap(params, "&", "=")));
+			env.setVariable("IncludeRequest", wrap(env, StringUtils.splitToMap(params, "&", "=")));
 			env.include(includeTemplate);
 		} else if (virtual) {
 			// 动态模板
@@ -157,7 +157,7 @@ public class CmsIncludeTag extends AbstractTag {
 			env.setOut(writer);
 			Template includeTemplate = env.getTemplateForInclusion(includeTemplateName,
 					StandardCharsets.UTF_8.displayName(), true);
-			env.setVariable("Request", wrap(env, params));
+			env.setVariable("IncludeRequest", wrap(env, params));
 			env.include(includeTemplate);
 			return writer.getBuffer().toString();
 		} finally {
