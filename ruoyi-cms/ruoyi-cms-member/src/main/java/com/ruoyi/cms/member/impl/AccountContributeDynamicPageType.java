@@ -82,7 +82,7 @@ public class AccountContributeDynamicPageType implements IDynamicPageType {
         Member member = this.memberService.getById(memberId);
         templateContext.getVariables().put("Member", member);
         templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(templateContext.isPreview()));
-        templateContext.getVariables().put("Request", ServletUtils.getParameters());
+        templateContext.getVariables().put("Request", parameters);
 
         Long contentId = MapUtils.getLong(parameters, "cid", 0L);
         if (IdUtils.validate(contentId)) {

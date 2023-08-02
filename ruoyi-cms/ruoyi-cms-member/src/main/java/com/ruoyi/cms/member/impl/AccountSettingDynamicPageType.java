@@ -70,6 +70,6 @@ public class AccountSettingDynamicPageType implements IDynamicPageType {
         Member member = this.memberService.getById(memberId);
         templateContext.getVariables().put("Member", member);
         templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(templateContext.isPreview()));
-        templateContext.getVariables().put("Request", ServletUtils.getParameters());
+        templateContext.getVariables().put("Request", parameters);
     }
 }

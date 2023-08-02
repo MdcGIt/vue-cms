@@ -69,7 +69,7 @@ public class AccountCentreDynamicPageType implements IDynamicPageType {
         MemberCache member = this.memberStatDataService.getMemberCache(memberId);
         templateContext.getVariables().put("Member", member);
         templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(templateContext.isPreview()));
-        templateContext.getVariables().put("Request", ServletUtils.getParameters());
+        templateContext.getVariables().put("Request", parameters);
         templateContext.setPageIndex(MapUtils.getIntValue(parameters, "page", 1));
 
         String link = "account/" + memberId + "?type=" + parameters.get("type");
