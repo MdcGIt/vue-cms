@@ -13,7 +13,10 @@ import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.*;
+import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.SortUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.core.IContent;
 import com.ruoyi.contentcore.core.IContentType;
 import com.ruoyi.contentcore.domain.CmsCatalog;
@@ -21,13 +24,10 @@ import com.ruoyi.contentcore.domain.CmsContent;
 import com.ruoyi.contentcore.domain.CmsResource;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.ResourceUploadDTO;
-import com.ruoyi.contentcore.enums.ContentOpType;
-import com.ruoyi.contentcore.fixed.dict.ContentAttribute;
 import com.ruoyi.contentcore.fixed.dict.ContentStatus;
 import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentSaveEvent;
 import com.ruoyi.contentcore.listener.event.BeforeContentSaveEvent;
-import com.ruoyi.contentcore.perms.CatalogPermissionType;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.IResourceService;
@@ -37,15 +37,13 @@ import com.ruoyi.contentcore.util.ContentCoreUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.security.StpMemberUtil;
+import com.ruoyi.member.service.IMemberStatDataService;
 import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.fixed.dict.YesOrNo;
-import com.ruoyi.system.permission.PermissionUtils;
-import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -56,7 +54,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -80,6 +77,8 @@ public class MemberContributeApiController extends BaseRestController implements
 	private final IResourceService resourceService;
 
 	private final IArticleService articleService;
+
+	private final IMemberStatDataService memberStatDataService;
 
 	private ApplicationContext applicationContext;
 
@@ -158,9 +157,9 @@ public class MemberContributeApiController extends BaseRestController implements
 			content.setContentEntity(cmsContent);
 			content.setExtendEntity(articleDetail);
 			content.setOperator(loginUser);
-			applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
+			applicationContext.publishEvent(new BeforeContentSaveEvent(this, content, false));
 			content.save();
-			applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
+			applicationContext.publishEvent(new AfterContentSaveEvent(this, content, false));
 		} else {
 			CmsContent contentEntity = new CmsContent();
 			contentEntity.setContentType(ArticleContentType.ID);
@@ -192,9 +191,9 @@ public class MemberContributeApiController extends BaseRestController implements
 				throw CommonErrorCode.NOT_EMPTY.exception("contentHtml");
 			}
 			content.setOperator(StpMemberUtil.getLoginUser());
-			applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
+			applicationContext.publishEvent(new BeforeContentSaveEvent(this, content, true));
 			content.add();
-			applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
+			applicationContext.publishEvent(new AfterContentSaveEvent(this, content, true));
 		}
 		return R.ok();
 	}

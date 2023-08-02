@@ -1,12 +1,18 @@
 package com.ruoyi.cms.member.listener;
 
 import com.ruoyi.cms.member.CmsMemberConstants;
+import com.ruoyi.cms.member.impl.ContributeMemberStatData;
 import com.ruoyi.common.exception.CommonErrorCode;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.contentcore.domain.CmsContent;
+import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
+import com.ruoyi.contentcore.listener.event.AfterContentSaveEvent;
 import com.ruoyi.contentcore.service.IContentService;
 import com.ruoyi.contentcore.service.impl.ContentDynamicDataService;
 import com.ruoyi.member.listener.event.*;
+import com.ruoyi.member.security.StpMemberUtil;
+import com.ruoyi.member.service.IMemberStatDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -18,6 +24,24 @@ public class MemberListener {
 	private final IContentService contentService;
 
 	private final ContentDynamicDataService contentDynamicDataService;
+
+	private final IMemberStatDataService memberStatDataService;
+
+	@EventListener
+	public void afterContentSaveEvent(AfterContentSaveEvent event) {
+		if (event.isAdd() && IdUtils.validate(event.getContent().getContentEntity().getContributorId())) {
+			// 更新会员文章数量
+			memberStatDataService.changeMemberStatData(StpMemberUtil.getLoginIdAsLong(), ContributeMemberStatData.TYPE, 1);
+		}
+	}
+
+	@EventListener
+	public void afterContentDeleteEvent(AfterContentDeleteEvent event) {
+		if (IdUtils.validate(event.getContent().getContentEntity().getContributorId())) {
+			// 更新会员文章数量
+			memberStatDataService.changeMemberStatData(StpMemberUtil.getLoginIdAsLong(), ContributeMemberStatData.TYPE, -1);
+		}
+	}
 
 	@EventListener
 	public void beforeMemberFavorite(BeforeMemberFavoriteEvent event) {

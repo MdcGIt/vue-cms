@@ -209,9 +209,9 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 
 	@Transactional(rollbackFor = Exception.class)
 	public void addContent0(IContent<?> content) {
-		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
+		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content, true));
 		content.add();
-		applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
+		applicationContext.publishEvent(new AfterContentSaveEvent(this, content, true));
 		AsyncTaskManager.setTaskPercent(100);
 	}
 
@@ -231,9 +231,9 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 
 	@Transactional(rollbackFor = Exception.class)
 	public void saveContent0(IContent<?> content) {
-		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content));
+		applicationContext.publishEvent(new BeforeContentSaveEvent(this, content, false));
 		content.save();
-		applicationContext.publishEvent(new AfterContentSaveEvent(this, content));
+		applicationContext.publishEvent(new AfterContentSaveEvent(this, content, false));
 		AsyncTaskManager.setTaskPercent(100);
 	}
 
