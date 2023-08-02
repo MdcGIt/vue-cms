@@ -1,0 +1,39 @@
+package com.ruoyi.cms.member.impl;
+
+import com.ruoyi.cms.member.publishpipe.PublishPipeProp_MemberLoginTemplate;
+import com.ruoyi.contentcore.core.IDynamicPageType;
+import org.springframework.stereotype.Component;
+
+/**
+ * 会员登录页
+ *
+ * @author 兮玥
+ * @email 190785909@qq.com
+ */
+@Component(IDynamicPageType.BEAN_PREFIX + AccountLoginDynamicPageType.TYPE)
+public class AccountLoginDynamicPageType implements IDynamicPageType {
+
+    public static final String TYPE = "AccountLogin";
+
+    public static final String REQUEST_PATH = "account/login";
+
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+    @Override
+    public String getName() {
+        return "会员登录页";
+    }
+
+    @Override
+    public String getRequestPath() {
+        return REQUEST_PATH;
+    }
+
+    @Override
+    public String getPublishPipeKey() {
+        return PublishPipeProp_MemberLoginTemplate.KEY;
+    }
+}
