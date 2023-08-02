@@ -900,8 +900,10 @@ export default {
         BaiduRefreshToken: "百度统计RefreshToken",
         BaiduAccessToken: "百度统计AccessToken",
         SiteApiUrl: "站点API地址前缀",
-        CustomFormCardTitle: "自定义表单",
-        EnableCustomFormCaptcha: "是否开启验证码"
+        CustomFormCardTitle: "自定义表单配置",
+        EnableCustomFormCaptcha: "是否开启验证码",
+        CommentCardTitle: " 评论配置",
+        EnableCommentAudit: "是否需要审核"
       },
       Property: {
         QueryPlaceholder: "输入名称/编码查询",

@@ -9,6 +9,7 @@ import com.ruoyi.comment.domain.vo.CommentVO;
 import com.ruoyi.comment.exception.CommentErrorCode;
 import com.ruoyi.comment.fixed.dict.CommentAuditStatus;
 import com.ruoyi.comment.listener.event.AfterCommentSubmitEvent;
+import com.ruoyi.comment.listener.event.BeforeCommentSubmitEvent;
 import com.ruoyi.comment.mapper.CommentLikeMapper;
 import com.ruoyi.comment.mapper.CommentMapper;
 import com.ruoyi.comment.member.CommentMemberStatData;
@@ -127,8 +128,8 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 			comment.setReplyUid(parent.getUid());
 			comment.setParentId(parent.getCommentId());
 		}
+		this.applicationContext.publishEvent(new BeforeCommentSubmitEvent(this, comment));
 		this.commentService.save(comment);
-		// 提供扩展点
 		this.applicationContext.publishEvent(new AfterCommentSubmitEvent(this, comment));
 		// 如果是回复，修改父级评论回复数
 		if (comment.getParentId() > 0) {

@@ -901,7 +901,9 @@ export default {
         BaiduAccessToken: "Baidu AccessToken",
         SiteApiUrl: "Site Api Url",
         CustomFormCardTitle: "Custom Form Configuration",
-        EnableCustomFormCaptcha: "Enable Captcha On Submit"
+        EnableCustomFormCaptcha: "Enable Captcha On Submit",
+        CommentCardTitle: " Comment Configuration",
+        EnableCommentAudit: "Enable Comment Audit"
       },
       Property: {
         QueryPlaceholder: "Input name/code",
