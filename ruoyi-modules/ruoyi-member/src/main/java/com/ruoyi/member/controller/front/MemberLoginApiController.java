@@ -27,6 +27,7 @@ import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISecurityConfigService;
 import com.ruoyi.system.service.ISysLogininforService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/member")
@@ -147,6 +149,8 @@ public class MemberLoginApiController extends BaseRestController {
 		}
 		try {
 			Member member = this.memberService.getById(StpMemberUtil.getLoginIdAsLong());
+
+			log.info("sms_code: " + mailSendUser +" >> " + member.getEmail());
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom(mailSendUser);
 			message.setTo(member.getEmail());
