@@ -148,7 +148,7 @@ spring:
     host: smtp.163.com
     port: 25
     username: liweiyimwz@163.com
-    password: ENC(vGAkqKWkIVxVNZRPRd3pdhlk8AfglUk2vAkxm6VnrcBshTDsTlVghGEGNdBgky4XFZYuT+iAhLnsPhVj0L5+TQ==)
+    password: WOXIVJMUSISIWONK
   properties:
     mail:
       smtp:

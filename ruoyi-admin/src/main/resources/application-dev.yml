@@ -157,7 +157,7 @@ spring:
       smtp:
         auth: true
         starttls:
-         enable: true
+          enable: true
         required: true
   # 监控配置
   application:
