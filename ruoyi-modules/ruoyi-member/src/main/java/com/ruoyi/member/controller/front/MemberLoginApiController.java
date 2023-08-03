@@ -150,7 +150,6 @@ public class MemberLoginApiController extends BaseRestController {
 		try {
 			Member member = this.memberService.getById(StpMemberUtil.getLoginIdAsLong());
 
-			log.info("sms_code: " + mailSendUser +" >> " + member.getEmail());
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom(mailSendUser);
 			message.setTo(member.getEmail());

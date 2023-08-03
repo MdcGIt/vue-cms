@@ -146,16 +146,23 @@ spring:
   # 邮件配置
   mail:
     host: smtp.163.com
-    port: 25
+    port: 465
     username: liweiyimwz@163.com
+    # 授权码
     password: WOXIVJMUSISIWONK
-  properties:
-    mail:
-      smtp:
-        auth: true
-        starttls:
-          enable: true
-        required: true
+    # 编码格式
+    default-encoding: utf-8
+    # 协议
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+          auth: true
+          starttls:
+            enable: true
+            required: true
   # 监控配置
   application:
     name: "RuoYi-Vue-CMS"
