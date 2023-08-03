@@ -61,31 +61,43 @@ public class ContentIndexService {
 	private final ExModelService extendModelService;
 
 	public void recreateIndex(CmsSite site) throws IOException {
-		// 先删除
-		esClient.indices().delete(fn -> fn.index(ESContent.INDEX_NAME)
-				.allowNoIndices(true).ignoreUnavailable(true));
-		// 创建索引
-		Map<String, Property> properties = new HashMap<>();
-		properties.put("catalogAncestors", Property.of(fn -> fn.keyword(b -> b
-				.ignoreAbove(500) // 指定字符串字段的最大长度。超过该长度的字符串将被截断或忽略。
-		)));
-		properties.put("contentType", Property.of(fn -> fn.keyword(b -> b
-				.ignoreAbove(20)
-		)));
-		properties.put("logo", Property.of(fn -> fn.keyword(b -> b
-				.ignoreAbove(256)
-		)));
-		properties.put("title", Property.of(fn -> fn.text(b -> b
-				.store(true) // 是否存储在索引中
-				.analyzer(SearchConsts.IKAnalyzeType_Smart)
-		)));
-		properties.put("fullText", Property.of(fn -> fn.text(b -> b
-				.analyzer(SearchConsts.IKAnalyzeType_Smart)
-		)));
-		CreateIndexResponse response = esClient.indices().create(fn -> fn
-				.index(ESContent.INDEX_NAME)
-				.mappings(mb -> mb.properties(properties)));
-		Assert.isTrue(response.acknowledged(), () -> new RuntimeException("Create Index[cms_content] failed."));
+		boolean exists = esClient.indices().exists(fn -> fn.index(ESContent.INDEX_NAME)).value();
+		if (!exists) {
+			// 创建索引
+			Map<String, Property> properties = new HashMap<>();
+			properties.put("catalogAncestors", Property.of(fn -> fn.keyword(b -> b
+					.ignoreAbove(500) // 指定字符串字段的最大长度。超过该长度的字符串将被截断或忽略。
+			)));
+			properties.put("contentType", Property.of(fn -> fn.keyword(b -> b
+					.ignoreAbove(20)
+			)));
+			properties.put("logo", Property.of(fn -> fn.keyword(b -> b
+					.ignoreAbove(256)
+			)));
+			properties.put("title", Property.of(fn -> fn.text(b -> b
+					.store(true) // 是否存储在索引中
+					.analyzer(SearchConsts.IKAnalyzeType_Smart)
+			)));
+			properties.put("fullText", Property.of(fn -> fn.text(b -> b
+					.analyzer(SearchConsts.IKAnalyzeType_Smart)
+			)));
+			CreateIndexResponse response = esClient.indices().create(fn -> fn
+					.index(ESContent.INDEX_NAME)
+					.mappings(mb -> mb.properties(properties)));
+			Assert.isTrue(response.acknowledged(), () -> new RuntimeException("Create Index[cms_content] failed."));
+		} else {
+			// 删除站点索引文档数据
+			long total = this.contentService.lambdaQuery().eq(CmsContent::getSiteId, site.getSiteId()).count();
+			long pageSize = 1000;
+			for (int i = 0; i * pageSize < total; i++) {
+				List<Long> contentIds = this.contentService.lambdaQuery()
+						.select(CmsContent::getContentId)
+						.eq(CmsContent::getSiteId, site.getSiteId())
+						.page(new Page<>(i, pageSize, false))
+						.getRecords().stream().map(CmsContent::getContentId).toList();
+				deleteContentDoc(contentIds);
+			}
+		}
 	}
 
 	/**
