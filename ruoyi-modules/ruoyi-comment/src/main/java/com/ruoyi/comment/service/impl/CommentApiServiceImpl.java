@@ -131,15 +131,15 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		this.applicationContext.publishEvent(new BeforeCommentSubmitEvent(this, comment));
 		this.commentService.save(comment);
 		this.applicationContext.publishEvent(new AfterCommentSubmitEvent(this, comment));
-		// 如果是回复，修改父级评论回复数
-		if (comment.getParentId() > 0) {
-			asyncTaskManager.execute(() -> {
-				// 更新评论回复数量
+
+		asyncTaskManager.execute(() -> {
+			// 更新会员评论数量
+			memberStatDataService.changeMemberStatData(comment.getUid(), CommentMemberStatData.TYPE, 1);
+			// 如果是回复，修改父级评论回复数
+			if (comment.getParentId() > 0) {
 				incrCommentReplyCount(comment.getParentId());
-				// 更新会员评论数量
-				memberStatDataService.changeMemberStatData(comment.getUid(), CommentMemberStatData.TYPE, 1);
-			});
-		}
+			}
+		});
 	}
 
 	@Override
