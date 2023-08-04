@@ -106,7 +106,7 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 	}
 
 	@Override
-	public void submitComment(SubmitCommentDTO dto) {
+	public Comment submitComment(SubmitCommentDTO dto) {
 		Comment comment = new Comment();
 		comment.setCommentId(IdUtils.getSnowflakeId());
 		comment.setSourceType(dto.getSourceType());
@@ -140,6 +140,7 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 				incrCommentReplyCount(comment.getParentId());
 			}
 		});
+		return comment;
 	}
 
 	@Override

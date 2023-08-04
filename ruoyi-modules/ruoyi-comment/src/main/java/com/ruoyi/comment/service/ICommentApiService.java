@@ -10,10 +10,11 @@ public interface ICommentApiService {
 
 	/**
 	 * 提交评论
-	 * 
+	 *
 	 * @param dto
+	 * @return
 	 */
-	void submitComment(SubmitCommentDTO dto);
+	Comment submitComment(SubmitCommentDTO dto);
 
 	/**
 	 * 获取评论列表

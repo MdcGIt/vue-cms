@@ -62,8 +62,8 @@ public class CommentApiController extends BaseRestController {
 		dto.setOperator(StpMemberUtil.getLoginUser());
 		dto.setClientIp(ServletUtils.getIpAddr(ServletUtils.getRequest()));
 		dto.setUserAgent(ServletUtils.getUserAgent());
-		this.commentApiService.submitComment(dto);
-		return R.ok();
+		Comment comment = this.commentApiService.submitComment(dto);
+		return R.ok(comment);
 	}
 
 	@IgnoreDemoMode
