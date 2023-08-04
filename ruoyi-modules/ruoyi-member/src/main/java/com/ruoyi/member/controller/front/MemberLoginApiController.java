@@ -7,6 +7,7 @@ import com.ruoyi.common.security.SecurityUtils;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
+import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.member.domain.Member;
@@ -26,6 +27,9 @@ import com.ruoyi.system.fixed.dict.SuccessOrFail;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.service.ISecurityConfigService;
 import com.ruoyi.system.service.ISysLogininforService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
@@ -99,7 +103,12 @@ public class MemberLoginApiController extends BaseRestController {
 
 	@IgnoreDemoMode
 	@PostMapping("/register")
-	public R<?> resgiter(@RequestBody MemberRegisterDTO dto) {
+	public R<?> resgiter(@RequestBody MemberRegisterDTO dto, HttpServletRequest request) {
+		String uuid = ServletUtils.getHeader(request, "uuid");
+		String authCode = this.redisCache.getCacheObject(SMS_CODE_CACHE_PREFIX + uuid);
+		if (StringUtils.isEmpty(authCode) || !dto.getAuthCode().equals(authCode)) {
+			return R.fail("验证码错误");
+		}
 		dto.setUserAgent(ServletUtils.getUserAgent());
 		dto.setIp(ServletUtils.getIpAddr(ServletUtils.getRequest()));
 		String token = this.memberLoginService.register(dto);
@@ -138,6 +147,33 @@ public class MemberLoginApiController extends BaseRestController {
 				.eq(Member::getMemberId, member.getMemberId())
 				.update();
 		return update ? R.ok() : R.fail();
+	}
+
+	@IgnoreDemoMode
+	@GetMapping("/register_sms_code")
+	public R<?> sendRegisterSmsCode(@RequestParam @Email String email) {
+		if (StringUtils.isEmpty(mailSendUser)) {
+			return R.fail("发送失败，请联系管理员！");
+		}
+		try {
+			Long count = this.memberService.lambdaQuery().eq(Member::getEmail, email).count();
+			if (count > 0) {
+				return R.fail("邮箱已注册！");
+			}
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setFrom(mailSendUser);
+			message.setTo(email);
+			message.setSubject("会员注册验证");
+			String code = String.valueOf(RandomUtils.nextInt(100000, 999999));
+			message.setText("验证码：" + code);
+			javaMailSender.send(message);
+
+			String uuid = IdUtils.simpleUUID();
+			redisCache.setCacheObject(SMS_CODE_CACHE_PREFIX + uuid, code, 600, TimeUnit.SECONDS);
+			return R.ok(uuid);
+		} catch (Exception e) {
+			return R.fail("发送失败，请联系管理员！");
+		}
 	}
 
 	@IgnoreDemoMode
