@@ -27,6 +27,8 @@ public class CommentVO {
 
     private Long commentId;
 
+    private Long parentId;
+
     private String dataId;
 
     private String sourceTitle;
@@ -91,6 +93,7 @@ public class CommentVO {
     public static CommentVO newInstance(Comment comment) {
         CommentVO vo = new CommentVO();
         vo.setCommentId(comment.getCommentId());
+        vo.setParentId(comment.getParentId());
         vo.setDataId(comment.getSourceId());
         vo.setClientType(comment.getClientType());
         vo.setCommentTime(comment.getCommentTime().toInstant(ZoneOffset.UTC).toEpochMilli());

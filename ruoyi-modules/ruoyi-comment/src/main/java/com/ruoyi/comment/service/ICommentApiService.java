@@ -31,13 +31,13 @@ public interface ICommentApiService {
 
 	/**
 	 * 获取评论回复列表
-	 * 
+	 *
 	 * @param commentId
 	 * @param limit
 	 * @param offset
 	 * @return
 	 */
-	List<Comment> getCommentReplyList(Long commentId, Integer limit, Long offset);
+	List<CommentVO> getCommentReplyList(Long commentId, Integer limit, Long offset);
 
 	/**
 	 * 删除指定用户评论

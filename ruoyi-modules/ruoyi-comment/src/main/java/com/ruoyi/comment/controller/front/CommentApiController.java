@@ -49,9 +49,9 @@ public class CommentApiController extends BaseRestController {
 	 */
 	@GetMapping("/reply/{commentId}")
 	public R<?> getCommentReplyList(@PathVariable @Min(1) Long commentId,
-			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
 			@RequestParam(value = "offset", defaultValue = "0") Long offset) {
-		List<Comment> list = this.commentApiService.getCommentReplyList(commentId, limit, offset);
+		List<CommentVO> list = this.commentApiService.getCommentReplyList(commentId, limit, offset);
 		return R.ok(list);
 	}
 

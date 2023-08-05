@@ -31,6 +31,11 @@ public class SubmitCommentDTO extends BaseDTO {
     private Long commentId;
 
     /**
+     * 回复的用户UID
+     */
+    private Long replyUid;
+
+    /**
      * 评论内容
      */
     @NotBlank

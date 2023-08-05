@@ -16,7 +16,6 @@ import com.ruoyi.comment.member.CommentMemberStatData;
 import com.ruoyi.comment.service.ICommentApiService;
 import com.ruoyi.comment.service.ICommentService;
 import com.ruoyi.common.async.AsyncTaskManager;
-import com.ruoyi.common.db.DBConstants;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IP2RegionUtils;
 import com.ruoyi.common.utils.IdUtils;
@@ -125,8 +124,13 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		comment.setClientType(ServletUtils.getDeviceType(dto.getUserAgent()));
 		if (IdUtils.validate(dto.getCommentId())) {
 			Comment parent = this.commentMapper.selectById(dto.getCommentId());
-			comment.setReplyUid(parent.getUid());
-			comment.setParentId(parent.getCommentId());
+			if (!comment.getSourceType().equals(parent.getSourceType())
+					|| !comment.getSourceId().equals(parent.getSourceId())
+					|| parent.getParentId() != 0) {
+				throw new RuntimeException("评论数据源异常！");
+			}
+			comment.setReplyUid(dto.getReplyUid());
+			comment.setParentId(dto.getCommentId());
 		}
 		this.applicationContext.publishEvent(new BeforeCommentSubmitEvent(this, comment));
 		this.commentService.save(comment);
@@ -157,7 +161,7 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 			CommentVO vo = CommentVO.newInstance(comment);
 			vo.setUser(this.memberStatDataService.getMemberCache(comment.getUid()));
 			if (comment.getReplyCount() > 0) {
-				List<CommentVO> replyList = this.getCommentReplyList(comment.getCommentId(), 2, 0L)
+				List<CommentVO> replyList = this.loadCommentReplyList(comment.getCommentId(), 2, 0L)
 						.stream().map(reply -> {
 							CommentVO voReply = CommentVO.newInstance(reply);
 							voReply.setUser(this.memberStatDataService.getMemberCache(reply.getUid()));
@@ -195,19 +199,27 @@ public class CommentApiServiceImpl implements ICommentApiService, ApplicationCon
 		return comments;
 	}
 
-	@Override
-	public List<Comment> getCommentReplyList(Long commentId, Integer limit, Long offset) {
-		List<Comment> list = this.commentService.lambdaQuery()
+	private List<Comment> loadCommentReplyList(Long commentId, Integer limit, Long offset) {
+		Page<Comment> page = this.commentService.lambdaQuery()
 				.eq(Comment::getParentId, commentId)
 				.eq(Comment::getAuditStatus, CommentAuditStatus.PASSED)
 				.lt(IdUtils.validate(offset), Comment::getCommentId, offset)
-				.orderByDesc(Comment::getCommentId).last("limit " + limit).list();
-		list.forEach(comment -> {
-			if (DBConstants.isDeleted(comment.getDeleted())) {
-				comment.setContent(null); // 已删除的评论内容不返回
+				.orderByDesc(Comment::getCommentId).page(new Page<>(1, limit, false));
+		return page.getRecords();
+	}
+
+	@Override
+	public List<CommentVO> getCommentReplyList(Long commentId, Integer limit, Long offset) {
+		List<Comment> list = loadCommentReplyList(commentId, limit, offset);
+		List<CommentVO> comments = list.stream().map(reply -> {
+			CommentVO vo = CommentVO.newInstance(reply);
+			vo.setUser(this.memberStatDataService.getMemberCache(reply.getUid()));
+			if (reply.getReplyUid() > 0) {
+				vo.setReplyUser(this.memberStatDataService.getMemberCache(reply.getReplyUid()));
 			}
-		});
-		return list;
+			return vo;
+		}).toList();
+		return comments;
 	}
 
 	@Override
