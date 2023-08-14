@@ -208,7 +208,7 @@ export default {
   padding: 15px;
 }
 .cms-image-editor .r-container {
-  height: 200px;
+  height: 202px;
   overflow: hidden;
 }
 .cms-image-editor .r-container .r-left {

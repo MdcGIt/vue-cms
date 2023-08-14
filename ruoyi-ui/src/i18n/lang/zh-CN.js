@@ -1,6 +1,6 @@
 export default {
   APP: {
-    TITLE: 'RuoYi-Vue-CMS'
+    TITLE: '浙大城市学院'
   },
   Common: {
     Search: '搜索',
@@ -811,7 +811,7 @@ export default {
       InsertContentLink: "插入内容链接",
       InsertCatalogLink: "插入栏目链接",
       InsertImageGroup: "插入组图",
-      ReplaceWord: "一键替换", 
+      ReplaceWord: "一键替换",
       HighlightWord: "高亮显示",
       InputReplacement: "输入替换字符",
       FoundSensitiveWord: "发现敏感词",
