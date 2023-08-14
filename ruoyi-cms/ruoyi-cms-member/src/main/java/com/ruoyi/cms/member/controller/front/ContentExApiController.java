@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.vo.ContentDynamicDataVO;
 import com.ruoyi.contentcore.service.impl.ContentDynamicDataService;
 import com.ruoyi.member.domain.vo.MemberCache;
+import com.ruoyi.member.fixed.config.MemberResourcePrefix;
 import com.ruoyi.member.service.IMemberStatDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,6 +59,9 @@ public class ContentExApiController extends BaseRestController {
 				contributor.setUid(memberCache.getMemberId());
 				contributor.setDisplayName(memberCache.getDisplayName());
 				contributor.setAvatar(memberCache.getAvatar());
+				if (StringUtils.isNotEmpty(contributor.getAvatar())) {
+					contributor.setAvatarSrc(MemberResourcePrefix.getValue() + memberCache.getAvatar());
+				}
 				contributor.setSlogan(memberCache.getSlogan());
 				contributor.setStat(memberCache.getStat());
 				vo.setContributor(contributor);

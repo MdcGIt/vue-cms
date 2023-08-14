@@ -58,12 +58,13 @@ public class CmsContentTag extends AbstractListTag {
 				"数据获取范围，值为`Root`时忽略属性catalogid、catalogalias", "Current");
 		tagAttrLevel.setOptions(AttrOptions_Level);
 		tagAttrs.add(tagAttrLevel);
-		TagAttr tagAttrSort = new TagAttr("sort", false, TagAttrDataType.STRING, "排序方式", "Recent");
+		TagAttr tagAttrSort = new TagAttr("sort", false, TagAttrDataType.STRING, "排序方式", "Default");
 		tagAttrSort.setOptions(AttrOptions_Sort);
 		tagAttrs.add(tagAttrSort);
 		tagAttrs.add(new TagAttr("hasattribute", false, TagAttrDataType.STRING, "包含内容属性，多个属性英文逗号分隔，属性定义见数据字典配置[cms_content_attribute]"));
 		tagAttrs.add(new TagAttr("noattribute", false, TagAttrDataType.STRING, "不包含内容属性，多个属性英文逗号分隔，属性定义见数据字典配置[cms_content_attribute]"));
 		tagAttrs.add(new TagAttr("status", false, TagAttrDataType.STRING, "状态，'-1'表示不限制状态，默认：已发布"));
+		tagAttrs.add(new TagAttr("topflag", false, TagAttrDataType.BOOLEAN, "是否允许置顶，默认：允许", "true"));
 		return tagAttrs;
 	}
 
@@ -111,12 +112,13 @@ public class CmsContentTag extends AbstractListTag {
 		}
 		q.apply(StringUtils.isNotEmpty(condition), condition);
 		String sortType = MapUtils.getString(attrs, "sort");
+		q.orderByDesc(MapUtils.getBooleanValue(attrs, "topflag", true), CmsContent::getTopFlag);
 		if ("Recent".equalsIgnoreCase(sortType)) {
 			q.orderByDesc(CmsContent::getPublishDate);
 		} else if("Views".equalsIgnoreCase(sortType)) {
 			q.orderByDesc(CmsContent::getViewCount);
 		} else {
-			q.orderByDesc(Arrays.asList(CmsContent::getTopFlag, CmsContent::getSortFlag));
+			q.orderByDesc(CmsContent::getSortFlag);
 		}
 
 		TemplateContext context = FreeMarkerUtils.getTemplateContext(env);

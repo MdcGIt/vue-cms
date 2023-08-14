@@ -48,7 +48,6 @@ public class ArticleContributeDTO {
      * 正文内容
      */
     @NotBlank
-    @Length(max = 10000)
     private String contentHtml;
 
     /**

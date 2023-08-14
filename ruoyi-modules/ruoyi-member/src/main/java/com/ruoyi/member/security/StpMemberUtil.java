@@ -73,7 +73,6 @@ public class StpMemberUtil {
 					if (StringUtils.isNotEmpty(tokenPrefix) && !tokenValue.startsWith(tokenPrefix + SaTokenConsts.TOKEN_CONNECTOR_CHAT)) {
 						tokenValue = tokenPrefix + SaTokenConsts.TOKEN_CONNECTOR_CHAT + tokenValue;
 					}
-					System.out.println("---getTokenValueNotCut.cookie: " + tokenValue);
 				}
 			}
 			// 5. 返回

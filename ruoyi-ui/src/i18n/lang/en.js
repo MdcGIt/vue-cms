@@ -901,7 +901,9 @@ export default {
         BaiduAccessToken: "Baidu AccessToken",
         SiteApiUrl: "Site Api Url",
         CustomFormCardTitle: "Custom Form Configuration",
-        EnableCustomFormCaptcha: "Enable Captcha On Submit"
+        EnableCustomFormCaptcha: "Enable Captcha On Submit",
+        CommentCardTitle: " Comment Configuration",
+        EnableCommentAudit: "Enable Comment Audit"
       },
       Property: {
         QueryPlaceholder: "Input name/code",
@@ -915,10 +917,21 @@ export default {
       },
       DefaultTemplate: {
         Title: "Default Template",
+        StaticizePageConfig: "Staticize Page Configuration",
+        DynamicPageConfig: "Dynamic Page configuration",
         CatalogList: "Catalog List Template",
         ContentDetail: " Detail Template",
         SelectCatalogFirst: "Please select catalog first.",
         CustomForm: "Custom Form Template",
+        SearchResult: "Search Page Template",
+        AccountCentre: "Account Centre Template",
+        MemberLogin: "Member Login Template",
+        MemberRegister: "Member Register Template",
+        MemberForgetPwd: "Member Forget Password Template",
+        MemberSetting: "Member Setting Template",
+        MemberBindEmail: "Member Bind Email Template",
+        MemberResetPwd: "Member Reset Password Template",
+        MemberContribute: "Member Contribute Template",
       },
       Dashboard: {
         DataCountCard: "Statistical Data",
@@ -1251,7 +1264,13 @@ export default {
       FuncAttrName: "Name",
       FuncAttrType: "Type",
       FuncAttrRequired: "Required",
-      FuncAttrDesc: "Description"
+      FuncAttrDesc: "Description",
+      DynamicTemplate: "Dynamic Template",
+      DynamicTempType: "Type",
+      DynamicTempName: "Name",
+      DynamicTempRequestPath: "Request Path",
+      RequestArgs: "Request Args",
+      DefaultValue: "Default Value"
     },
     ExModel: {
       Name: "Name",

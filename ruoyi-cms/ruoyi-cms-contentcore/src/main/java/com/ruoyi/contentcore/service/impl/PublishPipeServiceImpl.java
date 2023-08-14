@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.ContentCoreConsts;
 import com.ruoyi.contentcore.core.impl.PublishPipeProp_IndexTemplate;
 import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
@@ -77,14 +78,18 @@ public class PublishPipeServiceImpl extends ServiceImpl<CmsPublishPipeMapper, Cm
 	@Override
 	public String getPublishPipePropValue(String propKey, String publishPipeCode,
 			Map<String, Map<String, Object>> props) {
+		String value;
 		if (props != null) {
-			return MapUtils.getString(props.get(publishPipeCode), propKey);
+			value = MapUtils.getString(props.get(publishPipeCode), propKey);
+			if (StringUtils.isNotEmpty(value)) {
+				return value;
+			}
 		}
 		Optional<IPublishPipeProp> opt = this.publishPipeProps.stream().filter(p -> p.getKey().equals(propKey)).findFirst();
 		if (opt.isPresent()) {
 			return opt.get().getDefaultValue();
 		} else {
-			log.warn("Unknow publish-pipe prop: {}", propKey);
+			log.warn("Unknown publish pipe prop: {}", propKey);
 		}
 		return null;
 	}

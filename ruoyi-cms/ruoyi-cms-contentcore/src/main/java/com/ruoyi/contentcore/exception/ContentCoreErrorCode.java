@@ -12,7 +12,7 @@ public enum ContentCoreErrorCode implements ErrorCode {
 	/**
 	 * 不支持的页面部件类型：{0}
 	 */
-	UNSUPPORT_PAGE_WIDGET_TYPE,
+	UNSUPPORTED_PAGE_WIDGET_TYPE,
 	
 	/**
 	 * 模板未配置或模板文件不存在
@@ -32,23 +32,28 @@ public enum ContentCoreErrorCode implements ErrorCode {
 	/**
 	 * 不支持的内容类型：{0}
 	 */
-	UNSUPPORT_CONTENT_TYPE, 
+	UNSUPPORTED_CONTENT_TYPE,
 
 	/**
 	 * 不支持的栏目类型：{0}
 	 */
-	UNSUPPORT_CATALOG_TYPE, 
+	UNSUPPORTED_CATALOG_TYPE,
 
 	/**
 	 * 不支持的内部数据类型：{0}
 	 */
-	UNSUPPORT_INTERNAL_DATA_TYPE, 
+	UNSUPPORTED_INTERNAL_DATA_TYPE,
 
 	/**
 	 * 不支持的资源类型：{0}
 	 */
-	UNSUPPORT_RESOURCE_TYPE, 
-	
+	UNSUPPORTED_RESOURCE_TYPE,
+
+	/**
+	 * 不支持的动态模板类型：{0}
+	 */
+	UNSUPPORTED_DYNAMIC_PAGE_TYPE,
+
 	/**
 	 * 请先删除子栏目
 	 */

@@ -44,6 +44,11 @@ public class MemberRegisterDTO {
 	@NotEmpty
 	private String password;
 
+	/**
+	 * 验证码
+	 */
+	private String authCode;
+
 	private String ip;
 
 	private String userAgent;

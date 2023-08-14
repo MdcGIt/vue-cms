@@ -1,15 +1,12 @@
 package com.ruoyi.contentcore.util;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.SpringUtils;
-import com.ruoyi.contentcore.core.ICatalogType;
-import com.ruoyi.contentcore.core.IContentType;
-import com.ruoyi.contentcore.core.IInternalDataType;
-import com.ruoyi.contentcore.core.IPageWidgetType;
-import com.ruoyi.contentcore.core.IResourceType;
+import com.ruoyi.contentcore.core.*;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.template.ITemplateType;
 
@@ -46,9 +43,25 @@ public class ContentCoreUtils {
 	 */
 	private static final Map<String, IResourceType> ResourceTypes = SpringUtils.getBeanMap(IResourceType.class);
 
+	/**
+	 * 动态模板类型
+	 */
+	private static final Map<String, IDynamicPageType> DynamicPageTypes = SpringUtils.getBeanMap(IDynamicPageType.class);
+
+
+	public static IDynamicPageType getDynamicPageType(String typeId) {
+		IDynamicPageType dpt = DynamicPageTypes.get(IResourceType.BEAN_NAME_PREFIX + typeId);
+		Assert.notNull(dpt, () -> ContentCoreErrorCode.UNSUPPORTED_DYNAMIC_PAGE_TYPE.exception(typeId));
+		return dpt;
+	}
+
+	public static Collection<IDynamicPageType> getDynamicPageTypes() {
+		return DynamicPageTypes.values();
+	}
+
 	public static IResourceType getResourceType(String typeId) {
 		IResourceType rt = ResourceTypes.get(IResourceType.BEAN_NAME_PREFIX + typeId);
-		Assert.notNull(rt, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(typeId));
+		Assert.notNull(rt, () -> ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(typeId));
 		return rt;
 	}
 	
@@ -58,7 +71,7 @@ public class ContentCoreUtils {
 
 	public static IPageWidgetType getPageWidgetType(String typeId) {
 		IPageWidgetType pwt = PageWidgetTypes.get(typeId);
-		Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORT_PAGE_WIDGET_TYPE.exception(typeId));
+		Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORTED_PAGE_WIDGET_TYPE.exception(typeId));
 		return pwt;
 	}
 
@@ -68,7 +81,7 @@ public class ContentCoreUtils {
 
 	public static ICatalogType getCatalogType(String catalogTypeId) {
 		ICatalogType ct = CatalogTypes.get(ICatalogType.BEAN_NAME_PREFIX + catalogTypeId);
-		Assert.notNull(ct, () -> ContentCoreErrorCode.UNSUPPORT_CATALOG_TYPE.exception(catalogTypeId));
+		Assert.notNull(ct, () -> ContentCoreErrorCode.UNSUPPORTED_CATALOG_TYPE.exception(catalogTypeId));
 		return ct;
 	}
 
@@ -78,7 +91,7 @@ public class ContentCoreUtils {
 
 	public static IContentType getContentType(String contentTypeId) {
 		IContentType ct = ContentTypes.get(IContentType.BEAN_NAME_PREFIX + contentTypeId);
-		Assert.notNull(ct, () -> ContentCoreErrorCode.UNSUPPORT_CONTENT_TYPE.exception(contentTypeId));
+		Assert.notNull(ct, () -> ContentCoreErrorCode.UNSUPPORTED_CONTENT_TYPE.exception(contentTypeId));
 		return ct;
 	}
 
@@ -88,7 +101,7 @@ public class ContentCoreUtils {
 
 	public static IInternalDataType getInternalDataType(String typeId) {
 		IInternalDataType idt = InternalDataTypes.get(IInternalDataType.BEAN_NAME_PREFIX + typeId);
-		Assert.notNull(idt, () -> ContentCoreErrorCode.UNSUPPORT_INTERNAL_DATA_TYPE.exception());
+		Assert.notNull(idt, () -> ContentCoreErrorCode.UNSUPPORTED_INTERNAL_DATA_TYPE.exception());
 		return idt;
 	}
 

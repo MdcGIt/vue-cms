@@ -13,9 +13,7 @@ import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.domain.CmsPageWidget;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.mapper.CmsPageWidgetMapper;
-import com.ruoyi.contentcore.perms.PageWidgetPermissionType.PageWidgetPrivItem;
 import com.ruoyi.contentcore.service.IPageWidgetService;
-import com.ruoyi.system.permission.PermissionUtils;
 import com.ruoyi.system.security.StpAdminUtil;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +45,7 @@ public class PageWidgetServiceImpl extends ServiceImpl<CmsPageWidgetMapper, CmsP
     @Override
     public IPageWidgetType getPageWidgetType(String type) {
         IPageWidgetType pwt = this.pageWidgetTypes.get(IPageWidgetType.BEAN_NAME_PREFIX + type);
-        Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORT_PAGE_WIDGET_TYPE.exception());
+        Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORTED_PAGE_WIDGET_TYPE.exception());
         return pwt;
     }
 

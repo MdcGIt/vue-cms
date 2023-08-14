@@ -1,44 +1,24 @@
 package com.ruoyi.cms.member.controller.front;
 
-import com.ruoyi.article.domain.CmsArticleDetail;
-import com.ruoyi.article.service.IArticleService;
-import com.ruoyi.cms.member.domain.vo.ContributeArticleVO;
+import com.ruoyi.cms.member.impl.*;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.staticize.StaticizeService;
-import com.ruoyi.common.staticize.core.TemplateContext;
-import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.contentcore.core.IContent;
-import com.ruoyi.contentcore.core.IContentType;
-import com.ruoyi.contentcore.domain.CmsContent;
-import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.service.IContentService;
-import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.contentcore.service.ITemplateService;
-import com.ruoyi.contentcore.util.ContentCoreUtils;
-import com.ruoyi.contentcore.util.InternalUrlUtils;
-import com.ruoyi.contentcore.util.SiteUtils;
-import com.ruoyi.contentcore.util.TemplateUtils;
-import com.ruoyi.member.domain.Member;
-import com.ruoyi.member.domain.vo.MemberCache;
+import com.ruoyi.contentcore.service.impl.DynamicPageService;
 import com.ruoyi.member.security.MemberUserType;
 import com.ruoyi.member.security.StpMemberUtil;
-import com.ruoyi.member.service.IMemberService;
-import com.ruoyi.member.service.IMemberStatDataService;
-import com.ruoyi.member.util.MemberUtils;
 import com.ruoyi.system.validator.LongId;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Objects;
+import java.util.Map;
 
 /**
  * 会员个人中心
@@ -49,22 +29,11 @@ import java.util.Objects;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/account")
 public class MemberAccountController extends BaseRestController {
 
-    private final ISiteService siteService;
+    private final DynamicPageService dynamicPageService;
 
-    private final IContentService contentService;
-
-    private final StaticizeService staticizeService;
-
-    private final ITemplateService templateService;
-
-    private final IMemberService memberService;
-
-    private final IMemberStatDataService memberStatDataService;
-
-    @GetMapping("/{memberId}")
+    @GetMapping(AccountCentreDynamicPageType.REQUEST_PATH)
     public void accountCentre(@PathVariable @LongId Long memberId,
                               @RequestParam(value = "type", required = false, defaultValue = "") String type,
                               @RequestParam("sid") Long siteId,
@@ -73,267 +42,104 @@ public class MemberAccountController extends BaseRestController {
                               @RequestParam(required = false, defaultValue = "false") Boolean preview,
                               HttpServletResponse response)
             throws IOException {
-        response.setCharacterEncoding(Charset.defaultCharset().displayName());
-        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 
-        CmsSite site = this.siteService.getSite(siteId);
-        if (Objects.isNull(site)) {
-            this.catchException("/", response, new RuntimeException("Site not found: " + siteId));
-            return;
-        }
-        MemberCache member = this.memberStatDataService.getMemberCache(memberId);
-        if (Objects.isNull(member)) {
-            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, new RuntimeException("Member not found: " + memberId));
-            return;
-        }
-        // 查找动态模板
-        final String detailTemplate = "account/account_centre.template.html"; // TODO 站点动态模板配置
-        File templateFile = this.templateService.findTemplateFile(site, detailTemplate, publishPipeCode);
-        if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, new RuntimeException("Template not found: " + detailTemplate));
-            return;
-        }
-        long s = System.currentTimeMillis();
-        // 生成静态页面
-        try {
-            // 模板ID = 通道:站点目录:模板文件名
-            String templateKey = SiteUtils.getTemplateKey(site, publishPipeCode, detailTemplate);
-            TemplateContext templateContext = new TemplateContext(templateKey, preview, publishPipeCode);
-            // init template datamode
-            TemplateUtils.initGlobalVariables(site, templateContext);
-            // init templateType data to datamode
-            templateContext.getVariables().put("Member", member);
-            templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(preview));
-            templateContext.getVariables().put("Request", ServletUtils.getParameters());
-            templateContext.setPageIndex(page);
+        Map<String, String> parameters = ServletUtils.getParameters();
+        parameters.put("memberId", memberId.toString());
 
-            String link = "account/" + memberId + "?type=" + type;
-            if (preview) {
-                link += "&sid=" + siteId + "&pp=" + publishPipeCode + "&preview=true";
-            }
-            templateContext.setFirstFileName(link);
-            templateContext.setOtherFileName(link + "&page=" + TemplateContext.PlaceHolder_PageNo);
-            // staticize
-            this.staticizeService.process(templateContext, response.getWriter());
-            log.debug("会员主页模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
-        } catch (Exception e) {
-            this.catchException(SiteUtils.getSiteLink(site, publishPipeCode, preview), response, e);
-        }
+        this.dynamicPageService.generateDynamicPage(AccountCentreDynamicPageType.TYPE,
+                siteId, publishPipeCode, preview, parameters, response);
+    }
+
+    @GetMapping(AccountLoginDynamicPageType.REQUEST_PATH)
+    public void memberLogin(@RequestParam("sid") Long siteId,
+                            @RequestParam("pp") String publishPipeCode,
+                            @RequestParam(required = false, defaultValue = "false") Boolean preview,
+                            HttpServletResponse response)
+            throws IOException {
+
+        this.dynamicPageService.generateDynamicPage(AccountLoginDynamicPageType.TYPE,
+                siteId, publishPipeCode, preview, ServletUtils.getParameters(), response);
+    }
+
+    @GetMapping(AccountRegisterDynamicPageType.REQUEST_PATH)
+    public void memberRegister(@RequestParam("sid") Long siteId,
+                            @RequestParam("pp") String publishPipeCode,
+                            @RequestParam(required = false, defaultValue = "false") Boolean preview,
+                            HttpServletResponse response)
+            throws IOException {
+
+        this.dynamicPageService.generateDynamicPage(AccountRegisterDynamicPageType.TYPE,
+                siteId, publishPipeCode, preview, ServletUtils.getParameters(), response);
+    }
+
+    @GetMapping(AccountForgetPasswordDynamicPageType.REQUEST_PATH)
+    public void memberResetPassword(@RequestParam("sid") Long siteId,
+                                    @RequestParam("pp") String publishPipeCode,
+                                    @RequestParam(required = false, defaultValue = "false") Boolean preview,
+                                    HttpServletResponse response) throws IOException {
+
+        this.dynamicPageService.generateDynamicPage(AccountForgetPasswordDynamicPageType.TYPE,
+                siteId, publishPipeCode, preview, ServletUtils.getParameters(), response);
     }
 
     @Priv(type = MemberUserType.TYPE)
-    @GetMapping("/setting")
+    @GetMapping(AccountSettingDynamicPageType.REQUEST_PATH)
     public void accountSetting(@RequestParam Long sid,
                                @RequestParam String pp,
                                @RequestParam(required = false, defaultValue = "false") Boolean preview,
-                               HttpServletResponse response)
-            throws IOException {
-        response.setCharacterEncoding(Charset.defaultCharset().displayName());
-        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
+                               HttpServletResponse response) throws IOException {
 
-        CmsSite site = this.siteService.getSite(sid);
-        if (Objects.isNull(site)) {
-            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
-            return;
-        }
-        long memberId = StpMemberUtil.getLoginIdAsLong();
-        Member member = this.memberService.getById(memberId);
-        if (Objects.isNull(member)) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
-            return;
-        }
-        // 查找动态模板
-        final String detailTemplate = "account/account_setting.template.html";
-        File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
-        if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
-            return;
-        }
-        long s = System.currentTimeMillis();
-        // 生成静态页面
-        try {
-            // 模板ID = 通道:站点目录:模板文件名
-            String templateKey = SiteUtils.getTemplateKey(site, pp, detailTemplate);
-            TemplateContext templateContext = new TemplateContext(templateKey, preview, pp);
-            // init template datamode
-            TemplateUtils.initGlobalVariables(site, templateContext);
-            // init templateType data to datamode
-            templateContext.getVariables().put("Member", member);
-            templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(preview));
-            templateContext.getVariables().put("Request", ServletUtils.getParameters());
-            // staticize
-            this.staticizeService.process(templateContext, response.getWriter());
-            log.debug("会员信息设置页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
-        } catch (Exception e) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
-        }
+        Map<String, String> parameters = ServletUtils.getParameters();
+        parameters.put("memberId", StpMemberUtil.getLoginIdAsString());
+
+        this.dynamicPageService.generateDynamicPage(AccountSettingDynamicPageType.TYPE,
+                sid, pp, preview, parameters, response);
     }
 
     @Priv(type = MemberUserType.TYPE)
-    @GetMapping("/password")
+    @GetMapping(AccountPasswordDynamicPageType.REQUEST_PATH)
     public void accountPassword(@RequestParam Long sid,
                                 @RequestParam String pp,
                                 @RequestParam(required = false, defaultValue = "false") Boolean preview,
                                 HttpServletResponse response)
             throws IOException {
-        response.setCharacterEncoding(Charset.defaultCharset().displayName());
-        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 
-        CmsSite site = this.siteService.getSite(sid);
-        if (Objects.isNull(site)) {
-            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
-            return;
-        }
-        long memberId = StpMemberUtil.getLoginIdAsLong();
-        Member member = this.memberService.getById(memberId);
-        if (Objects.isNull(member)) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
-            return;
-        }
-        // 查找动态模板
-        final String detailTemplate = "account/account_password.template.html";
-        File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
-        if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
-            return;
-        }
-        long s = System.currentTimeMillis();
-        // 生成静态页面
-        try {
-            // 模板ID = 通道:站点目录:模板文件名
-            String templateKey = SiteUtils.getTemplateKey(site, pp, detailTemplate);
-            TemplateContext templateContext = new TemplateContext(templateKey, preview, pp);
-            // init template datamode
-            TemplateUtils.initGlobalVariables(site, templateContext);
-            // init templateType data to datamode
-            templateContext.getVariables().put("Member", member);
-            templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(preview));
-            templateContext.getVariables().put("Request", ServletUtils.getParameters());
-            // staticize
-            this.staticizeService.process(templateContext, response.getWriter());
-            log.debug("会员信息设置页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
-        } catch (Exception e) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
-        }
+        Map<String, String> parameters = ServletUtils.getParameters();
+        parameters.put("memberId", StpMemberUtil.getLoginIdAsString());
+
+        this.dynamicPageService.generateDynamicPage(AccountPasswordDynamicPageType.TYPE,
+                sid, pp, preview, parameters, response);
     }
 
     @Priv(type = MemberUserType.TYPE)
-    @GetMapping("/change_email")
+    @GetMapping(AccountBindEmailDynamicPageType.REQUEST_PATH)
     public void accountChangeEmail(@RequestParam Long sid,
                                    @RequestParam String pp,
                                    @RequestParam(required = false, defaultValue = "false") Boolean preview,
                                    HttpServletResponse response)
             throws IOException {
-        response.setCharacterEncoding(Charset.defaultCharset().displayName());
-        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 
-        CmsSite site = this.siteService.getSite(sid);
-        if (Objects.isNull(site)) {
-            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
-            return;
-        }
-        long memberId = StpMemberUtil.getLoginIdAsLong();
-        Member member = this.memberService.getById(memberId);
-        if (Objects.isNull(member)) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
-            return;
-        }
-        // 查找动态模板
-        final String detailTemplate = "account/account_change_email.template.html";
-        File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
-        if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
-            return;
-        }
-        long s = System.currentTimeMillis();
-        // 生成静态页面
-        try {
-            // 模板ID = 通道:站点目录:模板文件名
-            String templateKey = SiteUtils.getTemplateKey(site, pp, detailTemplate);
-            TemplateContext templateContext = new TemplateContext(templateKey, preview, pp);
-            // init template datamode
-            TemplateUtils.initGlobalVariables(site, templateContext);
-            // init templateType data to datamode
-            templateContext.getVariables().put("Member", member);
-            templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(preview));
-            templateContext.getVariables().put("Request", ServletUtils.getParameters());
-            // staticize
-            this.staticizeService.process(templateContext, response.getWriter());
-            log.debug("会员信息设置页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
-        } catch (Exception e) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
-        }
+        Map<String, String> parameters = ServletUtils.getParameters();
+        parameters.put("memberId", StpMemberUtil.getLoginIdAsString());
+
+        this.dynamicPageService.generateDynamicPage(AccountBindEmailDynamicPageType.TYPE,
+                sid, pp, preview, parameters, response);
     }
 
-    private final IArticleService articleService;
-
     @Priv(type = MemberUserType.TYPE)
-    @GetMapping("/contribute")
+    @GetMapping(AccountContributeDynamicPageType.REQUEST_PATH)
     public void accountContribute(@RequestParam Long sid,
                                   @RequestParam String pp,
                                   @RequestParam(value = "cid", required = false) Long contentId,
                                   @RequestParam(required = false, defaultValue = "false") Boolean preview,
                                   HttpServletResponse response)
             throws IOException {
-        response.setCharacterEncoding(Charset.defaultCharset().displayName());
-        response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 
-        CmsSite site = this.siteService.getSite(sid);
-        if (Objects.isNull(site)) {
-            this.catchException("/", response, new RuntimeException("Site not found: " + sid));
-            return;
-        }
-        long memberId = StpMemberUtil.getLoginIdAsLong();
-        Member member = this.memberService.getById(memberId);
-        if (Objects.isNull(member)) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Member not found: " + memberId));
-            return;
-        }
-        // 查找动态模板
-        final String detailTemplate = "account/account_contribute.template.html";
-        File templateFile = this.templateService.findTemplateFile(site, detailTemplate, pp);
-        if (Objects.isNull(templateFile) || !templateFile.exists()) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, new RuntimeException("Template not found: " + detailTemplate));
-            return;
-        }
-        long s = System.currentTimeMillis();
-        // 生成静态页面
-        try {
-            // 模板ID = 通道:站点目录:模板文件名
-            String templateKey = SiteUtils.getTemplateKey(site, pp, detailTemplate);
-            TemplateContext templateContext = new TemplateContext(templateKey, preview, pp);
-            // init template datamode
-            TemplateUtils.initGlobalVariables(site, templateContext);
-            // init templateType data to datamode
-            templateContext.getVariables().put("Member", member);
-            templateContext.getVariables().put("MemberResourcePrefix", MemberUtils.getMemberResourcePrefix(preview));
-            templateContext.getVariables().put("Request", ServletUtils.getParameters());
-            if (IdUtils.validate(contentId)) {
-                CmsContent content = this.contentService.getById(contentId);
-                CmsArticleDetail articleDetail = this.articleService.getById(content.getContentId());
-                ContributeArticleVO article = ContributeArticleVO.newInstance(content, articleDetail);
-                if (StringUtils.isNotEmpty(content.getLogo())) {
-                    article.setLogoSrc(InternalUrlUtils.getActualUrl(article.getLogo(), pp, preview));
-                }
-                article.setContentHtml(InternalUrlUtils.dealResourceInternalUrl(article.getContentHtml()));
-                templateContext.getVariables().put("Article", article);
-            } else {
-                templateContext.getVariables().put("Article", new ContributeArticleVO());
-            }
-            // staticize
-            this.staticizeService.process(templateContext, response.getWriter());
-            log.debug("会员投稿页面模板解析：{}，耗时：{} ms", member.getMemberId(), System.currentTimeMillis() - s);
-        } catch (Exception e) {
-            this.catchException(SiteUtils.getSiteLink(site, pp, preview), response, e);
-        }
-    }
+        Map<String, String> parameters = ServletUtils.getParameters();
+        parameters.put("memberId", StpMemberUtil.getLoginIdAsString());
 
-    private void catchException(String redirectLink, HttpServletResponse response, Exception e) throws IOException {
-        if (log.isDebugEnabled()) {
-            e.printStackTrace(response.getWriter());
-        } else {
-            response.sendRedirect(redirectLink); // TODO 通过发布通道属性配置错误页面
-        }
+        this.dynamicPageService.generateDynamicPage(AccountContributeDynamicPageType.TYPE,
+                sid, pp, preview, parameters, response);
     }
 }
 
