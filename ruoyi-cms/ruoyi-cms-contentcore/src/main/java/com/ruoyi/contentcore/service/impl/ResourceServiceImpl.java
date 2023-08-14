@@ -66,7 +66,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		String suffix = FileExUtils.getImageSuffix(url);
 		IResourceType resourceType = ContentCoreUtils.getResourceType(ResourceType_Image.ID);
 		if (!resourceType.check(suffix)) {
-			throw ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix);  // 不支持的图片格式
+			throw ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix);  // 不支持的图片格式
 		}
 		CmsSite site = siteService.getSite(siteId);
 
@@ -99,7 +99,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 			throws IOException {
 		String suffix = FileExUtils.getExtension(Objects.requireNonNull(dto.getFile().getOriginalFilename()));
 		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
-		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();
 		resource.setResourceId(IdUtils.getSnowflakeId());
@@ -132,7 +132,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		String suffix = base64Data.substring(11, base64Data.indexOf(";"));
 
 		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
-		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();
 		resource.setResourceId(IdUtils.getSnowflakeId());

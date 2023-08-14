@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -29,6 +30,12 @@ public class AccountBindEmailDynamicPageType implements IDynamicPageType {
     public static final String TYPE = "AccountBindEmail";
 
     public static final String REQUEST_PATH = "account/change_email";
+
+    public static final List<RequestArg> REQUEST_ARGS =  List.of(
+            REQUEST_ARG_SITE_ID,
+            REQUEST_ARG_PUBLISHPIPE_CODE,
+            REQUEST_ARG_PREVIEW
+    );
 
     private final IMemberStatDataService memberStatDataService;
 
@@ -47,6 +54,11 @@ public class AccountBindEmailDynamicPageType implements IDynamicPageType {
     @Override
     public String getRequestPath() {
         return REQUEST_PATH;
+    }
+
+    @Override
+    public List<RequestArg> getRequestArgs() {
+        return REQUEST_ARGS;
     }
 
     @Override

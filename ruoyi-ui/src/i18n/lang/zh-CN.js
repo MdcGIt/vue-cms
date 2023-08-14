@@ -1264,7 +1264,13 @@ export default {
       FuncAttrName: "名称",
       FuncAttrType: "类型",
       FuncAttrRequired: "是否必填",
-      FuncAttrDesc: "描述"
+      FuncAttrDesc: "描述",
+      DynamicTemplate: "动态模板",
+      DynamicTempType: "类型",
+      DynamicTempName: "名称",
+      DynamicTempRequestPath: "访问路径",
+      RequestArgs: "请求参数",
+      DefaultValue: "默认值"
     },
     ExModel: {
       Name: "名称",

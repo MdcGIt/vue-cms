@@ -1,7 +1,9 @@
 package com.ruoyi.contentcore.core;
 
 import com.ruoyi.common.staticize.core.TemplateContext;
+import com.ruoyi.common.utils.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +16,10 @@ public interface IDynamicPageType {
 
     String BEAN_PREFIX = "DynamicPageType_";
 
+    RequestArg REQUEST_ARG_SITE_ID = new RequestArg("sid", "站点ID", RequestArgType.Parameter, true, null);
+    RequestArg REQUEST_ARG_PUBLISHPIPE_CODE = new RequestArg("pp", "发布通道编码", RequestArgType.Parameter, true, null);
+    RequestArg REQUEST_ARG_PREVIEW = new RequestArg("preview", "是否预览模式", RequestArgType.Parameter, false, "false");
+
     /**
      * 类型
      */
@@ -25,6 +31,14 @@ public interface IDynamicPageType {
     String getName();
 
     /**
+     * 描述
+     * @return
+     */
+    default String getDesc() {
+        return StringUtils.EMPTY;
+    }
+
+    /**
      * 访问路径
      */
     String getRequestPath();
@@ -33,6 +47,13 @@ public interface IDynamicPageType {
      * 模板发布通道配置属性KEY
      */
     String getPublishPipeKey();
+
+    /**
+     * 请求参数
+     */
+    default List<RequestArg> getRequestArgs() {
+        return List.of();
+    }
 
     /**
      * 校验请求参数
@@ -51,5 +72,21 @@ public interface IDynamicPageType {
      */
     default void initTemplateData(Map<String, String> parameters, TemplateContext templateContext) {
 
+    }
+
+    record RequestArg(
+            String name, // 参数名
+
+            String desc, // 参数说明
+
+            RequestArgType type, // 类型：parameter, path
+
+            boolean mandatory, // 是否必填
+
+            String defaultValue // 默认值
+    ){}
+
+    enum RequestArgType {
+        Parameter, Path
     }
 }

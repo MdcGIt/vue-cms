@@ -131,7 +131,7 @@ public class PageWidgetController extends BaseRestController {
 	public R<?> addPageWidget(@RequestBody @Validated PageWidgetAddDTO dto)
 			throws IOException {
 		IPageWidgetType pwt = this.pageWidgetService.getPageWidgetType(dto.getType());
-		Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORT_PAGE_WIDGET_TYPE.exception(dto.getType()));
+		Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORTED_PAGE_WIDGET_TYPE.exception(dto.getType()));
 
 		CmsPageWidget pageWidget= new CmsPageWidget();
 		BeanUtils.copyProperties(dto, pageWidget);

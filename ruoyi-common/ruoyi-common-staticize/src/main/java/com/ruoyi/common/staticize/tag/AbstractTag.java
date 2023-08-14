@@ -79,8 +79,8 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 				// 保存冲突变量，render后恢复
 				Map<String, TemplateModel> conflictVariables = FreeMarkerUtils.setVariables(env, tagVariables);
 				body.render(env.getOut());
-				tagVariables.keySet().forEach(k -> env.setVariable(k, null));
-				conflictVariables.entrySet().forEach(e -> env.setVariable(e.getKey(), e.getValue()));
+				tagVariables.forEach((k, v) -> env.setVariable(k, null));
+				conflictVariables.forEach(env::setVariable);
 			} else {
 				body.render(env.getOut());
 			}

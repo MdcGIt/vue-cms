@@ -8,6 +8,7 @@ import com.ruoyi.contentcore.core.IDynamicPageType;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +24,16 @@ public class SearchDynamicPageType implements IDynamicPageType {
 
     public static final String REQUEST_PATH = "_search";
 
+    public static final List<RequestArg> REQUEST_ARGS =  List.of(
+            REQUEST_ARG_SITE_ID,
+            REQUEST_ARG_PUBLISHPIPE_CODE,
+            REQUEST_ARG_PREVIEW,
+            new RequestArg("q", "搜索词", RequestArgType.Parameter, false, null),
+            new RequestArg("ot", "是否只搜索标题", RequestArgType.Parameter, false, "false"),
+            new RequestArg("ct", "内容类型", RequestArgType.Parameter, false, null),
+            new RequestArg("page", "当前页码", RequestArgType.Parameter, false, "1")
+        );
+
     @Override
     public String getType() {
         return TYPE;
@@ -36,6 +47,11 @@ public class SearchDynamicPageType implements IDynamicPageType {
     @Override
     public String getRequestPath() {
         return REQUEST_PATH;
+    }
+
+    @Override
+    public List<RequestArg> getRequestArgs() {
+        return REQUEST_ARGS;
     }
 
     @Override

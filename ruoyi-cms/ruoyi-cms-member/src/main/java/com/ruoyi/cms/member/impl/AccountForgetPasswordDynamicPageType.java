@@ -4,6 +4,8 @@ import com.ruoyi.cms.member.publishpipe.PublishPipeProp_MemberForgetPasswordTemp
 import com.ruoyi.contentcore.core.IDynamicPageType;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 会员找回密码页
  *
@@ -16,6 +18,12 @@ public class AccountForgetPasswordDynamicPageType implements IDynamicPageType {
     public static final String TYPE = "AccountForgetPassword";
 
     public static final String REQUEST_PATH = "account/forget_password";
+
+    public static final List<RequestArg> REQUEST_ARGS =  List.of(
+            REQUEST_ARG_SITE_ID,
+            REQUEST_ARG_PUBLISHPIPE_CODE,
+            REQUEST_ARG_PREVIEW
+    );
 
     @Override
     public String getType() {
@@ -30,6 +38,11 @@ public class AccountForgetPasswordDynamicPageType implements IDynamicPageType {
     @Override
     public String getRequestPath() {
         return REQUEST_PATH;
+    }
+
+    @Override
+    public List<RequestArg> getRequestArgs() {
+        return REQUEST_ARGS;
     }
 
     @Override

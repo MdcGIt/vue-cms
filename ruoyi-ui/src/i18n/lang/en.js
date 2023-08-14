@@ -1264,7 +1264,13 @@ export default {
       FuncAttrName: "Name",
       FuncAttrType: "Type",
       FuncAttrRequired: "Required",
-      FuncAttrDesc: "Description"
+      FuncAttrDesc: "Description",
+      DynamicTemplate: "Dynamic Template",
+      DynamicTempType: "Type",
+      DynamicTempName: "Name",
+      DynamicTempRequestPath: "Request Path",
+      RequestArgs: "Request Args",
+      DefaultValue: "Default Value"
     },
     ExModel: {
       Name: "Name",

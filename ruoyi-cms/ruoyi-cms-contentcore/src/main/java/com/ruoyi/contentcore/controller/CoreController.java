@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.controller;
 
+import com.ruoyi.common.domain.R;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.staticize.StaticizeService;
@@ -50,7 +51,7 @@ public class CoreController extends BaseRestController {
 
 	/**
 	 * 预览内容核心数据页面
-	 * 
+	 *
 	 * @param dataType    内容核心数据类型ID
 	 * @param dataId      内容核心数据ID
 	 * @param publishPipe 发布通道编码
@@ -61,15 +62,15 @@ public class CoreController extends BaseRestController {
 	@Priv(type = AdminUserType.TYPE)
 	@GetMapping("/cms/preview/{dataType}/{dataId}")
 	public void preview(@PathVariable("dataType") String dataType, @PathVariable("dataId") Long dataId,
-			@RequestParam(value = "pp") String publishPipe,
-			@RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex,
-			@RequestParam(value = "list", required = false, defaultValue = "N") String listFlag)
+						@RequestParam(value = "pp") String publishPipe,
+						@RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex,
+						@RequestParam(value = "list", required = false, defaultValue = "N") String listFlag)
 			throws IOException, TemplateException {
 		HttpServletResponse response = ServletUtils.getResponse();
 		response.setCharacterEncoding(Charset.defaultCharset().displayName());
 		response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 		IInternalDataType internalDataType = ContentCoreUtils.getInternalDataType(dataType);
-		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORT_INTERNAL_DATA_TYPE.exception(dataType));
+		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORTED_INTERNAL_DATA_TYPE.exception(dataType));
 
 		IInternalDataType.RequestData data = new IInternalDataType.RequestData(dataId, pageIndex, publishPipe,
 				true, ServletUtils.getParamMap(ServletUtils.getRequest()));
@@ -79,7 +80,7 @@ public class CoreController extends BaseRestController {
 
 	/**
 	 * 浏览内部数据页面
-	 * 
+	 *
 	 * @param dataType    内容核心数据类型ID
 	 * @param dataId      内容核心数据ID
 	 * @param publishPipe 发布通道编码
@@ -89,15 +90,15 @@ public class CoreController extends BaseRestController {
 	 */
 	@GetMapping("/cms/view/{dataType}/{dataId}")
 	public void browse(@PathVariable("dataType") String dataType, @PathVariable("dataId") Long dataId,
-			@RequestParam(value = "pp") String publishPipe,
-			@RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex)
+					   @RequestParam(value = "pp") String publishPipe,
+					   @RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex)
 			throws IOException, TemplateException {
 		HttpServletResponse response = ServletUtils.getResponse();
 
 		response.setCharacterEncoding(Charset.defaultCharset().displayName());
 		response.setContentType("text/html; charset=" + Charset.defaultCharset().displayName());
 		IInternalDataType internalDataType = ContentCoreUtils.getInternalDataType(dataType);
-		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORT_INTERNAL_DATA_TYPE.exception(dataType));
+		Assert.notNull(internalDataType, () -> ContentCoreErrorCode.UNSUPPORTED_INTERNAL_DATA_TYPE.exception(dataType));
 
 		IInternalDataType.RequestData data = new IInternalDataType.RequestData(dataId, pageIndex, publishPipe,
 				false, ServletUtils.getParamMap(ServletUtils.getRequest()));
@@ -107,9 +108,9 @@ public class CoreController extends BaseRestController {
 
 	@GetMapping("/cms/ssi/virtual/")
 	public void getSSIVirtualContent(@RequestParam("sid") Long siteId, @RequestParam("pp") String publishPipeCode,
-			@RequestParam("t") String template,
-			@RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex,
-			@RequestParam Map<String, Object> params) {
+									 @RequestParam("t") String template,
+									 @RequestParam(value = "pi", required = false, defaultValue = "1") Integer pageIndex,
+									 @RequestParam Map<String, Object> params) {
 		try {
 			// TODO 缓存
 			long s = System.currentTimeMillis();
@@ -137,5 +138,11 @@ public class CoreController extends BaseRestController {
 		} catch (TemplateException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Priv(type = AdminUserType.TYPE)
+	@GetMapping("/cms/dynamicPageTypes")
+	public R<?> getDynamicPageTypes() {
+		return R.ok(ContentCoreUtils.getDynamicPageTypes());
 	}
 }

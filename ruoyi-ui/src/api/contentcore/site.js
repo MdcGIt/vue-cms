@@ -172,3 +172,11 @@ export function uploadWatermarker(siteId, data) {
     data: data
   })
 }
+
+// 动态模板类型
+export function getDynamicPageTypes() {
+  return request({
+    url: '/cms/dynamicPageTypes',
+    method: 'get'
+  })
+}
