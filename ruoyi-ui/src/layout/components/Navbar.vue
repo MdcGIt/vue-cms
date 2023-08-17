@@ -108,7 +108,8 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = process.env.VUE_APP_PATH + 'index';
+          console.log(location,'location');
+          location.href = location.origin+location.port;
           // location.reload();
         })
       }).catch(() => {});
