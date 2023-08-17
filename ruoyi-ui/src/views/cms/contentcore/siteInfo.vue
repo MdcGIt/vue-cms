@@ -52,6 +52,16 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
+      <el-col :span="1.5">
+        <el-button 
+          plain
+          type="primary"
+          icon="el-icon-s-promotion"
+          size="mini"
+          :disabled="!this.siteId"
+          v-hasPermi="[ $p('Site:Export:{0}', [ siteId ]) ]"
+          @click="handleExport">{{ $t("CMS.Site.Export") }}</el-button>
+      </el-col>
     </el-row>
     <el-form 
       ref="form_info"
@@ -161,7 +171,7 @@
   </div>
 </template>
 <script>
-import { getSite, publishSite, updateSite  } from "@/api/contentcore/site";
+import { getSite, publishSite, updateSite, exportSite  } from "@/api/contentcore/site";
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
 import CMSProgress from '@/views/components/Progress';
 import CMSLogoView from '@/views/cms/components/LogoView';
@@ -296,6 +306,17 @@ export default {
             this.taskId = response.data;
             this.openProgress = true;
           }
+        } else {
+          this.$modal.msgError(response.msg);
+        }
+      });
+    },
+    handleExport () {
+      const data = { siteId: this.siteId }
+      exportSite(data).then(response => {
+        if (response.code == 200) {
+            this.taskId = response.data;
+            this.openProgress = true;
         } else {
           this.$modal.msgError(response.msg);
         }

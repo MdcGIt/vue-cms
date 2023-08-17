@@ -1,9 +1,9 @@
 package com.ruoyi.common.async;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -86,11 +86,10 @@ public class AsyncTaskManager {
 
     /**
      * 获取任务列表
-     * @param type
      * @return
      */
-	public List<AsyncTask> getTaskList(String type) {
-		return this.asyncTaskMap.values().stream().collect(Collectors.toList());
+	public List<AsyncTask> getTaskList() {
+		return new ArrayList<>(this.asyncTaskMap.values());
 	}
 
     /**

@@ -845,6 +845,7 @@ export default {
       ExModelCardTitle: "扩展模型属性",
       CurrentSelectorTitle: "切换当前站点",
       AlreayCurrentSite: "请选择非当前站点",
+      Export: "导出站点",
       Tab: {
         Basic: "基础信息",
         Extend: "扩展配置",

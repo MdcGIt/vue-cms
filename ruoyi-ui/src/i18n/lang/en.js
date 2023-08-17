@@ -845,6 +845,7 @@ export default {
       ExModelCardTitle: "Ex-Model Configuration",
       CurrentSelectorTitle: "Change Current Site",
       AlreayCurrentSite: "Please select a non current site.",
+      Export: "Export",
       Tab: {
         Basic: "Basic Information",
         Extend: "Extend Config",

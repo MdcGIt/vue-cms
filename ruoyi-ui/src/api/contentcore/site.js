@@ -75,6 +75,15 @@ export function publishSite(data) {
   })
 }
 
+// 导出站点
+export function exportSite(data) {
+  return request({
+    url: '/cms/site/export',
+    method: 'post',
+    data: data
+  })
+}
+
 // 重建全站索引
 export function rebuildIndex() {
   return request({

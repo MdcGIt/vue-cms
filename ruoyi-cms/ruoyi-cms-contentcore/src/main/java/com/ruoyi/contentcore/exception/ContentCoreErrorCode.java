@@ -143,7 +143,12 @@ public enum ContentCoreErrorCode implements ErrorCode {
 	/**
 	 * 栏目排序值不能为0
 	 */
-	CATALOG_SORT_VALUE_ZERO;
+	CATALOG_SORT_VALUE_ZERO,
+
+	/**
+	 * 站点导出任务正在进行中
+	 */
+	SITE_EXPORT_TASK_EXISTS;
 
 	@Override
 	public String value() {

@@ -20,16 +20,14 @@ import com.ruoyi.common.utils.file.FileExUtils;
 import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.core.IPublishPipeProp.PublishPipePropUseType;
 import com.ruoyi.contentcore.domain.CmsSite;
-import com.ruoyi.contentcore.domain.dto.PublishPipeProp;
-import com.ruoyi.contentcore.domain.dto.PublishSiteDTO;
-import com.ruoyi.contentcore.domain.dto.SiteDTO;
-import com.ruoyi.contentcore.domain.dto.SiteDefaultTemplateDTO;
+import com.ruoyi.contentcore.domain.dto.*;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
 import com.ruoyi.contentcore.perms.SitePermissionType.SitePrivItem;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
+import com.ruoyi.contentcore.service.impl.SiteExportService;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
@@ -39,6 +37,7 @@ import com.ruoyi.system.validator.LongId;
 import freemarker.template.TemplateException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +48,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 站点管理
@@ -71,10 +71,11 @@ public class SiteController extends BaseRestController {
 
     private final AsyncTaskManager asyncTaskManager;
 
+    private final SiteExportService siteExportService;
+
     /**
      * 获取当前站点数据
      *
-     * @return
      * @apiNote 读取request.header['CurrentSite']中的siteId，如果无header或无站点则取数据库第一条站点数据
      */
     @Priv(type = AdminUserType.TYPE)
@@ -88,7 +89,6 @@ public class SiteController extends BaseRestController {
      * 设置当前站点
      *
      * @param siteId 站点ID
-     * @return
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:View:${#siteId}")
     @Log(title = "切换站点", businessType = BusinessType.UPDATE)
@@ -102,7 +102,6 @@ public class SiteController extends BaseRestController {
      * 查询站点数据列表
      *
      * @param siteName 站点名称
-     * @return
      */
     @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
     @GetMapping("/list")
@@ -127,7 +126,6 @@ public class SiteController extends BaseRestController {
      * 获取站点详情
      *
      * @param siteId 站点ID
-     * @return
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:View:${#siteId}")
     @GetMapping(value = "/{siteId}")
@@ -164,10 +162,6 @@ public class SiteController extends BaseRestController {
 
     /**
      * 新增站点数据
-     *
-     * @param dto
-     * @return
-     * @throws IOException
      */
     @Priv(type = AdminUserType.TYPE, value = ContentCorePriv.SiteView)
     @Log(title = "新增站点", businessType = BusinessType.INSERT)
@@ -180,10 +174,6 @@ public class SiteController extends BaseRestController {
 
     /**
      * 修改站点数据
-     *
-     * @param dto
-     * @return
-     * @throws IOException
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#dto.siteId}")
     @Log(title = "编辑站点", businessType = BusinessType.UPDATE)
@@ -198,8 +188,6 @@ public class SiteController extends BaseRestController {
      * 删除站点数据
      *
      * @param siteId 站点ID
-     * @return
-     * @throws IOException
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:Delete:${#siteId}")
     @Log(title = "删除站点", businessType = BusinessType.DELETE)
@@ -222,11 +210,6 @@ public class SiteController extends BaseRestController {
 
     /**
      * 发布站点
-     *
-     * @param dto
-     * @return
-     * @throws IOException
-     * @throws TemplateException
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:Publish:${#dto.siteId}")
     @Log(title = "发布站点", businessType = BusinessType.OTHER)
@@ -247,7 +230,6 @@ public class SiteController extends BaseRestController {
      * 获取站点扩展配置数据
      *
      * @param siteId 站点ID
-     * @return
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:View:${#siteId}")
     @GetMapping("/extends")
@@ -265,7 +247,6 @@ public class SiteController extends BaseRestController {
      *
      * @param siteId  站点ID
      * @param configs 扩展配置数据
-     * @return
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
     @Log(title = "站点扩展", businessType = BusinessType.UPDATE, isSaveRequestData = false)
@@ -282,7 +263,6 @@ public class SiteController extends BaseRestController {
      * 获取站点默认模板配置
      *
      * @param siteId 站点ID
-     * @return
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:View:${#siteId}")
     @GetMapping("/default_template")
@@ -301,9 +281,6 @@ public class SiteController extends BaseRestController {
 
     /**
      * 保存站点默认模板配置
-     *
-     * @param dto
-     * @return
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#dto.siteId}")
     @Log(title = "默认模板", businessType = BusinessType.UPDATE)
@@ -319,9 +296,6 @@ public class SiteController extends BaseRestController {
 
     /**
      * 应用站点默认模板配置到指定栏目
-     *
-     * @param dto
-     * @return
      */
     @Priv(type = AdminUserType.TYPE)
     @Log(title = "应用默认模板", businessType = BusinessType.UPDATE)
@@ -342,8 +316,6 @@ public class SiteController extends BaseRestController {
      *
      * @param siteId        站点ID
      * @param multipartFile 上传文件
-     * @return
-     * @throws Exception
      */
     @Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
     @Log(title = "上传水印图", businessType = BusinessType.UPDATE)
@@ -354,11 +326,15 @@ public class SiteController extends BaseRestController {
             CmsSite site = this.siteService.getSite(siteId);
             Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
 
-            String dir = SiteUtils.getSiteResourceRoot(site.getPath());
-            String suffix = FileExUtils.getExtension(multipartFile.getOriginalFilename());
+            String dir = SiteUtils.getSiteResourceRoot(site.getPath()) + "resources";
+            String suffix = FileExUtils.getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             String path = "watermaker" + StringUtils.DOT + suffix;
             File file = new File(dir + path);
-            Files.write(multipartFile.getBytes(), file);
+            boolean mkdirs = file.getParentFile().mkdirs();
+            if (!mkdirs) {
+                return R.fail("mkdirs failed.");
+            }
+            FileUtils.writeByteArrayToFile(file, multipartFile.getBytes());
             String src = SiteUtils.getResourcePrefix(site, true) + path;
             return R.ok(Map.of("path", path, "src", src));
         } catch (Exception e) {
@@ -368,7 +344,11 @@ public class SiteController extends BaseRestController {
 
     @Priv(type = AdminUserType.TYPE)
     @PostMapping("/export")
-    public void exportSiteZipFile() {
+    public R<?> exportSiteZipFile(@Validated @RequestBody SiteExportDTO dto) {
+        CmsSite site = this.siteService.getSite(dto.getSiteId());
+        Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
 
+        AsyncTask asyncTask = this.siteExportService.exportSite(site, dto.getDirectories());
+        return R.ok(asyncTask.getTaskId());
     }
 }
