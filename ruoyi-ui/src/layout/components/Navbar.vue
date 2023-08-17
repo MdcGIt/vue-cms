@@ -20,7 +20,7 @@
         <el-tooltip :content="$t('Component.Layout.Navbar.Language')" effect="dark" placement="bottom">
           <language-select id="language-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-        
+
         <current-site id="current-site" class="right-menu-item" />
       </template>
 
@@ -109,8 +109,9 @@ export default {
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
           console.log(location,'location');
-          location.href = location.origin+location.port;
+          // location.href = location.origin+location.port;
           // location.reload();
+          this.$router.push({ path: '/login' })
         })
       }).catch(() => {});
     }
