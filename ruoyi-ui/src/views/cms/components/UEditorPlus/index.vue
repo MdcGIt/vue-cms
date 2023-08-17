@@ -1,6 +1,6 @@
 <template>
   <div class="ueditor">
-    <vue-ueditor-wrap 
+    <vue-ueditor-wrap
       v-model="contentHtml"
       :editor-id="editorId"
       :config="editorConfig"
@@ -9,9 +9,9 @@
       @ready="handleReady"
       :style="styles" />
     <!-- 素材库 -->
-    <cms-resource-dialog 
+    <cms-resource-dialog
       :open.sync="openResourceDialog"
-      :upload-limit="100" 
+      :upload-limit="100"
       :rtype="resourceType"
       @ok="handleResourceDialogOk">
     </cms-resource-dialog>
@@ -602,9 +602,13 @@ export default {
         const r = results[0];
         var html;
         if (r.resourceType == 'image') {
-          html = "<img src='" + r.src + "' iurl='" + r.path + "' class='art-body-img' />" 
-        } else {
+          html = "<img src='" + r.src + "' iurl='" + r.path + "' class='art-body-img' />"
+        }
+        else {
           html = '<a href="' + r.src + '" iurl="' + r.path + '" target="_blank">' + r.name + '</a>'
+        }
+        if(r.name.indexOf('pdf')>0){
+          html = '<iframe style="width: 100%;height: 600px;border: 0px;overflow: hidden" width="100%" height="500px" src="'+r.src+'"></iframe>';
         }
         if (html && html.length > 0) {
           var editor = window.UE.getEditor(this.editorId)
@@ -682,7 +686,7 @@ export default {
                     distinguishCancelAndClose: true
                   }).then(() => {
                     editor.execCommand('xy-replace-word', response.data)
-                  }).catch(() => {  
+                  }).catch(() => {
                     editor.execCommand('xy-highlight-word', response.data.map(item => item.w))
                   });
                 }
