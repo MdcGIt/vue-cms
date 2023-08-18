@@ -55,7 +55,9 @@ public class CmsAdvertisementTag extends AbstractListTag {
 		}
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
 
+		Long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
 		LambdaQueryWrapper<CmsAdvertisement> q = new LambdaQueryWrapper<CmsAdvertisement>()
+				.eq(CmsAdvertisement::getSiteId, siteId)
 				.eq(CmsAdvertisement::getAdSpaceId, adSpace.getPageWidgetId())
 				.eq(CmsAdvertisement::getState, EnableOrDisable.ENABLE);
 		q.apply(StringUtils.isNotEmpty(condition), condition);

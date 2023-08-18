@@ -37,7 +37,7 @@ public class PublishPipeProp_SearchTemplate implements IPublishPipeProp {
 
 	public static String getValue(String publishPipeCode, Map<String, Map<String, Object>> publishPipeProps) {
 		if (Objects.nonNull(publishPipeProps)) {
-			return MapUtils.getString(publishPipeProps.get(publishPipeCode), KEY, "search.template.html");
+			return MapUtils.getString(publishPipeProps.get(publishPipeCode), KEY, DEFAULT_VALUE);
 		}
 		return null;
 	}
