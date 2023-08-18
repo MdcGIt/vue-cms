@@ -1,24 +1,26 @@
 package com.ruoyi.link.listener;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ruoyi.common.utils.JacksonUtils;
-import com.ruoyi.contentcore.listener.event.SiteExportEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.async.AsyncTaskManager;
+import com.ruoyi.common.utils.IdUtils;
+import com.ruoyi.common.utils.JacksonUtils;
+import com.ruoyi.common.utils.SortUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.listener.event.BeforeSiteDeleteEvent;
+import com.ruoyi.contentcore.listener.event.SiteThemeExportEvent;
+import com.ruoyi.contentcore.listener.event.SiteThemeImportEvent;
 import com.ruoyi.link.domain.CmsLink;
 import com.ruoyi.link.domain.CmsLinkGroup;
 import com.ruoyi.link.service.ILinkGroupService;
 import com.ruoyi.link.service.ILinkService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -58,48 +60,43 @@ public class LinkListener {
 	}
 
 	@EventListener
-	public void onSiteExport(SiteExportEvent event) throws IOException {
+	public void onSiteThemeImport(SiteThemeImportEvent event) throws IOException {
+		int percent = AsyncTaskManager.getTaskProgressPercent();
+		AsyncTaskManager.setTaskProgressInfo( percent + (100 - percent) / 10,
+				"正在导入友情链接分组数据");
 		// cms_link_group
-		{
-			long total = linkGroupService.count(new LambdaQueryWrapper<CmsLinkGroup>()
-					.eq(CmsLinkGroup::getSiteId, event.getSite().getSiteId()));
-			int pageNumber = 1;
-			long offset = 0;
-			long limit = 500;
-			while (total > 0) {
-				LambdaQueryWrapper<CmsLinkGroup> q = new LambdaQueryWrapper<CmsLinkGroup>()
-						.eq(CmsLinkGroup::getSiteId, event.getSite().getSiteId())
-						.gt(CmsLinkGroup::getLinkGroupId, offset)
-						.orderByAsc(CmsLinkGroup::getLinkGroupId);
-				Page<CmsLinkGroup> page = linkGroupService.page(new Page<>(1, limit, false), q);
-				String json = JacksonUtils.to(page.getRecords());
-				event.getZipBuilder().add(json.getBytes(StandardCharsets.UTF_8))
-						.path("db/" + CmsLinkGroup.TABLE_NAME + "/page" + pageNumber + ".json")
-						.save();
-				offset = page.getRecords().get(page.getRecords().size() - 1).getLinkGroupId();
-				total -= page.getRecords().size();
+		File dataFile = new File(event.getDestDir() + "db/" + CmsLinkGroup.TABLE_NAME + ".json");
+		if (dataFile.exists()) {
+			List<CmsLinkGroup> list = JacksonUtils.fromList(dataFile, CmsLinkGroup.class);
+			for (CmsLinkGroup data : list) {
+				try {
+					CmsLinkGroup linkGroup = new CmsLinkGroup();
+					linkGroup.setSiteId(event.getSite().getSiteId());
+					linkGroup.setLinkGroupId(IdUtils.getSnowflakeId());
+					linkGroup.setName(data.getName());
+					linkGroup.setCode(data.getCode());
+					linkGroup.setSortFlag(SortUtils.getDefaultSortValue());
+					linkGroup.createBy(event.getOperator().getUsername());
+					linkGroupService.save(linkGroup);
+				} catch (Exception e) {
+					AsyncTaskManager.addErrMessage("导入友链分组数据添加失败：" + data.getName() + "|" + data.getCode() + " > " + e.getMessage());
+				}
 			}
 		}
-		// cms_link
-		{
-			long total = linkService.count(new LambdaQueryWrapper<CmsLink>()
-					.eq(CmsLink::getSiteId, event.getSite().getSiteId()));
-			int pageNumber = 1;
-			long offset = 0;
-			long limit = 500;
-			while (total > 0) {
-				LambdaQueryWrapper<CmsLink> q = new LambdaQueryWrapper<CmsLink>()
-						.eq(CmsLink::getSiteId, event.getSite().getSiteId())
-						.gt(CmsLink::getLinkId, offset)
-						.orderByAsc(CmsLink::getLinkId);
-				Page<CmsLink> page = linkService.page(new Page<>(1, limit, false), q);
-				String json = JacksonUtils.to(page.getRecords());
-				event.getZipBuilder().add(json.getBytes(StandardCharsets.UTF_8))
-						.path("db/" + CmsLink.TABLE_NAME + "/page" + pageNumber + ".json")
-						.save();
-				offset = page.getRecords().get(page.getRecords().size() - 1).getLinkId();
-				total -= page.getRecords().size();
-			}
-		}
+	}
+
+	@EventListener
+	public void onSiteThemeExport(SiteThemeExportEvent event) throws IOException {
+		// cms_link_group
+		int percent = AsyncTaskManager.getTaskProgressPercent();
+		AsyncTaskManager.setTaskProgressInfo( percent + (100 - percent) / 10,
+				"正在导出友情链接分组数据");
+		List<CmsLinkGroup> list = linkGroupService.lambdaQuery()
+				.eq(CmsLinkGroup::getSiteId, event.getSite().getSiteId())
+				.list();
+		String json = JacksonUtils.to(list);
+		event.getZipBuilder().add(json.getBytes(StandardCharsets.UTF_8))
+				.path("db/" + CmsLinkGroup.TABLE_NAME + ".json")
+				.save();
 	}
 }

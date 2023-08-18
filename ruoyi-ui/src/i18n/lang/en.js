@@ -845,7 +845,9 @@ export default {
       ExModelCardTitle: "Ex-Model Configuration",
       CurrentSelectorTitle: "Change Current Site",
       AlreayCurrentSite: "Please select a non current site.",
-      Export: "Export",
+      ImportTheme: "Import Theme",
+      ExportTheme: "Export Theme",
+      ThemeFileTypeErrMsg: "Theme file only supported .zip!",
       Tab: {
         Basic: "Basic Information",
         Extend: "Extend Config",

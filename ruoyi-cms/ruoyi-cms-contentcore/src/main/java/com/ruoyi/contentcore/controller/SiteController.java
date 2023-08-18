@@ -1,24 +1,26 @@
 package com.ruoyi.contentcore.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.common.io.Files;
 import com.ruoyi.common.async.AsyncTask;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
+import com.ruoyi.common.i18n.I18nUtils;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.anno.Priv;
 import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.security.web.BaseRestController;
-import com.ruoyi.common.utils.Assert;
-import com.ruoyi.common.utils.IdUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.file.FileExUtils;
+import com.ruoyi.contentcore.ContentCoreConsts;
 import com.ruoyi.contentcore.core.IProperty.UseType;
 import com.ruoyi.contentcore.core.IPublishPipeProp.PublishPipePropUseType;
+import com.ruoyi.contentcore.domain.CmsPublishPipe;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.domain.dto.*;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
@@ -27,28 +29,29 @@ import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.service.IPublishPipeService;
 import com.ruoyi.contentcore.service.IPublishService;
 import com.ruoyi.contentcore.service.ISiteService;
-import com.ruoyi.contentcore.service.impl.SiteExportService;
+import com.ruoyi.contentcore.service.impl.SiteThemeService;
 import com.ruoyi.contentcore.util.ConfigPropertyUtils;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
+import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.security.AdminUserType;
 import com.ruoyi.system.security.StpAdminUtil;
 import com.ruoyi.system.validator.LongId;
 import freemarker.template.TemplateException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * 站点管理
@@ -71,7 +74,7 @@ public class SiteController extends BaseRestController {
 
     private final AsyncTaskManager asyncTaskManager;
 
-    private final SiteExportService siteExportService;
+    private final SiteThemeService siteExportService;
 
     /**
      * 获取当前站点数据
@@ -342,13 +345,71 @@ public class SiteController extends BaseRestController {
         }
     }
 
-    @Priv(type = AdminUserType.TYPE)
-    @PostMapping("/export")
-    public R<?> exportSiteZipFile(@Validated @RequestBody SiteExportDTO dto) {
+    @Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
+    @Log(title = "导入主题模板", businessType = BusinessType.UPDATE)
+    @PostMapping("/importTheme")
+    public R<?> importSiteTheme(@RequestParam("siteId") @LongId Long siteId,
+                           @RequestParam("file") @NotNull MultipartFile multipartFile) throws Exception {
+        try {
+            CmsSite site = this.siteService.getSite(siteId);
+            Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", siteId));
+
+            String path = SiteUtils.getSiteResourceRoot(site.getPath()) + "importTheme.zip";
+            File file = new File(path);
+            FileUtils.forceMkdirParent(file);
+            FileUtils.writeByteArrayToFile(file, multipartFile.getBytes());
+            AsyncTask asyncTask = this.siteExportService.importSiteTheme(site, file, StpAdminUtil.getLoginUser());
+            return R.ok(asyncTask.getTaskId());
+        } catch (Exception e) {
+            return R.fail(e.getMessage());
+        }
+    }
+
+    @Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
+    @PostMapping("/exportTheme")
+    public R<?> exportSiteTheme(@Validated @RequestBody SiteExportDTO dto) {
         CmsSite site = this.siteService.getSite(dto.getSiteId());
         Assert.notNull(site, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("siteId", dto.getSiteId()));
-
-        AsyncTask asyncTask = this.siteExportService.exportSite(site, dto.getDirectories());
+        // TODO
+        List<String> directories = new ArrayList<>();
+//        directories.add(site.getPath() + "/resources/");
+        List<CmsPublishPipe> publishPipes = this.publishPipeService.getAllPublishPipes(site.getSiteId());
+        publishPipes.forEach(pp -> {
+            String path = SiteUtils.getSitePublishPipePath(site.getPath(), pp.getCode());
+            directories.add(path + "assets/");
+            directories.add(path + "fonts/");
+            directories.add(path + "css/");
+            directories.add(path + "js/");
+            directories.add(path + ContentCoreConsts.TemplateDirectory);
+        });
+        AsyncTask asyncTask = this.siteExportService.exportSiteTheme(site, directories);
         return R.ok(asyncTask.getTaskId());
+    }
+
+    @Priv(type = AdminUserType.TYPE, value = "Site:Edit:${#siteId}")
+    @PostMapping("/theme_download")
+    public void export(@RequestParam Long siteId, HttpServletResponse response) throws IOException {
+        CmsSite site = this.siteService.getSite(siteId);
+        File file = new File(SiteUtils.getSiteResourceRoot(site) + SiteThemeService.ThemeFileName);
+        if (!file.exists()) {
+            response.getWriter().write("站点主题文件不存在");
+            return;
+        }
+        response.setContentType("application/octet-stream");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+        response.setHeader("Content-disposition", "attachment;filename=" + SiteThemeService.ThemeFileName);
+        response.addHeader("Content-Length", "" + file.length());
+        try(BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+            byte[] buff = new byte[1024];
+            OutputStream os  = response.getOutputStream();
+            int i;
+            while ((i = bis.read(buff)) != -1) {
+                os.write(buff, 0, i);
+                os.flush();
+            }
+        } catch (IOException e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            e.printStackTrace();
+        }
     }
 }

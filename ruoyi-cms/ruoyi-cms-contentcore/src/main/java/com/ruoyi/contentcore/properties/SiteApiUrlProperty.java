@@ -55,6 +55,9 @@ public class SiteApiUrlProperty implements IProperty {
 	public static String getValue(CmsSite site, String publishPipeCode) {
 		String apiUrl = ConfigPropertyUtils.getStringValue(ID, site.getConfigProps());
 		if (StringUtils.isEmpty(apiUrl)) {
+			apiUrl = SiteApiUrl.getValue();
+		}
+		if (StringUtils.isEmpty(apiUrl)) {
 			apiUrl = site.getUrl(publishPipeCode);
 		}
 		if (StringUtils.isNotEmpty(apiUrl) && !apiUrl.endsWith("/")) {

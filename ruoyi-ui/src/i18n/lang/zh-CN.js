@@ -845,7 +845,9 @@ export default {
       ExModelCardTitle: "扩展模型属性",
       CurrentSelectorTitle: "切换当前站点",
       AlreayCurrentSite: "请选择非当前站点",
-      Export: "导出站点",
+      ImportTheme: "导入主题",
+      ExportTheme: "导出主题",
+      ThemeFileTypeErrMsg: "主题文件仅支持zip类型",
       Tab: {
         Basic: "基础信息",
         Extend: "扩展配置",

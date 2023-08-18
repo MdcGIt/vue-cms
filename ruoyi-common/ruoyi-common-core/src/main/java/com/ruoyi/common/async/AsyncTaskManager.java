@@ -169,4 +169,12 @@ public class AsyncTaskManager {
     		task.setProgressInfo(percent, msg);
     	}
     }
+
+	public static int getTaskProgressPercent() {
+		AsyncTask task = CURRENT.get();
+		if (Objects.nonNull(task)) {
+			return task.getPercent();
+		}
+		return 0;
+	}
 }

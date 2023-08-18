@@ -6,7 +6,7 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class SiteExportEvent extends ApplicationEvent {
+public class SiteThemeExportEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,7 +14,7 @@ public class SiteExportEvent extends ApplicationEvent {
 
 	private ZipBuilder zipBuilder;
 
-	public SiteExportEvent(Object source, CmsSite site, ZipBuilder zipBuilder) {
+	public SiteThemeExportEvent(Object source, CmsSite site, ZipBuilder zipBuilder) {
 		super(source);
 		this.site = site;
 		this.zipBuilder = zipBuilder;

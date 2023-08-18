@@ -118,7 +118,7 @@ export const constantRoutes = [
         path: 'site/tabs',
         component: () => import('@/views/cms/contentcore/siteTab'),
         name: 'CMSSiteTab',
-        meta: { title: i18n.t('CMS.ContentCore.Route.EditSite'), activeMenu: '/configs/site'}
+        meta: { noCache: true, title: i18n.t('CMS.ContentCore.Route.EditSite'), activeMenu: '/configs/site'}
       },
       {
         path: 'template/editor',
@@ -174,19 +174,19 @@ export const constantRoutes = [
         path: 'link/list',
         component: () => import('@/views/cms/link/link'),
         name: 'CmsLink',
-        meta: { title: i18n.t('CMS.FriendLink.RouteLinkList'), activeMenu: '/operations/link'}
+        meta: { noCache: true, title: i18n.t('CMS.FriendLink.RouteLinkList'), activeMenu: '/operations/link'}
       },
       {
         path: 'customform/fields',
         component: () => import('@/views/meta/fieldList'),
         name: 'CmsCustomFields',
-        meta: { title: i18n.t('CMS.CustomForm.RouteFieldList'), activeMenu: '/operations/customform'}
+        meta: { noCache: true, title: i18n.t('CMS.CustomForm.RouteFieldList'), activeMenu: '/operations/customform'}
       },
       {
         path: 'customform/data',
         component: () => import('@/views/cms/customform/data'),
         name: 'CmsCustomData',
-        meta: { title: i18n.t('CMS.CustomForm.RouteData'), activeMenu: '/operations/customform'}
+        meta: { noCache: true, title: i18n.t('CMS.CustomForm.RouteData'), activeMenu: '/operations/customform'}
       }
     ]
   }
