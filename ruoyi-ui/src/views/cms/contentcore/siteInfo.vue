@@ -56,7 +56,7 @@
         <el-button 
           plain
           type="primary"
-          icon="el-icon-s-upload"
+          icon="el-icon-upload"
           size="mini"
           :disabled="!this.siteId"
           v-hasPermi="[ $p('Site:Edit:{0}', [ siteId ]) ]"
