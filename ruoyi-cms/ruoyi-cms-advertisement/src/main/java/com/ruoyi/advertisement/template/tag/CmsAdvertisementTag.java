@@ -49,15 +49,16 @@ public class CmsAdvertisementTag extends AbstractListTag {
 	@Override
 	public TagPageData prepareData(Environment env, Map<String, String> attrs, boolean page, int size, int pageIndex) throws TemplateException {
 		String code = MapUtils.getString(attrs, TagAttr_Code);
-		CmsPageWidget adSpace = this.pageWidgetService.getOne(new LambdaQueryWrapper<CmsPageWidget>().eq(CmsPageWidget::getCode, code));
+		Long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
+		CmsPageWidget adSpace = this.pageWidgetService.getOne(new LambdaQueryWrapper<CmsPageWidget>()
+				.eq(CmsPageWidget::getSiteId, siteId)
+				.eq(CmsPageWidget::getCode, code));
 		if (adSpace == null) {
 			throw new TemplateException(StringUtils.messageFormat("<@{0}>AD place `{1}` not exists.", this.getTagName(), code), env)  ;
 		}
 		String condition = MapUtils.getString(attrs, TagAttr.AttrName_Condition);
 
-		Long siteId = FreeMarkerUtils.evalLongVariable(env, "Site.siteId");
 		LambdaQueryWrapper<CmsAdvertisement> q = new LambdaQueryWrapper<CmsAdvertisement>()
-				.eq(CmsAdvertisement::getSiteId, siteId)
 				.eq(CmsAdvertisement::getAdSpaceId, adSpace.getPageWidgetId())
 				.eq(CmsAdvertisement::getState, EnableOrDisable.ENABLE);
 		q.apply(StringUtils.isNotEmpty(condition), condition);
