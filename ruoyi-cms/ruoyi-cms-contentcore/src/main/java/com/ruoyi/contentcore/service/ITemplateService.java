@@ -53,15 +53,18 @@ public interface ITemplateService extends IService<CmsTemplate> {
 	 * 
 	 * @throws IOException 
 	 */
-	void saveTemplate(TemplateUpdateDTO dto) throws IOException;
+	void saveTemplate(CmsTemplate template, TemplateUpdateDTO dto) throws IOException;
 
 	/**
 	 * 模板文件重命名
-	 * 
-	 * @param dto
+	 *
+	 * @param template
+	 * @param path
+	 * @param remark
+	 * @param operator
 	 * @throws IOException
 	 */
-	void renameTemplate(TemplateRenameDTO dto) throws IOException;
+	void renameTemplate(CmsTemplate template, String path, String remark, String operator) throws IOException;
 
 	/**
 	 * 获取模板文件
@@ -95,5 +98,5 @@ public interface ITemplateService extends IService<CmsTemplate> {
 	 * @param templateIds
 	 * @throws IOException 
 	 */
-	void deleteTemplates(List<Long> templateIds) throws IOException;
+	void deleteTemplates(CmsSite site, List<Long> templateIds) throws IOException;
 }
