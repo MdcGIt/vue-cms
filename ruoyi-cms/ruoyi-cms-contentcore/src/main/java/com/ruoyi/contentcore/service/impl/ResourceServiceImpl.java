@@ -157,6 +157,38 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		this.processResource(resource, resourceType, site, imageBytes);
 		return resource;
 	}
+
+	@Override
+	public CmsResource addImageFromFile(CmsSite site, String operator, File imageFile) throws IOException {
+		if (Objects.isNull(imageFile) || !imageFile.exists()) {
+			return null;
+		}
+		String suffix = FileExUtils.getExtension(imageFile.getName());
+		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix));
+
+		CmsResource resource = new CmsResource();
+		resource.setResourceId(IdUtils.getSnowflakeId());
+		resource.setSiteId(site.getSiteId());
+		resource.setResourceType(resourceType.getId());
+		resource.setFileName(resource.getResourceId().toString() + "." + suffix);
+		resource.setName(resource.getFileName());
+		resource.setSuffix(suffix);
+
+		String siteResourceRoot = SiteUtils.getSiteResourceRoot(site);
+		String fileName = resource.getResourceId() + StringUtils.DOT + suffix;
+		String dir = resourceType.getUploadPath()
+				+ LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + StringUtils.SLASH;
+		FileExUtils.mkdirs(siteResourceRoot + dir);
+
+		resource.setPath(dir + fileName);
+		resource.setStatus(EnableOrDisable.ENABLE);
+		resource.createBy(operator);
+
+		byte[] bytes = FileUtils.readFileToByteArray(imageFile);
+		this.processResource(resource, resourceType, site, bytes);
+		return resource;
+	}
 	
 	private void processResource(CmsResource resource, IResourceType resourceType, CmsSite site, byte[] bytes) throws IOException {
 		// 处理资源，图片属性读取、水印等

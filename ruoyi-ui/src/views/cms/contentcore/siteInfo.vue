@@ -52,6 +52,26 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
+      <el-col :span="1.5">
+        <el-button 
+          plain
+          type="primary"
+          icon="el-icon-upload"
+          size="mini"
+          :disabled="!this.siteId"
+          v-hasPermi="[ $p('Site:Edit:{0}', [ siteId ]) ]"
+          @click="handleImportTheme">{{ $t("CMS.Site.ImportTheme") }}</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button 
+          plain
+          type="primary"
+          icon="el-icon-s-promotion"
+          size="mini"
+          :disabled="!this.siteId"
+          v-hasPermi="[ $p('Site:Edit:{0}', [ siteId ]) ]"
+          @click="handleExportTheme">{{ $t("CMS.Site.ExportTheme") }}</el-button>
+      </el-col>
     </el-row>
     <el-form 
       ref="form_info"
@@ -150,6 +170,41 @@
         </cms-exmodel-editor>
       </el-card>
     </el-form>
+    <!-- 导入主题对话框 -->
+    <el-dialog 
+      :title="title"
+      :visible.sync="open"
+      width="500px"
+      append-to-body>
+      <el-form 
+        ref="importForm"
+        :model="importForm"
+        label-width="80px">
+        <el-form-item :label="$t('CMS.Site.ImportTheme')">
+          <el-upload 
+            ref="upload"
+            drag
+            :data="importForm"
+            :action="upload.url"
+            :headers="upload.headers"
+            :file-list="upload.fileList"
+            :on-progress="handleFileUploadProgress"
+            :on-success="handleFileSuccess"
+            :auto-upload="false"
+            :on-change="handleUploadChange"
+            :limit="1">
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">{{ $t('CMS.Resource.UploadTip1') }}</div>
+              <div class="el-upload__tip" slot="tip">{{ $t('CMS.Resource.UploadTip2', [ '[.zip]',  '100M']) }}</div>
+            </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer"
+           class="dialog-footer">
+        <el-button type="primary" :loading="upload.isUploading" @click="uploadSiteThemeZipFile">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancelImportSiteTheme">{{ $t("Common.Cancel") }}</el-button>
+      </div>
+    </el-dialog>
     <!-- 模板选择组件 -->
     <cms-template-selector 
       :open="openTemplateSelector" 
@@ -157,11 +212,12 @@
       @ok="handleTemplateSelected"
       @cancel="handleTemplateSelectorCancel" />
     <!-- 进度条 -->
-    <cms-progress :title="$t('CMS.ContentCore.PublishProgressTitle')" :open.sync="openProgress" :taskId.sync="taskId"></cms-progress>
+    <cms-progress :title="progressTitle" :open.sync="openProgress" :taskId.sync="taskId" @close="handleProgressClose"></cms-progress>
   </div>
 </template>
 <script>
-import { getSite, publishSite, updateSite  } from "@/api/contentcore/site";
+import { getToken } from "@/utils/auth";
+import { getSite, publishSite, updateSite, exportSiteTheme  } from "@/api/contentcore/site";
 import CMSTemplateSelector from '@/views/cms/contentcore/templateSelector';
 import CMSProgress from '@/views/components/Progress';
 import CMSLogoView from '@/views/cms/components/LogoView';
@@ -194,8 +250,23 @@ export default {
       loading: false,
       // 弹出层标题
       title: "",
+      progressTitle: "",
       // 是否显示弹出层
       open: false,
+      // 上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken(), CurrentSite: this.$cache.local.get("CurrentSite") },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/cms/site/importTheme",
+        // 上传的文件列表
+        fileList: []
+      },
+      importForm: {
+        siteId: this.site
+      },
       openTemplateSelector: false,
       publishPipeActiveName: "",
 
@@ -294,12 +365,71 @@ export default {
         if (response.code == 200) {
           if (response.data && response.data != "") {
             this.taskId = response.data;
+            this.progressTitle = this.$t('CMS.ContentCore.PublishProgressTitle');
             this.openProgress = true;
           }
         } else {
           this.$modal.msgError(response.msg);
         }
       });
+    },
+    handleImportTheme() {
+      this.open = true;
+    },
+    cancelImportSiteTheme() {
+      this.open = false;
+      this.$refs.upload.clearFiles();
+      this.resetForm("importForm");
+    },
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    handleFileSuccess(response, file, fileList) {
+      this.upload.isUploading = false;
+      if (response.code == 200) {
+        this.open = false;
+        this.taskId = response.data;
+        this.progressTitle = this.$t('CMS.Site.ImportTheme');
+        this.openProgress = true;
+      } else {
+        this.$modal.msgError(response.msg);
+      }
+      this.$refs.upload.clearFiles();
+      this.resetForm("importForm");
+    },
+    handleUploadChange(file) {
+      file.name = file.name.toLowerCase();
+      if (!file.name.endsWith(".zip")) {
+        this.$modal.msgError(this.$t('CMS.Site.ThemeFileTypeErrMsg'));
+        this.upload.fileList = [];
+        return;
+      }
+    },
+    uploadSiteThemeZipFile: function () {
+      this.$refs["importForm"].validate(valid => {
+        if (valid) {
+          this.$refs.upload.submit();
+        }
+      });
+    },
+    handleExportTheme () {
+      const data = { siteId: this.siteId }
+      exportSiteTheme(data).then(response => {
+        if (response.code == 200) {
+            this.taskId = response.data;
+        this.progressTitle = this.$t('CMS.Site.ExportTheme');
+            this.openProgress = true;
+        } else {
+          this.$modal.msgError(response.msg);
+        }
+      });
+    },
+    handleProgressClose(resultStatus) {
+      if (this.progressTitle == this.$t('CMS.Site.ExportTheme')) {
+        this.download('cms/site/theme_download', {
+          ...{ siteId: this.siteId }
+        }, `SiteTheme.zip`)
+      }
     }
   }
 };

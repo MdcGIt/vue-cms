@@ -1,24 +1,19 @@
 package com.ruoyi.article.listener;
 
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-
 import com.ruoyi.article.domain.vo.ArticleVO;
 import com.ruoyi.article.mapper.CmsArticleDetailMapper;
-import com.ruoyi.article.service.IArticleService;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.listener.event.AfterContentEditorInitEvent;
 import com.ruoyi.contentcore.listener.event.BeforeSiteDeleteEvent;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ArticleListener {
-
-	private final IArticleService articleService;
 
 	private final CmsArticleDetailMapper articleMapper;
 
@@ -40,7 +35,7 @@ public class ArticleListener {
 	}
 
 	@EventListener
-	public void afterContentEditirInit(AfterContentEditorInitEvent event) {
+	public void afterContentEditorInit(AfterContentEditorInitEvent event) {
 		if (event.getContentVO() instanceof ArticleVO vo) {
 			vo.setContentHtml(InternalUrlUtils.dealResourceInternalUrl(vo.getContentHtml()));
 		}

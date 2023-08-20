@@ -107,12 +107,12 @@
           </el-row>
           <el-row v-if="this.form.linkFlag !== 'Y' && this.contentType === 'audio'">
             <el-col class="pr10">
-              <cms-audio-editor v-model="form.audioList" :logo="form.logoSrc"></cms-audio-editor>
+              <cms-audio-editor v-model="form.audioList" :logo="form.logoSrc" @choose="handleSetLogo"></cms-audio-editor>
             </el-col>
           </el-row>
           <el-row v-if="this.form.linkFlag !== 'Y' && this.contentType === 'video'">
             <el-col class="pr10">
-              <cms-video-editor v-model="form.videoList"></cms-video-editor>
+              <cms-video-editor v-model="form.videoList" @choose="handleSetLogo"></cms-video-editor>
             </el-col>
           </el-row>
         </el-col>
@@ -433,6 +433,7 @@ export default {
       this.openTemplateSelector = false;
     },
     handleSetLogo(path, src) {
+      console.log(path, src)
       this.$set(this.form, "logoSrc", src);
       this.form.logo = path;
     },

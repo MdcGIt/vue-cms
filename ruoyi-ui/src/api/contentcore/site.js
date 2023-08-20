@@ -75,6 +75,15 @@ export function publishSite(data) {
   })
 }
 
+// 导出站点主题
+export function exportSiteTheme(data) {
+  return request({
+    url: '/cms/site/exportTheme',
+    method: 'post',
+    data: data
+  })
+}
+
 // 重建全站索引
 export function rebuildIndex() {
   return request({

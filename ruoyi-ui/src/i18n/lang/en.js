@@ -845,6 +845,9 @@ export default {
       ExModelCardTitle: "Ex-Model Configuration",
       CurrentSelectorTitle: "Change Current Site",
       AlreayCurrentSite: "Please select a non current site.",
+      ImportTheme: "Import Theme",
+      ExportTheme: "Export Theme",
+      ThemeFileTypeErrMsg: "Theme file only supported .zip!",
       Tab: {
         Basic: "Basic Information",
         Extend: "Extend Config",
@@ -1111,7 +1114,12 @@ export default {
       Add: "Add Video",
       AddThirdVideo: "Add Third Party Video",
       ThirdVideoTitle: "The third party video",
-      ThirdVideoCode: "Video Code"
+      ThirdVideoCode: "Video Code",
+      Cover: "Cover",
+      ScreenshotCover: "Screenshot",
+      UploadCover: "Upload",
+      ScreenshotDialog: "Video Screenshot",
+      SetLogo: "Set Album Cover"
     },
     PageWidget: {
       Type: "Type",

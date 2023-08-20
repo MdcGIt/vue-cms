@@ -1,16 +1,14 @@
 package com.ruoyi.advertisement.listener;
 
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.advertisement.domain.CmsAdvertisement;
 import com.ruoyi.advertisement.service.IAdvertisementService;
 import com.ruoyi.common.async.AsyncTaskManager;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.listener.event.BeforeSiteDeleteEvent;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor

@@ -12,6 +12,8 @@ import java.util.Objects;
 public class PublishPipeProp_SearchTemplate implements IPublishPipeProp {
 
 	public static final String KEY = "searchTemplate";
+
+	static final String DEFAULT_VALUE = "search.template.html";
 	
 	@Override
 	public String getKey() {
@@ -28,9 +30,14 @@ public class PublishPipeProp_SearchTemplate implements IPublishPipeProp {
 		return List.of(PublishPipePropUseType.Site);
 	}
 
+	@Override
+	public String getDefaultValue() {
+		return DEFAULT_VALUE;
+	}
+
 	public static String getValue(String publishPipeCode, Map<String, Map<String, Object>> publishPipeProps) {
 		if (Objects.nonNull(publishPipeProps)) {
-			return MapUtils.getString(publishPipeProps.get(publishPipeCode), KEY);
+			return MapUtils.getString(publishPipeProps.get(publishPipeCode), KEY, DEFAULT_VALUE);
 		}
 		return null;
 	}

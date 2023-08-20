@@ -66,7 +66,7 @@ public class BaseRestController {
 	}
 	
 	protected R<?> bindDataTable(List<?> list, int total) {
-		return R.ok(new TableData<>(list, (long) total));
+		return R.ok(new TableData<>(list, total));
 	}
 	
 	protected R<?> bindDataTable(List<?> list, long total) {

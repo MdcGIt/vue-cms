@@ -845,6 +845,9 @@ export default {
       ExModelCardTitle: "扩展模型属性",
       CurrentSelectorTitle: "切换当前站点",
       AlreayCurrentSite: "请选择非当前站点",
+      ImportTheme: "导入主题",
+      ExportTheme: "导出主题",
+      ThemeFileTypeErrMsg: "主题文件仅支持zip类型",
       Tab: {
         Basic: "基础信息",
         Extend: "扩展配置",
@@ -1111,7 +1114,12 @@ export default {
       Add: "添加视频",
       AddThirdVideo: "添加第三方视频",
       ThirdVideoTitle: "第三方视频分享",
-      ThirdVideoCode: "视频嵌入代码"
+      ThirdVideoCode: "视频嵌入代码",
+      Cover: "封面",
+      ScreenshotCover: "截取视频封面图",
+      UploadCover: "上传视频封面图",
+      ScreenshotDialog: "视频封面截图",
+      SetLogo: "设为视频集封面"
     },
     PageWidget: {
       Type: "类型",

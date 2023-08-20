@@ -70,7 +70,7 @@ public class ContentCoreUtils {
 	}
 
 	public static IPageWidgetType getPageWidgetType(String typeId) {
-		IPageWidgetType pwt = PageWidgetTypes.get(typeId);
+		IPageWidgetType pwt = PageWidgetTypes.get(IPageWidgetType.BEAN_NAME_PREFIX + typeId);
 		Assert.notNull(pwt, () -> ContentCoreErrorCode.UNSUPPORTED_PAGE_WIDGET_TYPE.exception(typeId));
 		return pwt;
 	}
@@ -101,7 +101,7 @@ public class ContentCoreUtils {
 
 	public static IInternalDataType getInternalDataType(String typeId) {
 		IInternalDataType idt = InternalDataTypes.get(IInternalDataType.BEAN_NAME_PREFIX + typeId);
-		Assert.notNull(idt, () -> ContentCoreErrorCode.UNSUPPORTED_INTERNAL_DATA_TYPE.exception());
+		Assert.notNull(idt, ContentCoreErrorCode.UNSUPPORTED_INTERNAL_DATA_TYPE::exception);
 		return idt;
 	}
 
