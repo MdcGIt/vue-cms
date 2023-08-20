@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.common.security.domain.LoginUser;
 import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.contentcore.util.TemplateUtils;
 import org.apache.commons.io.FileUtils;
@@ -149,12 +150,8 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 	 * @throws IOException
 	 */
 	@Override
-	public void renameTemplate(TemplateRenameDTO dto) throws IOException {
-		CmsTemplate template = this.getById(dto.getTemplateId());
-		Assert.notNull(template,
-				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
-
-		String newPath = FileExUtils.normalizePath(dto.getPath());
+	public void renameTemplate(CmsTemplate template, String path, String remark, String operator) throws IOException {
+		String newPath = FileExUtils.normalizePath(path);
 		if (!template.getPath().equals(newPath)) {
 			CmsSite site = this.siteService.getSite(template.getSiteId());
 			String siteRoot = SiteUtils.getSiteRoot(site, template.getPublishPipeCode());
@@ -164,8 +161,8 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 
 			template.setPath(newPath);
 		}
-		template.setRemark(dto.getRemark());
-		template.updateBy(dto.getOperator().getUsername());
+		template.setRemark(remark);
+		template.updateBy(operator);
 		this.updateById(template);
 	}
 
@@ -175,22 +172,19 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 	 * @throws IOException
 	 */
 	@Override
-	public void saveTemplate(TemplateUpdateDTO dto) throws IOException {
-		CmsTemplate dbTemplate = this.getById(dto.getTemplateId());
-		Assert.notNull(dbTemplate, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
-
-		dbTemplate.setContent(dto.getContent());
-		dbTemplate.setRemark(dto.getRemark());
+	public void saveTemplate(CmsTemplate template, TemplateUpdateDTO dto) throws IOException {
+		template.setContent(dto.getContent());
+		template.setRemark(dto.getRemark());
 		// 变更文件内容
-		File file = this.getTemplateFile(dbTemplate);
+		File file = this.getTemplateFile(template);
 		file.getParentFile().mkdirs();
 		FileUtils.writeStringToFile(file, dto.getContent(), StandardCharsets.UTF_8);
 
-		dbTemplate.setModifyTime(file.lastModified());
-		dbTemplate.updateBy(dto.getOperator().getUsername());
-		this.updateById(dbTemplate);
+		template.setModifyTime(file.lastModified());
+		template.updateBy(dto.getOperator().getUsername());
+		this.updateById(template);
 		// 清理include缓存
-		this.clearTemplateStaticContentCache(dbTemplate);
+		this.clearTemplateStaticContentCache(template);
 	}
 
 	/**
@@ -222,8 +216,11 @@ public class TemplateServiceImpl extends ServiceImpl<CmsTemplateMapper, CmsTempl
 	}
 
 	@Override
-	public void deleteTemplates(List<Long> templateIds) throws IOException {
-		List<CmsTemplate> templates = this.listByIds(templateIds);
+	public void deleteTemplates(CmsSite site, List<Long> templateIds) throws IOException {
+		List<CmsTemplate> templates = this.lambdaQuery()
+				.eq(CmsTemplate::getSiteId, site.getSiteId())
+				.in(CmsTemplate::getTemplateId, templateIds)
+				.list();
 		for (CmsTemplate template : templates) {
 			File f = this.getTemplateFile(template);
 			if (f.exists()) {
