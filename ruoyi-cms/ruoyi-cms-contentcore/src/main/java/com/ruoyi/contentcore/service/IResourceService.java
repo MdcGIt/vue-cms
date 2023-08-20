@@ -1,5 +1,6 @@
 package com.ruoyi.contentcore.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,7 +34,18 @@ public interface IResourceService extends IService<CmsResource> {
 	 * @throws IOException
 	 */
 	CmsResource addBase64Image(CmsSite site, String operator, String base64Data) throws IOException;
-	
+
+	/**
+	 * 添加本地文件到资源库
+	 *
+	 * @param site
+	 * @param operator
+	 * @param imageFile
+	 * @return
+	 * @throws IOException
+	 */
+	CmsResource addImageFromFile(CmsSite site, String operator, File imageFile) throws IOException;
+
 	/**
 	 * 删除资源
 	 * 

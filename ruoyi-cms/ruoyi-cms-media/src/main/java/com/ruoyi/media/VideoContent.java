@@ -97,12 +97,12 @@ public class VideoContent extends AbstractContent<List<CmsVideo>> {
 						this.getVideoService().progressVideoInfo(dbVideo);
 					}
 				}
+				dbVideo.setCover(video.getCover());
 				dbVideo.updateBy(this.getOperator().getUsername());
 				this.getVideoService().updateById(dbVideo);
 			} else {
 				video.setVideoId(IdUtils.getSnowflakeId());
 				video.setContentId(this.getContentEntity().getContentId());
-				video.setSiteId(this.getContentEntity().getSiteId());
 				video.setSiteId(this.getSiteId());
 				video.setSortFlag(i);
 				video.createBy(this.getOperator().getUsername());

@@ -130,6 +130,9 @@ public class VideoContentType implements IContentType {
 			list.forEach(video -> {
 				video.setSrc(InternalUrlUtils.getActualPreviewUrl(video.getPath()));
 				video.setFileSizeName(FileUtils.byteCountToDisplaySize(video.getFileSize()));
+				if (StringUtils.isNotEmpty(video.getCover())) {
+					video.setCoverSrc(InternalUrlUtils.getActualPreviewUrl(video.getCover()));
+				}
 			});
 			vo = VideoAlbumVO.newInstance(contentEntity, list);
 			if (StringUtils.isNotEmpty(vo.getLogo())) {

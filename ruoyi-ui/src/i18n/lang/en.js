@@ -1114,7 +1114,12 @@ export default {
       Add: "Add Video",
       AddThirdVideo: "Add Third Party Video",
       ThirdVideoTitle: "The third party video",
-      ThirdVideoCode: "Video Code"
+      ThirdVideoCode: "Video Code",
+      Cover: "Cover",
+      ScreenshotCover: "Screenshot",
+      UploadCover: "Upload",
+      ScreenshotDialog: "Video Screenshot",
+      SetLogo: "Set Album Cover"
     },
     PageWidget: {
       Type: "Type",

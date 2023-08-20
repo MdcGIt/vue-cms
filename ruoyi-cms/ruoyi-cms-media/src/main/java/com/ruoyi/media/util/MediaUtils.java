@@ -21,7 +21,6 @@ import ws.schild.jave.encode.EncodingAttributes;
 import ws.schild.jave.encode.VideoAttributes;
 import ws.schild.jave.filtergraphs.OverlayWatermark;
 import ws.schild.jave.filters.helpers.OverlayLocation;
-import ws.schild.jave.info.AudioInfo;
 import ws.schild.jave.info.MultimediaInfo;
 
 @Slf4j
@@ -29,7 +28,7 @@ public class MediaUtils {
 
 	/**
 	 * 获取音视频文件信息
-	 * 
+	 *
 	 * @param file
 	 * @return
 	 */
@@ -50,7 +49,7 @@ public class MediaUtils {
 
 	/**
 	 * 视频加图片水印
-	 * 
+	 *
 	 * jave2插件 3.0版本后 针对windows版本的路径有bug,导致windows下添加水印命令不成功
 	 * 但是3.0版本前，没找到添加水印功能，所以不考虑windows或则反编译MovieFilter.escapingPath 方法修改
 	 * <p>
@@ -90,17 +89,18 @@ public class MediaUtils {
 
 	/**
 	 * 视频压缩
-	 * 
+	 *
 	 * @param source
 	 * @param dest
-	 * @param supplier
+	 * @param supplierAudio
+	 * @param supplierVideo
 	 * @throws IllegalArgumentException
 	 * @throws InputFormatException
 	 * @throws EncoderException
 	 * @throws FileNotFoundException
 	 */
 	public static void compress(File source, File dest, Supplier<AudioAttributes> supplierAudio,
-			Supplier<VideoAttributes> supplierVideo)
+								Supplier<VideoAttributes> supplierVideo)
 			throws IllegalArgumentException, InputFormatException, EncoderException, FileNotFoundException {
 		if (!source.exists()) {
 			throw new FileNotFoundException(source.getAbsolutePath());
@@ -138,12 +138,12 @@ public class MediaUtils {
 	 *
 	 * @param source    原视频文件
 	 * @param output    截图存储文件
-	 * @param timestamp 截取的时间戳，单位：ms
+	 * @param timestamp 截取的时间戳，单位：秒
 	 * @throws EncoderException
 	 * @throws FileNotFoundException
 	 */
-	public static void generateVideoManyScreenImage(File source, File output, long timestamp)
-			throws EncoderException, FileNotFoundException {
+	public static void generateVideoScreenshot(File source, File output, long timestamp)
+			throws FileNotFoundException, EncoderException {
 		if (!source.exists()) {
 			throw new FileNotFoundException(source.getAbsolutePath());
 		}
@@ -162,6 +162,13 @@ public class MediaUtils {
 
 	public static void main(String[] args) {
 		long s = System.currentTimeMillis();
+		try {
+			generateVideoScreenshot(new File("C:/Users/liwy/Videos/911Mothers_2010W-480p.mp4"),
+					new File("C:/Users/liwy/Videos/screenshot.gif"), 78);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		System.out.println((System.currentTimeMillis() - s) + " ms");
 //		MultimediaInfo multimediaInfo = getMultimediaInfo("C:/Users/liwy/Videos/911Mothers_2010W-480p.mp4");
 //		MultimediaInfo multimediaInfo = getMultimediaInfo("http://vfx.mtime.cn/Video/2019/03/21/mp4/190321153853126488.mp4");
 //		// 封装格式
@@ -184,31 +191,31 @@ public class MediaUtils {
 //		System.out.println("aspectRatioExpression: " + video.getSize().aspectRatioExpression());
 //		// VideoInfo元数据
 //		System.out.println(video.getMetadata());
-		System.out.println("cost: " + (System.currentTimeMillis() - s));
-
-		s = System.currentTimeMillis();
-		MultimediaInfo multimediaInfo2 = getMultimediaInfo("C:/Users/liwy/Music/11582.mp3");
-		// 格式
-		System.out.println(multimediaInfo2.getFormat());
-		// 时长
-		System.out.println(multimediaInfo2.getDuration());
-		// 元数据
-		System.out.println(multimediaInfo2.getMetadata());
-		AudioInfo audio = multimediaInfo2.getAudio();
-		// 比特率：bps
-		System.out.println("BitRate: " + audio.getBitRate());
-		// 视频编码方式
-		System.out.println("Decoder: " + audio.getDecoder());
-		// 声道数
-		System.out.println("Channels: " + audio.getChannels());
-		// 取样率 Hz
-		System.out.println("SamplingRate: " + audio.getSamplingRate());
-		// AudioInfo元数据
-		System.out.println(audio.getMetadata());
-		System.out.println("cost: " + (System.currentTimeMillis() - s));
-
-		s = System.currentTimeMillis();
-
-		System.out.println("cost: " + (System.currentTimeMillis() - s));
+//		System.out.println("cost: " + (System.currentTimeMillis() - s));
+//
+//		s = System.currentTimeMillis();
+//		MultimediaInfo multimediaInfo2 = getMultimediaInfo("C:/Users/liwy/Music/11582.mp3");
+//		// 格式
+//		System.out.println(multimediaInfo2.getFormat());
+//		// 时长
+//		System.out.println(multimediaInfo2.getDuration());
+//		// 元数据
+//		System.out.println(multimediaInfo2.getMetadata());
+//		AudioInfo audio = multimediaInfo2.getAudio();
+//		// 比特率：bps
+//		System.out.println("BitRate: " + audio.getBitRate());
+//		// 视频编码方式
+//		System.out.println("Decoder: " + audio.getDecoder());
+//		// 声道数
+//		System.out.println("Channels: " + audio.getChannels());
+//		// 取样率 Hz
+//		System.out.println("SamplingRate: " + audio.getSamplingRate());
+//		// AudioInfo元数据
+//		System.out.println(audio.getMetadata());
+//		System.out.println("cost: " + (System.currentTimeMillis() - s));
+//
+//		s = System.currentTimeMillis();
+//
+//		System.out.println("cost: " + (System.currentTimeMillis() - s));
 	}
 }

@@ -26,6 +26,7 @@
                       src: item.src,//视频地址
                     },
                   ],
+                  poster: item.coverSrc, // 视频封面
                   controlBar: {
                     timeDivider: false,
                     durationDisplay: false,
@@ -84,6 +85,19 @@
                 :underline="false"
                 v-if="itemList.length > 1 && index < itemList.length - 1" 
                 @click="moveDown(index)">{{ $t('CMS.Video.MoveDown') }}</el-link>
+              <el-dropdown @command="handleCoverCommand">
+                <span class="el-dropdown-link">
+                  <svg-icon icon-class="images" /> {{ $t('CMS.Video.Cover') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-camera" :command="beforeCommand(index, 'Screenshot')">{{ $t('CMS.Video.ScreenshotCover') }}</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-upload" :command="beforeCommand(index, 'Upload')">{{ $t('CMS.Video.UploadCover') }}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+              <el-link 
+                icon="el-icon-picture"
+                :underline="false"
+                @click="setLogo(index)">{{ $t('CMS.Video.SetLogo') }}</el-link>
               <el-link 
                 icon="el-icon-edit"
                 :underline="false"
@@ -91,7 +105,7 @@
               <el-link 
                 icon="el-icon-delete"
                 :underline="false"
-                @click="deleteImage(index)">{{ $t('Common.Delete') }}</el-link>
+                @click="deleteItem(index)">{{ $t('Common.Delete') }}</el-link>
             </el-row>
           </el-col>
         </el-row>
@@ -118,7 +132,7 @@
     <cms-resource-dialog 
       :open.sync="openResourceDialog"
       :upload-limit="uploadLimit"
-      rtype="video"
+      :rtype="resourceType"
       @ok="handleResourceDialogOk">
     </cms-resource-dialog>
     <!-- 添加/修改第三方视频对话框 -->
@@ -137,10 +151,28 @@
         <el-button @click="cancel">{{ $t("Common.Cancel") }}</el-button>
       </div>
     </el-dialog>
+    <!-- 视频帧截图 -->
+    <el-dialog 
+      :title="$t('CMS.Video.ScreenshotDialog')"
+      :visible.sync="openVideoScreenshotDialog"
+      v-loading="screenshotLoading"
+      width="600px"
+      append-to-body>
+      <el-form ref="form" label-position="top">
+        <el-form-item label="时间点（单位：秒）">
+          <el-input-number v-model="screenshotTime" :min="0" :max="videoSeconds"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleScreenshot">{{ $t("Common.Confirm") }}</el-button>
+        <el-button @click="cancelScreenshot">{{ $t("Common.Cancel") }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import CMSResourceDialog from "@/views/cms/contentcore/resourceDialog";
+import { videoScreenshot } from "@/api/contentcore/video";
 
 export default {
   name: "CMSVideoList",
@@ -160,12 +192,18 @@ export default {
   },
   data () {
     return {
+      resourceType: 'video',
       ThirdVideoType: "SHARE",
       openResourceDialog: false,
       uploadLimit: 10,
       editIndex: -1,
       openThirdVideoDialog: false,
-      thirdVideoCode: ""
+      thirdVideoCode: "",
+      screenshotLoading: false,
+      screenshotFlag: false,
+      openVideoScreenshotDialog: false,
+      videoSeconds: 99999, // 当前截图视频长度（单位：秒）
+      screenshotTime: 0
     };
   },
   watch: {
@@ -175,30 +213,39 @@ export default {
   },
   methods: {
     handleResourceDialogOk (results) {
-      if (this.editIndex > -1) {
-        const r = results[0];
-        this.itemList[this.editIndex] = { 
-            path: r.path, 
-            src: r.src, 
-            title: r.name, 
-            fileName: r.name, 
-            fileSize: r.fileSize,
-            fileSizeName: r.fileSizeName,
-            resourceType: r.resourceType
-          };
-        this.editIndex = -1;
+      if (this.screenshotFlag) {
+          this.screenshotFlag = false;
+          const r = results[0];
+          let item = this.itemList[this.editIndex];
+          item.cover = r.path;
+          item.coverSrc = r.src;
+          this.editIndex = -1;
       } else {
-        results.forEach(r => {
-          this.itemList.push({ 
-            path: r.path, 
-            src: r.src, 
-            title: r.name, 
-            fileName: r.name, 
-            fileSize: r.fileSize,
-            fileSizeName: r.fileSizeName,
-            resourceType: r.resourceType
+        if (this.editIndex > -1) {
+          const r = results[0];
+          this.itemList[this.editIndex] = { 
+              path: r.path, 
+              src: r.src, 
+              title: r.name, 
+              fileName: r.name, 
+              fileSize: r.fileSize,
+              fileSizeName: r.fileSizeName,
+              resourceType: r.resourceType
+            };
+          this.editIndex = -1;
+        } else {
+          results.forEach(r => {
+            this.itemList.push({ 
+              path: r.path, 
+              src: r.src, 
+              title: r.name, 
+              fileName: r.name, 
+              fileSize: r.fileSize,
+              fileSizeName: r.fileSizeName,
+              resourceType: r.resourceType
+            });
           });
-        });
+        }
       }
     },
     handleThirdVideo(index) {
@@ -244,6 +291,7 @@ export default {
     addItem () {
       this.editIndex = -1;
       this.uploadLimit = 10;
+      this.resourceType = 'video';
       this.openResourceDialog = true;
     },
     editItem (index) {
@@ -253,10 +301,11 @@ export default {
       } else {
         this.uploadLimit = 1;
         this.editIndex = index;
+        this.resourceType = 'video';
         this.openResourceDialog = true;
       }
     },
-    deleteImage (index) {
+    deleteItem (index) {
       this.itemList.splice(index, 1);
     }, 
     moveUp (index) {
@@ -271,8 +320,54 @@ export default {
         this.$set(this.itemList, index, this.itemList[index + 1]);
         this.$set(this.itemList, index + 1, temp);
     },
-    chooseImage (index) {
-        this.$emit("choose", this.itemList[index].path, this.itemList[index].src);
+    // 将视频封面图设置为视频集封面图
+    setLogo (index) {
+      const item = this.itemList[index];
+      if (item.cover && item.cover.length > 0) {
+        this.$emit("choose", item.cover, item.coverSrc);
+      } else {
+        this.$modal.msgWarning("No video cover!")
+      }
+    },
+    uploadVideoCover(index) {
+      this.uploadLimit = 1;
+      this.editIndex = index;
+      this.screenshotFlag = true;
+      this.resourceType = 'image';
+      this.openResourceDialog = true;
+    },
+    beforeCommand(index, command) {
+      return {index, command}
+    },
+    handleCoverCommand (arg) {
+      const { index, command } = arg;
+      if (command == 'Screenshot') {
+        this.screenshot(index)
+      } else if (command == 'Upload') {
+        this.uploadVideoCover(index);
+      }
+    },
+    screenshot(index) {
+      this.uploadLimit = 1;
+      this.editIndex = index;
+      this.openVideoScreenshotDialog = true;
+    },
+    cancelScreenshot() {
+      this.openVideoScreenshotDialog = false;
+      this.editIndex = -1;
+    },
+    handleScreenshot() {
+      let item = this.itemList[this.editIndex]
+      this.screenshotLoading = true;
+      const data = { path: item.path, timestamp: this.screenshotTime }
+      videoScreenshot(data).then(res => {
+        let item = this.itemList[this.editIndex];
+        item.cover = res.data.internalUrl;
+        item.coverSrc = res.data.src;
+        this.openVideoScreenshotDialog = false;
+        this.screenshotLoading = false;
+        this.editIndex = -1;
+      })
     }
   }
 };
@@ -322,7 +417,7 @@ export default {
 .cms-video-editor .r-container .el-form-item {
   margin-bottom: 15px;
 }
-.cms-video-editor .r-container .el-link {
+.cms-video-editor .r-container .el-link, .el-dropdown {
   margin-left: 20px;
 }
 .cms-video-editor .r-container .r-opr-row {
