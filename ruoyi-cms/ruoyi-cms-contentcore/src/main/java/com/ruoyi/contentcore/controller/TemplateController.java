@@ -46,11 +46,6 @@ import java.util.regex.Pattern;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(
-	type = AdminUserType.TYPE,
-	value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
-	mode = SaMode.AND
-)
 @RestController
 @RequestMapping("/cms/template")
 @RequiredArgsConstructor
@@ -69,6 +64,11 @@ public class TemplateController extends BaseRestController {
 	 * @param filename        文件名
 	 * @return
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@GetMapping
 	public R<?> getTemplateList(@RequestParam(value = "publishPipeCode", required = false) String publishPipeCode,
 								@RequestParam(value = "filename", required = false) String filename) {
@@ -98,6 +98,11 @@ public class TemplateController extends BaseRestController {
 	 * @param templateId
 	 * @return
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@GetMapping("/{templateId}")
 	public R<?> getTemplateDetail(@PathVariable("templateId") String templateId) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -118,6 +123,11 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "新增模板", businessType = BusinessType.INSERT)
 	@XssIgnore
 	@PostMapping
@@ -137,6 +147,11 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "重命名模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/rename")
 	public R<?> rename(@RequestBody @Validated TemplateRenameDTO dto) throws IOException {
@@ -177,6 +192,11 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "编辑模板", businessType = BusinessType.UPDATE)
 	@XssIgnore
 	@PutMapping
@@ -201,6 +221,11 @@ public class TemplateController extends BaseRestController {
 	 * @return
 	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "删除模板", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> delete(@RequestBody @NotEmpty List<Long> templateIds) throws IOException {
@@ -210,6 +235,11 @@ public class TemplateController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "清理模板缓存", businessType = BusinessType.OTHER)
 	@PostMapping("/clearTemplateCache")
 	public R<?> clearTemplateCache() {
@@ -217,6 +247,11 @@ public class TemplateController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "清理区块缓存", businessType = BusinessType.OTHER)
 	@DeleteMapping("/clearIncludeCache")
 	public R<?> clearIncludeCache(@RequestBody @NotEmpty List<Long> templateIds) {
