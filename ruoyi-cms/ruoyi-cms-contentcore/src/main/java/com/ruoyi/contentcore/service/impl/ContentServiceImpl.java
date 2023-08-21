@@ -24,6 +24,7 @@ import com.ruoyi.contentcore.domain.dto.MoveContentDTO;
 import com.ruoyi.contentcore.domain.dto.SetTopContentDTO;
 import com.ruoyi.contentcore.domain.dto.SortContentDTO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
+import com.ruoyi.contentcore.fixed.dict.ContentStatus;
 import com.ruoyi.system.fixed.config.BackendContext;
 import com.ruoyi.contentcore.listener.event.AfterContentDeleteEvent;
 import com.ruoyi.contentcore.listener.event.AfterContentOfflineEvent;
@@ -83,6 +84,9 @@ public class ContentServiceImpl extends ServiceImpl<CmsContentMapper, CmsContent
 			CmsContent xContent = this.getById(contentId);
 			Assert.notNull(xContent, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
 			PermissionUtils.checkPermission(CatalogPrivItem.DeleteContent.getPermissionKey(xContent.getCatalogId()), operator);
+
+			boolean canDelete = ContentStatus.isDraft(xContent.getStatus()) || ContentStatus.isOffline(xContent.getStatus());
+			Assert.isTrue(canDelete, ContentCoreErrorCode.DEL_CONTENT_ERR::exception);
 
 			IContentType contentType = ContentCoreUtils.getContentType(xContent.getContentType());
 			IContent<?> content = contentType.loadContent(xContent);

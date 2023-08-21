@@ -55,6 +55,10 @@ public class ContentStatus extends FixedDictType {
 		return PUBLISHED.equals(v) || TO_PUBLISHED.equals(v);
 	}
 
+	public static boolean isOffline(String v) {
+		return OFFLINE.equals(v);
+	}
+
 	public static <T> void decode(List<T> list, Function<T, String> getter, BiConsumer<T, String> setter) {
 		dictTypeService.decode(TYPE, list, getter, setter);
 	}

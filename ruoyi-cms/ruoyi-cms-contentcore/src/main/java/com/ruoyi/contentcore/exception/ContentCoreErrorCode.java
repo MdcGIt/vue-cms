@@ -148,7 +148,12 @@ public enum ContentCoreErrorCode implements ErrorCode {
 	/**
 	 * 站点导出任务正在进行中
 	 */
-	SITE_EXPORT_TASK_EXISTS;
+	SITE_EXPORT_TASK_EXISTS,
+
+	/**
+	 * 只能删除初稿或已下线内容
+	 */
+	DEL_CONTENT_ERR;
 
 	@Override
 	public String value() {
