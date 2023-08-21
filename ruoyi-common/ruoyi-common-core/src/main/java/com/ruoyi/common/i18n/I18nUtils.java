@@ -1,18 +1,17 @@
 package com.ruoyi.common.i18n;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
+import com.ruoyi.common.utils.ReflectASMUtils;
+import com.ruoyi.common.utils.SpringUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.util.PropertyPlaceholderHelper;
 
-import com.ruoyi.common.utils.ReflectASMUtils;
-import com.ruoyi.common.utils.SpringUtils;
-import com.ruoyi.common.utils.StringUtils;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class I18nUtils {
 
@@ -21,7 +20,7 @@ public class I18nUtils {
 
 	private static final PropertyPlaceholderHelper FieldPlaceholderHelper = new PropertyPlaceholderHelper("#{", "}");
 
-	private static final PropertyPlaceholderHelper PlaceholderHelper = new PropertyPlaceholderHelper("{", "}", ":",
+	private static final I18nPlaceholderHelper PlaceholderHelper = new I18nPlaceholderHelper("{", "}", ":",
 			true);
 
 	public static void replaceI18nFields(List<?> objs) {
@@ -30,7 +29,7 @@ public class I18nUtils {
 
 	/**
 	 * 将列表所有对象中@I18nField标注的字段替换为指定国际化语言值
-	 * 
+	 *
 	 * @param objs
 	 * @param locale
 	 */
@@ -47,7 +46,7 @@ public class I18nUtils {
 
 	/**
 	 * 将对象有@I18nField标注的字段替换为指定国际化语言值
-	 * 
+	 *
 	 * @param obj
 	 * @param locale
 	 */
@@ -86,7 +85,7 @@ public class I18nUtils {
 
 	/**
 	 * 获取国际化键名对应的当前默认语言值
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -96,7 +95,7 @@ public class I18nUtils {
 
 	/**
 	 * 获取国际化键名指定的语言值
-	 * 
+	 *
 	 * @param str
 	 * @param locale
 	 * @param args

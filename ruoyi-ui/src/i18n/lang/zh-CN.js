@@ -845,6 +845,9 @@ export default {
       ExModelCardTitle: "扩展模型属性",
       CurrentSelectorTitle: "切换当前站点",
       AlreayCurrentSite: "请选择非当前站点",
+      ImportTheme: "导入主题",
+      ExportTheme: "导出主题",
+      ThemeFileTypeErrMsg: "主题文件仅支持zip类型",
       Tab: {
         Basic: "基础信息",
         Extend: "扩展配置",
@@ -900,8 +903,10 @@ export default {
         BaiduRefreshToken: "百度统计RefreshToken",
         BaiduAccessToken: "百度统计AccessToken",
         SiteApiUrl: "站点API地址前缀",
-        CustomFormCardTitle: "自定义表单",
-        EnableCustomFormCaptcha: "是否开启验证码"
+        CustomFormCardTitle: "自定义表单配置",
+        EnableCustomFormCaptcha: "是否开启验证码",
+        CommentCardTitle: " 评论配置",
+        EnableCommentAudit: "是否需要审核"
       },
       Property: {
         QueryPlaceholder: "输入名称/编码查询",
@@ -915,10 +920,21 @@ export default {
       },
       DefaultTemplate: {
         Title: "默认模板配置",
+        StaticizePageConfig: "静态页面模板配置",
+        DynamicPageConfig: "动态页面模板配置",
         CatalogList: "栏目列表页模板",
         ContentDetail: "详情页模板",
         SelectCatalogFirst: "请先选择栏目",
         CustomForm: "自定义表单模板",
+        SearchResult: "搜索结果页模板",
+        AccountCentre: "个人中心页模板",
+        MemberLogin: "会员登录页模板",
+        MemberRegister: "会员注册页模板",
+        MemberForgetPwd: "忘记密码页模板",
+        MemberSetting: "会员信息设置页模板",
+        MemberBindEmail: "会员绑定邮箱页模板",
+        MemberResetPwd: "会员修改密码页模板",
+        MemberContribute: "会员文章投稿页模板",
       },
       Dashboard: {
         DataCountCard: "数据统计",
@@ -1098,7 +1114,12 @@ export default {
       Add: "添加视频",
       AddThirdVideo: "添加第三方视频",
       ThirdVideoTitle: "第三方视频分享",
-      ThirdVideoCode: "视频嵌入代码"
+      ThirdVideoCode: "视频嵌入代码",
+      Cover: "封面",
+      ScreenshotCover: "截取视频封面图",
+      UploadCover: "上传视频封面图",
+      ScreenshotDialog: "视频封面截图",
+      SetLogo: "设为视频集封面"
     },
     PageWidget: {
       Type: "类型",
@@ -1251,7 +1272,13 @@ export default {
       FuncAttrName: "名称",
       FuncAttrType: "类型",
       FuncAttrRequired: "是否必填",
-      FuncAttrDesc: "描述"
+      FuncAttrDesc: "描述",
+      DynamicTemplate: "动态模板",
+      DynamicTempType: "类型",
+      DynamicTempName: "名称",
+      DynamicTempRequestPath: "访问路径",
+      RequestArgs: "请求参数",
+      DefaultValue: "默认值"
     },
     ExModel: {
       Name: "名称",

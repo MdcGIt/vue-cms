@@ -43,7 +43,7 @@ public class MemberFollowServiceImpl extends ServiceImpl<MemberFollowMapper, Mem
             mf.setMemberId(memberId);
             mf.setFollowMemberId(targetId);
             this.save(mf);
-            this.updateMemberFollow(memberId, targetId);
+            this.updateMemberFollow(memberId, targetId, false);
         } finally {
             lock.unlock();
         }
@@ -58,17 +58,17 @@ public class MemberFollowServiceImpl extends ServiceImpl<MemberFollowMapper, Mem
                     .eq(MemberFollow::getFollowMemberId, targetId).oneOpt();
             if (opt.isPresent()) {
                 this.removeById(opt.get());
-                this.updateMemberFollow(memberId, targetId);
+                this.updateMemberFollow(memberId, targetId ,true);
             }
         } finally {
             lock.unlock();
         }
     }
 
-    private void updateMemberFollow(final long memberId, final Long targetId) {
+    private void updateMemberFollow(final long memberId, final Long targetId, boolean cancel) {
         this.asyncTaskManager.execute(() -> {
-            memberStatDataService.changeMemberStatData(memberId, FollowMemberStatData.TYPE, 1);
-            memberStatDataService.changeMemberStatData(targetId, FollowerMemberStatData.TYPE, 1);
+            memberStatDataService.changeMemberStatData(memberId, FollowMemberStatData.TYPE, cancel ? -1 :1);
+            memberStatDataService.changeMemberStatData(targetId, FollowerMemberStatData.TYPE, cancel ? -1 : 1);
         });
     }
 }

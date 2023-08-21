@@ -845,6 +845,9 @@ export default {
       ExModelCardTitle: "Ex-Model Configuration",
       CurrentSelectorTitle: "Change Current Site",
       AlreayCurrentSite: "Please select a non current site.",
+      ImportTheme: "Import Theme",
+      ExportTheme: "Export Theme",
+      ThemeFileTypeErrMsg: "Theme file only supported .zip!",
       Tab: {
         Basic: "Basic Information",
         Extend: "Extend Config",
@@ -901,7 +904,9 @@ export default {
         BaiduAccessToken: "Baidu AccessToken",
         SiteApiUrl: "Site Api Url",
         CustomFormCardTitle: "Custom Form Configuration",
-        EnableCustomFormCaptcha: "Enable Captcha On Submit"
+        EnableCustomFormCaptcha: "Enable Captcha On Submit",
+        CommentCardTitle: " Comment Configuration",
+        EnableCommentAudit: "Enable Comment Audit"
       },
       Property: {
         QueryPlaceholder: "Input name/code",
@@ -915,10 +920,21 @@ export default {
       },
       DefaultTemplate: {
         Title: "Default Template",
+        StaticizePageConfig: "Staticize Page Configuration",
+        DynamicPageConfig: "Dynamic Page configuration",
         CatalogList: "Catalog List Template",
         ContentDetail: " Detail Template",
         SelectCatalogFirst: "Please select catalog first.",
         CustomForm: "Custom Form Template",
+        SearchResult: "Search Page Template",
+        AccountCentre: "Account Centre Template",
+        MemberLogin: "Member Login Template",
+        MemberRegister: "Member Register Template",
+        MemberForgetPwd: "Member Forget Password Template",
+        MemberSetting: "Member Setting Template",
+        MemberBindEmail: "Member Bind Email Template",
+        MemberResetPwd: "Member Reset Password Template",
+        MemberContribute: "Member Contribute Template",
       },
       Dashboard: {
         DataCountCard: "Statistical Data",
@@ -1098,7 +1114,12 @@ export default {
       Add: "Add Video",
       AddThirdVideo: "Add Third Party Video",
       ThirdVideoTitle: "The third party video",
-      ThirdVideoCode: "Video Code"
+      ThirdVideoCode: "Video Code",
+      Cover: "Cover",
+      ScreenshotCover: "Screenshot",
+      UploadCover: "Upload",
+      ScreenshotDialog: "Video Screenshot",
+      SetLogo: "Set Album Cover"
     },
     PageWidget: {
       Type: "Type",
@@ -1251,7 +1272,13 @@ export default {
       FuncAttrName: "Name",
       FuncAttrType: "Type",
       FuncAttrRequired: "Required",
-      FuncAttrDesc: "Description"
+      FuncAttrDesc: "Description",
+      DynamicTemplate: "Dynamic Template",
+      DynamicTempType: "Type",
+      DynamicTempName: "Name",
+      DynamicTempRequestPath: "Request Path",
+      RequestArgs: "Request Args",
+      DefaultValue: "Default Value"
     },
     ExModel: {
       Name: "Name",

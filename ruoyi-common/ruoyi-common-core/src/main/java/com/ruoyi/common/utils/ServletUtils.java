@@ -229,8 +229,12 @@ public class ServletUtils {
 	}
 
 	public static Map<String, String> getParameters() {
+		return getParameters(getRequest());
+	}
+
+	public static Map<String, String> getParameters(HttpServletRequest request) {
 		Map<String, String> params = new HashMap<>();
-		getRequest().getParameterMap().forEach((k, y) -> {
+		request.getParameterMap().forEach((k, y) -> {
 			if (y.length > 0) {
 				params.put(k, StringUtils.join(y));
 			}

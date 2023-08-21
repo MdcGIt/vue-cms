@@ -1,6 +1,5 @@
 package com.ruoyi.system.controller.common;
 
-import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class AsyncController extends BaseRestController {
 	@GetMapping("/task")
 	public R<?> getAsyncTaskList(@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "id", required = false) String taskId) {
-		List<AsyncTask> taskList = this.asyncTaskManager.getTaskList(type);
+		List<AsyncTask> taskList = this.asyncTaskManager.getTaskList();
 		List<AsyncTaskVO> list = taskList.stream()
 				.filter(t -> (StringUtils.isBlank(type) || t.getType().contains(type))
 					&& (StringUtils.isBlank(taskId) || t.getTaskId().contains(taskId)))

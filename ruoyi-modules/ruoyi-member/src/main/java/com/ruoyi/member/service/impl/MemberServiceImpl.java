@@ -13,6 +13,7 @@ import com.ruoyi.common.utils.*;
 import com.ruoyi.member.config.MemberConfig;
 import com.ruoyi.member.core.IMemberStatData;
 import com.ruoyi.member.domain.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -33,6 +34,7 @@ import com.ruoyi.system.service.ISecurityConfigService;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements IMemberService, CommandLineRunner {
@@ -151,6 +153,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 		String path = "avatar/" + memberId + "." + suffix;
 		FileUtils.writeByteArrayToFile(new File(MemberConfig.getUploadDir() + path), imageBytes);
 
+		log.info("upload avatar: " + path);
 		this.lambdaUpdate().set(Member::getAvatar, path).eq(Member::getMemberId, memberId).update();
 		return path;
 	}

@@ -13,6 +13,7 @@ import com.ruoyi.common.security.web.BaseRestController;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.IP2RegionUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.annotation.IgnoreDemoMode;
 import com.ruoyi.system.config.SystemConfig;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.domain.SysUser;
@@ -112,6 +113,7 @@ public class SysProfileController extends BaseRestController {
 		return update ? R.ok() : R.fail();
 	}
 
+	@IgnoreDemoMode
 	@Priv(type = AdminUserType.TYPE)
 	@Log(title = "个人中心", businessType = BusinessType.UPDATE)
 	@PostMapping("/avatar")

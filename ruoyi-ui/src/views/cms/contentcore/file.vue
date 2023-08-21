@@ -209,7 +209,10 @@ export default {
         // 是否禁用上传
         isUploading: false,
         // 设置上传的请求头部
-        headers: { Authorization: "Bearer " + getToken() },
+        headers: { 
+          Authorization: "Bearer " + getToken(),
+          CurrentSite: this.$cache.local.get("CurrentSite")
+        },
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + "/cms/file/upload",
         // 上传的文件列表
@@ -356,10 +359,14 @@ export default {
       this.upload.isUploading = true;
     },
     handleFileSuccess(response, file, fileList) {
+      if (response.code == 200) {
+        this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
+        this.open = false;
+        this.loadFileList();
+      } else {
+        this.$modal.msgError(response.msg)
+      }
       this.upload.isUploading = false;
-      this.$modal.msgSuccess(this.$t('Common.SaveSuccess'));
-      this.open = false;
-      this.loadFileList();
       this.$refs.upload.clearFiles();
       this.resetForm("uploadForm");
     },

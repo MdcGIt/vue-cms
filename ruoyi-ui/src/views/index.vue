@@ -14,14 +14,14 @@
         <cms-site-data-stat></cms-site-data-stat>
 
 
-        <el-card shadow="hover" class="mt10">
-          <div slot="header" class="clearfix">
-            <span>广告位招租</span>
-          </div>
-          <div class="body">
-            <div style="display: inline-block; height: 30px; line-height: 30px">演示站后台首页广告位招租~（1000RMB/月，月登陆次数1500左右，具体请参考用户登录日志）</div>
-          </div>
-        </el-card>
+<!--        <el-card shadow="hover" class="mt10">-->
+<!--          <div slot="header" class="clearfix">-->
+<!--            <span>广告位招租</span>-->
+<!--          </div>-->
+<!--          <div class="body">-->
+<!--            <div style="display: inline-block; height: 30px; line-height: 30px">演示站后台首页广告位招租~（1000RMB/月，月登陆次数1500左右，具体请参考用户登录日志）</div>-->
+<!--          </div>-->
+<!--        </el-card>-->
       </el-col>
     </el-row>
   </div>

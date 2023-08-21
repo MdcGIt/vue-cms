@@ -1,4 +1,4 @@
-# RuoYi-Vue-CMS v1.3.14
+# RuoYi-Vue-CMS v1.3.16
 
 ### 系统简介
 
@@ -10,7 +10,9 @@ RuoYi-Vue-CMS是前后端分离的企业级内容管理系统。项目基于[Ruo
 
 账号：demo / a123456
 
-前台网站地址：<http://www.swikoon.com>
+企业站演示地址：<http://www.swikoon.com>
+
+资讯站演示地址：<http://www.1000mz.com>（带会员中心）
 
 ##### 演示站静态资源
 - 演示站的静态资源已提交到仓库[ruoyi-vue-cms-wwwroot](https://gitee.com/liweiyi/ruoyi-vue-cms-wwwroot)。

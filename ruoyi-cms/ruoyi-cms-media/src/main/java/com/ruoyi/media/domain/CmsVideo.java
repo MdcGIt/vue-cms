@@ -8,6 +8,8 @@ import com.ruoyi.common.db.domain.BaseEntityWithLogicDelete;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * 视频数据表对象 [cms_video]
  * 
@@ -19,7 +21,7 @@ import lombok.Setter;
 @TableName(CmsVideo.TABLE_NAME)
 public class CmsVideo extends BaseEntityWithLogicDelete {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
     
     public static final String TABLE_NAME = "cms_video";
 
@@ -35,6 +37,17 @@ public class CmsVideo extends BaseEntityWithLogicDelete {
      * 所属站点ID
      */
     private long siteId;
+
+    /**
+     * 视频封面图
+     */
+    private String cover;
+
+    /**
+     * 视频封面图预览路径
+     */
+    @TableField(exist = false)
+    private String coverSrc;
 
     /**
      * 视频标题

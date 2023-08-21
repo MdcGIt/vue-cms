@@ -18,6 +18,8 @@ public class ContributorVO {
 
     private String avatar;
 
+    private String avatarSrc;
+
     private String slogan;
 
     /**

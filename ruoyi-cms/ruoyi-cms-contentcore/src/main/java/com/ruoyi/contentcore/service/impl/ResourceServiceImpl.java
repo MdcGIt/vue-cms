@@ -66,7 +66,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		String suffix = FileExUtils.getImageSuffix(url);
 		IResourceType resourceType = ContentCoreUtils.getResourceType(ResourceType_Image.ID);
 		if (!resourceType.check(suffix)) {
-			throw ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix);  // 不支持的图片格式
+			throw ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix);  // 不支持的图片格式
 		}
 		CmsSite site = siteService.getSite(siteId);
 
@@ -99,7 +99,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 			throws IOException {
 		String suffix = FileExUtils.getExtension(Objects.requireNonNull(dto.getFile().getOriginalFilename()));
 		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
-		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();
 		resource.setResourceId(IdUtils.getSnowflakeId());
@@ -132,7 +132,7 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		String suffix = base64Data.substring(11, base64Data.indexOf(";"));
 
 		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
-		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORT_RESOURCE_TYPE.exception(suffix));
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix));
 
 		CmsResource resource = new CmsResource();
 		resource.setResourceId(IdUtils.getSnowflakeId());
@@ -155,6 +155,38 @@ public class ResourceServiceImpl extends ServiceImpl<CmsResourceMapper, CmsResou
 		String base64Str = StringUtils.substringAfter(base64Data, ",");
 		byte[] imageBytes = Base64.getDecoder().decode(base64Str);
 		this.processResource(resource, resourceType, site, imageBytes);
+		return resource;
+	}
+
+	@Override
+	public CmsResource addImageFromFile(CmsSite site, String operator, File imageFile) throws IOException {
+		if (Objects.isNull(imageFile) || !imageFile.exists()) {
+			return null;
+		}
+		String suffix = FileExUtils.getExtension(imageFile.getName());
+		IResourceType resourceType = ResourceUtils.getResourceTypeBySuffix(suffix);
+		Assert.notNull(resourceType, () -> ContentCoreErrorCode.UNSUPPORTED_RESOURCE_TYPE.exception(suffix));
+
+		CmsResource resource = new CmsResource();
+		resource.setResourceId(IdUtils.getSnowflakeId());
+		resource.setSiteId(site.getSiteId());
+		resource.setResourceType(resourceType.getId());
+		resource.setFileName(resource.getResourceId().toString() + "." + suffix);
+		resource.setName(resource.getFileName());
+		resource.setSuffix(suffix);
+
+		String siteResourceRoot = SiteUtils.getSiteResourceRoot(site);
+		String fileName = resource.getResourceId() + StringUtils.DOT + suffix;
+		String dir = resourceType.getUploadPath()
+				+ LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + StringUtils.SLASH;
+		FileExUtils.mkdirs(siteResourceRoot + dir);
+
+		resource.setPath(dir + fileName);
+		resource.setStatus(EnableOrDisable.ENABLE);
+		resource.createBy(operator);
+
+		byte[] bytes = FileUtils.readFileToByteArray(imageFile);
+		this.processResource(resource, resourceType, site, bytes);
 		return resource;
 	}
 	

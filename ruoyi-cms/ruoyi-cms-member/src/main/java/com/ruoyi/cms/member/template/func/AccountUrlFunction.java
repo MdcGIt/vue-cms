@@ -61,8 +61,8 @@ public class AccountUrlFunction extends AbstractFunc  {
 
 	@Override
 	public List<FuncArg> getFuncArgs() {
-		return List.of(new FuncArg("会员ID", FuncArgType.Long, true, "数字或字符串"),
-				new FuncArg("类型", FuncArgType.String, true, null),
+		return List.of(new FuncArg("会员ID", FuncArgType.Long, true, null),
+				new FuncArg("类型", FuncArgType.String, true, "用于处理会员主页展示数据，可在模板中根据类型显示会员评论、收藏等数据。"),
 				new FuncArg("是否带站点ID和发布通道参数", FuncArgType.String, false, "默认：true"));
 	}
 }

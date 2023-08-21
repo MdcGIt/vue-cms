@@ -15,7 +15,7 @@
       :model="form"
       v-loading="loading"
       :disabled="!this.siteId"
-      label-width="180px">
+      label-width="260px">
       <el-card shadow="hover">
         <div slot="header" class="clearfix">
           <span>{{ $t('CMS.Site.DefaultTemplate.Title') }}</span>
@@ -27,6 +27,7 @@
             :command="pp"
             :name="pp.pipeCode"
             :label="pp.pipeName">
+            <el-divider content-position="left">{{ $t('CMS.Site.DefaultTemplate.StaticizePageConfig') }}</el-divider>
             <el-form-item 
               :label="$t('CMS.Site.DefaultTemplate.CatalogList')"
               prop="defaultListTemplate">
@@ -77,6 +78,97 @@
                 type="primary" 
                 plain 
                 @click="handleApplyToCatalog('defaultCustomFormTemplate')">{{ $t('CMS.ContentCore.ApplyToCatalog') }}</el-button>
+            </el-form-item>
+            <el-divider content-position="left">{{ $t('CMS.Site.DefaultTemplate.DynamicPageConfig') }}</el-divider>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.SearchResult')"
+              prop="searchTemplate">
+              <el-input v-model="pp.props.searchTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('searchTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.AccountCentre')"
+              prop="accountCentreTemplate">
+              <el-input v-model="pp.props.accountCentreTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('accountCentreTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.MemberLogin')"
+              prop="memberLoginTemplate">
+              <el-input v-model="pp.props.memberLoginTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('memberLoginTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.MemberRegister')"
+              prop="memberRegisterTemplate">
+              <el-input v-model="pp.props.memberRegisterTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('memberRegisterTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.MemberForgetPwd')"
+              prop="memberForgetPasswordTemplate">
+              <el-input v-model="pp.props.memberForgetPasswordTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('memberForgetPasswordTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.MemberSetting')"
+              prop="memberSettingTemplate">
+              <el-input v-model="pp.props.memberSettingTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('memberSettingTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.MemberBindEmail')"
+              prop="memberBindEmailTemplate">
+              <el-input v-model="pp.props.memberBindEmailTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('memberBindEmailTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.MemberResetPwd')"
+              prop="memberPasswordTemplate">
+              <el-input v-model="pp.props.memberPasswordTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('memberPasswordTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item 
+              :label="$t('CMS.Site.DefaultTemplate.MemberContribute')"
+              prop="memberContributeTemplate">
+              <el-input v-model="pp.props.memberContributeTemplate">
+                <el-button 
+                  slot="append"
+                  type="primary"
+                  @click="handleSelectTemplate('memberContributeTemplate')">{{ $t("Common.Select") }}</el-button>
+              </el-input>
             </el-form-item>
           </el-tab-pane>
         </el-tabs>
@@ -216,7 +308,7 @@ export default {
 <style scoped>
 .site-def-temp-container .el-form-item {
   margin-bottom: 18px;
-  width: 700px;
+  width: 800px;
 }
 .site-def-temp-container .el-input, .el-select {
   width: 320px;

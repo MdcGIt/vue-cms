@@ -1,6 +1,7 @@
 package com.ruoyi.contentcore.controller;
 
 import cn.dev33.satoken.annotation.SaMode;
+import cn.dev33.satoken.exception.NotPermissionException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.domain.R;
 import com.ruoyi.common.exception.CommonErrorCode;
@@ -21,6 +22,7 @@ import com.ruoyi.contentcore.domain.vo.TemplateListVO;
 import com.ruoyi.contentcore.exception.ContentCoreErrorCode;
 import com.ruoyi.contentcore.fixed.config.TemplateSuffix;
 import com.ruoyi.contentcore.perms.ContentCorePriv;
+import com.ruoyi.contentcore.perms.SitePermissionType;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.service.ITemplateService;
 import com.ruoyi.contentcore.util.CmsPrivUtils;
@@ -78,17 +80,15 @@ public class TemplateController extends BaseRestController {
 				.like(StringUtils.isNotEmpty(filename), CmsTemplate::getPath, filename)
 				.orderByAsc(CmsTemplate::getPath)
 				.page(new Page<>(pr.getPageNumber(), pr.getPageSize(), true));
-		List<TemplateListVO> list = page.getRecords().stream().map(t -> {
-			return TemplateListVO.builder()
-					.templateId(t.getTemplateId())
-					.path(t.getPath())
-					.publishPipeCode(t.getPublishPipeCode())
-					.siteId(t.getSiteId())
-					.filesize(t.getFilesize())
-					.filesizeName(FileUtils.byteCountToDisplaySize(t.getFilesize()))
-					.modifyTime(DateUtils.epochMilliToLocalDateTime(t.getModifyTime()))
-					.build();
-		}).toList();
+		List<TemplateListVO> list = page.getRecords().stream().map(t -> TemplateListVO.builder()
+				.templateId(t.getTemplateId())
+				.path(t.getPath())
+				.publishPipeCode(t.getPublishPipeCode())
+				.siteId(t.getSiteId())
+				.filesize(t.getFilesize())
+				.filesizeName(FileUtils.byteCountToDisplaySize(t.getFilesize()))
+				.modifyTime(DateUtils.epochMilliToLocalDateTime(t.getModifyTime()))
+				.build()).toList();
 		return this.bindDataTable(list, (int) page.getTotal());
 	}
 
@@ -97,16 +97,17 @@ public class TemplateController extends BaseRestController {
 	 *
 	 * @param templateId
 	 * @return
-	 * @throws IOException
 	 */
 	@GetMapping("/{templateId}")
-	public R<?> getTemplateDetail(@PathVariable("templateId") String templateId) throws IOException {
+	public R<?> getTemplateDetail(@PathVariable("templateId") String templateId) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		this.templateService.scanTemplates(site);
 
 		CmsTemplate template = this.templateService.getById(templateId);
 		Assert.notNull(template, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", templateId));
 
+		Assert.isTrue(template.getSiteId() == site.getSiteId(),
+				() -> new NotPermissionException(SitePermissionType.SitePrivItem.View.getPermissionKey(site.getSiteId())));
 		return R.ok(template);
 	}
 
@@ -140,8 +141,15 @@ public class TemplateController extends BaseRestController {
 	@PostMapping("/rename")
 	public R<?> rename(@RequestBody @Validated TemplateRenameDTO dto) throws IOException {
 		Assert.isTrue(validTemplateName(dto.getPath()), ContentCoreErrorCode.INVALID_TEMPLATE_NAME::exception);
-		dto.setOperator(StpAdminUtil.getLoginUser());
-		this.templateService.renameTemplate(dto);
+		CmsTemplate template = this.templateService.getById(dto.getTemplateId());
+		Assert.notNull(template,
+				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
+
+		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
+		Assert.isTrue(template.getSiteId() == site.getSiteId(),
+				() -> new NotPermissionException(SitePermissionType.SitePrivItem.View.getPermissionKey(site.getSiteId())));
+
+		this.templateService.renameTemplate(template, dto.getPath(), dto.getRemark(), StpAdminUtil.getLoginUser().getUsername());
 		return R.ok();
 	}
 
@@ -173,8 +181,16 @@ public class TemplateController extends BaseRestController {
 	@XssIgnore
 	@PutMapping
 	public R<?> save(@RequestBody @Validated TemplateUpdateDTO dto) throws IOException {
+		CmsTemplate template = this.templateService.getById(dto.getTemplateId());
+		Assert.notNull(template,
+				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
+
+		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
+		Assert.isTrue(template.getSiteId() == site.getSiteId(),
+				() -> new NotPermissionException(SitePermissionType.SitePrivItem.View.getPermissionKey(site.getSiteId())));
+
 		dto.setOperator(StpAdminUtil.getLoginUser());
-		this.templateService.saveTemplate(dto);
+		this.templateService.saveTemplate(template, dto);
 		return R.ok();
 	}
 
@@ -189,7 +205,8 @@ public class TemplateController extends BaseRestController {
 	@DeleteMapping
 	public R<?> delete(@RequestBody @NotEmpty List<Long> templateIds) throws IOException {
 		Assert.isTrue(IdUtils.validate(templateIds), () -> CommonErrorCode.INVALID_REQUEST_ARG.exception("templateIds"));
-		this.templateService.deleteTemplates(templateIds);
+		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
+		this.templateService.deleteTemplates(site, templateIds);
 		return R.ok();
 	}
 
