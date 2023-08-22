@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.staticize.enums.TagAttrDataType;
 import com.ruoyi.common.staticize.tag.AbstractListTag;
 import com.ruoyi.common.staticize.tag.TagAttr;
+import com.ruoyi.common.staticize.tag.TagAttrOption;
 import com.ruoyi.member.domain.MemberFollow;
 import com.ruoyi.member.domain.vo.MemberCache;
 import com.ruoyi.member.service.IMemberFollowService;
@@ -22,24 +23,13 @@ import java.util.Map;
 public class CmsMemberFollowTag extends AbstractListTag {
 
 	public final static String TAG_NAME = "cms_member_follow";
+
 	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
 	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
-
-	final static Map<String, String> AttrOptions_Type = Map.of("follow", "关注", "follower", "粉丝");
 
 	private final IMemberStatDataService memberStatDataService;
 
 	private final IMemberFollowService memberFollowService;
-	
-	@Override
-	public List<TagAttr> getTagAttrs() {
-		List<TagAttr> tagAttrs = super.getTagAttrs();
-		tagAttrs.add(new TagAttr("uid", false, TagAttrDataType.INTEGER, "用户ID"));
-		TagAttr type = new TagAttr("type", true, TagAttrDataType.STRING, "类型");
-		type.setOptions(AttrOptions_Type);
-		tagAttrs.add(type);
-		return tagAttrs;
-	}
 
 	@Override
 	public TagPageData prepareData(Environment env, Map<String, String> attrs, boolean page, int size, int pageIndex) throws TemplateException {
@@ -47,8 +37,8 @@ public class CmsMemberFollowTag extends AbstractListTag {
 		String type = attrs.get("type");
 
 		Page<MemberFollow> pageResult = this.memberFollowService.lambdaQuery()
-				.eq("follow".equalsIgnoreCase(type), MemberFollow::getMemberId, uid)
-				.eq("follower".equalsIgnoreCase(type), MemberFollow::getFollowMemberId, uid)
+				.eq(MemberFollowTagType.isFollow(type), MemberFollow::getMemberId, uid)
+				.eq(MemberFollowTagType.isFollower(type), MemberFollow::getFollowMemberId, uid)
 				.orderByDesc(MemberFollow::getLogId)
 				.page(new Page<>(pageIndex, size, page));
 		if (pageResult.getRecords().isEmpty()) {
@@ -77,5 +67,42 @@ public class CmsMemberFollowTag extends AbstractListTag {
 	@Override
 	public String getDescription() {
 		return DESC;
+	}
+
+
+	@Override
+	public List<TagAttr> getTagAttrs() {
+		List<TagAttr> tagAttrs = super.getTagAttrs();
+		tagAttrs.add(new TagAttr("uid", false, TagAttrDataType.INTEGER, "用户ID"));
+		tagAttrs.add(new TagAttr("type", true, TagAttrDataType.STRING, "类型", MemberFollowTagType.toTagAttrOptions(), null));
+		return tagAttrs;
+	}
+
+	private enum MemberFollowTagType {
+		// 所有站点
+		follow("关注"),
+		// 当前站点
+		follower("粉丝");
+
+		private final String desc;
+
+		MemberFollowTagType(String desc) {
+			this.desc = desc;
+		}
+
+		public static boolean isFollow(String v) {
+			return follow.name().equalsIgnoreCase(v);
+		}
+
+		public static boolean isFollower(String v) {
+			return follower.name().equalsIgnoreCase(v);
+		}
+
+		static List<TagAttrOption> toTagAttrOptions() {
+			return List.of(
+					new TagAttrOption(follow.name(), follow.desc),
+					new TagAttrOption(follower.name(), follower.desc)
+			);
+		}
 	}
 }

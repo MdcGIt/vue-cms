@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.staticize.StaticizeConstants;
+import com.ruoyi.common.staticize.tag.TagAttrOption;
 import com.ruoyi.exmodel.CmsExtendMetaModelType;
-import com.ruoyi.exmodel.domain.CmsExtendModelData;
-import com.ruoyi.exmodel.fixed.dict.ExtendModelDataType;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +15,7 @@ import com.ruoyi.common.staticize.enums.TagAttrDataType;
 import com.ruoyi.common.staticize.tag.AbstractTag;
 import com.ruoyi.common.staticize.tag.TagAttr;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.xmodel.domain.XModel;
 import com.ruoyi.xmodel.service.IModelDataService;
-import com.ruoyi.xmodel.service.IModelService;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateException;
@@ -39,17 +36,13 @@ public class CmsXModelDataTag extends AbstractTag {
 
 	public final static String TagAttr_Data_ID = "dataId";
 	
-	private final IModelService modelService;
-	
 	private final IModelDataService modelDataService;
 	
 	@Override
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = new ArrayList<>();
 		tagAttrs.add(new TagAttr(TagAttr_ModelId, true, TagAttrDataType.INTEGER, "模型ID") );
-		TagAttr dataTypeAttr = new TagAttr(TagAttr_Data_Type, true, TagAttrDataType.STRING, "模型数据类型");
-		dataTypeAttr.setOptions(Map.of("site", "站点", "catalog", "栏目", "content", "内容"));
-		tagAttrs.add(dataTypeAttr);
+		tagAttrs.add(new TagAttr(TagAttr_Data_Type, true, TagAttrDataType.STRING, "模型数据类型", XModelDataTagType.toTagAttrOptions(), null));
 		tagAttrs.add(new TagAttr(TagAttr_Data_ID, true, TagAttrDataType.STRING, "模型数据ID") );
 		return tagAttrs;
 	}
@@ -91,5 +84,28 @@ public class CmsXModelDataTag extends AbstractTag {
 	@Override
 	public String getDescription() {
 		return DESC;
+	}
+
+	private enum XModelDataTagType {
+		// 所有站点
+		site("站点"),
+		// 当前站点
+		catalog("栏目"),
+		// 子站点
+		content("内容");
+
+		private final String desc;
+
+		XModelDataTagType(String desc) {
+			this.desc = desc;
+		}
+
+		static List<TagAttrOption> toTagAttrOptions() {
+			return List.of(
+					new TagAttrOption(site.name(), site.desc),
+					new TagAttrOption(catalog.name(), catalog.desc),
+					new TagAttrOption(content.name(), content.desc)
+			);
+		}
 	}
 }
