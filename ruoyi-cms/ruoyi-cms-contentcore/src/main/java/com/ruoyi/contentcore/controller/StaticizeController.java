@@ -46,7 +46,6 @@ public class StaticizeController extends BaseRestController {
 			vo.getTagAttrs().forEach(attr -> {
 				attr.setName(I18nUtils.get(attr.getName()));
 				attr.setUsage(I18nUtils.get(attr.getUsage()));
-				attr.getOptions().forEach(op -> op.setDesc(I18nUtils.get(op.getDesc())));
 			});
 			return vo;
 		}).toList();
