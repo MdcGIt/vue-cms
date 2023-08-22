@@ -1,18 +1,14 @@
 package com.ruoyi.contentcore.core;
 
-import java.io.IOException;
-import java.util.Map;
-
 import cn.dev33.satoken.config.SaTokenConfig;
-import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
-
 import com.ruoyi.system.security.StpAdminUtil;
 import freemarker.template.TemplateException;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * 内部数据类型
@@ -29,7 +25,6 @@ public interface IInternalDataType {
 	
 	/**
 	 * 获取内部数据预览地址
-	 * 
 	 * 预览路径规则：cms/preview/{内部数据类型}/{数据id}?pp={发布通道编码}&pi={页码}
 	 * 
 	 * @param type
@@ -58,7 +53,6 @@ public interface IInternalDataType {
 
 	/**
 	 * 获取内部数据动态浏览地址
-	 * 
 	 * 动态路径规则：cms/view/{内部数据类型}/{数据id}?pp={发布通道编码}&pi={页码}
 	 * 
 	 * @param type
@@ -68,7 +62,7 @@ public interface IInternalDataType {
 	 * @return
 	 */
 	static String getViewPath(String type, Long id, String publishPipeCode, int pageIndex) {
-		String path = "cms/preview/" + type + "/" + id + "?pp=" + publishPipeCode;
+		String path = "cms/view/" + type + "/" + id + "?pp=" + publishPipeCode;
 		if (pageIndex > 1) {
 			path += "&pi=" + pageIndex;
 		}
@@ -82,7 +76,7 @@ public interface IInternalDataType {
 	/**
 	 * 类型ID
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * 获取模板解析页面内容

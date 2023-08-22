@@ -1,14 +1,5 @@
 package com.ruoyi.contentcore.template.tag;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.staticize.FreeMarkerUtils;
@@ -16,16 +7,22 @@ import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.staticize.enums.TagAttrDataType;
 import com.ruoyi.common.staticize.tag.AbstractListTag;
 import com.ruoyi.common.staticize.tag.TagAttr;
+import com.ruoyi.common.staticize.tag.TagAttrOption;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsCatalog;
 import com.ruoyi.contentcore.service.ICatalogService;
 import com.ruoyi.contentcore.template.exception.CatalogNotFoundException;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.system.fixed.dict.YesOrNo;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -34,7 +31,7 @@ public class CmsCatalogTag extends AbstractListTag {
 	public final static String TAG_NAME = "cms_catalog";
 	public final static String NAME = "{FREEMARKER.TAG.NAME." + TAG_NAME + "}";
 	public final static String DESC = "{FREEMARKER.TAG.DESC." + TAG_NAME + "}";
-	
+
 	private static final String TAG_ATTR_ID = "id";
 	private static final String TAG_ATTR_ALIAS = "alias";
 	private static final String TAG_ATTR_LEVEL = "level";
@@ -47,7 +44,7 @@ public class CmsCatalogTag extends AbstractListTag {
 		tagAttrs.add(new TagAttr(TAG_ATTR_ID, false, TagAttrDataType.INTEGER, "栏目ID"));
 		tagAttrs.add(new TagAttr(TAG_ATTR_ALIAS, false, TagAttrDataType.STRING, "栏目别名"));
 		tagAttrs.add(new TagAttr(TAG_ATTR_LEVEL, false, TagAttrDataType.STRING, "数据获取范围，值为`Root`时忽略属性id、alias",
-				CatalogTagLevel.options(), "Current"));
+				CatalogTagLevel.toTagAttrOptions(), CatalogTagLevel.Current.name()));
 		return tagAttrs;
 	}
 
@@ -106,46 +103,44 @@ public class CmsCatalogTag extends AbstractListTag {
 	public String getDescription() {
 		return DESC;
 	}
-	
+
 	private enum CatalogTagLevel {
-		Root("所有栏目"), 
-		Current("同级栏目"),
-		Child("子栏目"),
-		CurrentAndChild("当前栏目及子栏目"),
-		Self("当前栏目"); 
-		
-		private String desc;
-		
+		Root("所有栏目"), Current("同级栏目"), Child("子栏目"), CurrentAndChild("当前栏目及子栏目"), Self("当前栏目");
+
+		private final String desc;
+
 		CatalogTagLevel(String desc) {
 			this.desc = desc;
 		}
 
-		String getDesc() {
-			return this.desc;
-		}
-		
 		static boolean isRoot(String level) {
 			return Root.name().equalsIgnoreCase(level);
 		}
-		
+
 		static boolean isCurrent(String level) {
 			return Current.name().equalsIgnoreCase(level);
 		}
-		
+
 		static boolean isChild(String level) {
 			return Child.name().equalsIgnoreCase(level);
 		}
-		
+
 		static boolean isCurrentAndChild(String level) {
 			return CurrentAndChild.name().equalsIgnoreCase(level);
 		}
-		
+
 		static boolean isSelf(String level) {
 			return Self.name().equalsIgnoreCase(level);
 		}
-		
-		static Map<String, String> options() {
-			return Stream.of(CatalogTagLevel.values()).collect(Collectors.toMap(CatalogTagLevel::name, CatalogTagLevel::getDesc));
+
+		static List<TagAttrOption> toTagAttrOptions() {
+			return List.of(
+					new TagAttrOption(Root.name(), Root.desc),
+					new TagAttrOption(Current.name(), Current.desc),
+					new TagAttrOption(Child.name(), Child.desc),
+					new TagAttrOption(CurrentAndChild.name(), CurrentAndChild.desc),
+					new TagAttrOption(Self.name(), Self.desc)
+			);
 		}
 	}
 }

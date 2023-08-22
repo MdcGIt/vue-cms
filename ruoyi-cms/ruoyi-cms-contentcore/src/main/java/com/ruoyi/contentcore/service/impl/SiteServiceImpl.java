@@ -83,7 +83,6 @@ public class SiteServiceImpl extends ServiceImpl<CmsSiteMapper, CmsSite> impleme
 		LoginUser loginUser = StpAdminUtil.getLoginUser();
 		// 无当前站点或当前站点无权限则取数据库查找一条有权限的站点数据作为当前站点
 		if (Objects.isNull(site) || !loginUser.hasPermission(SitePrivItem.View.getPermissionKey(site.getSiteId()))) {
-			site = this.lambdaQuery().last("limit 1").one();
 			Optional<CmsSite> opt = this.lambdaQuery().list().stream().filter(s ->
 					loginUser.hasPermission(SitePrivItem.View.getPermissionKey(s.getSiteId()))).findFirst();
 			if (opt.isPresent()) {

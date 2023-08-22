@@ -27,17 +27,17 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 	
 	/**
 	 * 执行标签逻辑，返回标签变量
-	 * 
-	 * @param env
-	 * @param attrs
-	 * @return
-	 * @throws TemplateException
-	 * @throws IOException
+	 *
+	 * @param env 模板环境
+	 * @param attrs 标签属性
+	 * @return 标签变量
+	 * @throws TemplateException 模板异常
+	 * @throws IOException IO异常
 	 */
 	public abstract Map<String, TemplateModel> execute0(Environment env, Map<String, String> attrs)
 			throws TemplateException, IOException;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public void execute(Environment env, Map attrs, TemplateModel[] loopVars, TemplateDirectiveBody body)
 			throws TemplateException, IOException {
@@ -52,11 +52,11 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 
 	/**
 	 * execute0之前执行
-	 * 
-	 * @param env
-	 * @param tagAttrs
-	 * @param body
-	 * @throws TemplateException
+	 *
+	 * @param env 模板环境
+	 * @param tagAttrs 标签属性
+	 * @param body 标签内容
+	 * @throws TemplateException 模板异常
 	 */
 	public void onTagStart(Environment env, Map<String, String> tagAttrs, TemplateDirectiveBody body)
 			throws TemplateException {
@@ -64,13 +64,13 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 
 	/**
 	 * execute0之后执行
-	 * 
-	 * @param env
-	 * @param tagAttrs
-	 * @param body
-	 * @param tagVariables
-	 * @throws TemplateException
-	 * @throws IOException
+	 *
+	 * @param env 模板环境
+	 * @param tagAttrs 标签属性
+	 * @param body 标签内容
+	 * @param tagVariables 标签变量
+	 * @throws TemplateException 模板异常
+	 * @throws IOException IO异常
 	 */
 	public void onTagEnd(Environment env, Map<String, String> tagAttrs, TemplateDirectiveBody body,
 			Map<String, TemplateModel> tagVariables) throws TemplateException, IOException {
@@ -90,9 +90,9 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 	/**
 	 * 校验标签属性并返回处理过的标签属性
 	 * 
-	 * @param env
-	 * @param _attrs
-	 * @throws TemplateException
+	 * @param env 模板环境
+	 * @param _attrs 标签属性
+	 * @throws TemplateException 模板异常
 	 */
 	Map<String, String> validTagAttributes(Environment env, Map<String, TemplateModel> _attrs) throws TemplateException {
 		CaseInsensitiveMap<String, String> map = null;
@@ -114,7 +114,7 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 							env);
 				}
 				if (tagAttr.getOptions() != null && StringUtils.isNotEmpty(attrValue)) {
-					String[] optionValues = tagAttr.getOptions().keySet().stream().map(String::toLowerCase).toArray(String[]::new);
+					String[] optionValues = tagAttr.getOptions().stream().map(TagAttrOption::lowerCaseValue).toArray(String[]::new);
 					if (!ArrayUtils.contains(optionValues, attrValue.toLowerCase())) {
 						throw new TemplateException(StringUtils.messageFormat("The tag <@{0}> attribute `{1}` = `{2}` is invalid, options: {3}", this.getTagName(),
 								tagAttr.getName(), attrValue, Arrays.toString(optionValues)), env);
@@ -132,10 +132,10 @@ public abstract class AbstractTag implements ITag, TemplateDirectiveModel {
 	/**
 	 * 构造模板变量
 	 *
-	 * @param env
-	 * @param o
-	 * @return
-	 * @throws TemplateModelException
+	 * @param env 模板环境
+	 * @param o 变量值
+	 * @return 模板变量
+	 * @throws TemplateModelException 模板异常
 	 */
 	public TemplateModel wrap(Environment env, Object o) throws TemplateModelException {
 		return env.getObjectWrapper().wrap(o);
