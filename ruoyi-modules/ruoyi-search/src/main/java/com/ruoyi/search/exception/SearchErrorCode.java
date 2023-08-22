@@ -17,7 +17,12 @@ public enum SearchErrorCode implements ErrorCode {
 	/**
 	 * 不支持的检索类型：{0}
 	 */
-	UNSUPPORTED_SEARCH_TYPE;
+	UNSUPPORTED_SEARCH_TYPE,
+
+	/**
+	 * ElasticSearch连接失败，请检查连接配置和ES服务是否有效。
+	 */
+	ESConnectFail;
 	
 	@Override
 	public String value() {
