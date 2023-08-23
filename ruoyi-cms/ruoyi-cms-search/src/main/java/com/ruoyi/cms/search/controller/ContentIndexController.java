@@ -73,7 +73,7 @@ public class ContentIndexController extends BaseRestController {
 	private final ElasticsearchClient esClient;
 
 	private void checkElasticSearchEnabled() throws IOException {
-		Assert.isTrue(this.esClient.ping().value(), SearchErrorCode.ESConnectFail::exception);
+		Assert.isTrue(this.searchService.isElasticSearchAvailable(), SearchErrorCode.ESConnectFail::exception);
 	}
 
 	@GetMapping("/contents")

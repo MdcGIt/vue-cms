@@ -264,15 +264,23 @@ public class ContentIndexService implements CommandLineRunner {
 		return data;
 	}
 
+	public boolean isElasticSearchAvailable() {
+		try {
+			return esClient.ping().value();
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		boolean connected = esClient.ping().value();
-		if (connected) {
+		if (isElasticSearchAvailable()) {
 			boolean exists = esClient.indices().exists(fn -> fn.index(ESContent.INDEX_NAME)).value();
 			if (!exists) {
 				this.createIndex(); // 创建内容索引库
 			}
+		} else {
+			log.warn("ES service not available!");
 		}
 	}
 }
