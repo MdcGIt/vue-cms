@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import co.elastic.clients.elasticsearch.core.InfoResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ruoyi.common.utils.JacksonUtils;
 import com.ruoyi.search.SearchConsts;
+import com.ruoyi.search.exception.SearchErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,11 +72,8 @@ public class ContentIndexController extends BaseRestController {
 
 	private final ElasticsearchClient esClient;
 
-	@Value("${spring.elasticsearch.enabled:true}")
-	private boolean elasticSearchEnable;
-
-	private void checkElasticSearchEnabled() {
-		Assert.isTrue(elasticSearchEnable, () -> new RuntimeException("ElasticSearch not enabled."));
+	private void checkElasticSearchEnabled() throws IOException {
+		Assert.isTrue(this.searchService.isElasticSearchAvailable(), SearchErrorCode.ESConnectFail::exception);
 	}
 
 	@GetMapping("/contents")
@@ -165,7 +164,7 @@ public class ContentIndexController extends BaseRestController {
 
 	@Log(title = "重建内容索引", businessType = BusinessType.UPDATE)
 	@PostMapping("/build/{contentId}")
-	public R<?> buildContentIndex(@PathVariable("contentId") @LongId Long contentId) {
+	public R<?> buildContentIndex(@PathVariable("contentId") @LongId Long contentId) throws IOException {
 		this.checkElasticSearchEnabled();
 		CmsContent content = this.contentService.getById(contentId);
 		Assert.notNull(content, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("contentId", contentId));
@@ -178,7 +177,7 @@ public class ContentIndexController extends BaseRestController {
 
 	@Log(title = "重建全站索引", businessType = BusinessType.UPDATE)
 	@PostMapping("/rebuild")
-	public R<?> rebuildAllIndex() {
+	public R<?> rebuildAllIndex() throws IOException {
 		this.checkElasticSearchEnabled();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		AsyncTask task = this.searchService.rebuildAll(site);

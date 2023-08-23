@@ -10,9 +10,11 @@ import java.util.Map;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import co.elastic.clients.transport.endpoints.BooleanResponse;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.exmodel.service.ExModelService;
 import com.ruoyi.search.SearchConsts;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -46,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ContentIndexService {
+public class ContentIndexService implements CommandLineRunner {
 
 	private final ISiteService siteService;
 
@@ -60,31 +62,35 @@ public class ContentIndexService {
 
 	private final ExModelService extendModelService;
 
+	private void createIndex() throws IOException {
+		// 创建索引
+		Map<String, Property> properties = new HashMap<>();
+		properties.put("catalogAncestors", Property.of(fn -> fn.keyword(b -> b
+				.ignoreAbove(500) // 指定字符串字段的最大长度。超过该长度的字符串将被截断或忽略。
+		)));
+		properties.put("contentType", Property.of(fn -> fn.keyword(b -> b
+				.ignoreAbove(20)
+		)));
+		properties.put("logo", Property.of(fn -> fn.keyword(b -> b
+				.ignoreAbove(256)
+		)));
+		properties.put("title", Property.of(fn -> fn.text(b -> b
+				.store(true) // 是否存储在索引中
+				.analyzer(SearchConsts.IKAnalyzeType_Smart)
+		)));
+		properties.put("fullText", Property.of(fn -> fn.text(b -> b
+				.analyzer(SearchConsts.IKAnalyzeType_Smart)
+		)));
+		CreateIndexResponse response = esClient.indices().create(fn -> fn
+				.index(ESContent.INDEX_NAME)
+				.mappings(mb -> mb.properties(properties)));
+		Assert.isTrue(response.acknowledged(), () -> new RuntimeException("Create Index[cms_content] failed."));
+	}
+
 	public void recreateIndex(CmsSite site) throws IOException {
 		boolean exists = esClient.indices().exists(fn -> fn.index(ESContent.INDEX_NAME)).value();
 		if (!exists) {
-			// 创建索引
-			Map<String, Property> properties = new HashMap<>();
-			properties.put("catalogAncestors", Property.of(fn -> fn.keyword(b -> b
-					.ignoreAbove(500) // 指定字符串字段的最大长度。超过该长度的字符串将被截断或忽略。
-			)));
-			properties.put("contentType", Property.of(fn -> fn.keyword(b -> b
-					.ignoreAbove(20)
-			)));
-			properties.put("logo", Property.of(fn -> fn.keyword(b -> b
-					.ignoreAbove(256)
-			)));
-			properties.put("title", Property.of(fn -> fn.text(b -> b
-					.store(true) // 是否存储在索引中
-					.analyzer(SearchConsts.IKAnalyzeType_Smart)
-			)));
-			properties.put("fullText", Property.of(fn -> fn.text(b -> b
-					.analyzer(SearchConsts.IKAnalyzeType_Smart)
-			)));
-			CreateIndexResponse response = esClient.indices().create(fn -> fn
-					.index(ESContent.INDEX_NAME)
-					.mappings(mb -> mb.properties(properties)));
-			Assert.isTrue(response.acknowledged(), () -> new RuntimeException("Create Index[cms_content] failed."));
+			this.createIndex();
 		} else {
 			// 删除站点索引文档数据
 			long total = this.contentService.lambdaQuery().eq(CmsContent::getSiteId, site.getSiteId()).count();
@@ -256,5 +262,25 @@ public class ContentIndexService {
 			data.put(fd.getFieldName(), fd.getValue());
 		});
 		return data;
+	}
+
+	public boolean isElasticSearchAvailable() {
+		try {
+			return esClient.ping().value();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		if (isElasticSearchAvailable()) {
+			boolean exists = esClient.indices().exists(fn -> fn.index(ESContent.INDEX_NAME)).value();
+			if (!exists) {
+				this.createIndex(); // 创建内容索引库
+			}
+		} else {
+			log.warn("ES service not available!");
+		}
 	}
 }

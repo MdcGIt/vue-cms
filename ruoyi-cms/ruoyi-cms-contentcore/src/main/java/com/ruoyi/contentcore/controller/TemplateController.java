@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -46,11 +47,6 @@ import java.util.regex.Pattern;
  * @author 兮玥
  * @email 190785909@qq.com
  */
-@Priv(
-	type = AdminUserType.TYPE,
-	value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
-	mode = SaMode.AND
-)
 @RestController
 @RequestMapping("/cms/template")
 @RequiredArgsConstructor
@@ -64,11 +60,12 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 模板数据集合
-	 *
-	 * @param publishPipeCode 发布通道编码
-	 * @param filename        文件名
-	 * @return
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@GetMapping
 	public R<?> getTemplateList(@RequestParam(value = "publishPipeCode", required = false) String publishPipeCode,
 								@RequestParam(value = "filename", required = false) String filename) {
@@ -94,10 +91,12 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 获取模板详情
-	 *
-	 * @param templateId
-	 * @return
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@GetMapping("/{templateId}")
 	public R<?> getTemplateDetail(@PathVariable("templateId") String templateId) {
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
@@ -106,18 +105,19 @@ public class TemplateController extends BaseRestController {
 		CmsTemplate template = this.templateService.getById(templateId);
 		Assert.notNull(template, () -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", templateId));
 
-		Assert.isTrue(template.getSiteId() == site.getSiteId(),
+		Assert.isTrue(Objects.equals(template.getSiteId(), site.getSiteId()),
 				() -> new NotPermissionException(SitePermissionType.SitePrivItem.View.getPermissionKey(site.getSiteId())));
 		return R.ok(template);
 	}
 
 	/**
 	 * 新增模板文件
-	 *
-	 * @param dto
-	 * @return
-	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "新增模板", businessType = BusinessType.INSERT)
 	@XssIgnore
 	@PostMapping
@@ -132,11 +132,12 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 重命名模板文件
-	 *
-	 * @param dto
-	 * @return
-	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "重命名模板", businessType = BusinessType.UPDATE)
 	@PostMapping("/rename")
 	public R<?> rename(@RequestBody @Validated TemplateRenameDTO dto) throws IOException {
@@ -146,7 +147,7 @@ public class TemplateController extends BaseRestController {
 				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
 
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		Assert.isTrue(template.getSiteId() == site.getSiteId(),
+		Assert.isTrue(Objects.equals(template.getSiteId(), site.getSiteId()),
 				() -> new NotPermissionException(SitePermissionType.SitePrivItem.View.getPermissionKey(site.getSiteId())));
 
 		this.templateService.renameTemplate(template, dto.getPath(), dto.getRemark(), StpAdminUtil.getLoginUser().getUsername());
@@ -159,7 +160,7 @@ public class TemplateController extends BaseRestController {
 			return false;
 		}
 		fileName = FileExUtils.normalizePath(fileName);
-		String[] split = fileName.substring(0, fileName.indexOf(suffix)).split("\\/");
+		String[] split = fileName.substring(0, fileName.indexOf(suffix)).split("/");
 		for (String item : split) {
 			System.out.println(item);
 			System.out.println(Pattern.matches("[a-zA-Z0-9_]+", item));
@@ -172,11 +173,12 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 修改模板文件内容
-	 *
-	 * @param dto
-	 * @return
-	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "编辑模板", businessType = BusinessType.UPDATE)
 	@XssIgnore
 	@PutMapping
@@ -186,7 +188,7 @@ public class TemplateController extends BaseRestController {
 				() -> CommonErrorCode.DATA_NOT_FOUND_BY_ID.exception("templateId", dto.getTemplateId()));
 
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
-		Assert.isTrue(template.getSiteId() == site.getSiteId(),
+		Assert.isTrue(Objects.equals(template.getSiteId(), site.getSiteId()),
 				() -> new NotPermissionException(SitePermissionType.SitePrivItem.View.getPermissionKey(site.getSiteId())));
 
 		dto.setOperator(StpAdminUtil.getLoginUser());
@@ -196,11 +198,12 @@ public class TemplateController extends BaseRestController {
 
 	/**
 	 * 删除模板文件
-	 *
-	 * @param templateIds
-	 * @return
-	 * @throws IOException
 	 */
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "删除模板", businessType = BusinessType.DELETE)
 	@DeleteMapping
 	public R<?> delete(@RequestBody @NotEmpty List<Long> templateIds) throws IOException {
@@ -210,6 +213,11 @@ public class TemplateController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "清理模板缓存", businessType = BusinessType.OTHER)
 	@PostMapping("/clearTemplateCache")
 	public R<?> clearTemplateCache() {
@@ -217,6 +225,11 @@ public class TemplateController extends BaseRestController {
 		return R.ok();
 	}
 
+	@Priv(
+		type = AdminUserType.TYPE,
+		value = { ContentCorePriv.TemplateView, CmsPrivUtils.PRIV_SITE_VIEW_PLACEHOLDER},
+		mode = SaMode.AND
+	)
 	@Log(title = "清理区块缓存", businessType = BusinessType.OTHER)
 	@DeleteMapping("/clearIncludeCache")
 	public R<?> clearIncludeCache(@RequestBody @NotEmpty List<Long> templateIds) {

@@ -1,15 +1,5 @@
 package com.ruoyi.contentcore.template.tag;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.ruoyi.common.utils.StringUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.springframework.stereotype.Component;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.staticize.FreeMarkerUtils;
@@ -17,15 +7,22 @@ import com.ruoyi.common.staticize.core.TemplateContext;
 import com.ruoyi.common.staticize.enums.TagAttrDataType;
 import com.ruoyi.common.staticize.tag.AbstractListTag;
 import com.ruoyi.common.staticize.tag.TagAttr;
+import com.ruoyi.common.staticize.tag.TagAttrOption;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.contentcore.domain.CmsSite;
 import com.ruoyi.contentcore.service.ISiteService;
 import com.ruoyi.contentcore.template.exception.SiteNotFoundException;
 import com.ruoyi.contentcore.util.InternalUrlUtils;
 import com.ruoyi.contentcore.util.SiteUtils;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -39,18 +36,14 @@ public class CmsSiteTag extends AbstractListTag {
 
 	public final static String TAG_ATTR_LEVEL = "level";
 
-	final static Map<String, String> AttrOptions_Level = SiteTagLevel.toMap();
-
 	private final ISiteService siteService;
 
 	@Override
 	public List<TagAttr> getTagAttrs() {
 		List<TagAttr> tagAttrs = super.getTagAttrs();
 		tagAttrs.add(new TagAttr(TAG_ATTR_ID, false, TagAttrDataType.INTEGER, "站点ID"));
-		TagAttr tagAttrLevel = new TagAttr(TAG_ATTR_LEVEL, false, TagAttrDataType.STRING, "数据获取范围，值为`Root`时忽略属性id",
-				"Current");
-		tagAttrLevel.setOptions(AttrOptions_Level);
-		tagAttrs.add(tagAttrLevel);
+		tagAttrs.add(new TagAttr(TAG_ATTR_LEVEL, false, TagAttrDataType.STRING, "数据获取范围，值为`Root`时忽略属性id",
+				SiteTagLevel.toTagAttrOptions(), "Current"));
 		return tagAttrs;
 	}
 
@@ -107,14 +100,10 @@ public class CmsSiteTag extends AbstractListTag {
 		// 子站点
 		Child("子站点"); 
 		
-		private String desc;
+		private final String desc;
 		
 		SiteTagLevel(String desc) {
 			this.desc = desc;
-		}
-
-		String getDesc() {
-			return this.desc;
 		}
 		
 		static boolean isRoot(String level) {
@@ -128,9 +117,13 @@ public class CmsSiteTag extends AbstractListTag {
 		static boolean isChild(String level) {
 			return Child.name().equalsIgnoreCase(level);
 		}
-		
-		static Map<String, String> toMap() {
-			return Stream.of(SiteTagLevel.values()).collect(Collectors.toMap(SiteTagLevel::name, SiteTagLevel::getDesc));
+
+		static List<TagAttrOption> toTagAttrOptions() {
+			return List.of(
+					new TagAttrOption(Root.name(), Root.desc),
+					new TagAttrOption(Current.name(), Current.desc),
+					new TagAttrOption(Child.name(), Child.desc)
+			);
 		}
 	}
 }

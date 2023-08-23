@@ -1,11 +1,10 @@
 package com.ruoyi.common.staticize.tag;
 
-import java.util.Map;
-
 import com.ruoyi.common.staticize.enums.TagAttrDataType;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * 标签属性描述类
@@ -42,7 +41,7 @@ public class TagAttr {
 	/**
 	 * 是否必填
 	 */
-	private boolean mandatory = false;
+	private boolean mandatory;
 
 	/**
 	 * 用法说明
@@ -52,12 +51,12 @@ public class TagAttr {
 	/**
 	 * 属性数据类型
 	 */
-	private TagAttrDataType dataType = TagAttrDataType.STRING;
+	private TagAttrDataType dataType;
 
 	/**
 	 * 属性可选项
 	 */
-	private Map<String, String> options;
+	private List<TagAttrOption> options;
 
 	/**
 	 * 属性默认值
@@ -67,7 +66,10 @@ public class TagAttr {
 	/**
 	 * 布尔值可选项
 	 */
-	public static Map<String, String> BOOL_OPTIONS = Map.of("true", "是", "false", "否");
+	public static List<TagAttrOption> BOOL_OPTIONS = List.of(
+			new TagAttrOption("true", "是"),
+			new TagAttrOption("false", "否")
+	);
 
 	public TagAttr(String name, boolean mandatory, TagAttrDataType dataType, String usage) {
 		this.name = name;
@@ -79,7 +81,7 @@ public class TagAttr {
 		}
 	}
 
-	public TagAttr(String name, boolean mandatory, TagAttrDataType dataType, String usage, Map<String, String> options) {
+	public TagAttr(String name, boolean mandatory, TagAttrDataType dataType, String usage, List<TagAttrOption> options) {
 		this.name = name;
 		this.mandatory = mandatory;
 		this.dataType = dataType;
@@ -98,7 +100,7 @@ public class TagAttr {
 		}
 	}
 
-	public TagAttr(String name, boolean mandatory, TagAttrDataType dataType, String usage, Map<String, String> options, String defaultValue) {
+	public TagAttr(String name, boolean mandatory, TagAttrDataType dataType, String usage, List<TagAttrOption> options, String defaultValue) {
 		this.name = name;
 		this.mandatory = mandatory;
 		this.dataType = dataType;
