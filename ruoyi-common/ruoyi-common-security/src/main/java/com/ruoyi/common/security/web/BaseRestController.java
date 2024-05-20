@@ -56,7 +56,9 @@ public class BaseRestController {
 	protected PageRequest getPageRequest() {
 		return PageRequestDTO.buildPageRequest();
 	}
-
+	protected PageRequest doPageRequest() {
+		return PageRequestDTO.getPageRequest();
+	}
 	protected R<?> bindDataTable(IPage<?> page) {
 		return R.ok(new TableData<>(page.getRecords(), page.getTotal()));
 	}

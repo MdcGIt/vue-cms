@@ -97,7 +97,7 @@ public class ContentController extends BaseRestController {
 				|| !loginUser.hasPermission(CatalogPrivItem.View.getPermissionKey(catalogId))) {
 			return this.bindDataTable(List.of());
 		}
-		PageRequest pr = getPageRequest();
+		PageRequest pr = doPageRequest();
 		CmsSite site = this.siteService.getCurrentSite(ServletUtils.getRequest());
 		boolean includeChild = IncludeChildContentPreference.getValue(StpAdminUtil.getLoginUser());
 

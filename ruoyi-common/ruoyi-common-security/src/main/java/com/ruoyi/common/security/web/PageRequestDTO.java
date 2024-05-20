@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -75,6 +78,48 @@ public class PageRequestDTO {
 					}
 					return null;
 				}).filter(Objects::nonNull).toList();
+				sort = Sort.by(orders);
+			}
+			return PageRequest.of(page, size, sort);
+		} else {
+			try {
+				PageRequestDTO dto = JacksonUtils.from(request.getInputStream(), PageRequestDTO.class);
+				List<Order> orders = dto.getSorts().stream()
+						.map(order -> {
+							if (Direction.ASC.equals(order.getDirection())) {
+								return Sort.Order.asc(order.getColumn());
+							} else if (Direction.DESC.equals(order.getDirection())) {
+								return Sort.Order.desc(order.getColumn());
+							}
+							return null;
+						}).filter(Objects::nonNull).toList();
+				return PageRequest.of(dto.getPageNum(), dto.getPageSize(), Sort.by(orders));
+			} catch (IOException e) {
+				e.printStackTrace();
+				return PageRequest.of(1, 20);
+			}
+		}
+	}
+
+	public static PageRequest getPageRequest() {
+		HttpServletRequest request = ServletUtils.getRequest();
+		if (RequestMethod.GET.name().equalsIgnoreCase(request.getMethod())) {
+			int page = ServletUtils.getParameterToInt(request, GET_PARAM_PAGENUM, 1);
+			int size = ServletUtils.getParameterToInt(request, GET_PARAM_PAGESIZE, 20);
+
+			String sortStr = ServletUtils.getParameter(GET_PARAM_SORTS);
+			// 将单引号替换为双引号
+			sortStr = sortStr.replace('\'', '\"');
+			Sort sort = Sort.unsorted();
+			if (StringUtils.isNotEmpty(sortStr)) {
+				List<SortOrder> sortOrderList = List.of();
+				ObjectMapper objectMapper = new ObjectMapper();
+				try {
+					 sortOrderList = objectMapper.readValue(sortStr, new TypeReference<List<SortOrder>>(){});
+				} catch (JsonProcessingException e) {
+					throw new RuntimeException(e);
+				}
+				List<Order> orders = sortOrderList.stream().map(e -> new Order(e.getDirection(), e.getColumn())).filter(Objects::nonNull).toList();
 				sort = Sort.by(orders);
 			}
 			return PageRequest.of(page, size, sort);

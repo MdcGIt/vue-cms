@@ -28,8 +28,11 @@ public class CmsContent extends BaseEntityWithLogicDelete {
     private static final long serialVersionUID=1L;
     
     public static final String TABLE_NAME = "cms_content";
-    
-    public static final Map<String, SFunction<CmsContent, ?>> MAP_PARAMS = Map.of("publishDate", CmsContent::getPublishDate);
+
+    public static final Map<String, SFunction<CmsContent, ?>> MAP_PARAMS = Map.of(
+            "publish_date", CmsContent::getPublishDate,"create_time", CmsContent::getCreateTime,
+            "viewCount", CmsContent::getViewCount, "favoriteCount", CmsContent::getFavoriteCount,
+            "likeCount", CmsContent::getLikeCount, "commentCount", CmsContent::getCommentCount);
     
     public static SFunction<CmsContent, ?> getSFunction(String key) {
     	return MAP_PARAMS.get(key);
