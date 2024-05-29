@@ -1,27 +1,28 @@
 # 项目相关配置
 ruoyi:
   # 名称
-  name: RuoYi-Vue-CMS
+  name: 浙大城市学院
   # 版本
   version: 1.3.17
   # 版权年份
   copyrightYear: 2023
   system:
     # 演示模式开关
-    demoMode: true
-    # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/app/uploadPath）
-    uploadPath: /home/app/uploadPath
+    demoMode: false
+    # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+    uploadPath: '/home/csxy/upload'
     # 验证码类型 math 数组计算 char 字符验证
     captchaType: math
-  freemarker:
-    templateLoaderPath: /home/app/statics
+  member:
+    uploadPath: '/home/csxy'
   cms:
-    resourceRoot: /home/app/wwwroot_release
-
+    resourceRoot: '/home/csxy/wwwroot_release'
 # 开发环境配置
 server:
-  # 服务器的HTTP端口，默认为8090
-  port: 8090
+  # 服务器的HTTP端口，默认为8080
+  port: 8081
+  # 开启优雅停机
+  shutdown: graceful
   servlet:
     # 应用的访问路径
     context-path: /
@@ -48,13 +49,16 @@ spring:
   messages:
     # 国际化资源文件路径
     basename: i18n/messages
+  lifecycle:
+    # 设置停机缓冲时间，默认：30s
+    timeout-per-shutdown-phase: 20s
   # 文件上传
   servlet:
-    multipart: 
+    multipart:
       # 单个文件大小
-      max-file-size:  20MB
+      max-file-size:  500MB
       # 设置总上传的文件大小
-      max-request-size:  100MB
+      max-request-size:  1000MB
   # 服务模块
   devtools:
     restart:
@@ -63,24 +67,24 @@ spring:
   freemarker:
     check-template-location: false
   elasticsearch:
-    uris: http://cc-elasticsearch:9200
-    username: elastic
-    password: hello1234
+    uris: http://localhost:9200
+  #    username:
+  #    password:
   # redis 配置
   data:
     redis:
       # 地址
-      host: cc-redis
+      host: 127.0.0.1
       # 端口，默认为6379
-      port: 6379
+      port: 6389
       # 数据库索引
-      database: 0
+      database: 1
       # 密码
-      password: b18a03
+      password: csxyAdmin
       # 连接超时时间
       timeout: 10s
-      lettuce: 
-        pool: 
+      lettuce:
+        pool:
           # 连接池中的最小空闲连接
           min-idle: 0
           # 连接池中的最大空闲连接
@@ -115,22 +119,22 @@ spring:
         master:
           type: ${spring.datasource.type}
           driverClassName: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://cc-mysql:3306/ry_cms?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=GMT%2B8
+          url: jdbc:mysql://localhost:3306/csxy?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
           username: root
-          password: hello1234
+          password: csxyAdmin
         # 从库
         slave:
           lazy: true
           type: ${spring.datasource.type}
           driverClassName: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
-          username:
-          password:
+          url: jdbc:mysql://localhost:3306/csxy?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
+          username: root
+          password: csxyAdmin
     hikari:
       # 连接池名
       pool-name: HikariCP
       # 连接超时时间：毫秒, 默认30秒
-      connection-timeout: 2000
+      connection-timeou t: 2000
       # 最小空闲连接，默认值10，小于0或大于maximum-pool-size，都会重置为maximum-pool-size
       minimum-idle: 5
       # 最大连接数，小于等于0会被重置为默认值10；大于零小于1会被重置为minimum-idle的值
@@ -143,6 +147,7 @@ spring:
       max-lifetime: 1800000
       # 用于测试连接是否可用的查询语句
       connection-test-query: SELECT 1
+
   # 邮件配置
   mail:
     host: smtp.163.com
@@ -165,7 +170,7 @@ spring:
             required: true
   # 监控配置
   application:
-    name: "RuoYi-Vue-CMS"
+    name: "浙大城市学院"
   boot:
     admin:
       client:
@@ -178,29 +183,47 @@ spring:
         username: ruoyi
         password: 123456
 
-# SaToken配置           
-sa-token: 
-    # token名称 (同时也是cookie名称)
-    token-name: Authorization
-    # token前缀
-    token-prefix: Bearer
-    # token有效期，单位s 默认30天, -1代表永不过期 
-    timeout: 2592000
-    # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
-    activity-timeout: -1
-    # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录) 
-    is-concurrent: true
-    # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token) 
-    is-share: true
-    # token风格
-    token-style: uuid
-    # 是否输出操作日志 
-    is-log: true           
+# Actuator 监控端点的配置项
+management:
+  trace:
+    http:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      external-file: ./logs/client.log
+
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: Authorization
+  # token前缀
+  token-prefix: Bearer
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 1500000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
 
 # MyBatis配置
 mybatis-plus:
   global-config:
     enable-sql-runner: true
+    db-config:
+      logic-delete-field: deleted # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   # 搜索指定包别名
   typeAliasesPackage: com.ruoyi.**.domain
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
@@ -209,15 +232,15 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # 防止XSS攻击
-xss: 
+xss:
   # 过滤开关
   enabled: true
   mode: clean
   # 过滤链接
-  urlPatterns: 
-   - /system/* 
-   - /monitor/*
-   - /tool/*
+  urlPatterns:
+    - /system/*
+    - /monitor/*
+    - /tool/*
 
 xxl:
   job:
@@ -228,13 +251,13 @@ xxl:
       ### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
       appname: ruoyi-admin
       ### 执行器注册 [选填]：优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题。
-      #address: 
+      #address:
       ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
-      ip: 
+      ip:
       ### 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
       port: 9968
       ### 执行器运行日志文件存储磁盘路径 [选填] ：需要对该路径拥有读写权限；为空则使用默认路径；
-      logpath: D:/dev/workspace_jdk17/RuoYi-Vue/ruoyi-modules/ruoyi-xxljob/jobhandler
+      logpath: E:/dev/workspace_jdk17/RuoYi-Vue/ruoyi-modules/ruoyi-xxljob/jobhandler
       ### 执行器日志文件保存天数 [选填] ： 过期日志自动清理, 限制值大于等于3时生效; 否则, 如-1, 关闭自动清理功能；默认：30
       logretentiondays: 30
 
